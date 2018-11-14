@@ -1,7 +1,13 @@
-class Log:
+levels = ["FATAL", "ERR", "WARN", "INFO"]
 
-    def __init__(self, name="Log", level=0):
-        self.name, self.level = name, level
+def output(msg, name, lvl):
+    print("[{}] {}: {}".format(name, levels[lvl], msg))
 
-    def __repr__(self):
-        return "{} - {}".format(self.name, self.level)
+def info(msg, name="Log"):
+    output(msg, name, 3)
+def warn(msg, name="Log"):
+    output(msg, name, 2)
+def err(msg, name="Log"):
+    output(msg, name, 1)
+def fatal(msg, name="Log"):
+    output(msg, name, 0)
