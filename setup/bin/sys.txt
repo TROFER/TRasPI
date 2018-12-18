@@ -1,1 +1,6 @@
-echo XD
+apt install git -y
+apt install python3.5 -y
+cd /home/dietpi/
+mkdir project
+cd project
+git init
