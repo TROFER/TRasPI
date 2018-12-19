@@ -1,6 +1,6 @@
 #include <iostream>
 
-//#ifdef __linux__
+#ifdef __linux__
 
 #include <fstream>
 #include <string>
@@ -72,20 +72,21 @@ bool setup(const std::string filename) {
 
 int main(int argc, char const *argv[]) {
 	if (argc < 2) { std::cerr << "Please enter a filename" << std::endl; return -1; }
-	if (true) { //setup(argv[1])
-		std::string local = std::string(std::system("who -m")).find("pts") == std::string::npos ? "--ssh" : "";
-
-		std::cout << std::system("python3.5 main.py") << std::endl;
+	if (setup(argv[1])) {
+		std::vector<std::string> args;
+		args.push_back(std::getenv("SSH_CLIENT") == nullptr ? "--ssh" : "");
+		std::string cmd = "python3.5 main.py ";
+		for (std::string arg : args) { cmd += arg+" "; }
+		std::system(cmd.c_str());
 	}
-	std::system("pause");
 	return 0;
 }
 
-//#elif _WIN32
+#elif _WIN32
 
-// int main() {
-// 	std::cerr << "This program does not run on Windows" << std::endl;
-// 	std::system("pause");
-// }
+int main() {
+	std::cerr << "This program does not run on Windows" << std::endl;
+	std::system("pause");
+}
 
-//#endif // __linux__
+#endif // __linux__
