@@ -1,28 +1,91 @@
 #include <iostream>
+
+//#ifdef __linux__
+
 #include <fstream>
 #include <string>
 #include <vector>
 
-bool sys_call(const std::string filename) {
-	std::vector<std::string> cmd;
+void hardware(bool& fail, const std::vector<std::string>& items) {
+	if (!fail) {
+		std::vector<std::string> not_found;
+		for (std::string item : items) {
+			// test each piece
+		}
+
+		if ((items.size() != 0) && (not_found.size() == 0)) {
+			std::cerr << "Unable to Detect Hardware:\n";
+			for (std::string s : not_found) {
+				std::cerr << s << "\n";
+			} std::cerr << std::endl;
+			fail = true;
+		}
+	}
+}
+
+void package(bool& fail, const std::vector<std::string>& items) {
+	if (!fail) {
+		for (std::string item : items) {
+			if (!std::system(("command -v " + item).c_str())) {
+				std::cerr << "Package Not Found: " << item << "\nInstalling..." << std::endl;
+				std::system(("apt install "+item+" -y").c_str());
+			} // if installing doesn't work, fail = true;
+		}
+	}
+}
+
+void install(bool& fail, const std::vector<std::string>& items) {
+	if (!fail) {
+		for (std::string item : items) {
+			std::system(item.c_str());
+		}
+	}
+}
+
+bool setup(const std::string filename) {
 	std::ifstream file(filename);
+	std::vector<std::string> items[3];
 	if (file.is_open()) {
+		int type = -1;
 		std::string line;
 		while (std::getline(file, line)) {
-			cmd.push_back(line);
+			if (line[0] == '#') {
+				++type;
+				continue;
+			}
+			items[type].push_back(line);
 		}
+
 	} else {
-		std::cerr << "Unable to Open File: " << filename << std::endl;
-		return false;
+		std::cerr << "Unable to Open File" << std::endl;
 	}
-	for (std::string c : cmd) {
-		std::system(c.c_str());
-	}
-	return true;
+
+	bool fail = false;
+	hardware(fail, items[0]);
+	package(fail, items[1]);
+	install(fail, items[2]);
+
+	if (!fail) { return true; }
+
+	return false;
 }
 
 int main(int argc, char const *argv[]) {
-	if (argc < 2) { std::cerr << "Requires at least 1 argument" << std::endl; return -1; }
-	sys_call(argv[1]);
+	if (argc < 2) { std::cerr << "Please enter a filename" << std::endl; return -1; }
+	if (true) { //setup(argv[1])
+		std::string local = std::string(std::system("who -m")).find("pts") == std::string::npos ? "--ssh" : "";
+
+		std::cout << std::system("python3.5 main.py") << std::endl;
+	}
+	std::system("pause");
 	return 0;
 }
+
+//#elif _WIN32
+
+// int main() {
+// 	std::cerr << "This program does not run on Windows" << std::endl;
+// 	std::system("pause");
+// }
+
+//#endif // __linux__

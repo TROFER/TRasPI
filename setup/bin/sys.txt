@@ -1,9 +1,0 @@
-apt install git -y
-apt install python3.5 -y
-cd /home/dietpi/
-mkdir project
-cd /home/dietpi/project
-git init
-git pull https://github.com/TWoolhouse/TRasPI/
-cd /home/dietpi/
-rm sys.txt
