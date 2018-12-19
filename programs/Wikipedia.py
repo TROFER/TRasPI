@@ -1,7 +1,7 @@
 import wikipedia
 import core.log
 log = core.log.name("Wikipedia")
-#Ver pre-finish
+#Ver prefinish v2
 
 def edit_len(ans_len):
     while True:
@@ -14,17 +14,20 @@ def edit_len(ans_len):
 
 def main():
     print("Basic Wikipedia Query\nComands:\nlength() for setting result length (Sentences)\nquit() for quitting the application\n") #Menu
-    lang, ans_len, command = ("en"), 2, ("") #Defult settings
+    lang, ans_len, command, cmd_char = ("en"), 2, (""), "!" #Defult settings
 
-    while command != "quit()":
+    while True:
         try:
             command = input("Enter a Query or Command: > ").lower()
-            if command == "length()":
-                ans_len =edit_len(ans_len)
-            elif command == "quit()":
-                quit()
+            print(command)
+            if command[:len(cmd_char)] == cmd_char:
+                command = command[len(cmd_char):]
+                if command == "length":
+                    ans_len = edit_len(ans_len)
+                elif command == "quit":
+                    quit()
             else:
                 wikipedia.set_lang(lang)
-                print(wikipedia.summary(command, sentences=ans_len))
-        except:
-            log.warn("Somthing went wrong, Please try again")
+                print(wikipedia.summary(command, sentences=ans_len), "\n")
+        except (wikipedia.exceptions.PageError, wikipedia.exceptions.DisambiguationError):
+            log.warn("Page not found, please try again")
