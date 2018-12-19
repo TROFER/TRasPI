@@ -19,6 +19,7 @@ def _run(func, *args):
     try:
         func(*args)
     except BaseException as e:
+        print(type(e).__name__, e)
         if type(e) not in (SystemExit, KeyboardInterrupt):
             flag = e
             return False
