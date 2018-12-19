@@ -1,5 +1,6 @@
 import wikipedia
-import log
+import core.log
+log = core.log.name("Wikipedia")
 
 def main():
     print("Basic Wikipedia Query\nComands:\nlength() for setting result length (Sentences)")
@@ -13,6 +14,8 @@ def main():
                             while True:
                                 ans_len = int(input("Enter New Result Length: "))
                         except ValueError:
+                            log.warn("Please enter an integer (1-15)")
+
 
 
 
