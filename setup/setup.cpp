@@ -26,9 +26,7 @@ void hardware(bool& fail, const std::vector<std::string>& items) {
 void package(bool& fail, const std::vector<std::string>& items) {
 	if (!fail) {
 		for (std::string item : items) {
-			if (!std::system(("command -v " + item).c_str())) {
-				std::cerr << "Package Not Found: " << item << "\nInstalling..." << std::endl;
-				std::system(("apt install "+item+" -y").c_str());
+			std::system(std::string("apt upgrade "+item+" -y"))
 			} // if installing doesn't work, fail = true;
 		}
 	}
@@ -75,7 +73,7 @@ int main(int argc, char const *argv[]) {
 	if (setup(argv[1])) {
 		std::vector<std::string> args;
 		args.push_back(std::getenv("SSH_CLIENT") == nullptr ? "--ssh" : "");
-		std::string cmd = "python3.5 main.py ";
+		std::string cmd = "python3 main.py ";
 		for (std::string arg : args) { cmd += arg+" "; }
 		std::system(cmd.c_str());
 	}

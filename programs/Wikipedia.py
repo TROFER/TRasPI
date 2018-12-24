@@ -1,3 +1,4 @@
+#$PIP: wikipedia,
 import wikipedia
 import core.log
 log = core.log.name("Wikipedia")
