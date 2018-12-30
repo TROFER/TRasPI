@@ -1,0 +1,21 @@
+MAYOR: I am happy to announce the new Tunisian diamond exhibit open!
+*Engine Sound*
+You have arrived at the museum and its late at night
+You observe that there are guards at the main entrance
+Do you sneak in or bust in?
+############BEGINING_A##############
+You chose to sneak in however the museum walls are tall what do you use?
+A: Jumble hoppers? B: Anti-Gravity Cap? C: Teleporter D: Shrink Ray E: A Pickaxe F: Liquidificator
+###########START_A###################
+              CHOICE A
+You use the Jumble Hoppers. Jumping you do not reach the top.
+Returning to the ground you fall backward descending into a river
+              CHOICE B
+You use the Anti-Gravity cap.
+Floating up you prepare to dis-engage the cap.
+However it does not turn of and you float off into space.
+              CHOICE C
+You use  the teleporter. Entering your desired co-coordinates it powers up
+You fall onto the roof of the museum and quickly hide behind an air vent
+############START_B#########################
+              CHOICE D:
