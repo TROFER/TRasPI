@@ -1,3 +1,6 @@
 import core.log
+import sys
 
-ssh = False
+argc, argv = len(sys.argv), sys.argv
+ssh = True
+window = None

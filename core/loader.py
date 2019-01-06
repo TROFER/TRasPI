@@ -19,7 +19,7 @@ def load(name):
 
 def preprocess(name):
     modules = []
-    with open(name, "r+") as file:
+    with open(name+".py", "r+") as file:
         length = 0
         for line in file:
             line = line.strip()
@@ -31,7 +31,7 @@ def preprocess(name):
                 file.write(line.replace("$", " "))
                 break
             length += len(line)+2
-    pip(modules)
+    pip(*modules)
 
 def pip(*modules):
     if modules:

@@ -5,35 +5,6 @@ import util.misc
 
 def play_game():
     util.misc.cls()
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
