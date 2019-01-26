@@ -40,39 +40,51 @@ log.info("-=Setup Complete=-\n")
 
 #---Example--------------------------------------------------------------------#
 
-# core.loader.load("programs.example")
+core.loader.load("programs.example")
 # core.execute.exec(core.loader.modules["example"])
-# util.misc.cls()
 
 #---Functions------------------------------------------------------------------#
 
-#---Setup----------------------------------------------------------------------#
+def get_programs_run(self):
+    self.actions = [graphics.menu.Action(window, p, "run", p.title(), "Run: "+p) for p in core.loader.modules]
 
 def action_callback(action):
-    if action.type == "back":
-        action.parent.back()
-    elif action.type == "show":
-        action.parent.forward(action.parent.pages[action.string])
-    elif action.type == "run":
-        core.execute.exec(core.loader.modules[action.string])
+    if action.type == "run":
+        core.execute.exec(core.loader.modules[action.func])
     elif action.type == "load":
-        core.loader.load("programs."+action.string)
+        core.loader.load("programs."+action.func)
+
+#---Setup----------------------------------------------------------------------#
+
+count = 0
 
 window = graphics.menu.Window(action_callback)
 graphics.menu.Page(window, "Main",
-graphics.menu.Element("Programs", "Run and Load Programs", graphics.menu.Action(window, "programs_run", "show", "Run"), graphics.menu.Action(window, "programs_load", "show", "Load")),
-graphics.menu.Element("Options", "desc2", graphics.menu.Action(window, "2", "run", "r1"), graphics.menu.Action(window, "2", "back", "r2")))
+graphics.menu.Action(window, "programs", "show", "Programs", "Run and Load Programs"),
+graphics.menu.Action(window, "options", "show", "Options", "Edit Program Options"),
+graphics.menu.Action(window, "test", "elmt", "Test", "Test Element"))
 
-graphics.menu.Page(window, "programs_run", *[graphics.menu.Element(p, "Program", graphics.menu.Action(window, p, "run", "Run"), graphics.menu.Action(window, "back", "back", "Back")) for p in core.loader.modules])
+graphics.menu.Page(window, "programs",
+graphics.menu.Action(window, "programs_run", "show", "Run", "Run Programs"),
+graphics.menu.Action(window, "programs_load", "show", "Load", "Load Programs"))
+
+graphics.menu.Page(window, "programs_run",
+load=get_programs_run)
+
+graphics.menu.Page(window, "options")
+
+graphics.menu.Element(window, "test", "hello world how are you today?\nthank you i am doing fine!",
+load=lambda self: self("\n".join([str(i) for i in range(count)])))
 
 window.set_page("Main")
 
 #---Main-----------------------------------------------------------------------#
 
-graphics.gui.draw(window)
-
 x = ""
 while x != "e":
+    count += 1
+    window.update()
+    graphics.gui.draw(window)
     x = input().lower()
     if x == "s":
         window.move(1)
@@ -82,6 +94,5 @@ while x != "e":
         window.select()
     elif x == "a":
         window.back()
-    graphics.gui.draw(window)
 
 print("END MAIN")

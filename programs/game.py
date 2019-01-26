@@ -1,10 +1,12 @@
 import core.log
+import grpahics.gui
 from random import randint
 from time import sleep
-import util.misc
+
+log = core.log.name("game")
 
 def play_game():
-    util.misc.cls()
+    graphics.gui.cls()
 
 
 

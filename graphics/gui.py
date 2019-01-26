@@ -5,36 +5,31 @@ import graphics.menu
 
 log = core.log.name("gui")
 
+misc_buffer = ""
+
 if core.env.ssh:
     #Text Terminal
 
     def cls():
         os.system("cls" if os.name == "nt" else "clear")
 
-    output = print
-
-    def menu():
-        pass
+    def output(*args):
+        global misc_buffer
+        for i in args:
+            misc_buffer += str(i)
 
     def draw(window):
+        global misc_buffer
         buffer = "\n/"
         buffer += "/".join((i.name for i in window.path))
         buffer += "\n"+graphics.menu.LINE_BREAK+"\n"
-        if isinstance(window.current, graphics.menu.Page):
-            buffer += window.current.draw()
-            buffer += "\n"+graphics.menu.LINE_BREAK+"\n"
-            buffer += window.current.elements[window.cursor()].desc
-            buffer += "\n"+graphics.menu.LINE_BREAK+"\n"
-        elif isinstance(window.current, graphics.menu.Element):
-            buffer += window.current.draw()
-            buffer += "\n"+graphics.menu.LINE_BREAK+"\n"
-            buffer += window.current.desc
-            buffer += "\n"+graphics.menu.LINE_BREAK+"\n"
-        buffer += "MISC"
+        buffer += window.buffer
+        buffer += misc_buffer
+        misc_buffer = ""
         buffer += "\n"+graphics.menu.LINE_BREAK+"\n"
-        buffer += "BACK | ACCEPT | QUIT"
+        buffer += "A: BACK | D: ACCEPT | E: QUIT"
 
-        #cls()
+        cls()
         print(buffer)
 
 else:
@@ -43,7 +38,5 @@ else:
         print("CLEARING")
     def output(*args):
         print("OUTPUT")
-    def menu():
-        print("MENU")
     def draw():
         print("DRAWING")
