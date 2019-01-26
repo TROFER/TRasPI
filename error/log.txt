@@ -1,0 +1,8 @@
+Logging Setup Successful
+
+[INFO] (Main) -=Core Setup=-
+[INFO] (Main) Log Level: 4
+[INFO] (Main) SSH: False
+[INFO] (Main) -=Graphics Setup=-
+[INFO] (Main) -=Setup Complete=-
+
