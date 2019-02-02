@@ -1,6 +1,7 @@
 import time
 import sys
 import atexit
+import image
 
 from gfxhat import touch, lcd, backlight, fonts
 from PIL import Image, ImageFont, ImageDraw
