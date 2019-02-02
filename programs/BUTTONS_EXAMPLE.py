@@ -11,7 +11,16 @@ Press Ctrl+C to exit.
 
 def handler(channel, event):
     print("Button Pressed")
-    blk_lte_tstr.main_script()
+    if channel == 0:
+        r = 255
+        g,b = 0,0
+    elif channel == 1:
+        g = 255
+        r,b = 0,0
+    elif channel == 2:
+        b = 255
+        r,g = 0,0
+    blk_lte_tstr.main_script(r,g,b)
 
 for x in range(6):
     touch.on(x, handler)
