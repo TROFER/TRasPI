@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import signal
-import blk_lte_tstr.py
+import blk_lte_tstr
 from gfxhat import touch
 
 print("""touch.py
