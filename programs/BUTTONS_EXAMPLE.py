@@ -3,12 +3,14 @@
 import signal
 from time import sleep
 import blk_lte_tstr
-from gfxhat import touch
+from gfxhat import touch, lcd, backlight, fonts
 
 print("""touch.py
 This shows how we can use scripts to link the buttons to certain actions
 Press Ctrl+C to exit.
 """)
+
+lcd.clear()
 
 def handler(channel, event):
     print("Button Pressed")
