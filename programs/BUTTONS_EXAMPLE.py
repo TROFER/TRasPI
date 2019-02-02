@@ -11,6 +11,7 @@ Press Ctrl+C to exit.
 """)
 
 lcd.clear()
+lcd.show()
 
 def handler(channel, event):
     print("Button Pressed")
