@@ -5,7 +5,7 @@ def set_backlight(r, g, b):
     backlight.set_all(r, g, b)
     backlight.show()
 '''
-main():
+def main_script():
     r = int(input("Enter Red Value MAX: 225 "))
     g = int(input("Enter Green Value MAX: 225 "))
     b = int(input("Enter Blue Value MAX: 225 "))
