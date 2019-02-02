@@ -4,7 +4,7 @@ import time
 import signal
 
 from gfxhat import touch, lcd, backlight, fonts
-from pillow import ImageFont, ImageDraw
+from PILL import ImageFont, ImageDraw
 
 print("""hello-world.py
 This basic example prints the text "Hello World" in the middle of the LCD
