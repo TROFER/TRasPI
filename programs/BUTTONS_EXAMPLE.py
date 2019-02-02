@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import signal
+from time import sleep
 import blk_lte_tstr
 from gfxhat import touch
 
@@ -20,6 +21,7 @@ def handler(channel, event):
     elif channel == 2:
         b = 255
         r,g = 0,0
+    sleep(1)
     blk_lte_tstr.main_script(r,g,b)
 
 for x in range(6):
