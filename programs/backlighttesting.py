@@ -1,4 +1,4 @@
-import gfxhat
+from gfxhat import touch, lcd, backlight, fonts
 
 '''
 def set_backlight(r, g, b):
