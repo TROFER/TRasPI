@@ -3,5 +3,7 @@ from gfxhat import touch, lcd, backlight, fonts
 backlight.set_all(255,0, 225)
 backlight.show()
 lcd.clear()
-lcd.set_pixel(1, 1, 1)
+for x in range(0,64):
+    for y in range(0,128):
+        lcd.set_pixel(x,y,1)
 lcd.show()
