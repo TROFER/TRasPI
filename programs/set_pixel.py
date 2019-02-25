@@ -5,5 +5,5 @@ backlight.show()
 lcd.clear()
 for x in range(0,64):
     for y in range(0,128):
-        lcd.set_pixel(x,y,1)
+        lcd.set_pixel(y,x,1)
 lcd.show()
