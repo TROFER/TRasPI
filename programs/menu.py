@@ -114,4 +114,4 @@ try:
         time.sleep(1.0 / 30)
 
 except KeyboardInterrupt:
-cleanup()
+    cleanup()
