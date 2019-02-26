@@ -13,6 +13,6 @@ cursorposy = 20
 for cursorposx in range(0,64,4):
     for letter in range(0,7):
         for p in range(0,3):
-                lcd.set_pixel(cursorposx,(cursorposy+a),1)
+                lcd.set_pixel(cursorposx,(cursorposy+p),1)
 
 lcd.show()
