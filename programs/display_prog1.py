@@ -8,11 +8,12 @@ for line in range(20,63,20):
         lcd.set_pixel(bar,line,1)
 for footer in range(0,128):
     lcd.set_pixel(header,63,1)
-lcd.show()
-
+#################################TEXT########################
 cursorposy = 20
 for cursorposx in range(0,64,4):
     for letter in range(0,7):
         for p in range(0,3):
             for a in range(0,8):
                 lcd.set_pixel(cursorposx,(cursorposy+a),1)
+
+lcd.show()
