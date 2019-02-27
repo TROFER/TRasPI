@@ -10,6 +10,8 @@ This shows how we can use scripts to link the buttons to certain actions
 Press Ctrl+C to exit.
 """)
 
+lcd.clear()
+lcd.show()
 
 def handler(channel, event):
     print("Button Pressed")
