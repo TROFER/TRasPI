@@ -1,25 +1,13 @@
-#!/usr/bin/env python
-
-import time
+from time import sleep
 import sys
 import atexit
-
 from gfxhat import touch, lcd, backlight, fonts
 from PIL import Image, ImageFont, ImageDraw
 
-print("""menu-options.py
-This example shows how you might store a list of menu options associated
-with functions and navigate them on GFX HAT.
-Press Ctrl+C or select "Exit" to exit.
-""")
-
 width, height = lcd.dimensions()
 
-# A squarer pixel font
-#font = ImageFont.truetype(fonts.BitocraFull, 11)
-
-# A slightly rounded, Ubuntu-inspired version of Bitocra
-font = ImageFont.truetype(fonts.BitbuntuFull, 10)
+font = ImageFont.truetype(fonts.BitocraFull, 11)
+#font = ImageFont.truetype(fonts.BitbuntuFull, 10)
 
 image = Image.new('P', (width, height))
 
@@ -68,6 +56,7 @@ def handler(ch, event):
 for x in range(6):
     touch.set_led(x, 0)
     backlight.set_pixel(x, 255, 255, 255)
+    sleep(0.01)
     touch.on(x, handler)
 
 backlight.show()
@@ -111,7 +100,7 @@ try:
                 lcd.set_pixel(x, y, pixel)
 
         lcd.show()
-        time.sleep(1.0 / 30)
+        sleep(1.0 / 30)
 
 except KeyboardInterrupt:
     cleanup()
