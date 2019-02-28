@@ -67,7 +67,7 @@ def cleanup():
     lcd.clear()
     lcd.show()
 
-atexit.register(cleanup)
+#atexit.register(cleanup)
 
 try:
     while True:
