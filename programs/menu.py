@@ -1,6 +1,6 @@
 from time import sleep
-import sys
-import atexit
+from sys import exit
+#import atexit
 from gfxhat import touch, lcd, backlight, fonts
 from PIL import Image, ImageFont, ImageDraw
 
@@ -55,7 +55,7 @@ def handler(ch, event):
 
 for x in range(6):
     touch.set_led(x, 0)
-    backlight.set_pixel(x, 255, 255, 255)
+    backlight.set_pixel(x, 200, 200, 200)
     sleep(0.01)
     touch.on(x, handler)
 
