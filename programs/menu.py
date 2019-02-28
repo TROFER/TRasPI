@@ -13,6 +13,8 @@ image = Image.new('P', (width, height))
 
 draw = ImageDraw.Draw(image)
 
+null = input("Point A")
+##########################################################Point A######################################
 class MenuOption:
     def __init__(self, name, action, options=()):
         self.name = name
@@ -27,6 +29,8 @@ class MenuOption:
 def set_backlight(r, g, b):
     backlight.set_all(r, g, b)
     backlight.show()
+    null = input("Point B")
+    #########################################Point B#########################
 
 menu_options = [
             MenuOption('Set BL Red', set_backlight, (255, 0, 0)),
@@ -36,7 +40,8 @@ menu_options = [
             MenuOption('Set BL White', set_backlight, (255, 255, 255)),
             MenuOption('Exit', exit, (0,))
         ]
-
+null = input("Point C")
+#####################################Point C##########################
 current_menu_option = 1
 
 trigger_action = False
@@ -44,6 +49,8 @@ trigger_action = False
 def handler(ch, event):
     global current_menu_option, trigger_action
     if event != 'press':
+        null = input("Point D")
+        ###############################Point D#####################
         return
     if ch == 1:
         current_menu_option += 1
@@ -52,12 +59,17 @@ def handler(ch, event):
     if ch == 4:
         trigger_action = True
     current_menu_option %= len(menu_options)
+    null = input("Point E")
+    ##################################Point E############################
 
 for x in range(6):
     touch.set_led(x, 0)
     backlight.set_pixel(x, 255, 255, 255)
-    sleep(0.01)
+    null = input("Point F")
+    ###############################Point F##################
     touch.on(x, handler)
+    ##############################Point G#####################
+    null = input("Point G")
 
 backlight.show()
 
@@ -66,11 +78,15 @@ def cleanup():
     backlight.show()
     lcd.clear()
     lcd.show()
+    #############################Point H#######################
+    null = input("Point G")
 
 register(cleanup)
 
 try:
     while True:
+        ###########################Point I##########################
+        null = input("Point I")
         image.paste(0, (0, 0, width, height))
         offset_top = 0
 
@@ -80,6 +96,8 @@ try:
 
         for index in range(len(menu_options)):
             if index == current_menu_option:
+            #############################################Point J############################
+                null = input("Point J")
                 break
             offset_top += 12
 
@@ -90,6 +108,8 @@ try:
             if index == current_menu_option:
                 draw.rectangle(((x-2, y-1), (width, y+10)), 1)
             draw.text((x, y), option.name, 0 if index == current_menu_option else 1, font)
+            ##########################################Point K###########################
+            null = input("Point K")
 
         w, h = font.getsize('>')
         draw.text((0, (height - h) / 2), '>', 1, font)
@@ -98,8 +118,12 @@ try:
             for y in range(height):
                 pixel = image.getpixel((x, y))
                 lcd.set_pixel(x, y, pixel)
+                ###################################Point L############################
+                print("Point L")
 
         lcd.show()
+        ######################################################Point M############################
+        print("Point M")
 
 except KeyboardInterrupt:
     cleanup()
