@@ -1,6 +1,6 @@
 from time import sleep
 from sys import exit
-#import atexit
+import atexit
 from gfxhat import touch, lcd, backlight, fonts
 from PIL import Image, ImageFont, ImageDraw
 
@@ -67,7 +67,7 @@ def cleanup():
     lcd.clear()
     lcd.show()
 
-#atexit.register(cleanup)
+atexit.register(cleanup)
 
 try:
     while True:
@@ -100,7 +100,7 @@ try:
                 lcd.set_pixel(x, y, pixel)
 
         lcd.show()
-        sleep(1.0 / 30)
+#        sleep(1.0 / 30)
 
 except KeyboardInterrupt:
     cleanup()
