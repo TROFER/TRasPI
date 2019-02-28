@@ -34,7 +34,7 @@ menu_options = [
             MenuOption('Set BL Blue', set_backlight, (0, 0, 255)),
             MenuOption('Set BL Purple', set_backlight, (255, 0, 255)),
             MenuOption('Set BL White', set_backlight, (255, 255, 255)),
-            MenuOption('Exit', sys.exit, (0,))
+            MenuOption('Exit', exit, (0,))
         ]
 
 current_menu_option = 1
