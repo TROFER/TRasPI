@@ -55,7 +55,7 @@ def handler(ch, event):
 
 for x in range(6):
     touch.set_led(x, 0)
-    backlight.set_pixel(x, 200, 200, 200)
+    backlight.set_pixel(x, 255, 255, 255)
     sleep(0.01)
     touch.on(x, handler)
 
