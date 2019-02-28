@@ -1,5 +1,6 @@
 from time import sleep
 from sys import exit
+from os import system
 from atexit import register
 from gfxhat import touch, lcd, backlight, fonts
 from PIL import Image, ImageFont, ImageDraw
@@ -29,7 +30,7 @@ def set_backlight(r, g, b):
     backlight.show()
 
 menu_options = [
-            MenuOption('Set BL Red', set_backlight, (255, 0, 0)),
+            MenuOption("Init Git Pull", system("sudo git pull"),
             MenuOption('Set BL Green', set_backlight, (0, 255, 0)),
             MenuOption('Set BL Blue', set_backlight, (0, 0, 255)),
             MenuOption('Set BL Purple', set_backlight, (255, 0, 255)),
