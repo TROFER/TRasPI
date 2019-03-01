@@ -25,17 +25,16 @@ font = ImageFont.truetype(fonts.BitocraFull, 11)
 current_pin = 0
 current_page = 0
 running = True
-
-
 backlight.set_all(255, 255, 255)
 backlight.show()
-cleanup()
 
 def cleanup():
     lcd.clear()
     lcd.show()
     backlight.set_all(0, 0, 0)
     backlight.show()
+
+cleanup()
 
 atexit.register(clear)
 
