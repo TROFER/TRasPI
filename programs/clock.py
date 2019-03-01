@@ -15,7 +15,7 @@ try:
 
         draw = ImageDraw.Draw(image)
 
-        font = ImageFont.truetype(fonts.clock, 20)
+        font = ImageFont.truetype(fonts.clock, 38)
 
         text = strftime("%H:%M", gmtime())
 
