@@ -28,13 +28,12 @@ running = True
 backlight.set_all(255, 255, 255)
 backlight.show()
 
-def cleanup():
-    lcd.clear()
-    lcd.show()
-    backlight.set_all(0, 0, 0)
-    backlight.show()
 
-cleanup()
+lcd.clear()
+lcd.show()
+backlight.set_all(0, 0, 0)
+backlight.show()
+
 
 atexit.register(clear)
 
