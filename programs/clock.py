@@ -15,7 +15,7 @@ try:
 
         draw = ImageDraw.Draw(image)
 
-        font = ImageFont.truetype(fonts.Bitbuntu-Full, 15)
+        font = ImageFont.truetype(fonts.Bitbuntu, 15)
 
         text = strftime("%H:%M", gmtime())
 
