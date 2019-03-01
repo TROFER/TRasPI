@@ -4,6 +4,9 @@ Raspberry Pi code
 Roadmap:
 https://trello.com/b/19Trr3Vm/raspberry-pi-development
 
+#Code Versions
+The development branch contains code that likely wont work, however if you want to see the latest additions and changes please do so.
+
 # Scripting Guide
 
 ### Main
