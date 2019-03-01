@@ -26,25 +26,12 @@ current_pin = 0
 current_page = 0
 running = True
 
+
 backlight.set_all(255, 255, 255)
 backlight.show()
+cleanup()
 
-
-def draw_cursor(image, x, y, direction):
-    y = y if direction else y + 2
-
-    image.putpixel((x + 2, y), 1)
-
-    y = y + 1 if direction else y - 1
-    for p in range(3):
-        image.putpixel((x + 1 + p, y), 1)
-
-    y = y + 1 if direction else y - 1
-    for p in range(5):
-        image.putpixel((x + p, y), 1)
-
-
-def clear():
+def cleanup():
     lcd.clear()
     lcd.show()
     backlight.set_all(0, 0, 0)
@@ -65,7 +52,6 @@ while running:
         offset_y = 25
         direction = 1
 
-    draw_cursor(img, offset_x - 2, offset_y, direction)
 
     backlight.show()
 
