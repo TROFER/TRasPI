@@ -43,8 +43,6 @@ def draw_cursor(image, x, y, direction):
     for p in range(5):
         image.putpixel((x + p, y), 1)
 
-for x in range(6):
-    touch.on(x, handle_input)
 
 def clear():
     lcd.clear()
