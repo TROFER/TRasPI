@@ -16,7 +16,7 @@ Press Ctrl + C to exit.
 """)
 
 pinout = yaml.load(open("pinout.yaml").read())
-src = Image.open("upinout.png").convert("P")
+src = Image.open("/home/os/graphics/global images/05_keycard.png").convert("P")
 
 width, height = lcd.dimensions()
 
