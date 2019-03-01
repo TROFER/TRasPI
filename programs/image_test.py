@@ -35,7 +35,7 @@ backlight.set_all(0, 0, 0)
 backlight.show()
 
 
-atexit.register(clear)
+#atexit.register(clear)
 
 while running:
     img = src.copy()
