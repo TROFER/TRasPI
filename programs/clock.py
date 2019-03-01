@@ -1,6 +1,6 @@
 import time
 import signal
-from datetime import *
+from time import gmtime, strftime
 from gfxhat import touch, lcd, backlight, fonts
 from PIL import Image, ImageFont, ImageDraw
 
