@@ -4,6 +4,9 @@ Raspberry Pi code
 Roadmap:
 https://trello.com/b/19Trr3Vm/raspberry-pi-development
 
+### Code Versions
+The development branch contains code that likely wont work, however if you want to see the latest additions and changes please do so.
+
 # Scripting Guide
 
 ### Main
@@ -35,3 +38,11 @@ The Config files can be read through *core.config*:
 
 ### Storage
 Scripts should be located in *programs* folder in the main directory.  
+
+### Using the backlight on the GFX-halt
+Warning: The RGB values sent to the backlight must be kept under 100 per colour
+*Example 100,0,0 or 100,0,100*
+Using values over 100 will cause some high pitched noise from the screen likely due to winey chokes on the board itself
+
+### Setting up the GFX-hat
+The script on the pimoroni git hub page are bugged with dietpi and wont actually enable the SPI Bus this is paramount for the use of the LCD and must be enabled manually by editing the config file to avoid errors
