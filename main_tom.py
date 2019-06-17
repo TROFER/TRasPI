@@ -48,6 +48,9 @@ core.loader.load("programs.example")
 def get_programs_run(self):
     self.actions = [graphics.menu.Action(window, p, "run", p.title(), "Run: "+p) for p in core.loader.modules]
 
+def get_programs_load(self):
+    self.actions = [graphics.menu.Action(window, p.split(".", 1)[0], "load", p.title(), "Load: "+p) for p in core.loader.os.listdir("Programs")]
+
 def action_callback(action):
     if action.type == "run":
         core.execute.exec(core.loader.modules[action.func])
@@ -70,6 +73,9 @@ graphics.menu.Action(window, "programs_load", "show", "Load", "Load Programs"))
 
 graphics.menu.Page(window, "programs_run",
 load=get_programs_run)
+
+graphics.menu.Page(window, "programs_load",
+load=get_programs_load)
 
 graphics.menu.Page(window, "options")
 
