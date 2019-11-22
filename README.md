@@ -12,7 +12,7 @@ All scripts **must** contain a *main* function as an entry point.
 
 ### Core-Graphics
 *menu*:
-Creates a menu
+Acepts one argument, labels, returns selected item as an index of labels
 
 #### Config
 The Config files can be read through *core.config*:  
