@@ -6,6 +6,7 @@ import queue
 import time
 import textwrap
 
+# Defult Globals For Menu
 WIDTH, HEIGHT = 128, 64
 TEMPLATE = Image.open("/home/traspi/core/menu.template").convert("P")
 
