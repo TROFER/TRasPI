@@ -1,4 +1,4 @@
-Temperature: 10.0
-Pressure: 996
-Humidity: 93
-Weather: light intensity drizzle rain
+Temperature: 9.0
+Pressure: 1000
+Humidity: 81
+Weather: few clouds

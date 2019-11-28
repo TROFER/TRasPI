@@ -6,7 +6,7 @@ import queue
 import time
 import textwrap
 
-# Defult Globals For Menu
+# Default Globals For Menu
 WIDTH, HEIGHT = 128, 64
 TEMPLATE = Image.open("/home/traspi/core/menu.template").convert("P")
 
@@ -31,11 +31,11 @@ def handle_hold(func):
     def handle_hold(self, ch, event):
         if event == "hold":
             return func(self, ch, event)
-
     return handle_hold
 
 
 # -------------------------Multiprocessing and Render---------------------------#
+'''
 class Render:
     _draw = None
     _image = None
@@ -107,6 +107,46 @@ class Render:
             except queue.Empty:
                 break
             cls._frame_event.clear()
+'''
+
+
+class Render:
+    _frames = mp.JoinableQueue()
+    _changes = mp.JoinableQueue()
+    _event = mp.Event()
+    _draw = None
+
+    @classmethod
+    def get_changes(cls):
+        cache = [[2 for y in range(64)] for x in range(128)]
+        while not cls._event.is_set():
+            frame = list(cls._frames.get().getdata())
+            for x in range(128):
+                for y in range(64):
+                    pixel_value = next(frame)
+                    if pixel_value != cache[x][y]:
+                        cls._changes.put((x, y, pixel_value))
+                    cache[x][y] = pixel_value
+
+    @classmethod
+    def set_changes(cls):
+        while not cls._event.is_set():
+            try:
+                while cls._changes is not queue.Empty:
+                    change = cls._changes.get()
+                    lcd.setpixel(change[0], change[1], change[2])
+                lcd.show()
+            except queue.Empty:
+                pass
+
+    @classmethod
+    def start_render(cls):
+        if __name__ == '__main__':
+            p_get_changes = mp.Process(target=cls.get_changes, args=(cls,))
+            p_set_changes = mp.Process(target=cls.set_changes, args=(cls,))
+            p_get_changes.start(), p_set_changes.start()
+            p_get_changes.join(), p_set_changes.join()
+
 
 
 class Screen:
