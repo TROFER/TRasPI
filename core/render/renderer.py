@@ -15,6 +15,7 @@ class Render(metaclass=Singleton):
         self.draw = None
         self._image = None
         self._buffer = mp.JoinableQueue()
+        self._changes = mp.JoinableQueue()
         self._frame_event = mp.Event()
         self._render_event = mp.Event()
 
