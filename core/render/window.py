@@ -38,18 +38,24 @@ class Window(metaclass=MetaWindow):
             if isinstance(window, Window):
                 Screen().call_focus(generator, self)
                 window.show()
-        except StopIteration:
-            pass
+        except StopIteration as e:
+            return e.value
 
     @staticmethod
     def focus(func):
         def focus(self, *args, **kwargs):
             result = func(self, *args, **kwargs)
             if type(result).__name__ == "generator":
-                self.active._handle_focus(None, result)
+                return self.active._handle_focus(None, result)
         return focus
 
-class Element:
+class MetaElement(type):
+
+    def __new__(cls, name, bases, attrs):
+        attrs["Render"] = Render()
+        return super().__new__(cls, name, bases, attrs)
+
+class Element(metaclass=MetaElement):
 
     Render = Render()
 

@@ -1,4 +1,4 @@
-from render.single import Singleton
+from core.render.single import Singleton
 
 __all__ = ["Screen"]
 
@@ -31,7 +31,7 @@ class Screen(metaclass=Singleton):
                     except AttributeError:    return
                     result = func()
                     if type(result).__name__ == "generator":
-                        self.active._handle_focus(None, result)
+                        return self.active._handle_focus(None, result)
 
                 return handle
             # print("BIND", key, wrap(handler))
