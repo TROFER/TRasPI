@@ -23,8 +23,13 @@ class Render(metaclass=Singleton):
         self._buffer.join()
 
     def _next(self):
+<<<<<<< HEAD
         self._image = core.render.template.background.copy()
         self._draw = PIL.ImageDraw.Draw(self._image)
+=======
+        self._image = core.render.template.background.copy() 
+        self._draw = ImageDraw.Draw(self._image)
+>>>>>>> b066274c1bab69350f8f4729a920a5bd7ef7ba25
 
     def start(self):
         if not self._render_event.is_set():
