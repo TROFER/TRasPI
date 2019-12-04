@@ -46,7 +46,7 @@ def start():
     try:
         while execute:
             core.render.render()
-            core.render.Render.frame()
+            core.render.Render().frame()
     finally:
         core.render.Render().close()
 
