@@ -50,12 +50,14 @@ class Render(metaclass=Singleton):
                 for x in range(WIDTH):
                     for y in range(HEIGHT):
                         pixel_value = next(frame)
+                        print("PV", pixel_value)
                         loc = x * WIDTH + y
                         if pixel_value != cache[loc]:
+                            print("Diff Cache", pixel_value, x, y, loc)
                             self._changes.put((x, y, pixel_value))
                         cache[loc] = pixel_value
-                        self._changes.put(None)
-                        print("Put None in Changes")
+                self._changes.put(None)
+                print("Put None in Changes")
                 self._buffer.task_done()
             except queue.Empty:
                 continue
