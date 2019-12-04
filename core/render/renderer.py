@@ -1,4 +1,4 @@
-from render.single import Singleton
+from core.render.single import Singleton
 
 __all__ = ["Render"]
 
