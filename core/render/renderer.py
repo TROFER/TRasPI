@@ -40,7 +40,7 @@ class Render(metaclass=Singleton):
         self._render_event.clear()
 
     def _render_cache(self):
-        cache = [2 for x in range(WIDTH) for y in range(HEIGHT)]
+        cache = [[2 for y in range(HEIGHT)] for x in range(WIDTH)]
         while self._render_event.is_set():
             self._frame_event.wait()
             # print("Wait Frame")
@@ -51,11 +51,11 @@ class Render(metaclass=Singleton):
                     for y in range(HEIGHT):
                         pixel_value = next(frame)
                         # print("PV", pixel_value)
-                        loc = x * WIDTH + y
-                        if pixel_value != cache[loc]:
+                        # loc = x * WIDTH + y
+                        if pixel_value != cache[x][y]:
                             # print("Diff Cache", pixel_value, x, y, loc)
                             self._changes.put((x, y, pixel_value))
-                        cache[loc] = pixel_value
+                        cache[x][y] = pixel_value
                 self._changes.put(None)
                 # print("Put None in Changes")
                 self._buffer.task_done()
