@@ -4,10 +4,9 @@ import queue
 import multiprocessing as mp
 import PIL
 from gfxhat import lcd
+import pysnooper
 
 __all__ = ["Render"]
-
-WIDTH, HEIGHT = 128, 64
 
 class Render(metaclass=Singleton):
 
@@ -26,7 +25,7 @@ class Render(metaclass=Singleton):
 
     def _next(self):
         self._image = core.render.template.background.copy()
-        self.draw = PIL.ImageDraw.Draw(self._image)
+        self._draw = ImageDraw.Draw(self._image)
 
     def start(self):
         if not self._render_event.is_set():
