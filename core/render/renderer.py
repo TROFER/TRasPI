@@ -45,6 +45,7 @@ class Render(metaclass=Singleton):
             self._frame_event.wait()
             try:
                 frame = (i for i in self._buffer.get(False).getdata())
+                print("FRAME", frame)
                 for x in range(WIDTH):
                     for y in range(HEIGHT):
                         pixel_value = next(frame)
@@ -64,6 +65,7 @@ class Render(metaclass=Singleton):
             while pixel is not None:
                 try:
                     pixel = self._changes.get(False)
+                    print("PIXEL", pixel)
                     lcd.set_pixel(*pixel)
                     self._changes.task_done()
                 except queue.Empty:
