@@ -1,4 +1,5 @@
 from core.render.single import Singleton
+from gfxhat import touch
 
 __all__ = ["Screen"]
 
@@ -35,8 +36,8 @@ class Screen(metaclass=Singleton):
 
                 return handle
             # print("BIND", key, wrap(handler))
-            self.test[key] = wrap(handler) # TEMP
-            # lcd.bind(key, wrap(handler))
+            # self.test[key] = wrap(handler) # TEMP
+            touch.on(key, wrap(handler))
 
     def render(self):
         self.active.render()

@@ -13,7 +13,7 @@ class Text(Element):
         self.text = text
         self.data = {}
         self.size = 10
-        self.colour = 1
+        self.colour = 0
         self.font = PIL.ImageFont.truetype(core.render.template.std_font, self.size)
         self.font_size = self.font.getsize(self.text)
 
