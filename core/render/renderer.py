@@ -27,7 +27,7 @@ class Render(metaclass=Singleton):
 
     def _next(self):
         self._image = core.render.template.background.copy()
-        self._draw = PIL.ImageDraw.Draw(self._image)
+        self.draw = PIL.ImageDraw.Draw(self._image)
 
     def start(self):
         if not self._render_event.is_set():
