@@ -2,7 +2,7 @@ from core.render.single import Singleton
 import core.render.template
 import queue
 import multiprocessing as mp
-import PIL.ImageDraw
+import PIL
 from gfxhat import lcd
 
 __all__ = ["Render"]
@@ -24,7 +24,7 @@ class Render(metaclass=Singleton):
 
     def _next(self):
         self._image = core.render.template.background.copy()
-        self._draw = ImageDraw.Draw(self._image)
+        self.draw = PIL.ImageDraw.Draw(self._image)
 
     def start(self):
         if not self._render_event.is_set():
