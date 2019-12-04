@@ -2,7 +2,7 @@ from core.render.single import Singleton
 import core.render.template
 import queue
 import multiprocessing as mp
-import PIL
+import PIL.ImageDraw
 from gfxhat import lcd
 
 __all__ = ["Render"]
