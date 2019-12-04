@@ -8,7 +8,7 @@ class Screen(metaclass=Singleton):
     def __init__(self):
         self.active = None
         self.callstack = []
-        self.test = [lambda *args: None] * 6 # TEMP
+        # self.test = [lambda *args: None] * 6 # TEMP
 
     def call_focus(self, generator, window):
         self.callstack.append((window, generator))
@@ -23,7 +23,8 @@ class Screen(metaclass=Singleton):
     def bind_handles(self):
         for key, handler in enumerate(self.active._handles):
             if handler is None:
-                self.test[key] = lambda *args: None # TEMP
+                touch.on(key, None)
+                # self.test[key] = lambda *args: None # TEMP
                 continue
             def wrap(handler):
                 def handle(ch, event):
