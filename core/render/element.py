@@ -1,7 +1,7 @@
 from core.render.window import Element, Vector
 from core.render.renderer import Render
 
-from core.render.template
+import core.render.template
 import PIL
 
 __all__ = ["Text"]
