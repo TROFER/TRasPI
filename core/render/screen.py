@@ -23,7 +23,7 @@ class Screen(metaclass=Singleton):
     def bind_handles(self):
         for key, handler in enumerate(self.active._handles):
             if handler is None:
-                touch.on(key, None)
+                touch.on(key, lambda c, e: None)
                 # self.test[key] = lambda *args: None # TEMP
                 continue
             def wrap(handler):
