@@ -70,7 +70,8 @@ class Render(metaclass=Singleton):
             while pixel is not None:
                 try:
                     pixel = self._changes.get(False)
-                    # print("PIXEL", pixel)
+                    if pixel is None:
+                        break
                     lcd.set_pixel(*pixel)
                     self._changes.task_done()
                 except queue.Empty:
