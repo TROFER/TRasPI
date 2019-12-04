@@ -7,6 +7,8 @@ from gfxhat import lcd
 
 __all__ = ["Render"]
 
+WIDTH, HEIGHT = 128, 64
+
 class Render(metaclass=Singleton):
 
     def __init__(self):
