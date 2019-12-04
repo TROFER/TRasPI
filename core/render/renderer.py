@@ -12,7 +12,7 @@ class Render(metaclass=Singleton):
     def __init__(self):
         self.draw = None
         self._image = None
-        self._buffer = mp.JoinableQueue() 
+        self._buffer = mp.JoinableQueue()
         self._frame_event = mp.Event()
         self._render_event = mp.Event()
 
@@ -24,7 +24,7 @@ class Render(metaclass=Singleton):
 
     def _next(self):
         self._image = core.render.template.background.copy()
-        self._draw = ImageDraw.Draw(self._image)
+        self._draw = PIL.ImageDraw.Draw(self._image)
 
     def start(self):
         if not self._render_event.is_set():
