@@ -1,10 +1,12 @@
+import queue
+import multiprocessing as mp
+
 
 class Lcd:
     def __init__(self):
         self.buffer = [["[]" for y in range(128)] for x in range(64)]
 
-    def set_pixel(self, x, y, value):
-        global lcd
+    def setpixel(self, x, y, value):
         if value == 1:
             value = "#"
         else:
@@ -15,9 +17,3 @@ class Lcd:
         print("\n")
         print("\n".join((" ".join(row) for row in self.buffer)))
         print("\n")
-
-
-a = Lcd()
-a.show()
-a.set_pixel(1,1,1)
-a.show()
