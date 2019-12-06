@@ -3,8 +3,7 @@ from gfxhat import lcd, backlight, touch
 from PIL import Image, ImageFont, ImageDraw
 import multiprocessing as mp
 import queue
-import time
-import textwrap
+
 
 # Default Globals For Menu
 WIDTH, HEIGHT = 128, 64
@@ -132,7 +131,7 @@ class Render:
     def set_changes(cls):
         while not cls._event.is_set():
             try:
-                while cls._changes is not queue.Empty:
+                while cls._changes is not None:
                     change = cls._changes.get()
                     lcd.setpixel(change[0], change[1], change[2])
                 lcd.show()
@@ -148,8 +147,7 @@ class Render:
             p_get_changes.join(), p_set_changes.join()
 
 
-
-class Screen:
+'''class Screen:
     _screen = None
 
     def __new__(cls, *args, **kwargs):
@@ -176,8 +174,10 @@ class Screen:
         if element is not None:
             cls._screen.showing = element
 
+'''
 
-class Element:
+
+'''class Element:
 
     def __init_subclass__(cls):
         for i in range(1, 7):
@@ -250,9 +250,10 @@ class Element:
                 element.focus(handle)
         except StopIteration:
             pass
+'''
 
-
-class TextContainer(Element):
+'''
+class TextContainer():
 
     def __init__(self, parent, pos, text="Default Text", font="/home/traspi/fonts/font.ttf", size=10, colour=1,
                  justify="C", char_limit=None):
@@ -307,10 +308,10 @@ class TextContainer(Element):
                            self.colour, self.font)
 
 
-class Square(Element):
+class Square():
 
     def __init__(self, parent, pos):
-        super().__init__(parent, pos)
+        super().__init__(parent, pos)'''
 
 
 # -----------------------Core Graphics Functions Classes------------------------#
