@@ -1,7 +1,3 @@
-import queue
-import multiprocessing as mp
-
-
 class Lcd:
     def __init__(self):
         self.buffer = [["[]" for y in range(128)] for x in range(64)]
