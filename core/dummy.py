@@ -1,8 +1,7 @@
 
-class lcd:
+class Lcd:
     def __init__(self):
-        self.buffer = [["[]" for y in range(64)] for x in range(128)]
-
+        self.buffer = [["[]" for y in range(128)] for x in range(64)]
 
     def set_pixel(self, x, y, value):
         global lcd
@@ -13,9 +12,12 @@ class lcd:
         self.buffer[x][y] = value
 
     def show(self):
-        for x in range(128):
-            print(" ".join(self.buffer[x][0:64]))
-            print("\n")
+        print("\n")
+        print("\n".join((" ".join(row) for row in self.buffer)))
+        print("\n")
 
-a = lcd()
+
+a = Lcd()
+a.show()
+a.set_pixel(1,1,1)
 a.show()
