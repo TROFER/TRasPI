@@ -1,5 +1,8 @@
 **__pycache__
 .vscode
+.programs/clock
+.programs/weather
+.programs/torch
 .idea
 test**
 **old_**
