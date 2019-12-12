@@ -46,34 +46,40 @@ class Render(metaclass=Singleton):
         cache = [[2 for y in range(HEIGHT)] for x in range(WIDTH)]
         # count = 0
         while self._render_event.is_set():
-            self._frame_event.wait()
             try:
-                frame = (i for i in self._buffer.get(False).getdata())
-                # count += 1
-                for y in range(HEIGHT):
-                    for x in range(WIDTH):
-                        pixel_value = next(frame)
-                        if pixel_value != cache[x][y]:
-                            self._changes.put((x, y, pixel_value))
-                        cache[x][y] = pixel_value
-                self._changes.put(None)
-                self._buffer.task_done()
-                self._frame_event.clear()
-                self._process_event.wait()
-                self._process_event.clear()
-            except queue.Empty:
-                continue
+                self._frame_event.wait()
+                try:
+                    frame = (i for i in self._buffer.get(False).getdata())
+                    # count += 1
+                    for y in range(HEIGHT):
+                        for x in range(WIDTH):
+                            pixel_value = next(frame)
+                            if pixel_value != cache[x][y]:
+                                self._changes.put((x, y, pixel_value))
+                            cache[x][y] = pixel_value
+                    self._changes.put(None)
+                    self._buffer.task_done()
+                    self._frame_event.clear()
+                    self._process_event.wait()
+                    self._process_event.clear()
+                except queue.Empty:
+                    continue
+            except KeyboardInterrupt:
+                print("KeyboardInterrupt - Render Cache")
 
     def _render_loop(self):
         while self._render_event.is_set():
             try:
-                pixel = self._changes.get(False)
-            except queue.Empty:
-                continue
-            if pixel is None:
-                # self._current_frame = pixel
-                lcd.show()
-                self._process_event.set()
-            else:
-                lcd.set_pixel(*pixel)
-            self._changes.task_done()
+                try:
+                    pixel = self._changes.get(False)
+                except queue.Empty:
+                    continue
+                if pixel is None:
+                    # self._current_frame = pixel
+                    lcd.show()
+                    self._process_event.set()
+                else:
+                    lcd.set_pixel(*pixel)
+                self._changes.task_done()
+            except KeyboardInterrupt:
+                print("KeyboardInterrupt - Render Loop")
