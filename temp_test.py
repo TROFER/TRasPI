@@ -11,7 +11,6 @@ class Window(core.render.Window):
         self.text = core.render.element.Text(core.Vector(64, 32), "MAIN WINDOW")
 
     def render(self):
-        print("Render Main")
         self.text.render()
 
 class SubWindow(core.render.Window):
@@ -25,7 +24,6 @@ class SubWindow(core.render.Window):
         self.index = 0
 
     def render(self):
-        print("Render Sub")
         self.text[self.index].render()
         self.index = (self.index + 1) % len(self.text)
 
