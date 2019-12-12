@@ -19,6 +19,7 @@ class Render(metaclass=Singleton):
         self._changes = mp.JoinableQueue()
         self._frame_event = mp.Event()
         self._render_event = mp.Event()
+        self._current_frame = None
 
     def frame(self):
         self._buffer.put(self._image)
@@ -42,6 +43,7 @@ class Render(metaclass=Singleton):
 
     def _render_cache(self):
         cache = [[2 for y in range(HEIGHT)] for x in range(WIDTH)]
+        name = 0
         while self._render_event.is_set():
             self._frame_event.wait()
             try:
@@ -52,9 +54,14 @@ class Render(metaclass=Singleton):
                         if pixel_value != cache[x][y]:
                             self._changes.put((x, y, pixel_value))
                         cache[x][y] = pixel_value
-                self._changes.put(None)
+                new = (name + 1) % 10
+                self._changes.put(new)
                 self._buffer.task_done()
                 self._frame_event.clear()
+                old = name
+                name = new
+                while old != self._current_frame:
+                    pass
             except queue.Empty:
                 continue
 
@@ -64,7 +71,8 @@ class Render(metaclass=Singleton):
                 pixel = self._changes.get(False)
             except queue.Empty:
                 continue
-            if pixel is None:
+            if not isinstance(pixel, tuple):
+                self._current_frame = pixel
                 lcd.show()
             else:
                 lcd.set_pixel(*pixel)
