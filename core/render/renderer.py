@@ -45,16 +45,9 @@ class Render(metaclass=Singleton):
         while self._render_event.is_set():
             self._frame_event.wait()
             try:
-                image = self._buffer.get(False)
-                frame = (i for i in image.getdata())
-<<<<<<< HEAD
+                frame = (i for i in self._buffer.get(False).getdata())
                 for y in range(HEIGHT):
                     for x in range(WIDTH):
-=======
-                # print("FRAME", frame)
-                for y in range(HEIGHT):
-                    for x in range(WIDTH): 
->>>>>>> 35194242971326926e63405c0618e9afe17e3499
                         pixel_value = next(frame)
                         if pixel_value != cache[x][y]:
                             self._changes.put((x, y, pixel_value))
