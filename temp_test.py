@@ -56,13 +56,9 @@ def start():
         while execute:
             core.render.render()
             core.render.Render().frame()
-    except KeyboardInterrupt:
-        print("KeyboardInterrupt - Exiting")
+    except BaseException:
+        print("Exiting")
     finally:
         core.render.Render().close()
-        print("Waiting 2 sec")
-        time.sleep(2)
-        print("Exiting")
-        raise KeyboardInterrupt from None
 
 start()

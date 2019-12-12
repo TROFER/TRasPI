@@ -4,11 +4,19 @@ import queue
 import multiprocessing as mp
 import PIL
 from gfxhat import lcd
+import trace
 # from core.dummy import lcd
 
 __all__ = ["Render"]
 
 WIDTH, HEIGHT = 128, 64
+
+def tracer(func):
+    def tracer(*args, **kwargs):
+        t = trace.Trace(outfile=core.render.template.PATH+"trace_log_{}".format(func.__name__))
+        t.runfunc(func, *args, **kwargs)
+        t.results().write_results()
+    return tracer
 
 class Render(metaclass=Singleton):
 
@@ -42,6 +50,7 @@ class Render(metaclass=Singleton):
     def close(self):
         self._render_event.clear()
 
+    @tracer
     def _render_cache(self):
         cache = [[2 for y in range(HEIGHT)] for x in range(WIDTH)]
         # count = 0
@@ -64,9 +73,10 @@ class Render(metaclass=Singleton):
                     self._process_event.clear()
                 except queue.Empty:
                     continue
-            except KeyboardInterrupt:
-                print("KeyboardInterrupt - Render Cache")
+            except BaseException:
+                pass
 
+    @tracer
     def _render_loop(self):
         while self._render_event.is_set():
             try:
@@ -81,5 +91,5 @@ class Render(metaclass=Singleton):
                 else:
                     lcd.set_pixel(*pixel)
                 self._changes.task_done()
-            except KeyboardInterrupt:
-                print("KeyboardInterrupt - Render Loop")
+            except BaseException:
+                pass
