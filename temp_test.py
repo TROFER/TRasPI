@@ -7,6 +7,7 @@ class Window(core.render.Window):
         self.text = core.render.element.Text(core.Vector(64, 32), "MAIN WINDOW")
 
     def render(self):
+        # print("Render", self)
         self.text.render()
 
 class SubWindow(core.render.Window):
@@ -46,21 +47,9 @@ def start():
     try:
         while execute:
             core.render.render()
+            # print("Frame")
             core.render.Render().frame()
     finally:
         core.render.Render().close()
 
 start()
-
-
-# from core.render import screen
-#
-# while True:
-#     core.render.render()
-#     i = input("Input:\n").lower().strip()
-#     if i == "a":
-#         screen.Screen().test[render.Button.UP.value](
-#             core.render.Button.UP.value, "press")
-#     elif i == "d":
-#         screen.Screen().test[render.Button.DOWN.value](
-#             core.render.Button.DOWN.value, "press")

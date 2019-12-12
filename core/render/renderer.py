@@ -1,9 +1,11 @@
 from core.render.single import Singleton
 import core.render.template
 import queue
-import multiprocessing as mp
+# import multiprocessing as mp
+import threading
 import PIL
 from gfxhat import lcd
+# from core.dummy import lcd
 
 __all__ = ["Render"]
 
@@ -14,16 +16,20 @@ class Render(metaclass=Singleton):
     def __init__(self):
         self.draw = None
         self._image = None
-        self._buffer = mp.JoinableQueue()
-        self._changes = mp.JoinableQueue()
-        self._frame_event = mp.Event()
-        self._render_event = mp.Event()
+        # self._buffer = mp.JoinableQueue()
+        self._buffer = queue.Queue()
+        # self._changes = mp.JoinableQueue()
+        self._changes = queue.Queue()
+        self._frame_event = threading.Event()
+        self._render_event = threading.Event()
 
     def frame(self):
         self._buffer.put(self._image)
         self._frame_event.set()
         self._next()
+        # print("START")
         self._buffer.join()
+        # print("Hang")
 
     def _next(self):
         self._image = core.render.template.background.copy()
@@ -31,10 +37,10 @@ class Render(metaclass=Singleton):
 
     def start(self):
         if not self._render_event.is_set():
-            self._next()
-            mp.Process(target=self._render_loop).start()
-            mp.Process(target=self._render_cache).start()
             self._render_event.set()
+            self._next()
+            threading.Thread(target=self._render_loop).start()
+            threading.Thread(target=self._render_cache).start()
 
     def close(self):
         self._render_event.clear()
@@ -51,7 +57,6 @@ class Render(metaclass=Singleton):
                     for y in range(HEIGHT):
                         pixel_value = next(frame)
                         # print("PV", pixel_value)
-                        # loc = x * WIDTH + y
                         if pixel_value != cache[x][y]:
                             # print("Diff Cache", pixel_value, x, y, loc)
                             self._changes.put((x, y, pixel_value))
@@ -59,22 +64,18 @@ class Render(metaclass=Singleton):
                 self._changes.put(None)
                 # print("Put None in Changes")
                 self._buffer.task_done()
+                self._frame_event.clear()
             except queue.Empty:
                 continue
 
     def _render_loop(self):
         while self._render_event.is_set():
-            self._frame_event.wait()
-            # print("Wait Pixel")
-            pixel = 1
-            while pixel is not None:
-                try:
-                    pixel = self._changes.get(False)
-                    if pixel is None:
-                        break
-                    lcd.set_pixel(*pixel)
-                    self._changes.task_done()
-                except queue.Empty:
-                    continue
-            lcd.show()
-            self._frame_event.clear()
+            try:
+                pixel = self._changes.get(False)
+            except queue.Empty:
+                continue
+            if pixel is None:
+                lcd.show()
+            else:
+                lcd.set_pixel(*pixel)
+            self._changes.task_done()

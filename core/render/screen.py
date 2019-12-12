@@ -1,5 +1,6 @@
 from core.render.single import Singleton
 from gfxhat import touch
+# from core.dummy import touch
 
 __all__ = ["Screen"]
 

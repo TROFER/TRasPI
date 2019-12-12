@@ -1,4 +1,5 @@
 from PIL import Image, ImageFont, ImageDraw
 
-background = Image.open("/home/traspi/core/menu.template").convert("P")
-std_font = "/home/traspi/fonts/font.ttf"
+PATH = "/home/traspi"
+background = Image.open(PATH+"core/menu.template").convert("P")
+std_font = PATH+"fonts/font.ttf"
