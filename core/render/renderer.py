@@ -43,24 +43,24 @@ class Render(metaclass=Singleton):
 
     def _render_cache(self):
         cache = [[2 for y in range(HEIGHT)] for x in range(WIDTH)]
-        count = 0
+        # count = 0
         while self._render_event.is_set():
             self._frame_event.wait()
             try:
                 frame = (i for i in self._buffer.get(False).getdata())
-                count += 1
+                # count += 1
                 for y in range(HEIGHT):
                     for x in range(WIDTH):
                         pixel_value = next(frame)
                         if pixel_value != cache[x][y]:
                             self._changes.put((x, y, pixel_value))
                         cache[x][y] = pixel_value
-                self._changes.put(count)
+                self._changes.put(None)
                 self._buffer.task_done()
                 self._frame_event.clear()
-                old = -1
-                while old > self._current_frame:
-                    pass
+                # old = -1
+                # while old > self._current_frame:
+                #     pass
             except queue.Empty:
                 continue
 
@@ -70,8 +70,8 @@ class Render(metaclass=Singleton):
                 pixel = self._changes.get(False)
             except queue.Empty:
                 continue
-            if not isinstance(pixel, tuple):
-                self._current_frame = pixel
+            if pixel is None:
+                # self._current_frame = pixel
                 lcd.show()
             else:
                 lcd.set_pixel(*pixel)
