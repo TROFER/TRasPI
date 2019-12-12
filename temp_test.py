@@ -2,6 +2,7 @@ from gfxhat import backlight
 backlight.set_all(255, 255, 255)
 backlight.show()
 import core
+import time
 
 class Window(core.render.Window):
 
@@ -55,7 +56,13 @@ def start():
         while execute:
             core.render.render()
             core.render.Render().frame()
+    except KeyboardInterrupt:
+        print("KeyboardInterrupt - Exiting")
     finally:
         core.render.Render().close()
+        print("Waiting 2 sec")
+        time.sleep(2)
+        print("Exiting")
+        raise KeyboardInterrupt from None
 
 start()
