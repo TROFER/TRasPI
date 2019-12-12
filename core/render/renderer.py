@@ -32,8 +32,8 @@ class Render(metaclass=Singleton):
         self._current_frame = -1
 
     def frame(self):
-        print("Flush Frame")
         self._buffer.put(self._image)
+        print("Flush Frame")
         self._frame_event.set()
         self._next()
         self._buffer.join()
@@ -75,6 +75,7 @@ class Render(metaclass=Singleton):
                     self._frame_event.clear()
                     self._process_event.wait()
                     self._process_event.clear()
+                    print("Clear")
                 except queue.Empty:
                     continue
             except BaseException:
