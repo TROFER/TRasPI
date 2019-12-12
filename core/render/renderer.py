@@ -4,6 +4,7 @@ import queue
 import multiprocessing as mp
 import PIL
 from gfxhat import lcd
+import gfxhat
 import trace
 # from core.dummy import lcd
 
