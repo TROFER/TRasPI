@@ -51,12 +51,15 @@ class Render(metaclass=Singleton):
             self._frame_event.wait()
             # print("Wait Frame")
             try:
-                frame = (i for i in self._buffer.get(False).getdata())
+                image = self._buffer.get(False)
+                frame = (i for i in image.getdata())
                 # print("FRAME", frame)
                 for x in range(WIDTH):
                     for y in range(HEIGHT):
                         pixel_value = next(frame)
-                        # print("PV", pixel_value)
+                        pv = image.getpixel((x, y))
+                        if pv != pixel_value:
+                            raise ValueError("I was Right: ({}, {}) {} {}".format(x, y, pixel_value, pv))
                         if pixel_value != cache[x][y]:
                             # print("Diff Cache", pixel_value, x, y, loc)
                             self._changes.put((x, y, pixel_value))
