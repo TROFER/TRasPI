@@ -19,6 +19,7 @@ class Render(metaclass=Singleton):
         self._changes = mp.JoinableQueue()
         self._frame_event = mp.Event()
         self._render_event = mp.Event()
+        self._process_event = mp.Event()
         self._current_frame = -1
 
     def frame(self):
@@ -58,9 +59,8 @@ class Render(metaclass=Singleton):
                 self._changes.put(None)
                 self._buffer.task_done()
                 self._frame_event.clear()
-                # old = -1
-                # while old > self._current_frame:
-                #     pass
+                self._process_event.wait()
+                self._process_event.clear()
             except queue.Empty:
                 continue
 
@@ -73,6 +73,7 @@ class Render(metaclass=Singleton):
             if pixel is None:
                 # self._current_frame = pixel
                 lcd.show()
+                self._process_event.set()
             else:
                 lcd.set_pixel(*pixel)
             self._changes.task_done()
