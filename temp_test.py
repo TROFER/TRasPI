@@ -7,7 +7,6 @@ class Window(core.render.Window):
         self.text = core.render.element.Text(core.Vector(64, 32), "MAIN WINDOW")
 
     def render(self):
-        # print("Render", self)
         self.text.render()
 
 class SubWindow(core.render.Window):
@@ -47,7 +46,6 @@ def start():
     try:
         while execute:
             core.render.render()
-            # print("Frame")
             core.render.Render().frame()
     finally:
         core.render.Render().close()

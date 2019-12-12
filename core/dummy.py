@@ -14,10 +14,8 @@ class lcd:
 
     @classmethod
     def show(cls):
-        print("\n\n\n////////////////////////////////////SHOW////////////////////////////////\n\n\n")
         for x in range(WIDTH):
             print(" ".join([cls.buffer[x][y] for y in range(HEIGHT)]))
-            # print("\n\n\n/////////LINE/////////////\n\n\n")
 
 
 class touch:
