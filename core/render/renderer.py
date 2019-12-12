@@ -32,11 +32,14 @@ class Render(metaclass=Singleton):
         self._current_frame = -1
 
     def frame(self):
+        print("Buffer Put")
         self._buffer.put(self._image)
-        print("Flush Frame")
+        print("Frame Set")
         self._frame_event.set()
         self._next()
+        print("Buffer Join")
         self._buffer.join()
+        print("Buffer Got")
 
     def _next(self):
         self._image = core.render.template.background.copy()
@@ -58,8 +61,9 @@ class Render(metaclass=Singleton):
         # count = 0
         while self._render_event.is_set():
             try:
+                print("Frame Wait")
                 self._frame_event.wait()
-                print("Frame Set")
+                print("Frame Got")
                 try:
                     frame = (i for i in self._buffer.get(False).getdata())
                     # count += 1
@@ -69,13 +73,16 @@ class Render(metaclass=Singleton):
                             if pixel_value != cache[x][y]:
                                 self._changes.put((x, y, pixel_value))
                             cache[x][y] = pixel_value
+                    print("Change Put")
                     self._changes.put(None)
-                    print("Put None")
-                    self._buffer.task_done()
+                    print("Frame Clear")
                     self._frame_event.clear()
+                    print("Task Done")
+                    self._buffer.task_done()
+                    print("Proc Wait")
                     self._process_event.wait()
+                    print("Proc Clear")
                     self._process_event.clear()
-                    print("Clear")
                 except queue.Empty:
                     continue
             except BaseException:
@@ -96,9 +103,9 @@ class Render(metaclass=Singleton):
     def _render_loop_2(self, pixel):
         if pixel is None:
             # self._current_frame = pixel
-            print("LCD Show")
-            lcd.show()
+            print("Proc Set")
             self._process_event.set()
+            lcd.show()
         else:
             lcd.set_pixel(*pixel)
         self._changes.task_done()
