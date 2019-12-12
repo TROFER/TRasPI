@@ -13,10 +13,15 @@ class SubWindow(core.render.Window):
 
     def __init__(self):
         super().__init__()
-        self.text = core.render.element.Text(core.Vector(64, 32), "SUB WINDOW")
+        self.text = [
+            core.render.element.Text(core.Vector(64, 32), "ABCDEFGHIJKLM"),
+            core.render.element.Text(core.Vector(64, 32), "NOPQRSTUVWXYZ"),
+        ]
+        self.index = 0
 
     def render(self):
-        self.text.render()
+        self.text[self.index].render()
+        self.index = (self.index + 1) % len(self.text)
 
 class Handle(core.render.Handler):
 
