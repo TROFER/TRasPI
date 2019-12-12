@@ -14,7 +14,7 @@ WIDTH, HEIGHT = 128, 64
 
 def tracer(func):
     def tracer(*args, **kwargs):
-        t = trace.Trace(ignoremods=(mp, queue, PIL, gfxhat), ignoredirs=("/usr/local/lib/",))
+        t = trace.Trace(ignoredirs=("/usr/local/lib/",))
         t.runfunc(func, *args, **kwargs)
         t.results().write_results()
     return tracer
