@@ -32,6 +32,7 @@ class Render(metaclass=Singleton):
         self._current_frame = -1
 
     def frame(self):
+        print("Flush Frame")
         self._buffer.put(self._image)
         self._frame_event.set()
         self._next()
@@ -51,13 +52,14 @@ class Render(metaclass=Singleton):
     def close(self):
         self._render_event.clear()
 
-    @tracer
+    # @tracer
     def _render_cache(self):
         cache = [[2 for y in range(HEIGHT)] for x in range(WIDTH)]
         # count = 0
         while self._render_event.is_set():
             try:
                 self._frame_event.wait()
+                print("Frame Set")
                 try:
                     frame = (i for i in self._buffer.get(False).getdata())
                     # count += 1
@@ -68,6 +70,7 @@ class Render(metaclass=Singleton):
                                 self._changes.put((x, y, pixel_value))
                             cache[x][y] = pixel_value
                     self._changes.put(None)
+                    print("Put None")
                     self._buffer.task_done()
                     self._frame_event.clear()
                     self._process_event.wait()
@@ -77,7 +80,6 @@ class Render(metaclass=Singleton):
             except BaseException:
                 pass
 
-    @tracer
     def _render_loop(self):
         while self._render_event.is_set():
             try:
@@ -85,12 +87,17 @@ class Render(metaclass=Singleton):
                     pixel = self._changes.get(False)
                 except queue.Empty:
                     continue
-                if pixel is None:
-                    # self._current_frame = pixel
-                    lcd.show()
-                    self._process_event.set()
-                else:
-                    lcd.set_pixel(*pixel)
-                self._changes.task_done()
+                self._render_loop_2(pixel)
             except BaseException:
                 pass
+
+    # @tracer
+    def _render_loop_2(self, pixel):
+        if pixel is None:
+            # self._current_frame = pixel
+            print("LCD Show")
+            lcd.show()
+            self._process_event.set()
+        else:
+            lcd.set_pixel(*pixel)
+        self._changes.task_done()
