@@ -54,8 +54,8 @@ class Render(metaclass=Singleton):
                 image = self._buffer.get(False)
                 frame = (i for i in image.getdata())
                 # print("FRAME", frame)
-                for x in range(WIDTH):
-                    for y in range(HEIGHT):
+                for y in range(HEIGHT):
+                    for x in range(WIDTH): 
                         pixel_value = next(frame)
                         pv = image.getpixel((x, y))
                         if pv != pixel_value:
