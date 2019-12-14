@@ -50,7 +50,7 @@ class TextContainer(Text):
 
     def __init__(self, pos: Vector, default="Text", *args, **kwargs):
         self._value = default
-        super().__init__(pos, str(self_value), *args, **kwargs)
+        super().__init__(pos, str(self._value), *args, **kwargs)
 
     def value(self, value=None):
         if value is not None:
