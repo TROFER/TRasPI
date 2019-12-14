@@ -8,9 +8,9 @@ __all__ = ["Text"]
 
 class Text(Element):
 
-    def __init__(self, pos: Vector, text="Default Text", size=10, colour=1, justify='C'):
+    def __init__(self, pos: Vector, text="Default Text", font_path=core.render.template.std_font, size=10, colour=1, justify='C'):
         super().__init__(pos)
-        self.text, self.size, self.colour, self.justify = text, size, colour, justify
+        self.text, self.size, self.colour, self.justify, self.font_path = text, size, colour, justify, font_path
         set_font(size), get_font_size(), _calc_justify()
 
     def get_font_size(self):
@@ -21,7 +21,7 @@ class Text(Element):
         get_font_size(), _calc_justify()
 
     def set_font(self, size):
-        self.font = ImageFont.truetype(core.render.template.std_font, size)
+        self.font = ImageFont.truetype(self.font_path, size)
 
     def render(self):
         self.Render.draw.text(self.position, self.text, self.colour, self.font)
