@@ -24,8 +24,8 @@ class Numpad(core.render.Window):
             self.selected_number.value(self.max)
 
     def subtract(self):
-        if not self.selected_number.value() - self.step < self.max:
-            self.selected_number.value(self.selected_number - self.step)
+        if not self.selected_number.value() - self.step < self.min:
+            self.selected_number.value(self.selected_number.value() - self.step)
         else:
             self.selected_number.value(self.min)
 
@@ -36,8 +36,8 @@ class Numpad(core.render.Window):
             self.right_step.text(f"+{self.step}")
 
     def units_down(self):
-        if not self.step / 10 < 1:
-            self.step /= 10
+        if not self.step // 10 < 1:
+            self.step //= 10
             self.left_step.text(f"-{self.step}")
             self.right_step.text(f"+{self.step}")
 
