@@ -10,7 +10,7 @@ class Text(Element):
 
     def __init__(self, pos: Vector, text="Default Text", font="std", size=10, colour=1, justify='C'):
         super().__init__(pos)
-        self._text, self._size, self.colour, self.justify, self._font = text, size, colour, justify, Font(font, size)
+        self._text, self._size, self.colour, self.justify, self._font = str(text), size, colour, justify, Font(font, size)
         self._calc_justify()
 
     def render(self):
@@ -23,7 +23,7 @@ class Text(Element):
 
     def text(self, text=None):
         if name is not None:
-            self._text = text
+            self._text = str(text)
             self._calc_justify()
         return self._text
 
