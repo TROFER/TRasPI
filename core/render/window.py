@@ -62,7 +62,7 @@ class Window(metaclass=MetaWindow):
         def focus(self, *args, **kwargs):
             result = func(self, *args, **kwargs)
             if type(result).__name__ == "generator":
-                return self.active._handle_focus(None, result)
+                return Screen().active._handle_focus(None, result)
         return focus
 
 class MetaElement(type):
