@@ -1,6 +1,7 @@
 from core.render.single import Singleton
 try:
     import gfxhat as display
+    import display.touch
 except ModuleNotFoundError:
     import core.render.dummy as display
 

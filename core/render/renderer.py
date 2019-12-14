@@ -7,6 +7,7 @@ import PIL.ImageDraw
 
 try:
     import gfxhat as display
+    import display.lcd
 except ModuleNotFoundError:
     import core.render.dummy as display
 
