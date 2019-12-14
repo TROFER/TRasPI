@@ -12,6 +12,11 @@ class MetaWindow(type):
         attrs["_handles"] = [None] * 6
         return super().__new__(cls, name, bases, attrs)
 
+    def __call__(cls, *args, **kwargs):
+        self = super().__call__(*args, **kwargs)
+        self.elements = {}
+        return self
+
 class Window(metaclass=MetaWindow):
 
     _handles = [None] * 6
