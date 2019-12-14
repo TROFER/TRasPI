@@ -1,8 +1,10 @@
 import core
 
-class Error(core.render.Window):
+__all__ = ["Info", "Warning", "Error"]
 
-    template = f"{core.sys.PATH}core/asset/template/error.template"
+class Info(core.render.Window):
+
+    template = f"{core.sys.PATH}core/asset/template/info.template"
 
     def __init__(self, message):
         self.message = core.render.element.Text(core.Vector(124, 27), message, size=10, justify="R")
@@ -13,13 +15,13 @@ class Error(core.render.Window):
 class Handle(core.render.Handler):
 
     key = core.render.Button.CENTRE
-    window = Error
+    window = Info
 
     def press(self):
         self.window.finish()
 
-class Warning(Error):
+class Warning(Info):
   template = f"{core.sys.PATH}core/asset/template/warning.template"
 
-class Info(Error):
-    template = f"{core.sys.PATH}core/asset/template/info.template"
+class Error(Info):
+    template = f"{core.sys.PATH}core/asset/template/error.template"

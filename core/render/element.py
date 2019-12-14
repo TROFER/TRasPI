@@ -43,6 +43,18 @@ class Text(Element):
             self.justify = "C"
             self.position = self.pos - fs
 
+class TextContainer(Text):
+
+    def __init__(self, self, pos: Vector, default="Text", *args, **kwargs):
+        self._value = default
+        super().__init__(pos, str(self_value), *args, **kwargs)
+
+    def value(self, value=None):
+        if value is not None:
+            self._value = value
+            self.text(str(self._value))
+        return self.value
+
 class Rectangle(Element):
 
     def __init__(self, pos: Vector, width: int, height: int):

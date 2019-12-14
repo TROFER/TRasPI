@@ -1,5 +1,7 @@
 import core
 
+__all__ = ["Menu"]
+
 class Menu(core.render.Window):
 
     def __init__(self, **items):
