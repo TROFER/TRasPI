@@ -11,8 +11,12 @@ __all__ = ["Window", "Element"]
 
 class MetaWindow(type):
 
-    # def __new__(cls, name, bases, attrs):
-    #     return super().__new__(cls, name, bases, attrs)
+    def __new__(cls, name, bases, attrs):
+        if "template" in attrs:
+            template = attrs["template"]
+            if isinstance(template, str):
+                attrs["template"] = PIL.Image.open(template).convert("P")
+        return super().__new__(cls, name, bases, attrs)
 
     def __init__(cls, name, bases, attrs):
         cls._handles = [i for i in cls._handles]
@@ -26,18 +30,13 @@ class MetaWindow(type):
 class Window(metaclass=MetaWindow):
 
     _handles = [None] * 6
-    template = PIL.Image.open(PATH+"core/asset/template/menu.template").convert("P")
+    template = PATH+"core/asset/template/menu.template"
 
     def __init__(self):
         self.elements = {}
 
     def render(self):
         pass
-
-    def template(self, image: str):
-        if isinstance(image, str):
-            image = PIL.Image.open(image).convert("P")
-        self._template = image
 
     def show(self):
         Screen().show(self)

@@ -3,7 +3,8 @@ from core.sys import WIDTH, HEIGHT
 from core.render.screen import Screen
 import queue
 import multiprocessing as mp
-import PIL
+import PIL.ImageDraw
+
 try:
     import gfxhat as display
 except ModuleNotFoundError:
@@ -30,7 +31,7 @@ class Render(metaclass=Singleton):
         self._buffer.join()
 
     def _next(self):
-        self._image = Screen().template()
+        self._image = Screen().template().copy()
         self.draw = PIL.ImageDraw.Draw(self._image)
 
     def start(self):
