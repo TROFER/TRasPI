@@ -37,7 +37,7 @@ class Text(Element):
         return self._size
 
     def _calc_justify(self):
-        fs = Vector(self._font.font_size(self._text)) // 2
+        fs = Vector(*self._font.font_size(self._text)) // 2
         if self.justify == "L":
             self.position = (self.pos[0], self.pos[1] - fs[1])
         elif self.justify == "R":
