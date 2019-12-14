@@ -8,7 +8,9 @@ import PIL.ImageDraw
 try:
     import gfxhat as display
     import display.lcd
-except ModuleNotFoundError:
+except ModuleNotFoundError as e:
+    print(e)
+    raise e
     import core.render.dummy as display
 
 __all__ = ["Render"]

@@ -2,7 +2,9 @@ from core.render.single import Singleton
 try:
     import gfxhat as display
     import display.touch
-except ModuleNotFoundError:
+except ModuleNotFoundError as e:
+    print(e)
+    raise e
     import core.render.dummy as display
 
 __all__ = ["Screen"]
