@@ -1,41 +1,47 @@
 from core.render.window import Element, Vector
 from core.render.renderer import Render
+from core.render.font import Font
 
-import core.render.template
 from PIL import ImageFont
 
 __all__ = ["Text"]
 
 class Text(Element):
 
-    def __init__(self, pos: Vector, text="Default Text", font_path=core.render.template.std_font, size=10, colour=1, justify='C'):
+    def __init__(self, pos: Vector, text="Default Text", font="std", size=10, colour=1, justify='C'):
         super().__init__(pos)
-        self.text, self.size, self.colour, self.justify, self.font_path = text, size, colour, justify, font_path
-        set_font(size), get_font_size(), _calc_justify()
-
-    def get_font_size(self):
-        self.font_size = self.font.getsize(self.text)
-
-    def set_text(self, text):
-        self.text = text
-        get_font_size(), _calc_justify()
-
-    def set_font(self, size):
-        self.font = ImageFont.truetype(self.font_path, size)
+        self._text, self._size, self.colour, self.justify, self._font = text, size, colour, justify, Font(font, size)
+        self._calc_justify()
 
     def render(self):
-        self.Render.draw.text(self.position, self.text, self.colour, self.font)
+        self.Render.draw.text(self.position, self._text, self.colour, self._font.font)
+
+    def font(self, name=None) -> Font:
+        if name is not None:
+            self._font = Font(name, self._size)
+        return self.font
+
+    def text(self, text=None):
+        if name is not None:
+            self._text = text
+            self._calc_justify()
+        return self._text
+
+    def size(self, size=None):
+        if name is not None:
+            self._size = size
+            self._calc_justify()
+        return self._size
 
     def _calc_justify(self):
-        if self.justify == "C":
-            self.position = (self.pos[0] - (self.font_size[0] // 2), self.pos[1] - (self.font_size[1] // 2))
-        elif self.justify == "L":
-            self.position = (self.pos[0], self.pos[1] - (self.font_size[1] // 2))
+        fs = Vector(self._font.font_size(self._text)) // 2
+        if self.justify == "L":
+            self.position = (self.pos[0], self.pos[1] - fs[1])
         elif self.justify == "R":
-            self.position = (self.pos[0] - self.font_size[0], self.pos[1] - (self.font_size[1] // 2))
+            self.position = (self.pos[0] - fs[0], self.pos[1] - fs[1])
         else:
             self.justify = "C"
-            self.position = (self.pos[0] - (self.font_size[0] // 2), self.pos[1] - (self.font_size[1] // 2))
+            self.position = self.pos - fs
 
 class Rectangle(Element):
 
