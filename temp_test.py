@@ -1,6 +1,3 @@
-from gfxhat import backlight
-backlight.set_all(255, 255, 255)
-backlight.show()
 import core
 import time
 

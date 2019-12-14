@@ -3,8 +3,10 @@ import core.render.template
 import queue
 import multiprocessing as mp
 import PIL
-from gfxhat import lcd
-# from core.dummy import lcd
+try:
+    import gfxhat as display
+except ModuleNotFoundError:
+    import core.render.dummy as display
 
 __all__ = ["Render"]
 
@@ -70,7 +72,7 @@ class Render(metaclass=Singleton):
                 continue
             if pixel is None:
                 self._process_event.set()
-                lcd.show()
+                display.lcd.show()
             else:
-                lcd.set_pixel(*pixel)
+                display.lcd.set_pixel(*pixel)
             self._changes.task_done()

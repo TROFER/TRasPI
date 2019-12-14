@@ -1,10 +1,10 @@
 from PIL import ImageFont
-
+from core.sys import PATH
 
 def font_size(height, path=None, text="sample text"):
     height = int(height)
     if path is None:
-            path="D:/Documents/Programing/TrasPi Operating System/fonts/font.ttf"
+            path = PATH + "fonts/font.ttf"
     def printout(size, height, path):
         print(f"{'#'*75}\nFont Size: {size} Path: {path[0:25]}... is closest match for {height}px\n{'#'*75}")
     results, maxsize = [], 100
@@ -18,7 +18,7 @@ def font_size(height, path=None, text="sample text"):
             else:
                 printout(size, height, path)
         printout((min(results)[1]), height, path)
-        
+
     except KeyboardInterrupt:
         quit()
 
@@ -26,7 +26,7 @@ def font_size(height, path=None, text="sample text"):
 def pixels(size, path=None, text=None):
     try:
         if path is None:
-            path="D:/Documents/Programing/TrasPi Operating System/fonts/font.ttf"
+            path = PATH + "fonts/font.ttf"
         if text is None:
             text = "Sample Text"
         x, y = (ImageFont.truetype(path, int(size)).getsize(text))
@@ -47,11 +47,11 @@ def main():
     while True:
         commands = {"pixels": pixels, "font size": font_size, "help": helpmenu}
         str_command = input("Type Help for Instructions\n> ").lower().split(" -")
-        try: 
+        try:
             command = commands[str_command[0]]
-            command(*str_command[1:len(str_command)])
+            command(*str_command[1:])
         except KeyError:
             print(f"{str_command[0]} is not a command")
-        
+
 
 main()

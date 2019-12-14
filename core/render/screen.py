@@ -1,6 +1,8 @@
 from core.render.single import Singleton
-from gfxhat import touch
-# from core.dummy import touch
+try:
+    import gfxhat as display
+except ModuleNotFoundError:
+    import core.render.dummy as display
 
 __all__ = ["Screen"]
 
@@ -23,7 +25,7 @@ class Screen(metaclass=Singleton):
     def bind_handles(self):
         for key, handler in enumerate(self.active._handles):
             if handler is None:
-                touch.on(key, lambda c, e: None)
+                display.touch.on(key, lambda c, e: None)
                 continue
             def wrap(handler):
                 def handle(ch, event):
@@ -35,7 +37,7 @@ class Screen(metaclass=Singleton):
                         return self.active._handle_focus(None, result)
 
                 return handle
-            touch.on(key, wrap(handler))
+            display.touch.on(key, wrap(handler))
 
     def render(self):
         self.active.render()
