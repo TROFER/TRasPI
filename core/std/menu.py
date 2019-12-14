@@ -5,7 +5,7 @@ __all__ = ["Menu"]
 class Menu(core.render.Window):
 
     def __init__(self, **items):
-        self.menu_items = [(core.render.element.Text(core.Vector(3, 32), text, size=10, justify="L"), func) for text, func in items.items()]
+        self.menu_items = [(core.render.element.Text(core.Vector(3, 32), text, size=10, justify="L", colour=0), func) for text, func in items.items()]
         self.index = 0
 
     def render(self):
