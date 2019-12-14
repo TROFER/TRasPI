@@ -11,6 +11,7 @@ class _Font(type):
                 for data in cls._instances:
                     if name in data:
                         name, path = data
+                        break
             else:
                 cls._instances.add((name, path))
                 return None
@@ -50,6 +51,5 @@ class Font(metaclass=_Font):
         return self._font.getsize(text)
 
     def _compute_font(self):
-        print(self._path)
         self._font = PIL.ImageFont.truetype(self._path, self._size)
         return self._font
