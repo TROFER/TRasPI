@@ -45,17 +45,3 @@ class Handle(core.render.Handler):
 
 w = Window()
 w.show()
-
-def start():
-    execute = True
-    core.render.Render().start()
-    try:
-        while execute:
-            core.render.render()
-            core.render.Render().frame()
-    except BaseException:
-        print("Exiting")
-    finally:
-        core.render.Render().close()
-
-start()

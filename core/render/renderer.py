@@ -1,7 +1,6 @@
 from core.render.single import Singleton
 from core.sys import WIDTH, HEIGHT
 from core.render.screen import Screen
-import core.render.template
 import queue
 import multiprocessing as mp
 import PIL
