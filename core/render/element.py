@@ -56,7 +56,7 @@ class TextContainer(Text):
         if value is not None:
             self._value = value
             self.text(str(self._value))
-        return self.value
+        return self._value
 
 class Rectangle(Element):
 
