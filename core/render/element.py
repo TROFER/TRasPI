@@ -45,7 +45,7 @@ class Text(Element):
 
 class TextContainer(Text):
 
-    def __init__(self, self, pos: Vector, default="Text", *args, **kwargs):
+    def __init__(self, pos: Vector, default="Text", *args, **kwargs):
         self._value = default
         super().__init__(pos, str(self_value), *args, **kwargs)
 
