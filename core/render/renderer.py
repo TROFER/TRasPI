@@ -72,7 +72,7 @@ class Render(metaclass=Singleton):
                 continue
             if pixel is None:
                 self._process_event.set()
-                display.lcd.show()
+                lcd.show()
             else:
-                display.lcd.set_pixel(*pixel)
+                lcd.set_pixel(*pixel)
             self._changes.task_done()

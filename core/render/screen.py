@@ -28,7 +28,7 @@ class Screen(metaclass=Singleton):
     def bind_handles(self):
         for key, handler in enumerate(self.active._handles):
             if handler is None:
-                display.touch.on(key, lambda c, e: None)
+                touch.on(key, lambda c, e: None)
                 continue
             def wrap(handler):
                 def handle(ch, event):
@@ -40,7 +40,7 @@ class Screen(metaclass=Singleton):
                         return self.active._handle_focus(None, result)
 
                 return handle
-            display.touch.on(key, wrap(handler))
+            touch.on(key, wrap(handler))
 
     def render(self):
         self.active.render()
