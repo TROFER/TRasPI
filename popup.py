@@ -17,3 +17,9 @@ class Handle(core.render.Handler):
 
     def press(self):
         self.window.finish()
+
+class Warning(Error):
+  template = f"{core.sys.PATH}core/assets/warning.template"
+
+class Info(Error):
+    template = f"{core.sys.PATH}core/assets/info.template"
