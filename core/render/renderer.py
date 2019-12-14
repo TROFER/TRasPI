@@ -1,4 +1,5 @@
 from core.render.single import Singleton
+from core.sys import WIDTH, HEIGHT
 import core.render.template
 import queue
 import multiprocessing as mp
@@ -9,8 +10,6 @@ except ModuleNotFoundError:
     import core.render.dummy as display
 
 __all__ = ["Render"]
-
-WIDTH, HEIGHT = 128, 64
 
 class Render(metaclass=Singleton):
 
