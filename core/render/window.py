@@ -23,7 +23,7 @@ class MetaWindow(type):
 class Window(metaclass=MetaWindow):
 
     _handles = [None] * 6
-    template = Image.open(PATH+"core/assets/menu.template").convert("P")
+    template = PIL.Image.open(PATH+"core/assets/menu.template").convert("P")
 
     def __init__(self):
         self.elements = {}
