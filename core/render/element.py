@@ -25,7 +25,7 @@ class Text(Element):
         return self.font
 
     def text(self, text=None):
-        if name is not None:
+        if text is not None:
             self._text = str(text)
             self._calc_justify()
         return self._text
