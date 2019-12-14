@@ -47,3 +47,19 @@ class Screen(metaclass=Singleton):
 
 def render():
     Screen().render()
+
+def loop(func: callable=None):
+    if func is None:
+        func = lambda: None
+
+    renderer = core.render.Render()
+    renderer.start()
+    try:
+        while renderer._render_event.is_set():
+            func()
+            core.render.render()
+            renderer.frame()
+    except BaseException:
+        print("Exiting")
+    finally:
+        renderer.close()
