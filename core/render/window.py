@@ -4,6 +4,7 @@ from core.render.handle import Handler
 from core.render.screen import Screen
 from core.render.renderer import Render
 # import core.render.template
+from core.sys import PATH
 
 import PIL.Image
 
