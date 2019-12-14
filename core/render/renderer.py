@@ -1,5 +1,6 @@
 from core.render.single import Singleton
 from core.sys import WIDTH, HEIGHT
+from core.render.screen import Screen
 import core.render.template
 import queue
 import multiprocessing as mp
@@ -30,7 +31,7 @@ class Render(metaclass=Singleton):
         self._buffer.join()
 
     def _next(self):
-        self._image = core.render.template.background.copy()
+        self._image = Screen().template()
         self.draw = PIL.ImageDraw.Draw(self._image)
 
     def start(self):

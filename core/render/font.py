@@ -42,6 +42,7 @@ class Font(metaclass=_Font):
         self._size = value
         self._compute_font()
 
+    @property
     def font(self):
         return self._font
 

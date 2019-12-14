@@ -12,6 +12,9 @@ class Screen(metaclass=Singleton):
         self.active = None
         self.callstack = []
 
+    def template(self):
+        return self.active.template
+
     def call_focus(self, generator, window):
         self.callstack.append((window, generator))
 
