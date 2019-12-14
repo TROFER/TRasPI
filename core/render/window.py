@@ -3,7 +3,7 @@ from core.render.enums import Button, Event
 from core.render.handle import Handler
 from core.render.screen import Screen
 from core.render.renderer import Render
-import core.render.template
+# import core.render.template
 
 import PIL.Image
 
@@ -23,7 +23,7 @@ class MetaWindow(type):
 class Window(metaclass=MetaWindow):
 
     _handles = [None] * 6
-    template = core.render.template.background
+    template = Image.open(PATH+"core/assets/menu.template").convert("P")
 
     def __init__(self):
         self.elements = {}
