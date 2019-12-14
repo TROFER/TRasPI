@@ -30,7 +30,7 @@ class MetaWindow(type):
 class Window(metaclass=MetaWindow):
 
     _handles = [None] * 6
-    template = PATH+"core/asset/template/menu.template"
+    template = PATH+"core/asset/template/default.template"
 
     def __init__(self):
         self.elements = {}
