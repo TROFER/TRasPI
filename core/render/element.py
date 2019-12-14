@@ -1,10 +1,13 @@
 from core.render.window import Element, Vector
 from core.render.renderer import Render
 from core.render.font import Font
+from core.sys import PATH
 
 from PIL import ImageFont
 
 __all__ = ["Text"]
+
+Font("std", PATH+"asset/font/font.ttf")
 
 class Text(Element):
 
