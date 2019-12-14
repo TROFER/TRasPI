@@ -6,12 +6,9 @@ import multiprocessing as mp
 import PIL.ImageDraw
 
 try:
-    import gfxhat as display
-    import display.lcd
-except ModuleNotFoundError as e:
-    print(e)
-    raise e
-    import core.render.dummy as display
+    from gfxhat import lcd
+except ModuleNotFoundError:
+    from core.render.dummy import lcd
 
 __all__ = ["Render"]
 
