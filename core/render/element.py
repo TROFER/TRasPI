@@ -7,7 +7,7 @@ from PIL import ImageFont
 
 __all__ = ["Text"]
 
-Font("std", PATH+"asset/font/font.ttf")
+Font("std", PATH+"core/asset/font/font.ttf")
 
 class Text(Element):
 
