@@ -7,7 +7,7 @@ class Info(core.render.Window):
     template = f"{core.sys.PATH}core/asset/template/info.template"
 
     def __init__(self, message):
-        self.message = core.render.element.Text(core.Vector(124, 27), message, size=10, justify="R")
+        self.message = core.render.element.Text(core.Vector(124, 27), message, size=10, justify="L")
 
     def render(self):
         self.message.render()
