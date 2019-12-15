@@ -37,7 +37,7 @@ class Text(Element):
         return self._size
 
     def _calc_justify(self):
-        fs = Vector(*self._font.font_size(self._text))
+        fs = Vector(*self._font_size())
         if self.justify == "L":
             self.position = (self.pos[0], self.pos[1] - fs[1] // 2)
         elif self.justify == "R":
@@ -45,6 +45,9 @@ class Text(Element):
         else:
             self.justify = "C"
             self.position = self.pos - fs // 2
+
+    def _font_size(self):
+        return self._font.font_size(self._text)
 
 class TextContainer(Text):
 
@@ -71,11 +74,34 @@ class TextContainer(Text):
         self._value = value
         self.text(str(func(self._value)))
 
+class TextBox(Text):
+
+    def __init__(self, pos: Vector, *args, **kwargs):
+        self.rect = Rectangle(pos, Vector(1, 1))
+        super().__init__(pos, *args, **kwargs)
+        self.rect.colour = self.colour
+
+    def _calc_justify(self):
+        super()._calc_justify()
+        self.rect.pos = self.position
+        self.rect.pos2 = self._font_size()
+        self.rect
+
 class Rectangle(Element):
 
-    def __init__(self, pos: Vector, width: int, height: int):
-        super().__init__(pos)
-        self.width, self.height = width, height
+    def __init__(self, pos1, pos2, colour=1, fill=None, width=1, rel=True):
+        super().__init__(pos1)
+        self.pos2 = pos2
+        self.colour, self.fill = colour, fill
+        self.width = width
+        if not rel:
+            self.pos_2 = self._calc_pos
+
+    def _calc_pos(self, vec: Vector):
+        self.pos2 = vec - self.pos
+
+    def pos_2(self, vec: Vector):
+        self.pos2 = vec
 
     def render(self):
-        self.Render.draw.rect()
+        self.Render.draw.rectangle([self.pos, self.pos + self.pos2], self.fill, self.colour, self.width)
