@@ -48,14 +48,23 @@ class Text(Element):
 
 class TextContainer(Text):
 
-    def __init__(self, pos: Vector, default="Text", *args, **kwargs):
+    _value_hook = {}
+
+    def __init__(self, pos: Vector, default="Text", *args, func=str, **kwargs):
+        if isinstance(default, self.__class__):
+            self._value_hook[default].append(self)
+            default = default._value
         self._value = default
+        self._func = func
         super().__init__(pos, str(self._value), *args, **kwargs)
+        self._value_hook[self] = []
 
     def value(self, value=None):
         if value is not None:
             self._value = value
-            self.text(str(self._value))
+            self.text(func(str(self._value)))
+            for element in self._value_hook:
+                element.value(self._value)
         return self._value
 
 class Rectangle(Element):
