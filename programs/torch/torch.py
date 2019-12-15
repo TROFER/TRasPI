@@ -1,6 +1,11 @@
 import core
 import coloursys
 import time
+####MAINWINDOW####
+class Mainwindow(core.std.Menu):
+
+    def __init__():
+        super().__init__(Torch=Torch, RGB=RGB, **{"Emergency Light": EmergencyLight})
 
 ######TORCH######
 class Torch(core.render.Window):
@@ -116,4 +121,4 @@ class Handle(core.render.Handler):
 
 
 
-main = Window()
+main = Mainwindow()
