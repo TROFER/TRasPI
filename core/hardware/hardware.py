@@ -8,7 +8,6 @@ from core.render.enums import Button as CoreButton
 class Backlight(metaclass=Singleton):
 
     def fill(r, g, b, percent=100):
-        _colours = [colour / 100 for colour in colours]
         backlight.set_all(round(r * percent), round(g * percent), round(b * percent))
         backlight.show()
 
