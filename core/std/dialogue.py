@@ -48,7 +48,7 @@ class Handle(core.render.Handler):
     window = Query
 
     def press(self):
-        self.window.finish(self.selection#NOT RITE)
+        self.window.finish(self.selection) #Not Workin
 
 class Handle(core.render.Handler):
 
