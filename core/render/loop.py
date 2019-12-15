@@ -14,5 +14,6 @@ def loop(func: callable=None):
             renderer.frame()
     except BaseException as e:
         print("Exiting", e)
+        raise
     finally:
         renderer.close()

@@ -3,6 +3,7 @@ try:
     from gfxhat import touch
 except ModuleNotFoundError:
     from core.hardware.dummy import touch
+import PIL.Image # TEMP:
 
 __all__ = ["Screen"]
 
@@ -16,6 +17,8 @@ class Screen(metaclass=Singleton):
         touch.set_repeat_rate(50)
 
     def template(self):
+        if isinstance(self.active.template, str): # TEMP: 
+            self.active.template = PIL.Image.open(self.active.template).convert("P")
         return self.active.template
 
     def call_focus(self, generator, window):
