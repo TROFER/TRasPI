@@ -1,5 +1,5 @@
 import core
-import coloursys
+import colorsys
 import time
 ####MAINWINDOW####
 class Mainwindow(core.std.Menu):
