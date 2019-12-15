@@ -16,16 +16,11 @@ class Torch(core.render.Window):
 
     def change_state(self):
         self.state = not self.state
-<<<<<<< HEAD
         self.template = f"{core.sys.PATH0}/programs/torch/{self.state}.template"
         if self.state:
             core.hardware.backlight.fill(225, 225, 225)
         else:
             core.hardware.backlight.fill(0, 0, 0)
-=======
-        self.template = f"{core.sys.PATH}/programs/torch/{self.state}.template"
-        core.render.hard
->>>>>>> 65b13298740fc863915b4cbc365bd8b68faa5aab
 
 class Handle(core.render.Handler):
 
