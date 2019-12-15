@@ -1,6 +1,6 @@
 import core
 
-__all__ = ["Diologue"]
+__all__ = ["Query"]
 
 class Query(core.render.Window):
 
