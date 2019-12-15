@@ -45,9 +45,6 @@ class Window(metaclass=MetaWindow):
     def show(self):
         pass
 
-    def clear(self):
-        pass
-
     def finish(self, value=None):
         parent, generator = Screen().call_lost()
         parent._show()

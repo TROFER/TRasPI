@@ -22,7 +22,6 @@ class Screen(metaclass=Singleton):
         return self.callstack.pop()
 
     def show(self, window):
-        self.active.clear()
         self.active = window
         self.bind_handles()
 
