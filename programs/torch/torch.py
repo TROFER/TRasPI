@@ -15,7 +15,7 @@ class Torch(core.render.Window):
         self.template = f"{core.sys.PATH}/programs/torch/{self.state}.template"
 
     def change_state(self):
-        self.state not = self.state
+        self.state = not self.state
         self.template = f"{core.sys.PATH0}/programs/torch/{self.state}.template"
         core.render.hard
 
