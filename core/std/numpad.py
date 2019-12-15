@@ -10,8 +10,8 @@ class Numpad(core.render.Window):
         self.min, self.max, self.default = min, max, default
         self.step = 1
         self.selected_number = core.render.element.TextContainer(core.Vector(64, 32), default)
-        self.left_step = core.render.element.Text(core.Vector(3, 32), f"-{self.step}", justify='R')
-        self.right_step = core.render.element.Text(core.Vector(125, 32), f"+{self.step}", justify='L')
+        self.left_step = core.render.element.Text(core.Vector(3, 32), f"-{self.step}", justify='L')
+        self.right_step = core.render.element.Text(core.Vector(125, 32), f"+{self.step}", justify='R')
 
     def render(self):
         self.selected_number.render()
