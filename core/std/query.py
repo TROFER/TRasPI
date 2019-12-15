@@ -9,13 +9,12 @@ class Query(core.render.Window):
     def __init__(self, message, title="Query", cancel=False):
         self.message = core.render.element.Text(core.Vector(64, 16), message)
         self.title = core.render.element.Text(core.Vector(5, 5), title)
-        self.selection = True
         if cancel:
             self.bttn_yes = core.render.element.Text(core.Vector(42, 56), "Yes")
             self.bttn_no = core.render.element.Text(core.Vector(84, 56), "No")
             self.bttn_cancel = core.render.element.Text(core.Vector(126, 56), "Cancel")
         else:
-            self.canel = None
+            self.cancel = None
             self.bttn_no = core.render.element.Text(core.Vector(31, 56), "No")
             self.bttn_cancel = core.render.element.Text(core.Vector(94, 56), "Cancel")
 
@@ -26,19 +25,13 @@ class Query(core.render.Window):
         if self.cancel is not None:
             self.cancel.render()
 
-    def select_left(self):
-        self.selection = True
-
-    def select_right(self):
-        self.selection = False
-
 class Handle(core.render.Handler):
 
     key = core.render.Button.LEFT
     window = Query
 
     def press(self):
-        self.window.select_left()
+        self.window.finish(True)
 
 class Handle(core.render.Handler):
 
@@ -46,17 +39,7 @@ class Handle(core.render.Handler):
     window = Query
 
     def press(self):
-        self.window.select_right()
-
-
-class Handle(core.render.Handler):
-
-    key = core.render.Button.CENTRE
-    window = Query
-
-    def press(self):
-        self.window.finish(self.window.selection)
-
+        self.window.finish(False)
 
 class Handle(core.render.Handler):
 
@@ -64,4 +47,4 @@ class Handle(core.render.Handler):
     window = Query
 
     def press(self):
-        self.window.finish()
+        self.window.finish(None)
