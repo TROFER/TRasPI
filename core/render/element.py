@@ -1,6 +1,6 @@
 from core.render.window import Element, Vector
 from core.render.renderer import Render
-from core.render.asset import Font
+from core.asset.font import Font
 from core.sys import PATH
 
 from PIL import ImageFont
