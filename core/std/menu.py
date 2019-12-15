@@ -4,7 +4,7 @@ __all__ = ["Menu"]
 
 class Menu(core.render.Window):
 
-    template = f"{core.sys.PATH}core/asset/template/menu.template"
+    template = f"{core.sys.PATH}core/resource/template/menu.template"
 
     def __init__(self, **items):
         items["Return"] = self.finish

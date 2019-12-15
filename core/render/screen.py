@@ -2,7 +2,7 @@ from core.render.single import Singleton
 try:
     from gfxhat import touch
 except ModuleNotFoundError:
-    from core.render.dummy import touch
+    from core.hardware.dummy import touch
 
 __all__ = ["Screen"]
 
@@ -11,6 +11,9 @@ class Screen(metaclass=Singleton):
     def __init__(self):
         self.active = None
         self.callstack = []
+
+        touch.enable_repeat(True)
+        touch.set_repeat_rate(50)
 
     def template(self):
         return self.active.template

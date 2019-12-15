@@ -1,5 +1,9 @@
-from gfxhat import backlight, touch
+try:
+    from gfxhat import backlight, touch
+except ModuleNotFoundError:
+    from core.hardware.dummy import backlight, touch
 from core.render.single import Singleton
+from core.render.enums import Button as CoreButton
 
 class Backlight(metaclass=Singleton):
 
@@ -14,10 +18,10 @@ class Backlight(metaclass=Singleton):
             backlight.set_pixel(led, _colours[0], _colours[1], _colours[2])
         backlight.show()
 
-class Touchled(metaclass=Singleton):
+class Button(metaclass=Singleton):
 
-    def set_state(value, leds=None):
-        if leds is None:
-            leds = [0, 1, 2, 3, 4, 5]
-        for led in leds:
-            touch.set_led(led, value)
+    def set_led(value: bool, *led: CoreButton):
+        if not led:
+            led = (0, 1, 2, 3, 4, 5)
+        for l in led:
+            touch.set_led(l.value() if isinstance(l, CoreButton) else l, int(value))

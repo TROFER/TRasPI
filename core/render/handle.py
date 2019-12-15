@@ -44,5 +44,5 @@ class Handler(metaclass=_Handler):
     def release(self):
         return
 
-    def hold(self):
+    def held(self):
         return

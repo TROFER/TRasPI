@@ -4,7 +4,7 @@ __all__ = ["Query"]
 
 class Query(core.render.Window):
 
-    template = f"{core.sys.PATH}core/asset/template/query.template"
+    template = f"{core.sys.PATH}core/resource/template/query.template"
 
     def __init__(self, message, title="Query", cancel=False):
         self.message = core.render.element.Text(core.Vector(64, 16), message)

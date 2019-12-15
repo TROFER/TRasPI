@@ -16,4 +16,4 @@ class Event(enum.Enum):
     NONE = None
     PRESS = "press"
     RELEASE = "release"
-    HOLD = "hold"
+    HELD = "held"

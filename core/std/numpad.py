@@ -4,7 +4,7 @@ __all__ = ["Numpad"]
 
 class Numpad(core.render.Window):
 
-    template = f"{core.sys.PATH}core/asset/template/numpad.template"
+    template = f"{core.sys.PATH}core/resource/template/numpad.template"
 
     def __init__(self, min, max, default=None, title="Numpad"):
         if default is None:

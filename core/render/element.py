@@ -1,13 +1,13 @@
 from core.render.window import Element, Vector
 from core.render.renderer import Render
-from core.render.font import Font
+from core.render.asset import Font
 from core.sys import PATH
 
 from PIL import ImageFont
 
 __all__ = ["Text"]
 
-Font("std", PATH+"core/asset/font/bitocra-full.bdf")
+Font("std", 11, path=PATH+"core/resource/font/bitocra-full.bdf")
 
 class Text(Element):
 

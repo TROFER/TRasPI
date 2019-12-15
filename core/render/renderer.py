@@ -12,7 +12,7 @@ import PIL.ImageDraw
 try:
     from gfxhat import lcd
 except ModuleNotFoundError:
-    from core.render.dummy import lcd
+    from core.hardware.dummy import lcd
 
 __all__ = ["Render"]
 
