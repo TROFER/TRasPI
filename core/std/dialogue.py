@@ -19,10 +19,10 @@ class Query(core.render.Window):
         if self.cancel is not None:
             self.cancel.render()
 
-    def select_left():
+    def select_left(self):
         self.selection = True
 
-    def select_right():
+    def select_right(self):
         self.selection = False
 
 class Handle(core.render.Handler):
