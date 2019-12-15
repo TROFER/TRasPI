@@ -18,9 +18,9 @@ class Torch(core.render.Window):
         self.state = not self.state
         self.template = f"{core.sys.PATH}programs/torch/{self.state}.template"
         if self.state:
-            core.hardware.backlight.fill(225, 225, 225)
+            core.hardware.Backlight.fill(225, 225, 225)
         else:
-            core.hardware.backlight.fill(0, 0, 0)
+            core.hardware.Backlight.fill(0, 0, 0)
 
 class Handle(core.render.Handler):
 
@@ -47,7 +47,7 @@ class RGB(core.render.Window):
         self.hue = 0
 
     def bl_set(self):
-        core.hardware.backlight.fill(*colorsys.hsv_to_rgb(self.hue, 100, 100))
+        core.hardware.Backlight.fill(*colorsys.hsv_to_rgb(self.hue, 100, 100))
 
     def increse(self):
         if self.hue < 360:
@@ -108,7 +108,7 @@ class EmergencyLight(core.render.Window):
     def render(self):
         self.index = (self.index + 1) % len(self.colours)
         colour = self.colours[self.index]
-        core.render.backlight.fill(*colour)
+        core.hardware.Backlight.fill(*colour)
         time.sleep(0.1)
 
 class Handle(core.render.Handler):
