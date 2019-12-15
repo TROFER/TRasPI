@@ -8,7 +8,7 @@ class Query(core.render.Window):
 
     def __init__(self, message, title, allow_cancel=None):
         self.message = core.render.element.TextContainer(core.Vector(64, 16), text=message, 0) #FONT: 10
-        self.selector = core.render.element.Rectangle() #NEEDS CODING
+        # self.selector = core.render.element.Rectangle() #NEEDS CODING
         if allow_cancel is not None:
             self.cancel = core.render.element.Text(core.Vector(64, 16), "To Cancel Press 'Return'", size=11) #FONT: 8
         else:
