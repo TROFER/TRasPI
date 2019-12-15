@@ -114,7 +114,7 @@ class EmergencyLight(core.render.Window):
 class Handle(core.render.Handler):
 
     key = core.render.Button.BACK
-    window = RGB
+    window = EmergencyLight
 
     def press(self):
         self.window.finish()
