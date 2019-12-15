@@ -4,18 +4,22 @@ __all__ = ["Numpad"]
 
 class Numpad(core.render.Window):
 
-    def __init__(self, min, max, default=None):
+    template = f"{core.sys.PATH}core/asset/template/numpad.template"
+
+    def __init__(self, min, max, default=None, title="Numpad"):
         if default is None:
             default = min
         self.min, self.max, self.default = min, max, default
         self.step = 1
         self.selected_number = core.render.element.TextContainer(core.Vector(64, 32), default)
-        self.left_step = core.render.element.Text(core.Vector(3, 32), f"-{self.step}", justify='L')
-        self.right_step = core.render.element.Text(core.Vector(125, 32), f"+{self.step}", justify='R')
+        self.left_step = core.render.element.Text(core.Vector(3, 48), f"-{self.step}", justify='L')
+        self.right_step = core.render.element.Text(core.Vector(125, 48), f"+{self.step}", justify='R')
+        self.title = core.render.element.Text(core.Vector(64, 16), title, size=8)
 
     def render(self):
         self.selected_number.render()
         self.left_step.render(), self.right_step.render()
+        self.title.render()
 
     def add(self):
         if not self.selected_number.value() + self.step > self.max:
