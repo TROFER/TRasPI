@@ -4,7 +4,7 @@ import time
 ####MAINWINDOW####
 class Mainwindow(core.std.Menu):
 
-    def __init__():
+    def __init__(self):
         super().__init__(Torch=Torch(), RGB=RGB(), **{"Emergency Light": EmergencyLight()})
 
 ######TORCH######
