@@ -3,6 +3,10 @@ from core.sys import WIDTH, HEIGHT
 from core.render.screen import Screen
 import queue
 import multiprocessing as mp
+# try:
+#     import multiprocessing as mp
+# except ModuleNotFoundError:
+#     import threading as mp
 import PIL.ImageDraw
 
 try:
@@ -22,7 +26,6 @@ class Render(metaclass=Singleton):
         self._frame_event = mp.Event()
         self._render_event = mp.Event()
         self._process_event = mp.Event()
-        self._current_frame = -1
 
     def frame(self):
         self._buffer.put(self._image)
