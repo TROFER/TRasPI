@@ -65,6 +65,8 @@ class Window(metaclass=MetaWindow):
                 return Screen().active._handle_focus(None, result)
         return focus
 
+Screen().show(Window())
+
 class MetaElement(type):
 
     def __new__(cls, name, bases, attrs):

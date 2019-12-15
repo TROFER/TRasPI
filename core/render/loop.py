@@ -6,13 +6,13 @@ def loop(func: callable=None):
         func = lambda: None
 
     renderer = Render()
-    renderer.start()
     try:
+        renderer.start()
         while renderer._render_event.is_set():
             func()
             render()
             renderer.frame()
-    except BaseException:
-        print("Exiting")
+    except BaseException as e:
+        print("Exiting", e)
     finally:
         renderer.close()
