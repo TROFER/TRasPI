@@ -38,16 +38,12 @@ class Window(metaclass=MetaWindow):
     def render(self):
         pass
 
-    def _show(self):
-        Screen().show(self)
-        self.show()
-
     def show(self):
-        pass
+        Screen().show(self)
 
     def finish(self, value=None):
         parent, generator = Screen().call_lost()
-        parent._show()
+        parent.show()
         if generator is not None:
             parent._handle_focus(value, generator)
         return value
@@ -57,7 +53,7 @@ class Window(metaclass=MetaWindow):
             window = generator.send(value)
             if isinstance(window, Window):
                 Screen().call_focus(generator, self)
-                window._show()
+                window.show()
         except StopIteration as e:
             return e.value
 
