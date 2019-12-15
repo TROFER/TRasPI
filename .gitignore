@@ -1,7 +1,7 @@
 **__pycache__
 .vscode
 /programs/clock
-/programs/torch
+/programs/torch/Legacy Mode
 /programs/weather
 .idea
 test**
