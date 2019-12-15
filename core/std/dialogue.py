@@ -46,6 +46,9 @@ class Handle(core.render.Handler):
 
     def press(self):
         self.window.finish(Query.selection)
+        # Because self <type: Handle> has no attribute 'selection'
+        # 'selection' is an attribute of <type: Query>
+        # How do we access member variables of a window when within the handler?
 
 class Handle(core.render.Handler):
 
