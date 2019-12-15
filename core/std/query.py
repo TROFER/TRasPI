@@ -45,12 +45,8 @@ class Handle(core.render.Handler):
     window = Query
 
     def press(self):
-        self.window.finish(Window.Query.selection)
-        # Because self <type: Handle> has no attribute 'selection'
-        # 'selection' is an attribute of <type: Query>
-        # How do we access member variables of a window when within the handler?
-        # core.window.Query.selection?
-        # Can i call the file query or somthing? Because diolouge is not the best name
+        self.window.finish(self.window.selection)
+
 
 class Handle(core.render.Handler):
 
