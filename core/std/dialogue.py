@@ -45,9 +45,7 @@ class Handle(core.render.Handler):
     window = Query
 
     def press(self):
-        self.window.finish(self.selection) #Not Workin
-        # Because self <type: Handle> has no attribute 'selection'
-        # 'selection' is an attribute of <type: Query>
+        self.window.finish(Query.selection)
 
 class Handle(core.render.Handler):
 
