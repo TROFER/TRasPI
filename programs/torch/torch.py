@@ -12,11 +12,11 @@ class Torch(core.render.Window):
 
     def __init__(self):
         self.state = False
-        self.template = f"{core.sys.PATH}/programs/torch/{self.state}.template"
+        self.template = f"{core.sys.PATH}programs/torch/{self.state}.template"
 
     def change_state(self):
         self.state = not self.state
-        self.template = f"{core.sys.PATH0}/programs/torch/{self.state}.template"
+        self.template = f"{core.sys.PATH0}programs/torch/{self.state}.template"
         if self.state:
             core.hardware.backlight.fill(225, 225, 225)
         else:
