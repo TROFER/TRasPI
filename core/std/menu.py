@@ -7,8 +7,8 @@ class Menu(core.render.Window):
     template = f"{core.sys.PATH}core/asset/template/menu.template"
 
     def __init__(self, **items):
-        self.menu_items = [(core.render.element.Text(core.Vector(3, 32), f'{text[:20]}>', justify="L", colour=0), func) for text, func in items.items()]
-        self.down_arrow, self.up_arrow = core.render.element.Text(core.Vector(64, 48), '\\/'), core.render.element.Text(core.Vector(64, 16), '/\\')
+        self.menu_items = [(core.render.element.Text(core.Vector(3, 32), f'{text[:20]}>', size=11, justify="L", colour=0), func) for text, func in items.items()]
+        self.down_arrow, self.up_arrow = core.render.element.Text(core.Vector(64, 50), '\\/'), core.render.element.Text(core.Vector(64, 14), '/\\')
         self.index = 0
 
     def render(self):
