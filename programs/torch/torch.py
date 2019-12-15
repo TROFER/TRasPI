@@ -47,22 +47,21 @@ class RGB(core.render.Window):
         self.hue = 0
 
     def bl_set(self):
-        core.hardware.Backlight.fill(*colorsys.hsv_to_rgb(self.hue, 100, 100))
+        core.hardware.Backlight.fill(*colorsys.hsv_to_rgb(self.hue, 100, 100))  
 
     def increse(self):
         if self.hue < 360:
             self.hue +=1
         else:
             self.hue = 0
-        bl_set()
+        self.bl_set()
 
     def decrese(self):
-        def increse(self):
-            if self.hue > 0:
-                self.hue -=1
-            else:
-                self.hue = 360
-        bl_set()
+        if self.hue > 0:
+            self.hue -=1
+        else:
+            self.hue = 360
+        self.bl_set()
 
 class Handle(core.render.Handler):
 
