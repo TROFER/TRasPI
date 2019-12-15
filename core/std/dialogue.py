@@ -7,8 +7,8 @@ class Query(core.render.Window):
     template = f"{core.sys.PATH}core/asset/template/query.template"
 
     def __init__(self, message, title, allow_cancel=None):
-        self.message = core.render.element.TextContainer(core.Vector(64, 16), message, "True") #FONT: 10
-        # self.selector = core.render.element.Rectangle() #NEEDS CODING
+        self.message = core.render.element.Text(core.Vector(64, 16), message) #FONT: 10
+        self.selection = True
         if allow_cancel is not None:
             self.cancel = core.render.element.Text(core.Vector(64, 16), "To Cancel Press 'Return'", size=11) #FONT: 8
         else:
@@ -20,10 +20,10 @@ class Query(core.render.Window):
             self.cancel.render()
 
     def select_left():
-        self.message.Value(0)
+        self.selection = True
 
     def select_right():
-        self.message.Value(1)
+        self.selection = False
 
 class Handle(core.render.Handler):
 
@@ -48,7 +48,7 @@ class Handle(core.render.Handler):
     window = Query
 
     def press(self):
-        self.window.finish(self.message.Value())
+        self.window.finish(self.selection#NOT RITE)
 
 class Handle(core.render.Handler):
 
