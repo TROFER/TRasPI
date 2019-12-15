@@ -14,7 +14,7 @@ class Numpad(core.render.Window):
         self.selected_number = core.render.element.TextContainer(core.Vector(64, 32), default)
         self.left_step = core.render.element.Text(core.Vector(3, 48), f"-{self.step}", justify='L')
         self.right_step = core.render.element.Text(core.Vector(125, 48), f"+{self.step}", justify='R')
-        self.title = core.render.element.Text(core.Vector(64, 16), title, size=8)
+        self.title = core.render.element.Text(core.Vector(64, 16), title, size=11)#Font: 8
 
     def render(self):
         self.selected_number.render()

@@ -11,7 +11,7 @@ Font("std", PATH+"core/asset/font/bitocra-full.bdf")
 
 class Text(Element):
 
-    def __init__(self, pos: Vector, text="Default Text", font="std", size=10, colour=1, justify='C'):
+    def __init__(self, pos: Vector, text="Default Text", font="std", size=11, colour=1, justify='C'):
         super().__init__(pos)
         self._text, self._size, self.colour, self.justify, self._font = str(text), size, colour, justify, Font(font, size)
         self._calc_justify()
