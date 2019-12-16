@@ -48,19 +48,8 @@ class RGB(core.render.Window):
 
     def bl_set(self):
         print(self.hue)
-        print(self.hue / 100)
         R, G, B = colorsys.hsv_to_rgb(self.hue / 100, 0.10, 0.5)
-        print(R, G, B)
-        R *= 100
-        G *= 100
-        B *= 100
-        print(R, G, B)
-        R = int(R)
-        G = int(G)
-        B = int(B)
-        print("Afer Round")
-        print(R, G, B)
-        core.hardware.Backlight.fill(R, G, B)
+        core.hardware.Backlight.fill(int(R*100), int(G*100), int(B*100))
 
     def increse(self):
         if self.hue < 360:
@@ -96,7 +85,7 @@ class Handle(core.render.Handler):
         self.window.decrese()
 
     def press(self):
-        self.window.increse()
+        self.window.decrese()
 
 class Handle(core.render.Handler):
 
