@@ -48,7 +48,7 @@ class RGB(core.render.Window):
 
     def bl_set(self):
         print(self.hue)
-        R, G, B = colorsys.hsv_to_rgb(self.hue / 100, 0.10, 0.5)
+        R, G, B = colorsys.hsv_to_rgb(self.hue / 100, 1, 1)
         core.hardware.Backlight.fill(int(R*100), int(G*100), int(B*100))
 
     def increse(self):
