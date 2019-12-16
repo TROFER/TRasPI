@@ -18,7 +18,7 @@ class Torch(core.render.Window):
         self.state = not self.state
         self.template = f"{core.sys.PATH}programs/torch/{self.state}.template"
         if self.state:
-            core.hardware.Backlight.fill(225, 225, 225)
+            core.hardware.Backlight.fill(255, 255, 255)
         else:
             core.hardware.Backlight.fill(0, 0, 0)
 
