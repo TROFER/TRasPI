@@ -47,7 +47,20 @@ class RGB(core.render.Window):
         self.hue = 0
 
     def bl_set(self):
-        core.hardware.Backlight.fill(*colorsys.hsv_to_rgb(self.hue, 100, 100))  
+        print(self.hue)
+        print(self.hue / 100)
+        R, G, B = colorsys.hsv_to_rgb(self.hue / 100, 0.10, 0.5)
+        print(R, G, B)
+        R *= 100
+        G *= 100
+        B *= 100
+        print(R, G, B)
+        R = int(R)
+        G = int(G)
+        B = int(B)
+        print("Afer Round")
+        print(R, G, B)
+        core.hardware.Backlight.fill(R, G, B)
 
     def increse(self):
         if self.hue < 360:
