@@ -9,7 +9,7 @@ class Mainwindow(core.render.Window):
         self.API = "&appid=dd440727faee99efb0b572bc6d78e7b3"
         self.URL = "http://api.openweathermap.org/data/2.5/weather?"
         self.location = "q=Isle%20of%20Wight%20GB"
-        update()
+        self.update()
 
     def elements(self):
         self.title = core.render.element.Text(Vector(4, 4), f"For {self.location}", colour=0)
@@ -31,7 +31,7 @@ class Mainwindow(core.render.Window):
         self.weather.render()
 
     def update(self):
-        get_weather(), elements()
+        self.get_weather(), self.elements()
 
 class Handle(core.render.Handler):
 
