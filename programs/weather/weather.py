@@ -22,6 +22,7 @@ class Mainwindow(core.render.Window):
         self.header2 = core.render.element.Text(Vector(4, 59), "Connected to: Open Weather Map")
 
     def get_weather(self):
+        print(self.URL+self.location+self.API)
         self.data = request.urlopen(self.URL+self.location+self.API).json()
 
 
