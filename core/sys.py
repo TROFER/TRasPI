@@ -1,3 +1,4 @@
+from core.render.single import Singleton
 import sys
 import os
 
