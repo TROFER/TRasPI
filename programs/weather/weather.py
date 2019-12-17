@@ -4,9 +4,8 @@ from urllib import request
 
 class Main(core.render.Window):
 
-    self.template = f"{core.sys.PATH}programs/weather/gui.template"
-
     def __init__(self):
+        self.template = f"{core.sys.PATH}programs/weather/gui.template"
         self.API = "&appid=dd440727faee99efb0b572bc6d78e7b3"
         self.URL = "http://api.openweathermap.org/data/2.5/weather?"
         self.location = "q=Isle%20of%20Wight%20GB"
