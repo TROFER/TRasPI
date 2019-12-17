@@ -10,9 +10,19 @@ https://trello.com/b/GIqJAKub/gcse-computer-science-corsework
 All scripts **must** contain a *main* function as an entry point.  
 * Optionally, it can take arguments (note: keyword arguments are not supported)  
 
-### Core-Graphics
-*menu*:
-Acepts one argument, labels, returns selected item as an index of labels
+#### core.std
+
+### std.menu
+Takes a list of items, callable objects and runs or returns the selected item
+
+### std.error
+Takes a message argument and displays it
+
+### std.warning
+Takes a message argument and displays it
+
+### std.info
+Takes a message argument and displays it
 
 #### Config
 The Config files can be read through *core.config*:  
