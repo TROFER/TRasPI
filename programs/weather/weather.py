@@ -9,30 +9,24 @@ class Mainwindow(core.render.Window):
         self.API = "&appid=dd440727faee99efb0b572bc6d78e7b3"
         self.URL = "http://api.openweathermap.org/data/2.5/weather?"
         self.location = "q=Isle%20of%20Wight%20GB"
-        self.update()
-
-    def elements(self):
         self.title = core.render.element.Text(Vector(4, 4), f"For {self.location}", colour=0)
-        self.tempreture = core.render.element.TextContianer(Vector(4, 13), f"Temperature: {round(self.data['main']['temp'] - 273.1, 1)}")
-        self.pressure = core.render.element.TextContianer(Vector(4, 24), f"Pressure: {self.data['main']['pressure']}")
-        self.humidity = core.render.element.TextContianer(Vector(4, 33), f"Humidity: {self.data['main']['humidity']}")
-        self.wind = core.render.element.TextContianer(Vector(4, 42), f"Wind Speed: {self.data['main']['humidity']}")
         self.header1 = core.render.element.Text(Vector(4, 54), "Current Weather:")
-        self.weather = core.render.element.Text(Vector(4, 63), f"{self.data['weather'][0]['description']}")
         self.header2 = core.render.element.Text(Vector(4, 59), "Connected to: Open Weather Map")
-
-    def get_weather(self):
-        print(self.URL+self.location+self.API)
-        self.data = request.urlopen(self.URL+self.location+self.API).json()
-
+        self.get_weather()
 
     def render(self):
         self.title.render(), self.header1.render(), self.header2.render()
         self.tempreture.render(), self.pressure.render(), self.humidity.render(), self.wind.render()
         self.weather.render()
 
-    def update(self):
-        self.get_weather(), self.elements()
+    def get_weather(self):
+        print(self.URL+self.location+self.API)
+        self.data = request.urlopen(self.URL+self.location+self.API).json()
+        self.tempreture = core.render.element.TextContianer(Vector(4, 13), f"Temperature: {round(self.data['main']['temp'] - 273.1, 1)}")
+        self.pressure = core.render.element.TextContianer(Vector(4, 24), f"Pressure: {self.data['main']['pressure']}")
+        self.humidity = core.render.element.TextContianer(Vector(4, 33), f"Humidity: {self.data['main']['humidity']}")
+        self.wind = core.render.element.TextContianer(Vector(4, 42), f"Wind Speed: {self.data['main']['humidity']}")
+        self.weather = core.render.element.Text(Vector(4, 63), f"{self.data['weather'][0]['description']}")
 
 class Handle(core.render.Handler):
 
@@ -40,7 +34,7 @@ class Handle(core.render.Handler):
     window = Mainwindow
 
     def press(self):
-        self.window.update()
+        self.window.get_weather()
 
 class Handle(core.render.Handler):
 
