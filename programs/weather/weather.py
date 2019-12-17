@@ -13,7 +13,7 @@ class Main(core.render.Window):
 
     def elements():
         self.title = core.render.element.Text(Vector(4, 4), f"For {self.location}", colour=0)
-        self.tempreture = core.render.element.TextContianer(Vector(4, 13), f"Temperature: {round(self.data['main']['temp'] - 273.1, 1)})
+        self.tempreture = core.render.element.TextContianer(Vector(4, 13), f"Temperature: {round(self.data['main']['temp'] - 273.1, 1)}")
         self.pressure = core.render.element.TextContianer(Vector(4, 24), f"Pressure: {self.data['main']['pressure']}")
         self.humidity = core.render.element.TextContianer(Vector(4, 33), f"Humidity: {self.{data['main']['humidity']}")
         self.wind = core.render.element.TextContianer(Vector(4, 42), f"Wind Speed: {self.data['main']['humidity']}")
