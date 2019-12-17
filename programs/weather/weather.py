@@ -10,7 +10,7 @@ class Mainwindow(core.render.Window):
         self.API = "&appid=dd440727faee99efb0b572bc6d78e7b3"
         self.URL = "http://api.openweathermap.org/data/2.5/weather?"
         self.location = "q=Isle of wight".replace(' ', '%20')
-        self.title = core.render.element.Text(core.Vector(4, 4), f"For {self.location}", colour=0, justify="L")
+        self.title = core.render.element.Text(core.Vector(4, 4), f"For {self.location.replace('%20', ' ')[2:]}", colour=0, justify="L")
         self.header1 = core.render.element.Text(core.Vector(4, 54), "Current Weather:", justify="L")
         self.header2 = core.render.element.Text(core.Vector(4, 59), "Connected to: Open Weather Map", justify="L")
         self.get_weather()
