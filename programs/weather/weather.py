@@ -8,7 +8,7 @@ class Mainwindow(core.render.Window):
         self.template = f"{core.sys.PATH}programs/weather/gui.template"
         self.API = "&appid=dd440727faee99efb0b572bc6d78e7b3"
         self.URL = "http://api.openweathermap.org/data/2.5/weather?"
-        self.location = "q=Isle%20of%20Wight%20GB"
+        self.location = "q=Newport%20GB"
         self.title = core.render.element.Text(core.Vector(4, 4), f"For {self.location}", colour=0)
         self.header1 = core.render.element.Text(core.Vector(4, 54), "Current Weather:")
         self.header2 = core.render.element.Text(core.Vector(4, 59), "Connected to: Open Weather Map")
