@@ -1,5 +1,5 @@
 import core
-import programs.torch.torch as module
+import programs.weather.weather as module
 
 module.main.show()
 core.render.loop()

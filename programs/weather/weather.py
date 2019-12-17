@@ -1,7 +1,7 @@
 from urllib import request
 
 
-class Weather(core.render.Window):
+class Main(core.render.Window):
 
     self.template = f"{core.sys.PATH}programs/weather/gui.template"
 
@@ -49,7 +49,7 @@ class Handle(core.render.Handler):
     def press(self):
         self.window.finish()
 
-
+main = Main()
 
 
 
