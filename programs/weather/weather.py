@@ -49,7 +49,7 @@ class Handle(core.render.Handler):
     def press(self):
         self.window.finish()
 
-main = Main()
+main = Mainwindow()
 
 
 
