@@ -2,7 +2,7 @@ import core
 from urllib import request
 
 
-class Main(core.render.Window):
+class Mainwindow(core.render.Window):
 
     def __init__(self):
         self.template = f"{core.sys.PATH}programs/weather/gui.template"
@@ -36,7 +36,7 @@ class Main(core.render.Window):
 class Handle(core.render.Handler):
 
     key = core.render.Button.UP
-    window = Weather
+    window = Mainwindow
 
     def press(self):
         self.window.update()
@@ -44,7 +44,7 @@ class Handle(core.render.Handler):
 class Handle(core.render.Handler):
 
     key = core.render.Button.BACK
-    window = Weather
+    window = Mainwindow
 
     def press(self):
         self.window.finish()
