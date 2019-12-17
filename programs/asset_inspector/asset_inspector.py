@@ -4,7 +4,7 @@ import json
 class Mainwindow(core.render.Window):
 
     def __init__(self):
-        self.images = json.load(f"{core.sys.PATH}programs/asset inspector/register.json")
+        self.images = [f"{core.sys.PATH}programs/asset_inspector/images/sans.png"]
         self.index = 0
         self.max = len(self.images)
 
