@@ -1,11 +1,10 @@
-from core.render.single import Singleton
 import sys
 import os
 
 PATH = os.path.dirname(os.path.abspath(sys.argv[0])).replace("\\", "/") + "/"
 WIDTH, HEIGHT = 128, 64
 
-class PowerOptions(metaclass=Singleton):
+class PowerOptions():
 
     def halt(self):
         os.system("halt")
