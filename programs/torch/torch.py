@@ -4,6 +4,8 @@ import time
 ####MAINWINDOW####
 class Mainwindow(core.std.Menu):
 
+    core.hardware.backlight.fill(225, 225, 225)
+
     def __init__(self):
         super().__init__(Torch=Torch(), RGB=RGB(), **{"Emergency Light": EmergencyLight()})
 
@@ -19,8 +21,10 @@ class Torch(core.render.Window):
         self.template = f"{core.sys.PATH}programs/torch/{self.state}.template"
         if self.state:
             core.hardware.Backlight.fill(255, 255, 255)
+            core.hardware.Button.set_led(True)
         else:
             core.hardware.Backlight.fill(0, 0, 0)
+            core.hardware.Button.set_led(False)
 
 class Handle(core.render.Handler):
 
