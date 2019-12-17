@@ -22,10 +22,10 @@ class Mainwindow(core.render.Window):
 
     def get_weather(self):
         self.data = json.load(request.urlopen(self.URL+self.location+self.API))
-        self.tempreture = core.render.element.TextContianer(core.Vector(4, 13), f"Temperature: {round(self.data['main']['temp'] - 273.1, 1)}")
-        self.pressure = core.render.element.TextContianer(core.Vector(4, 24), f"Pressure: {self.data['main']['pressure']}")
-        self.humidity = core.render.element.TextContianer(core.Vector(4, 33), f"Humidity: {self.data['main']['humidity']}")
-        self.wind = core.render.element.TextContianer(core.Vector(4, 42), f"Wind Speed: {self.data['main']['humidity']}")
+        self.tempreture = core.render.element.Text(core.Vector(4, 13), f"Temperature: {round(self.data['main']['temp'] - 273.1, 1)}")
+        self.pressure = core.render.element.Text(core.Vector(4, 24), f"Pressure: {self.data['main']['pressure']}")
+        self.humidity = core.render.element.Text(core.Vector(4, 33), f"Humidity: {self.data['main']['humidity']}")
+        self.wind = core.render.element.Text(core.Vector(4, 42), f"Wind Speed: {self.data['main']['humidity']}")
         self.weather = core.render.element.Text(core.Vector(4, 63), f"{self.data['weather'][0]['description']}")
 
 class Handle(core.render.Handler):
