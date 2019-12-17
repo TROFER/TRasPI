@@ -1,4 +1,0 @@
-Temperature: 9.0
-Pressure: 1000
-Humidity: 81
-Weather: few clouds

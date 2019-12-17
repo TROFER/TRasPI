@@ -4,7 +4,7 @@ import time
 ####MAINWINDOW####
 class Mainwindow(core.std.Menu):
 
-    core.hardware.backlight.fill(225, 225, 225)
+    core.hardware.Backlight.fill(225, 225, 225)
 
     def __init__(self):
         super().__init__(Torch=Torch(), RGB=RGB(), **{"Emergency Light": EmergencyLight()})
@@ -40,6 +40,7 @@ class Handle(core.render.Handler):
     window = Torch
 
     def press(self):
+        core.hardware.Backlight.fill(225, 225, 225)
         self.window.finish()
 
 #######RGB#######
@@ -51,7 +52,6 @@ class RGB(core.render.Window):
         self.hue = 0
 
     def bl_set(self):
-        print(self.hue)
         R, G, B = colorsys.hsv_to_rgb(self.hue / 100, 1, 1)
         core.hardware.Backlight.fill(int(R*100), int(G*100), int(B*100))
 
@@ -100,6 +100,7 @@ class Handle(core.render.Handler):
         self.window.finish()
 
     def press(self):
+        core.hardware.Backlight.fill(225, 225, 225)
         self.window.finish()
 
 ###EMERGENCYLIGHT###
@@ -122,11 +123,8 @@ class Handle(core.render.Handler):
     window = EmergencyLight
 
     def press(self):
+        core.hardware.Backlight.fill(225, 225, 225)
         self.window.finish()
-
-
-
-
 
 
 main = Mainwindow()
