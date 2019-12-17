@@ -1,4 +1,5 @@
 import core
+import json
 from urllib import request
 
 
@@ -8,7 +9,7 @@ class Mainwindow(core.render.Window):
         self.template = f"{core.sys.PATH}programs/weather/gui.template"
         self.API = "&appid=dd440727faee99efb0b572bc6d78e7b3"
         self.URL = "http://api.openweathermap.org/data/2.5/weather?"
-        self.location = "zip={PO302LR},{GB}"
+        self.location = "q=Isle of wight".replace(' ', '%20')
         self.title = core.render.element.Text(core.Vector(4, 4), f"For {self.location}", colour=0)
         self.header1 = core.render.element.Text(core.Vector(4, 54), "Current Weather:")
         self.header2 = core.render.element.Text(core.Vector(4, 59), "Connected to: Open Weather Map")
@@ -20,8 +21,7 @@ class Mainwindow(core.render.Window):
         self.weather.render()
 
     def get_weather(self):
-        print(self.URL+self.location+self.API)
-        self.data = request.urlopen(self.URL+self.location+self.API).json()
+        self.data = json.load(request.urlopen(self.URL+self.location+self.API))
         self.tempreture = core.render.element.TextContianer(core.Vector(4, 13), f"Temperature: {round(self.data['main']['temp'] - 273.1, 1)}")
         self.pressure = core.render.element.TextContianer(core.Vector(4, 24), f"Pressure: {self.data['main']['pressure']}")
         self.humidity = core.render.element.TextContianer(core.Vector(4, 33), f"Humidity: {self.data['main']['humidity']}")
