@@ -16,7 +16,7 @@ class Mainwindow(core.render.Window):
         core.render.element.TextBox(core.Vector(64, 42), "System Settings"),
         core.render.element.TextBox(core.Vector(64, 54), "Power Options")]
         self.left_arrow = core.render.element.Text(core.Vector(buttons[self.index].position[0]-2,
-         core.Vector(buttons[self.index].pos[1]), ">", justify="R")
+        (buttons[self.index].pos[1]), ">", justify="R")
 
     def render(self):
         self.title1.render(), self.title2.render()
