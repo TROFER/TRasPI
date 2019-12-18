@@ -7,8 +7,8 @@ class Query(core.render.Window):
     template = f"{core.sys.PATH}core/resource/template/query.template"
 
     def __init__(self, message, title="Query", cancel=False):
-        self.message = core.render.element.Text(core.Vector(38, 27), message, justify="L")
-        self.title = core.render.element.Text(core.Vector(5, 5), title, justify="L")
+        self.message = core.render.element.TextBox(core.Vector(38, 27), message, justify="L")
+        self.title = core.render.element.TextBox(core.Vector(5, 5), title, justify="L")
         if cancel:
             bttn_yes = core.Vector(42, 56)
             bttn_no = core.Vector(84, 56)

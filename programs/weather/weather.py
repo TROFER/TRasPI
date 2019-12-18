@@ -20,8 +20,12 @@ class Mainwindow(core.render.Window):
         self.tempreture.render(), self.pressure.render(), self.humidity.render(), self.wind.render()
         self.weather.render()
 
+    @core.render.Window.focus
     def get_weather(self):
-        self.data = json.load(request.urlopen(self.URL+self.location[0]+self.API))
+        try:
+            self.data = json.load(request.urlopen(self.URL+self.location[0]+self.API))
+        except URLError:
+            yield core.std.Error("Unable To Connect")
         self.tempreture = core.render.element.Text(core.Vector(3, 14), f"Temperature: {round(self.data['main']['temp'] - 273.1, 1)}°C", justify="L")
         self.pressure = core.render.element.Text(core.Vector(3, 22), f"Pressure: {self.data['main']['pressure']}Pa", justify="L")
         self.humidity = core.render.element.Text(core.Vector(3, 30), f"Humidity: {self.data['main']['humidity']}%", justify="L")

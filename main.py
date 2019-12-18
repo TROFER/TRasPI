@@ -1,5 +1,5 @@
 import core
-import programs.weather.weather as module
+import home as module
 
 module.main.show()
 core.render.loop()
