@@ -19,7 +19,7 @@ class Mainwindow(core.render.Window):
 
     def calc_arrow_pos(self):
         self.left_arrow = core.render.element.Text(core.Vector(self.buttons[self.index].position[0] - 2, self.buttons[self.index].pos[1]), ">", justify="R")
-        self.right_arrow = core.render.element.Text(core.Vector(64 + self.buttons[self.index].position[0] - 2, self.buttons[self.index].pos[1]), "<", justify="L")
+        self.right_arrow = core.render.element.Text(core.Vector(64 + self.buttons[self.index].position[0] + 2, self.buttons[self.index].pos[1]), "<", justify="L")
 
     def render(self):
         self.title1.render(), self.title2.render()
