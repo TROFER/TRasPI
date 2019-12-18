@@ -16,8 +16,7 @@ class Backlight(metaclass=Singleton):
         for led in range(5):
             print(colours[led] / 360)
             _colours = colorsys.hsv_to_rgb(colours[led] / 360, 1, 1)
-            print((int(_colours[0]*100), int(_colours[1]*100), int(_colours[2]*100)))
-            backlight.set_pixel(led, int(_colours[0]*360), int(_colours[1]*100), int(_colours[2]*100))
+            backlight.set_pixel(led, int(_colours[0]*255), int(_colours[1]*255), int(_colours[2]*255))
         backlight.show()
 
 class Button(metaclass=Singleton):
