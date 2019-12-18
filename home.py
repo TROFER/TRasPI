@@ -17,7 +17,8 @@ class Mainwindow(core.render.Window):
         self.functions = {0: "core.loader.run", 1: "core.render.load", 2: "core.sys.configurator", 3: "core.sys.powermenu"} #Needs to be ajusted if name changes
 
     def render(self):
-        self.title1.render(), self.title2.render()
+        #self.title1.render()
+        self.title2.render()
         self.bttn1.render(), self.bttn2.render(), self.bttn3.render(), self.bttn4.render()
 
     def up(self):
