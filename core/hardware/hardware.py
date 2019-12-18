@@ -4,6 +4,7 @@ except ModuleNotFoundError:
     from core.hardware.dummy import backlight, touch
 from core.render.single import Singleton
 from core.render.enums import Button as CoreButton
+import colorsys
 
 class Backlight(metaclass=Singleton):
 
@@ -13,8 +14,8 @@ class Backlight(metaclass=Singleton):
 
     def gradient(colours):
         for led in range(5):
-            _colours = [int(hex_colour, 16) for hex_colour in [colours[led][i:i + 2] for i in range(0, 6, 2)]]
-            backlight.set_pixel(led, _colours[0], _colours[1], _colours[2])
+            _colours = colorsys.hsv_to_rgb(self.hue / 100, 1, 1)
+            backlight.set_pixel(led, int(_colours[0]*100), int(_colours[1]*100) int(_colours[2]*100))
         backlight.show()
 
 class Button(metaclass=Singleton):

@@ -15,6 +15,8 @@ class Mainwindow(core.render.Window):
         # Variables
         self.index = 0
         self.functions = {0: "core.loader.run", 1: "core.render.load", 2: "core.sys.configurator", 3: "core.sys.powermenu"} #Needs to be ajusted if name changes
+        # Misc
+        core.hardware.Backlight.gradient((240, 205, 205, 240))
 
     def render(self):
         self.title1.render(), self.title2.render()
