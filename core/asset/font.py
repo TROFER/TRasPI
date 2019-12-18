@@ -18,14 +18,12 @@ class Font(metaclass=_Font):
         self._size = size
         self._compute_font()
 
+    def __repr__(self) -> str:
+        return "<Asset: {}[{}] {} : {} {}>".format(self.__class__.__name__, self._name, self._path, self._size, self._font)
+
     @property
     def size(self) -> int:
         return self._size
-
-    @size.setter
-    def size(self, value: int):
-        self._size = value
-        self._compute_font()
 
     @property
     def font(self):

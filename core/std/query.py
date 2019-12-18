@@ -4,7 +4,7 @@ __all__ = ["Query"]
 
 class Query(core.render.Window):
 
-    template = f"{core.sys.PATH}core/resource/template/query.template"
+    template = core.asset.Template("std::query", path="query.template")
 
     def __init__(self, message, title="Query", cancel=False):
         self.message = core.render.element.TextBox(core.Vector(38, 27), message, justify="L")

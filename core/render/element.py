@@ -7,8 +7,6 @@ from PIL import ImageFont
 
 __all__ = ["Text"]
 
-Font("std", 11, path=PATH+"core/resource/font/bitocra-full.bdf")
-
 class Text(Element):
 
     def __init__(self, pos: Vector, text="Default Text", font="std", size=11, colour=1, justify='C'):

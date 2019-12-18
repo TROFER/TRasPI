@@ -3,9 +3,8 @@ from core.render.enums import Button, Event
 from core.render.handle import Handler
 from core.render.screen import Screen
 from core.render.renderer import Render
-from core.sys import PATH
+from core.asset import Template
 
-import PIL.Image
 
 __all__ = ["Window", "Element"]
 
@@ -15,7 +14,7 @@ class MetaWindow(type):
         if "template" in attrs:
             template = attrs["template"]
             if isinstance(template, str):
-                attrs["template"] = PIL.Image.open(template).convert("P")
+                attrs["template"] = Template(template)
         return super().__new__(cls, name, bases, attrs)
 
     def __init__(cls, name, bases, attrs):
@@ -30,7 +29,7 @@ class MetaWindow(type):
 class Window(metaclass=MetaWindow):
 
     _handles = [None] * 6
-    template = PATH+"core/resource/template/default.template"
+    template = "std"
 
     def __init__(self):
         self.elements = {}

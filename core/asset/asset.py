@@ -1,3 +1,6 @@
+from core.sys import PATH
+import os.path
+
 class Asset(type):
 
     _instances = {}
@@ -27,16 +30,34 @@ class Asset(type):
         return super().__init__(name, bases, dct)
 
     def __call__(cls, name: str, *args, path=None, new=False, **kwargs):
-        # print(cls, name, args, path, new, kwargs)
         if path is None:
             if new:
-                path = cls._instances[cls][name]._path
+                try:
+                    path = cls._instances[cls][name]._path
+                except KeyError:
+                    raise AttributeError("No Asset: <{}> called '{}'".format(cls.__name__, name)) from None
                 name += "_new"
                 self = super().__call__(name, path, *args, **kwargs)
                 return self
             else:
-                return cls._instances[cls][name]
+                try:
+                    return cls._instances[cls][name]
+                except KeyError:
+                    raise AttributeError("No Asset: <{}> called '{}'".format(cls.__name__, name)) from None
         else:
+            for prefix in ("", PATH+"core/resource/"+cls.__name__.lower()+"/", PATH+"programs/", PATH):
+                if os.path.isfile(prefix+path):
+                    path = prefix + path
+                    break
+            else:
+                raise FileNotFoundError("Asset <{}>: '{}'".format(cls.__name__, path))
             self = super().__call__(name, path, *args, **kwargs)
             cls._instances[cls][name] = self
             return self
+
+    @classmethod
+    def clear(cls):
+        for dct in cls._instances.values():
+            for name in list(dct.keys()):
+                if not name.startswith("std"):
+                    del dct[name]
