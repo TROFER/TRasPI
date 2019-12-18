@@ -12,6 +12,7 @@ class Mainwindow(core.render.Window):
         self.bttn2 = core.render.element.TextBox(core.Vector(64, 30), "Load Program")
         self.bttn3 = core.render.element.TextBox(core.Vector(64, 42), "System Settings")
         self.bttn4 = core.render.element.TextBox(core.Vector(64, 54), "Power Options")
+        print(self.bttn1.position)
         # Variables
         self.index = 0
         self.functions = {0: "core.loader.run", 1: "core.render.load", 2: "core.sys.configurator", 3: "core.sys.powermenu"} #Needs to be ajusted if name changes
