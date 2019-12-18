@@ -33,7 +33,7 @@ class Mainwindow(core.render.Window):
             self.index -=1 #Needs to reposiiton
 
     def down(self):
-        if self.index < len(self.functions):
+        if self.index < len(self.functions)-1:
             self.index +=1
 
     def select(self):
