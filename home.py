@@ -7,7 +7,7 @@ class Mainwindow(core.render.Window):
         # Elements
         self.template = f"{core.sys.PATH}core/resource/template/home.template"
         self.title1 = core.render.element.Text(core.Vector(3, 5), "TRasPi OS", justify="L") #Could be part of template
-        self.title2 = core.render.element.Text(core.Vector(126, 5), time.strftime('%I:%M %p'), justify="R")
+        self.title2 = core.render.element.Text(core.Vector(126, 5), time.strftime('%I:%M%p'), justify="R")
         self.bttn1 = core.render.element.TextBox(core.Vector(64, 20), "Run Program")
         self.bttn2 = core.render.element.TextBox(core.Vector(64, 30), "Load Program")
         self.bttn3 = core.render.element.TextBox(core.Vector(64, 40), "System Settings")
