@@ -3,11 +3,13 @@ import json
 from urllib.error import HTTPError, URLError
 from urllib import request
 
+core.asset.Template("weather", path="weather/gui.template")
+
 class Mainwindow(core.render.Window):
 
     def __init__(self):
         core.hardware.Backlight.fill(0, 255, 0)
-        self.template = f"{core.sys.PATH}programs/weather/gui.template"
+        self.template = core.asset.Template("weather")
         self.API = "&appid=dd440727faee99efb0b572bc6d78e7b3"
         self.URL = "http://api.openweathermap.org/data/2.5/weather?"
         self.location = ["id=2641598", "Newport GB"]

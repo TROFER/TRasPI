@@ -1,6 +1,10 @@
 import core
 import colorsys
 import time
+
+core.asset.Template("True", path="torch/True.template")
+core.asset.Template("False", path="torch/False.template")
+
 ####MAINWINDOW####
 class Mainwindow(core.std.Menu):
 
@@ -14,11 +18,11 @@ class Torch(core.render.Window):
 
     def __init__(self):
         self.state = False
-        self.template = f"{core.sys.PATH}programs/torch/{self.state}.template"
+        self.template = core.asset.Template(str(self.state))
 
     def change_state(self):
         self.state = not self.state
-        self.template = f"{core.sys.PATH}programs/torch/{self.state}.template"
+        self.template = core.asset.Template(str(self.state))
         if self.state:
             core.hardware.Backlight.fill(255, 255, 255)
             core.hardware.Button.set_led(True)
