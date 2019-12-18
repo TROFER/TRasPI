@@ -25,6 +25,7 @@ class Mainwindow(core.render.Window):
         self.title1.render(), self.title2.render()
         for button in self.buttons:
             button.render()
+        self.calc_arrow_pos()
         self.left_arrow.render(), self.right_arrow.render()
 
     def up(self):
