@@ -21,6 +21,7 @@ class Mainwindow(core.render.Window):
         self.title1.render(), self.title2.render()
         for button in self.buttons:
             button.render()
+        self.left_arrow.render()
 
     def up(self):
         if self.index > 0:
