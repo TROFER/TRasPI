@@ -109,4 +109,4 @@ class Rectangle(Element):
         self._abs_2 = self.pos + vec
 
     def render(self):
-        self.Render.draw.rectangle([*self.pos, *self._abs_2], self.fill, self.colour, self.width)
+        self.Render.draw.rectangle([self.pos[0] - 1, self.pos[1], *self._abs_2], self.fill, self.colour, self.width)
