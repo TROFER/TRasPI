@@ -85,7 +85,10 @@ class TextBox(Text):
         super()._calc_justify()
         self.rect.pos = self.position
         self.rect.pos_2(self._font_size())
-        self.rect
+
+    def render(self):
+        super().render()
+        self.rect.render()
 
 class Rectangle(Element):
 

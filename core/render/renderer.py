@@ -37,6 +37,9 @@ class Render(metaclass=Singleton):
         self._image = Screen().template().copy()
         self.draw = PIL.ImageDraw.Draw(self._image)
 
+    def clear(self):
+        self._next()
+
     def start(self):
         if not self._render_event.is_set():
             self._render_event.set()

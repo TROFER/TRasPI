@@ -40,6 +40,7 @@ class Window(metaclass=MetaWindow):
 
     def show(self):
         Screen().show(self)
+        Render().clear()
 
     def finish(self, value=None):
         parent, generator = Screen().call_lost()
