@@ -6,12 +6,12 @@ class Mainwindow(core.render.Window):
     def __init__(self):
         # Elements
         self.template = f"{core.sys.PATH}core/resource/template/home.template"
-        self.title1 = core.render.element.Text(core.Vector(3, 7), "TRasPi OS", justify="L") #Could be part of template
-        self.title2 = core.render.element.Text(core.Vector(126, 7), time.strftime('%I:%M %r'), justify="R")
-        self.bttn1 = core.render.element.TextBox(core.Vector(64, 16), "Run Program")
-        self.bttn2 = core.render.element.TextBox(core.Vector(64, 26), "Load Program")
-        self.bttn3 = core.render.element.TextBox(core.Vector(64, 36), "System Settings")
-        self.bttn4 = core.render.element.TextBox(core.Vector(64, 46), "Power Options")
+        self.title1 = core.render.element.Text(core.Vector(3, 5), "TRasPi OS", justify="L") #Could be part of template
+        self.title2 = core.render.element.Text(core.Vector(126, 5), time.strftime('%I:%M%r'), justify="R")
+        self.bttn1 = core.render.element.TextBox(core.Vector(64, 20), "Run Program")
+        self.bttn2 = core.render.element.TextBox(core.Vector(64, 30), "Load Program")
+        self.bttn3 = core.render.element.TextBox(core.Vector(64, 40), "System Settings")
+        self.bttn4 = core.render.element.TextBox(core.Vector(64, 50), "Power Options")
         # Variables
         self.index = 0
         self.functions = {0: "core.loader.run", 1: "core.render.load", 2: "core.sys.configurator", 3: "core.sys.powermenu"} #Needs to be ajusted if name changes
