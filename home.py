@@ -15,30 +15,32 @@ class Mainwindow(core.render.Window):
         core.render.element.TextBox(core.Vector(64, 30), "Load Program"),
         core.render.element.TextBox(core.Vector(64, 42), "System Settings"),
         core.render.element.TextBox(core.Vector(64, 54), "Power Options")]
-        self.calc_arrow_pos()
+        self.dynamic_elements()
 
-    def calc_arrow_pos(self):
+    def dynamic_elements(self):
         self.left_arrow = core.render.element.Text(core.Vector(self.buttons[self.index].position[0] - 2, self.buttons[self.index].pos[1]), ">", justify="R")
         self.right_arrow = core.render.element.Text(core.Vector(128 - self.buttons[self.index].position[0] + 2, self.buttons[self.index].pos[1]), "<", justify="L")
+        self.title2 = core.render.element.Text(core.Vector(126, 5), time.strftime('%I:%M%p'), justify="R")
 
     def render(self):
         self.title1.render(), self.title2.render()
         for button in self.buttons:
             button.render()
-        self.calc_arrow_pos()
+        self.dynamic_elements()
         self.left_arrow.render(), self.right_arrow.render()
 
     def up(self):
         if self.index > 0:
-            self.index -=1 #Needs to reposiiton
+            self.index -=1
 
     def down(self):
         if self.index < len(self.functions)-1:
             self.index +=1
 
+    @core.render.Window.focus
     def select(self):
-        pass
-
+        command =  self.functions[self.index]
+        res = yield command
 
 class Handle(core.render.Handler):
 
