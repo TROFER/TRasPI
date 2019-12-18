@@ -17,11 +17,6 @@ class Mainwindow(core.render.Window):
         core.render.element.TextBox(core.Vector(64, 54), "Power Options")]
         self.left_arrow = core.render.element.Text(core.Vector(buttons[self.index].position[0]-2,
          core.Vector(buttons[self.index].pos[1]), ">", justify="R")
-        # Variables
-        self.index = 0
-        self.functions = {0: "core.loader.run", 1: "core.render.load", 2: "core.sys.configurator", 3: "core.sys.powermenu"} #Needs to be ajusted if name changes
-        # Misc
-        core.hardware.Backlight.gradient((240, 180, 240, 180, 240))
 
     def render(self):
         self.title1.render(), self.title2.render()
