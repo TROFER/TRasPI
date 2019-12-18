@@ -15,7 +15,7 @@ class Backlight(metaclass=Singleton):
     def gradient(colours):
         for led in range(5):
             _colours = colorsys.hsv_to_rgb(self.hue / 100, 1, 1)
-            backlight.set_pixel(led, int(_colours[0]*100), int(_colours[1]*100) int(_colours[2]*100))
+            backlight.set_pixel(led, int(_colours[0]*100), int(_colours[1]*100), int(_colours[2]*100))
         backlight.show()
 
 class Button(metaclass=Singleton):
