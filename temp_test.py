@@ -3,9 +3,6 @@ import core.sys
 
 print(core.sys.PATH)
 
-info = core.std.Info("Test")
-res = yield info
-
 info = core.std.Error("Info")
 numpad = core.std.Numpad(2, 8000)
 boolinput = core.std.Query("Test", "Test")
