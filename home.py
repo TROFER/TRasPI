@@ -5,7 +5,7 @@ class Mainwindow(core.render.Window):
 
     def __init__(self):
         self.index = 0
-        self.functions = {0: "core.loader.run", 1: "core.render.load",
+        self.functions = {0: core.loader., 1: "core.render.load",
          2: "core.sys.configurator", 3: "core.sys.powermenu"} #Needs to be ajusted if name changes
         core.hardware.Backlight.gradient((240, 180, 240, 180, 240))
         self.template = f"{core.sys.PATH}core/resource/template/home.template"
