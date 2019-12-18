@@ -4,7 +4,10 @@ import time
 class Mainwindow(core.render.Window):
 
     def __init__(self):
-        # Elements
+        self.index = 0
+        self.functions = {0: "core.loader.run", 1: "core.render.load",
+         2: "core.sys.configurator", 3: "core.sys.powermenu"} #Needs to be ajusted if name changes
+        core.hardware.Backlight.gradient((240, 180, 240, 180, 240))
         self.template = f"{core.sys.PATH}core/resource/template/home.template"
         self.title1 = core.render.element.Text(core.Vector(3, 5), "TRasPi OS", justify="L")
         self.title2 = core.render.element.Text(core.Vector(126, 5), time.strftime('%I:%M%p'), justify="R")
@@ -12,6 +15,8 @@ class Mainwindow(core.render.Window):
         core.render.element.TextBox(core.Vector(64, 30), "Load Program"),
         core.render.element.TextBox(core.Vector(64, 42), "System Settings"),
         core.render.element.TextBox(core.Vector(64, 54), "Power Options")]
+        self.left_arrow = core.render.element.Text(core.Vector(buttons[self.index].position[0]-2,
+         core.Vector(buttons[self.index].pos[1]), ">", justify="R")
         # Variables
         self.index = 0
         self.functions = {0: "core.loader.run", 1: "core.render.load", 2: "core.sys.configurator", 3: "core.sys.powermenu"} #Needs to be ajusted if name changes
