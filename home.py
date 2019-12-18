@@ -15,6 +15,7 @@ class Mainwindow(core.render.Window):
         core.render.element.TextBox(core.Vector(64, 30), "Load Program"),
         core.render.element.TextBox(core.Vector(64, 42), "System Settings"),
         core.render.element.TextBox(core.Vector(64, 54), "Power Options")]
+        self.calc_arrow_pos()
 
     def calc_arrow_pos(self):
         self.left_arrow = core.render.element.Text(core.Vector(self.buttons[self.index].position[0] - 2, self.buttons[self.index].pos[1]), ">", justify="R")
