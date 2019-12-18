@@ -14,7 +14,6 @@ class Backlight(metaclass=Singleton):
 
     def gradient(colours):
         for led in range(5):
-            print(colours[led] / 360)
             _colours = colorsys.hsv_to_rgb(colours[led] / 360, 1, 1)
             backlight.set_pixel(led, int(_colours[0]*255), int(_colours[1]*255), int(_colours[2]*255))
         backlight.show()
