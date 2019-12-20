@@ -108,3 +108,12 @@ class Rectangle(Element):
 
     def render(self):
         self.Render.draw.rectangle([self.pos[0] - 2, self.pos[1], *self._abs_2], self.fill, self.colour, self.width)
+
+class Image(Element):
+
+    def __init__(self, image, pos: Vector):
+        super().__init__(pos)
+        self.image = image
+
+    def render(self):
+        self.Render.paste(self.image, self.pos)
