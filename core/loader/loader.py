@@ -21,6 +21,7 @@ class ProgramMenu(core.render.Window):
                 pass
             else:
                 self.contents.append((item, self.folder_icon))
+        self.contents.insert(0, ("return", "RETURN"))
         while len(self.contents) % 4 != 0:
             self.contents.append(("", ""))
         # Elements
@@ -45,9 +46,58 @@ class ProgramMenu(core.render.Window):
         self.dynamic_elements()
         for element in self.table:
             element.render()
-        # for icon in self.icons: While waiting for workaround
-            # icon.render()
-        self.title1.render()
-        self.cursor.render()
+        #for icon in self.icons: #While waiting for workaround
+            #icon.render()
+
+    def up(self):
+        if self.index + 1 < len(self.contents) - 1:
+            self.index += 1
+
+    def down(self):
+        if self.index - 1 > 0:
+            self.index -= 1
+
+    @core.render.Window.focus
+    def select(self):
+        if ".py" in self.contents[self.index][0]:
+            command = self.content[self.index][0]
+        else:
+            pass
+            # Needs to open a submenu with items from the folder
+            
+        res = yield command
+
+class Handle(core.render.Handler):
+
+    key = core.render.Button.CENTRE
+    window = ProgramMenu
+
+    def press(self):
+        self.window.select()
+
+class Handle(core.render.Handler):
+
+    key = core.render.Button.UP
+    window = ProgramMenu
+
+    def press(self):
+        self.window.up()
+
+class Handle(core.render.Handler):
+
+    key = core.render.Button.DOWN
+    window = ProgramMenu
+
+    def press(self):
+        self.window.down()
+
+class Handle(core.render.Handler):
+
+    key = core.render.Button.RIGHT
+    window = Mainwindow
+
+    def press(self):
+        pass
+        # self.window.change_sort() Wait for sort to be implemented
 
 main = ProgramMenu()
