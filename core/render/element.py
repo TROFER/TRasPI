@@ -116,4 +116,4 @@ class Image(Element):
         self.image = image
 
     def render(self):
-        self.Render.paste(self.image, self.pos)
+        self._image.paste(self.image, self.pos) #The Problem Line
