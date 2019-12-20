@@ -8,7 +8,7 @@ class Mainwindow(core.render.Window):
         self.functions = {0: core.loader., 1: "core.render.load",
          2: "core.sys.configurator", 3: "core.sys.powermenu"} #Needs to be ajusted if name changes
         core.hardware.Backlight.gradient((240, 180, 240, 180, 240))
-        self.template = f"{core.sys.PATH}core/resource/template/home.template"
+        self.template = core.asset.Template("home", path="core/resource/template/home.template")
         self.title1 = core.render.element.Text(core.Vector(3, 5), "TRasPi OS", justify="L")
         self.title2 = core.render.element.Text(core.Vector(126, 5), time.strftime('%I:%M%p'), justify="R")
         self.buttons = [core.render.element.TextBox(core.Vector(64, 18), "Run Program"),

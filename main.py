@@ -1,5 +1,5 @@
 import core
-import home as module
+import core.loader.loader as module
 
 module.main.show()
 core.render.loop()
