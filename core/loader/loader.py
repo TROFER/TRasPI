@@ -5,16 +5,20 @@ import core.sys
 class ProgramMenu(core.render.Window):
 
     def __init__(self):
-        # Load Template
+        # Load Templates / Icons
         self.template = core.asset.Template("home", path="core/resource/template/std_window.template")
+        self.py_icon = core.asset.Image("pyscript", path="core/resource/icon/pyfile.icon")
+        self.folder_icon = core.asset.Image("folder", path="core/resource/icon/folder.icon")
         # Index /programs
         self.contents = []
         self.index = 0
         for item in os.listdir(f"{core.sys.PATH}programs"):
             if item[len(item)-3:] == ".py":
-                self.contents.append((item.capitalize(), ".py"))
+                self.contents.append((item.capitalize(), self.py_icon))
+            elif "." in item:
+                pass
             else:
-                self.contents.append((item.capitalize(), "folder"))
+                self.contents.append((item.capitalize(), self.folder_icon))
         while len(self.contents) % 4 != 0:
             self.contents.append(("", ""))
         # Elements
@@ -24,15 +28,23 @@ class ProgramMenu(core.render.Window):
     def dynamic_elements(self):
         self.table = [
         core.render.element.Text(core.Vector(12, 20), self.contents[self.index][0], justify="L"),
-        core.render.element.Text(core.Vector(12, 40), self.contents[self.index + 1][0], justify="L"),
-        core.render.element.Text(core.Vector(12, 50), self.contents[self.index + 2][0], justify="L"),
-        core.render.element.Text(core.Vector(12, 60), self.contents[self.index + 3][0], justify="L")]
+        core.render.element.Text(core.Vector(12, 30), self.contents[self.index + 1][0], justify="L"),
+        core.render.element.Text(core.Vector(12, 40), self.contents[self.index + 2][0], justify="L"),
+        core.render.element.Text(core.Vector(12, 50), self.contents[self.index + 3][0], justify="L")]
         self.cursor = core.render.element.Text(core.Vector(12 + self.table[self.index]._font_size()[0] + 3, self.table[self.index].pos[1]), "<", justify="L")
+        self.icons = [
+        core.render.element.Image(self.contents[self.index][1], core.Vector(1, 20)),
+        core.render.element.Image(self.contents[self.index + 1][1], core.Vector(1, 30)),
+        core.render.element.Image(self.contents[self.index + 2][1], core.Vector(1, 40)),
+        core.render.element.Image(self.contents[self.index + 3][1], core.Vector(1, 50))
+        ]
 
     def render(self):
         self.dynamic_elements()
         for element in self.table:
             element.render()
+        for icon in self.icons:
+            icon.render()
         self.title1.render()
         self.cursor.render()
 
