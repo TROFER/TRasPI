@@ -5,6 +5,8 @@ core.asset.Template("home", path="core/resource/template/std_window.template")
 core.asset.Image("pyscript", path="core/resource/icon/pyfile.icon")
 core.asset.Image("folder", path="core/resource/icon/folder.icon")
 
+VISABLE = 4
+
 class Item:
 
     def __init__(self, name: str, image: str):
@@ -44,6 +46,7 @@ class ProgramMenu(core.render.Window):
 
     def __init__(self, path="programs"):
         self.index = 0
+        self.cursor_index = self.index
         # Backlight
         core.hardware.Backlight.gradient((240, 180, 240, 180, 240))
         # Index /programs
@@ -61,7 +64,7 @@ class ProgramMenu(core.render.Window):
         self.title1.render()
         self._update_cursor()
         self.cursor.render()
-        for index in range(min(4, len(self.contents))):
+        for index in range(min(VISABLE, len(self.contents))):
             item = self.contents[self.index + index]
             item.render(index)
 
@@ -70,12 +73,16 @@ class ProgramMenu(core.render.Window):
         self.cursor._calc_justify()
 
     def up(self):
-        if self.index > 0:
-            self.index -= 1
+        if self.cursor_index > 0:
+            self.cursor_index -= 1
+            if self.cursor_index < self.index:
+                self.index -= 1
 
     def down(self):
-        if self.index + 1 < len(self.contents):
-            self.index += 1
+        if self.cursor_index + 1 < len(self.contents):
+            self.cursor_index += 1
+            if self.cursor_index >= self.index + VISABLE:
+                self.index += 1
 
     def select(self):
         pass
