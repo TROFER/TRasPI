@@ -1,6 +1,6 @@
 import os
 import core
-import importlib
+import importlib.util
 
 core.asset.Template("home", path="core/resource/template/std_window.template")
 core.asset.Image("pyscript", path="core/resource/icon/pyfile.icon")
@@ -38,15 +38,18 @@ class FolderItem(Item):
 class ProgramItem(Item):
 
     def __init__(self, name, path):
-        super().__init__(name[:-3], "pyscript", path)
+        super().__init__(name, "pyscript", path)
 
     def select(self):
-        module = importlib.import_module("{}/{}".format(self.path, self.name))
+        path = "{}{}/{}/main.py".format(core.sys.PATH, self.path, self.name)
+        spec = importlib.util.spec_from_file_location("module", path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
         return module.main
 
 class BackItem(Item):
 
-    def __init__(self, name="Return", path):
+    def __init__(self, name="Return", path=None):
         super().__init__(name, "return", path)
 
     def select(self):
@@ -65,7 +68,7 @@ class ProgramMenu(core.render.Window):
         self.contents = []
         for item in os.listdir(f"{core.sys.PATH}{path}"):
             if "main.py" in os.listdir(f"{core.sys.PATH}{path}/{item}"):
-                self.contents.append(ProgramItem(item))
+                self.contents.append(ProgramItem(item, path))
             else:
                 self.contents.append(FolderItem(item, path))
         self.contents.append(BackItem())
