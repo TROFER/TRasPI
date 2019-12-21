@@ -69,7 +69,7 @@ class ProgramMenu(core.render.Window):
             item.render(index)
 
     def _update_cursor(self):
-        self.cursor.pos = core.Vector(12 + self.contents[self.index].label._font_size()[0] + 3, self.contents[self.index].label.pos[1])
+        self.cursor.pos = core.Vector(12 + self.contents[self.cursor_index].label._font_size()[0] + 3, self.contents[self.cursor_index].label.pos[1])
         self.cursor._calc_justify()
 
     def up(self):
