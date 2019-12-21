@@ -1,5 +1,5 @@
 import os
-import core
+import core 
 
 core.asset.Template("home", path="core/resource/template/std_window.template")
 core.asset.Image("pyscript", path="core/resource/icon/pyfile.icon")
@@ -13,7 +13,7 @@ class Item:
 
     def select(self):
         pass
- 
+
     def render(self, index):
         self.icon.pos = core.Vector(2, 15 + 10 * index)
         self.icon.render()
@@ -55,14 +55,19 @@ class ProgramMenu(core.render.Window):
                 self.contents.append(FolderItem(item, path))
         # Elements
         self.title1 = core.render.element.Text(core.Vector(3, 5), "Programs", justify="L")
-        self.cursor = core.render.element.Text(core.Vector(12 + self.contents[self.index].label._font_size()[0] + 3, self.contents[self.index].label.pos[1]), "<", justify="L")
+        self.cursor = core.render.element.Text(core.Vector(0, 0), "<", justify="L")
 
     def render(self):
         self.title1.render()
+        self._update_cursor()
         self.cursor.render()
         for index in range(min(4, len(self.contents))):
             item = self.contents[self.index + index]
             item.render(index)
+
+    def _update_cursor(self):
+        self.cursor.pos = core.Vector(12 + self.contents[self.index].label._font_size()[0] + 3, self.contents[self.index].label.pos[1])
+        self.cursor._calc_justify()
 
 class Handle(core.render.Handler):
 
