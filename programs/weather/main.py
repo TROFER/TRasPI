@@ -13,7 +13,7 @@ class Mainwindow(core.render.Window):
         self.API = "&appid=dd440727faee99efb0b572bc6d78e7b3"
         self.URL = "http://api.openweathermap.org/data/2.5/weather?"
         self.location = ["id=2641598", "Newport GB"]
-        self.title = core.render.element.Text(core.Vector(3, 5), f"For {self.location[1]}", colour=0, justify="L")
+        self.title = core.render.element.Text(core.Vector(3, 5), f"For {self.location[1]}", colour=1, justify="L")
         self.header1 = core.render.element.Text(core.Vector(3, 50), "Current Weather:", justify="L")
         self.get_weather()
 
