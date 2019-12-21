@@ -47,7 +47,10 @@ class _backlight(metaclass=Singleton):
     def clear(self):
         pass
 
-    def set_pixel(self, x, y, r, g, b):
+    def set_pixel(self, x, r, g, b):
+        pass
+
+    def show(self):
         pass
 
 #------------------------------------------------------------------------------#
