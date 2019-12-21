@@ -1,6 +1,6 @@
 import core
-import sys
 
+__all__ = ["PowerMenu"]
 
 core.asset.Template("std::power", path="powermenu.template")
 core.asset.Image("std::powericon", path="power.icon")
@@ -12,7 +12,7 @@ class PowerMenu(core.render.Window):
 
     def __init__(self):
         self.index = 2
-        self.functions = {0: PowerOptions.halt, 1: PowerOptions.restart, 2: self.finish}
+        self.functions = {0: core.hardware.Power.halt, 1: core.hardware.Power.restart, 2: self.finish}
         # Elements
         self.title = core.element.Text(core.Vector(3, 5), "Power Options", justify="L")
         self.powericon = core.element.Image(core.Vector(20, 20), core.asset.Image("std::powericon"))
@@ -39,20 +39,9 @@ class PowerMenu(core.render.Window):
             self.index -=1
             self.options[self.index].rect.colour = 0
 
-
     def select(self):
-        exec = self.functions[self.index]
-        exec()
-
-class PowerOptions():
-
-    def halt(self):
-        print("WOULD HALT")
-        # os.system("halt")
-
-    def restart(self):
-        print("WOULD REBOOT")
-        # os.system("reboot")
+        func = self.functions[self.index]
+        func()
 
 class Handle(core.render.Handler):
 

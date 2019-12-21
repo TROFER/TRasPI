@@ -2,6 +2,8 @@ import os
 import core
 import importlib.util
 
+__all__ = ["ProgramMenu"]
+
 core.asset.Template("std::home", path="window.template")
 core.asset.Image("std::script", path="pyfile.icon")
 core.asset.Image("std::folder", path="folder.icon")

@@ -1,4 +1,4 @@
-class PowerOptions():
+class Power():
 
     def halt(self):
         print("WOULD HALT")
