@@ -1,17 +1,21 @@
 import os
 import core
+import importlib
 
 core.asset.Template("home", path="core/resource/template/std_window.template")
 core.asset.Image("pyscript", path="core/resource/icon/pyfile.icon")
 core.asset.Image("folder", path="core/resource/icon/folder.icon")
+core.asset.Image("return", path="core/resource/icon/return.icon")
 
 VISABLE = 4
 
 class Item:
 
-    def __init__(self, name: str, image: str):
+    def __init__(self, name: str, image: str, path: str):
         self.icon = core.element.Image(core.Vector(0, 0), core.asset.Image(image))
         self.label = core.element.Text(core.Vector(0, 0), name, justify="L")
+        self.name = name
+        self.path = path
 
     def select(self):
         pass
@@ -26,19 +30,27 @@ class Item:
 class FolderItem(Item):
 
     def __init__(self, name, path):
-        super().__init__(name, "folder")
-        self.path = path
+        super().__init__(name, "folder", path)
 
     def select(self):
-        return ProgramMenu
+        return ProgramMenu("{}/{}".format(self.path, self.name))
 
 class ProgramItem(Item):
 
-    def __init__(self, name):
-        super().__init__(name, "pyscript")
+    def __init__(self, name, path):
+        super().__init__(name[:-3], "pyscript", path)
 
     def select(self):
-        pass
+        module = importlib.import_module("{}/{}".format(self.path, self.name))
+        return module.main
+
+class BackItem(Item):
+
+    def __init__(self, name="Return", path):
+        super().__init__(name, "return", path)
+
+    def select(self):
+        return None
 
 class ProgramMenu(core.render.Window):
 
@@ -56,13 +68,13 @@ class ProgramMenu(core.render.Window):
                 self.contents.append(ProgramItem(item))
             else:
                 self.contents.append(FolderItem(item, path))
+        self.contents.append(BackItem())
         # Elements
         self.title1 = core.render.element.Text(core.Vector(3, 5), "Programs", justify="L")
-        self.cursor = core.render.element.Text(core.Vector(0, 0), "<", justify="L")
+        self.cursor = core.render.element.Text(core.Vector(12 + self.contents[self.cursor_index].label._font_size()[0] + 3, 20), "<", justify="L")
 
     def render(self):
         self.title1.render()
-        self._update_cursor()
         self.cursor.render()
         for index in range(min(VISABLE, len(self.contents))):
             item = self.contents[self.index + index]
@@ -77,15 +89,22 @@ class ProgramMenu(core.render.Window):
             self.cursor_index -= 1
             if self.cursor_index < self.index:
                 self.index -= 1
+            self._update_cursor()
 
     def down(self):
         if self.cursor_index + 1 < len(self.contents):
             self.cursor_index += 1
             if self.cursor_index >= self.index + VISABLE:
                 self.index += 1
+            self._update_cursor()
 
+    @core.render.Window.focus
     def select(self):
-        pass
+        res = self.contents[self.cursor_index].select()
+        if res is not None:
+            yield res
+        else:
+            self.finish()
 
 class Handle(core.render.Handler):
 
