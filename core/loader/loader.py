@@ -1,5 +1,5 @@
 import os
-import core 
+import core
 
 core.asset.Template("home", path="core/resource/template/std_window.template")
 core.asset.Image("pyscript", path="core/resource/icon/pyfile.icon")
@@ -68,6 +68,17 @@ class ProgramMenu(core.render.Window):
     def _update_cursor(self):
         self.cursor.pos = core.Vector(12 + self.contents[self.index].label._font_size()[0] + 3, self.contents[self.index].label.pos[1])
         self.cursor._calc_justify()
+
+    def up(self):
+        if self.index > 0:
+            self.index -= 1
+
+    def down(self):
+        if self.index + 1 < len(self.contents):
+            self.index += 1
+
+    def select(self):
+        pass
 
 class Handle(core.render.Handler):
 
