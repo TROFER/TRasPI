@@ -1,9 +1,7 @@
 from core.render.window import Element, Vector
 from core.render.renderer import Render
 from core.asset.font import Font
-from core.sys import PATH
-
-from PIL import ImageFont
+from core.asset.image import Image
 
 __all__ = ["Text"]
 
@@ -111,9 +109,9 @@ class Rectangle(Element):
 
 class Image(Element):
 
-    def __init__(self, image, pos: Vector):
+    def __init__(self, pos: Vector, image: Image):
         super().__init__(pos)
         self.image = image
 
     def render(self):
-        core.renderer._image.paste(self.image, self.pos) #The Problem Line
+        self.Render.image.paste(self.image.image, self.pos)

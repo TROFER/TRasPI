@@ -20,7 +20,7 @@ class Render(metaclass=Singleton):
 
     def __init__(self):
         self.draw = None
-        self._image = None
+        self.image = None
         self._buffer = mp.JoinableQueue()
         self._changes = mp.JoinableQueue()
         self._frame_event = mp.Event()
@@ -28,14 +28,14 @@ class Render(metaclass=Singleton):
         self._process_event = mp.Event()
 
     def frame(self):
-        self._buffer.put(self._image)
+        self._buffer.put(self.image)
         self._frame_event.set()
         self._next()
         self._buffer.join()
 
     def _next(self):
-        self._image = Screen().template().copy()
-        self.draw = PIL.ImageDraw.Draw(self._image)
+        self.image = Screen().template().copy()
+        self.draw = PIL.ImageDraw.Draw(self.image)
 
     def clear(self):
         self._next()
