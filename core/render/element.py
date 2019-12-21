@@ -8,7 +8,7 @@ __all__ = ["Text"]
 class Text(Element):
 
     def __init__(self, pos: Vector, text="Default Text", font="std", size=11, colour=1, justify='C'):
-        super().__init__(pos)
+        self._pos = pos
         self._text, self._size, self.colour, self.justify, self._font = str(text), size, colour, justify, Font(font, size)
         self._calc_justify()
 
@@ -31,6 +31,16 @@ class Text(Element):
             self._size = size
             self._calc_justify()
         return self._size
+
+    @property
+    def pos(self):
+        return _pos
+
+    @pos.setter
+    def pos(self, value: Vector):
+        self._pos = value
+        self._calc_justify()
+        return self._pos
 
     def _calc_justify(self):
         fs = self._font_size()
