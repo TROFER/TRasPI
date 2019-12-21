@@ -34,7 +34,7 @@ class Text(Element):
 
     @property
     def pos(self):
-        return _pos
+        return self._pos
 
     @pos.setter
     def pos(self, value: Vector):
