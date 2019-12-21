@@ -2,7 +2,7 @@ import core
 
 __all__ = ["PowerMenu"]
 
-core.asset.Template("std::power", path="powermenu.template")
+core.asset.Template("std::power", path="power.template")
 core.asset.Image("std::powericon", path="power.icon")
 core.asset.Image("std::restarticon", path="restart.icon")
 
