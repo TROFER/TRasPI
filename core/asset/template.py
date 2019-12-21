@@ -6,7 +6,7 @@ __all__ = ["Template"]
 class Template(metaclass=Asset):
 
     def __init__(self):
-        self._image = PIL.Image.open(self._path).convert("P")
+        self._image = PIL.Image.open(self._path).convert("1")
 
     def __repr__(self) -> str:
         return "<Asset: {}[{}] {} : {}>".format(self.__class__.__name__, self._name, self._path, self._image)
