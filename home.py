@@ -7,7 +7,7 @@ class Mainwindow(core.render.Window):
 
     def __init__(self):
         self.index = 0
-        self.functions = {0: core.system.ProgramMenu(), 1: core.std.Error("No 1")
+        self.functions = {0: core.system.ProgramMenu(), 1: core.std.Error("No 1"),
          2: core.std.Error("No 2"), 3: core.system.PowerMenu()} #Needs to be ajusted if name changes
         core.hardware.Backlight.gradient((240, 180, 240, 180, 240))
         self.title1 = core.render.element.Text(core.Vector(3, 5), "TRasPi OS", justify="L")
