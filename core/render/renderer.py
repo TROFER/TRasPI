@@ -60,7 +60,7 @@ class Render(metaclass=Singleton):
                     for x in range(WIDTH):
                         pixel_value = next(frame)
                         if pixel_value != cache[x][y]:
-                            self._changes.put((x, y, pixel_value))
+                            self._changes.put((x, y, 1 if pixel_value == 0 else 0))
                         cache[x][y] = pixel_value
                 self._changes.put(None)
                 self._frame_event.clear()
