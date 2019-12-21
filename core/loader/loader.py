@@ -2,10 +2,10 @@ import os
 import core
 import importlib.util
 
-core.asset.Template("home", path="std_window.template")
-core.asset.Image("pyscript", path="pyfile.icon")
-core.asset.Image("folder", path="folder.icon")
-core.asset.Image("return", path="return.icon")
+core.asset.Template("std::home", path="window.template")
+core.asset.Image("std::script", path="pyfile.icon")
+core.asset.Image("std::folder", path="folder.icon")
+core.asset.Image("std::return", path="return.icon")
 
 VISABLE = 4
 
@@ -30,7 +30,7 @@ class Item:
 class FolderItem(Item):
 
     def __init__(self, name, path):
-        super().__init__(name, "folder", path)
+        super().__init__(name, "std::folder", path)
 
     def select(self):
         return ProgramMenu("{}/{}".format(self.path, self.name))
@@ -38,7 +38,7 @@ class FolderItem(Item):
 class ProgramItem(Item):
 
     def __init__(self, name, path):
-        super().__init__(name, "pyscript", path)
+        super().__init__(name, "std::script", path)
 
     def select(self):
         path = "{}{}/{}/main.py".format(core.sys.PATH, self.path, self.name)
@@ -50,14 +50,14 @@ class ProgramItem(Item):
 class BackItem(Item):
 
     def __init__(self, name="Return", path=None):
-        super().__init__(name, "return", path)
+        super().__init__(name, "std::return", path)
 
     def select(self):
         return None
 
 class ProgramMenu(core.render.Window):
 
-    template = core.asset.Template("home")
+    template = core.asset.Template("std::home")
 
     def __init__(self, path="programs"):
         self.index = 0
