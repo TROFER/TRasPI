@@ -7,7 +7,7 @@ __all__ = ["Text"]
 
 class Text(Element):
 
-    def __init__(self, pos: Vector, text="Default Text", font="std", size=11, colour=1, justify='C'):
+    def __init__(self, pos: Vector, text="Default Text", font="std", size=11, colour=0, justify='C'):
         self._pos = pos
         self._text, self._size, self.colour, self.justify, self._font = str(text), size, colour, justify, Font(font, size)
         self._calc_justify()
@@ -98,7 +98,7 @@ class TextBox(Text):
 
 class Rectangle(Element):
 
-    def __init__(self, pos1, pos2, colour=1, fill=None, width=1, rel=True):
+    def __init__(self, pos1, pos2, colour=0, fill=None, width=1, rel=True):
         super().__init__(pos1)
         self.colour, self.fill = colour, fill
         self.width = width
