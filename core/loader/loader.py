@@ -66,7 +66,7 @@ class ProgramMenu(core.render.Window):
         core.hardware.Backlight.gradient((240, 180, 240, 180, 240))
         # Index /programs
         self.contents = []
-        for item in os.listdir(f"{core.sys.PATH}{path}"): 
+        for item in os.listdir(f"{core.sys.PATH}{path}"):
             p = f"{core.sys.PATH}{path}/{item}"
             if "main.py" in os.listdir(p):
                 self.contents.append(ProgramItem(item, path))
@@ -109,6 +109,10 @@ class ProgramMenu(core.render.Window):
             yield res
         else:
             self.finish()
+
+    def show(self):
+        super().show()
+        core.hardware.Backlight.gradient((240, 180, 240, 180, 240))
 
 class Handle(core.render.Handler):
 
