@@ -2,10 +2,10 @@ import os
 import core
 import importlib.util
 
-core.asset.Template("home", path="core/resource/template/std_window.template")
-core.asset.Image("pyscript", path="core/resource/icon/pyfile.icon")
-core.asset.Image("folder", path="core/resource/icon/folder.icon")
-core.asset.Image("return", path="core/resource/icon/return.icon")
+core.asset.Template("home", path="std_window.template")
+core.asset.Image("pyscript", path="pyfile.icon")
+core.asset.Image("folder", path="folder.icon")
+core.asset.Image("return", path="return.icon")
 
 VISABLE = 4
 
