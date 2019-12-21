@@ -2,15 +2,19 @@ import os
 import core
 import core.sys
 
+core.asset.Template("home", path="core/resource/template/std_window.template")
+core.asset.Image("pyscript", path="core/resource/icon/pyfile.icon")
+core.asset.Image("folder", path="core/resource/icon/folder.icon")
+
 class ProgramMenu(core.render.Window):
 
     def __init__(self):
         # Backlight Cfg
         core.hardware.Backlight.gradient((0, 44, 44, 0, 0))
         # Load Templates / Icons
-        self.template = core.asset.Template("home", path="core/resource/template/std_window.template")
-        self.py_icon = core.asset.Image("pyscript", path="core/resource/icon/pyfile.icon")
-        self.folder_icon = core.asset.Image("folder", path="core/resource/icon/folder.icon")
+        self.template = core.asset.Template("home")
+        self.py_icon = core.asset.Image("pyscript")
+        self.folder_icon = core.asset.Image("folder")
         # Index /programs
         self.contents = []
         self.index = 0
@@ -64,7 +68,7 @@ class ProgramMenu(core.render.Window):
         else:
             pass
             # Needs to open a submenu with items from the folder
-            
+
         res = yield command
 
 class Handle(core.render.Handler):
