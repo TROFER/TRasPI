@@ -10,10 +10,10 @@ class Numpad(core.render.Window):
         if default is None:
             default = min
         self.min, self.max, self.default = min, max, default
-        self.selected_number = core.render.element.TextContainer(core.Vector(64, 32), default)
-        self.step = core.render.element.TextContainer(core.Vector(125, 48), 1, justify='R', func=lambda v: "+"+str(v))
-        self.step_l = core.render.element.TextContainer(core.Vector(3, 48), self.step, justify='L', func=lambda v: "-"+str(v))
-        self.title = core.render.element.Text(core.Vector(64, 16), title, size=11)#Font: 8
+        self.selected_number = core.element.TextContainer(core.Vector(64, 32), default)
+        self.step = core.element.TextContainer(core.Vector(125, 48), 1, justify='R', func=lambda v: "+"+str(v))
+        self.step_l = core.element.TextContainer(core.Vector(3, 48), self.step, justify='L', func=lambda v: "-"+str(v))
+        self.title = core.element.Text(core.Vector(64, 16), title, size=11)#Font: 8
 
     def render(self):
         self.selected_number.render()
