@@ -98,10 +98,11 @@ class TextBox(Text):
 
 class Rectangle(Element):
 
-    def __init__(self, pos1, pos2, colour=1, fill=None, width=1, rel=True):
+    def __init__(self, pos1, pos2, colour=0, fill=None, width=1, rel=True):
         super().__init__(pos1)
         self.colour, self.fill = colour, fill
         self.width = width
+        print(self.colour)
         if not rel:
             self.pos_2 = self._calc_pos
         self.pos_2(pos2)
