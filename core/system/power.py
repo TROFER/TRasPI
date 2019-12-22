@@ -31,12 +31,14 @@ class PowerMenu(core.render.Window):
         if self.index + 1 < 2:
             self.options[self.index].rect_colour = 1
             self.index += 1
+            print("Index Up")
             self.options[self.index].rect_colour = 0
 
     def down(self):
         if self.index > 0:
             self.options[self.index].rect_colour = 1
             self.index -=1
+            print("Index down")
             self.options[self.index].rect_colour = 0
 
     def select(self):
