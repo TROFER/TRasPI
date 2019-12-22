@@ -15,10 +15,10 @@ class PowerMenu(core.render.Window):
         self.functions = {0: core.hardware.Power.halt, 1: core.hardware.Power.restart, 2: self.finish}
         # Elements
         self.title = core.element.Text(core.Vector(3, 4), "Power Options", justify="L")
-        self.powericon = core.element.Image(core.Vector(42, 10), core.asset.Image("std::powericon"))
-        self.restarticon = core.element.Image(core.Vector(84, 10), core.asset.Image("std::restarticon"))
-        self.options = [core.element.TextBox(core.Vector(42, 30), "Turn Off", rect_colour=1),
-        core.element.TextBox(core.Vector(84, 30), "Restart", rect_colour=1),
+        self.powericon = core.element.Image(core.Vector(32, 10), core.asset.Image("std::powericon"))
+        self.restarticon = core.element.Image(core.Vector(94, 10), core.asset.Image("std::restarticon"))
+        self.options = [core.element.TextBox(core.Vector(32, 30), "Turn Off", rect_colour=1),
+        core.element.TextBox(core.Vector(94, 30), "Restart", rect_colour=1),
         core.render.element.TextBox(core.Vector(100, 49), "Cancel", rect_colour=0)]
 
     def render(self):
