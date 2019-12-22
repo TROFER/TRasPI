@@ -59,4 +59,12 @@ class Handle(core.render.Handler):
     window = PowerMenu
 
     def press(self):
-        self.window.up()
+        self.window.down()
+
+class Handle(core.render.Handler):
+
+    key = core.render.Button.CENTRE
+    window = PowerMenu
+
+    def press(self):
+        self.window.select()
