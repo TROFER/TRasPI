@@ -102,7 +102,6 @@ class Rectangle(Element):
         super().__init__(pos1)
         self.colour, self.fill = colour, fill
         self.width = width
-        print(self.colour)
         if not rel:
             self.pos_2 = self._calc_pos
         self.pos_2(pos2)
