@@ -7,36 +7,37 @@ class Mainwindow(core.render.Window):
 
     def __init__(self):
         self.index = 0
-        self.functions = {0: core.system.ProgramMenu(), 1: core.std.Error("No 1"),
-         2: core.std.Error("No 2"), 3: core.system.PowerMenu()} #Needs to be ajusted if name changes
+        self.functions = {0: core.system.ProgramMenu(), 1: core.std.Error("Not Ready"), 2: core.system.PowerMenu()}
         core.hardware.Backlight.gradient((240, 180, 240, 180, 240))
         self.title1 = core.render.element.Text(core.Vector(3, 5), "TRasPi OS", justify="L")
-        self.title2 = core.render.element.Text(core.Vector(126, 5), time.strftime('%I:%M%p'), justify="R")
         self.buttons = [core.render.element.TextBox(core.Vector(64, 18), "Run Program"),
-        core.render.element.TextBox(core.Vector(64, 30), "Load Program"),
-        core.render.element.TextBox(core.Vector(64, 42), "System Settings"),
-        core.render.element.TextBox(core.Vector(64, 54), "Power Options")]
-        self.dynamic_elements()
+        core.render.element.TextBox(core.Vector(64, 30), "System Settings"),
+        core.render.element.TextBox(core.Vector(64, 42), "Power Options")]
+        self.clock()
 
-    def dynamic_elements(self):
+    def clock(self):
+        self.title2 = core.render.element.Text(core.Vector(126, 5), time.strftime('%I:%M%p'), justify="R")
+
+    def update_arrow(self):
         self.left_arrow = core.render.element.Text(core.Vector(self.buttons[self.index].position[0] - 2, self.buttons[self.index].pos[1]), ">", justify="R")
         self.right_arrow = core.render.element.Text(core.Vector(128 - self.buttons[self.index].position[0] + 2, self.buttons[self.index].pos[1]), "<", justify="L")
-        self.title2 = core.render.element.Text(core.Vector(126, 5), time.strftime('%I:%M%p'), justify="R")
 
     def render(self):
+        clock()
         self.title1.render(), self.title2.render()
         for button in self.buttons:
             button.render()
-        self.dynamic_elements()
         self.left_arrow.render(), self.right_arrow.render()
 
     def up(self):
         if self.index > 0:
             self.index -=1
+            update_arrow()
 
     def down(self):
         if self.index < len(self.functions)-1:
             self.index +=1
+            update_arrow()
 
     @core.render.Window.focus
     def select(self):
