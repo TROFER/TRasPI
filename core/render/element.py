@@ -99,6 +99,7 @@ class TextBox(Text):
 class Rectangle(Element):
 
     def __init__(self, pos1, pos2, colour=0, fill=None, width=1, rel=True):
+        print(colour)
         super().__init__(pos1)
         self.colour, self.fill = colour, fill
         self.width = width
