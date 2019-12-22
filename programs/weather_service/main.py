@@ -3,7 +3,7 @@ import json
 from urllib.error import HTTPError, URLError
 from urllib import request
 
-core.asset.Template("weather", path="weather/gui.template")
+core.asset.Template("weather", path="weather_service/gui.template")
 
 class Mainwindow(core.render.Window):
 
