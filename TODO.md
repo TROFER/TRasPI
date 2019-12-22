@@ -1,11 +1,12 @@
 ## Bugs
 
 Weird thing that happens when changing windows
+TextBox does set box colour to white
 
 ## Features
 
 Freeze / Pause renderer to save power
-T - Work on home.py
+T - Work on home.py #DONE? 
 Error handle Loader
 Optimise Loader
 Test and Tweak Power Menu
