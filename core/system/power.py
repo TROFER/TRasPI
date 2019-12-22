@@ -32,6 +32,7 @@ class PowerMenu(core.render.Window):
             self.options[self.index].rect_colour = 1
             self.index += 1
             print("Index Up")
+            print(self.index)
             self.options[self.index].rect_colour = 0
 
     def down(self):
@@ -39,6 +40,7 @@ class PowerMenu(core.render.Window):
             self.options[self.index].rect_colour = 1
             self.index -=1
             print("Index down")
+            print(self.index)
             self.options[self.index].rect_colour = 0
 
     def select(self):
