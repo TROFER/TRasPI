@@ -83,8 +83,7 @@ class TextContainer(Text):
 class TextBox(Text):
 
     def __init__(self, pos: Vector, *args, rect_colour=0, fill=None, width=1, **kwargs):
-        print(f"Text Box: {rect_colour} {self.text} {pos}")
-        self.rect = Rectangle(pos, Vector(1, 1), colour=rect_colour, fill=fill, width=width)
+        self.rect = Rectangle(pos, Vector(1, 1), rect_colour, fill, width)
         super().__init__(pos, *args, **kwargs)
         self.rect.colour = self.colour
 
@@ -99,10 +98,9 @@ class TextBox(Text):
 
 class Rectangle(Element):
 
-    def __init__(self, pos1, pos2, colour=0, fill=None, width=1, rel=True):
+    def __init__(self, pos1, pos2, colour=1, fill=None, width=1, rel=True):
         super().__init__(pos1)
         self.colour, self.fill = colour, fill
-        print(f"Rectangle Element: {self.colour}")
         self.width = width
         if not rel:
             self.pos_2 = self._calc_pos
