@@ -29,15 +29,15 @@ class PowerMenu(core.render.Window):
 
     def up(self):
         if self.index + 1 < 2:
-            self.options[self.index].rect.colour = 1
+            self.options[self.index].rect_colour = 1
             self.index += 1
-            self.options[self.index].rect.colour = 0
+            self.options[self.index].rect_colour = 0
 
     def down(self):
         if self.index > 0:
-            self.options[self.index].rect.colour = 1
+            self.options[self.index].rect_colour = 1
             self.index -=1
-            self.options[self.index].rect.colour = 0
+            self.options[self.index].rect_colour = 0
 
     def select(self):
         func = self.functions[self.index]
