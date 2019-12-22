@@ -28,7 +28,7 @@ class PowerMenu(core.render.Window):
         self.title.render()
 
     def up(self):
-        if self.index + 1 < 2:
+        if self.index + 1 < 3:
             self.options[self.index].rect_colour = 1
             self.index += 1
             print("Index Up")
