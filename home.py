@@ -23,7 +23,7 @@ class Mainwindow(core.render.Window):
         self.right_arrow = core.render.element.Text(core.Vector(128 - self.buttons[self.index].position[0] + 2, self.buttons[self.index].pos[1]), "<", justify="L")
 
     def render(self):
-        clock()
+        self.clock()
         self.title1.render(), self.title2.render()
         for button in self.buttons:
             button.render()
@@ -32,12 +32,12 @@ class Mainwindow(core.render.Window):
     def up(self):
         if self.index > 0:
             self.index -=1
-            update_arrow()
+            self.update_arrow()
 
     def down(self):
         if self.index < len(self.functions)-1:
             self.index +=1
-            update_arrow()
+            self.update_arrow()
 
     @core.render.Window.focus
     def select(self):
@@ -69,3 +69,5 @@ class Handle(core.render.Handler):
         self.window.down()
 
 main = Mainwindow()
+main.show()
+core.render.loop()
