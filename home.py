@@ -10,7 +10,7 @@ class Mainwindow(core.render.Window):
         self.functions = {0: core.system.ProgramMenu(), 1: core.std.Error("Not Ready"), 2: core.system.PowerMenu()}
         core.hardware.Backlight.gradient((240, 180, 240, 180, 240))
         self.title1 = core.render.element.Text(core.Vector(3, 5), "TRasPi OS", justify="L")
-        self.buttons = [core.render.element.TextBox(core.Vector(64, 18), "Run Program"),
+        self.buttons = [core.render.element.TextBox(core.Vector(64, 18), "Run Program", rect_colour=0),
         core.render.element.TextBox(core.Vector(64, 30), "System Settings"),
         core.render.element.TextBox(core.Vector(64, 42), "Power Options")]
         self.clock(), self.update_arrow()
