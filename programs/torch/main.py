@@ -25,10 +25,10 @@ class Torch(core.render.Window):
         self.template = core.asset.Template(str(self.state))
         if self.state:
             core.hardware.Backlight.fill(255, 255, 255)
-            core.hardware.Button.set_led(True)
+            core.hardware.Button.led(True)
         else:
             core.hardware.Backlight.fill(0, 0, 0)
-            core.hardware.Button.set_led(False)
+            core.hardware.Button.led(False)
 
 class Handle(core.render.Handler):
 
@@ -45,7 +45,7 @@ class Handle(core.render.Handler):
 
     def press(self):
         core.hardware.Backlight.fill(225, 225, 225)
-        core.hardware.Button.set_led(False)
+        core.hardware.Button.led(False)
         self.window.finish()
 
 #######RGB#######
