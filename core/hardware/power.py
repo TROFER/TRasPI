@@ -1,4 +1,5 @@
 import core
+import os
 import time
 
 class Power:
