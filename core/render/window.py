@@ -23,7 +23,7 @@ class MetaWindow(type):
 
     def __call__(cls, *args, **kwargs):
         self = super().__call__(*args, **kwargs)
-        self.elements = {}
+        # self.elements = {}
         return self
 
 class Window(metaclass=MetaWindow):
