@@ -122,7 +122,7 @@ class Image(Element):
     def __init__(self, pos: Vector, image: Image, justify=True):
         super().__init__(pos)
         self.image = image
-        self.pos = tuple(self.pos)
+        self.pos = list(self.pos)
         if justify:
             self._calc_pos()
 
@@ -131,4 +131,4 @@ class Image(Element):
         self.pos[0], self.pos[1] = self.pos[0] - (self.image_w // 2), self.pos[1] - (self.image_h // 2)
 
     def render(self):
-        self.Render.image.paste(self.image.image, self.pos)
+        self.Render.image.paste(self.image.image, tuple(self.pos))
