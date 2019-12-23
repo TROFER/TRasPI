@@ -23,7 +23,7 @@ class HardwareWindow(core.render.Window):
                 label.text(self.data[index])
             self.time = time.time()
         else:
-            print("False")
+            print(time.time() - self.time)
 
     def render(self):
         self.update()
