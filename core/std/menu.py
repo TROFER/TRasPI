@@ -51,14 +51,6 @@ class MenuElement:
     def dehover(self):
         pass
 
-class Handle(core.render.Handler):
-
-    key = core.render.Button.UP
-    window = Menu
-
-    def press(self):
-        self.window.up()
-
 class Menu(core.render.Window):
 
     Element = MenuElement
