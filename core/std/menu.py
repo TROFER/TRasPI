@@ -57,7 +57,7 @@ class Menu(core.render.Window):
 
     def __init__(self, *items: MenuElement, visable=4, offset=10):
         self.visable = visable
-        self.items = items
+        self.items = list(items)
         self.items.append(MenuElement(core.element.Text(core.Vector(0, 0), "Return", justify="L"), select=lambda s, w: w.finish()))
         for elm in self.items:
             elm._offset = offset
