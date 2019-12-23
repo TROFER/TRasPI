@@ -12,7 +12,7 @@ class PowerMenu(core.render.Window):
 
     def __init__(self):
         self.index = 2
-        self.functions = {0: core.hardware.Power.halt, 1: core.hardware.Power.restart, 2: self.finish}
+        self.functions = {0: core.hardware.PowerControls.halt, 1: core.hardware.PowerControls.restart, 2: self.finish}
         # Elements
         self.title = core.element.Text(core.Vector(3, 4), "Power Options", justify="L")
         self.powericon = core.element.Image(core.Vector(32, 20), core.asset.Image("std::powericon"))
@@ -44,8 +44,8 @@ class PowerMenu(core.render.Window):
             self.options[self.index].rect_colour = 0
 
     def select(self):
-        self.func = self.functions[self.index]
-        self.func()
+        func = self.functions[self.index]
+        func()
 
 class Handle(core.render.Handler):
 
