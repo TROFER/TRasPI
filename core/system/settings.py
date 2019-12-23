@@ -24,7 +24,7 @@ class _Settings(core.std.Menu):
         super().__init__(*elements)
 
     def render(self):
-        self.title()
+        self.title.render()
         super().render()
 
     def load(self):
@@ -44,7 +44,7 @@ class Core(_Settings):
     """ Core settings """
 
     def __init__(self):
-        super().__init__(core.sys.PATH+"core/system/system.cfg") 
+        super().__init__(core.sys.PATH+"core/system/system.cfg")
 
 class Application(_Settings):
     """ Application settings"""
