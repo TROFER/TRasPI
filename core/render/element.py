@@ -119,13 +119,15 @@ class Rectangle(Element):
 
 class Image(Element):
 
-    def __init__(self, pos: Vector, image: Image):
+    def __init__(self, pos: Vector, image: Image, justify=True):
         super().__init__(pos)
         self.image = image
-        print(pos)
+        if justify:
+            self._calc_pos()
 
     def _calc_pos(self):
         self.image_w, self.image_h = self.image.size
+        self.pos[0], self.pos[1] = self.pos[0] - (self.image_w // 2), self.pos[1] - (self.image_h // 2)
 
     def render(self):
         self.Render.image.paste(self.image.image, tuple(self.pos))
