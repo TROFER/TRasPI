@@ -17,15 +17,28 @@ class _Settings(core.std.Menu):
         # Elements
         self.title = core.element.Text(core.Vector(3, 5), "", justify="L")
 
-        elements = [
-            core.std.Menu.Element(core.element.Text(core.Vector(0, 0), "Test")),
-        ]
+        self.load()
+        elements = []
+        for name, data in self.data.items():
+            elements.append(core.std.Menu.Element(
+                core.element.Text(core.Vector(0, 0), data["name"], justify="L"),
+                data = {**data, "key": name},
+                select = self.edit))
 
         super().__init__(*elements)
 
     def render(self):
         self.title.render()
         super().render()
+
+    @core.render.Window.focus
+    def edit(self, element, window):
+        if element.data["type"] == "bool":
+            res = yield core.std.Query(element.data["desc"])
+        elif element.data["type"] == "int":
+            res = yield core.std.Numpad(element.data["min"], element.data["max"], element.data["value"], element.data["desc"])
+        element.data["value"] = res
+        self.save()
 
     def load(self):
         with open(self._file, "r") as file:
@@ -34,11 +47,6 @@ class _Settings(core.std.Menu):
     def save(self):
         with open(self._file, "w") as file:
             json.dump(self.data, file)
-
-    def __enter__(self):
-        self.load()
-    def __exit__(self, *args):
-        self.save()
 
 class Core(_Settings):
     """ Core settings """
