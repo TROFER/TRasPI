@@ -1,19 +1,29 @@
 import core
 import json
 
-class SettingsWindow(core.render.Window):
+class SettingsWindow(core.std.MenuSingle):
     """ Open all the other settings windows. """
 
     def __init__(self):
-        pass
+        super().__init__(Core=Core())
 
-class _Settings(core.render.Window):
+class _Settings(core.std.Menu):
     """ Parent class for all settings """
 
     def __init__(self, file: str):
         self._file = file # file to .cfg
         # Elements
         self.title = core.element.Text(core.Vector(3, 5), "", justify="L")
+
+        elements = [
+            core.std.Menu.Element(core.element.Text(core.Vector(0, 0), "Test")),
+        ]
+
+        super().__init__(*elements)
+
+    def render(self):
+        self.title()
+        super().render()
 
     def load(self):
         with open(self._file, "r") as file:
@@ -32,13 +42,13 @@ class Core(_Settings):
     """ Core settings """
 
     def __init__(self):
-        super()._init__()
+        super()._init__(core.sys.PATH+"core/system/system.cfg")
 
 class Application(_Settings):
     """ Application settings"""
 
     def __init__(self):
-        super()._init__()
+        super()._init__("test")
 
 
 ## Notes ##
