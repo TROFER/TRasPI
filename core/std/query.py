@@ -7,12 +7,12 @@ class Query(core.render.Window):
     template = core.asset.Template("std::query", path="query.template")
 
     def __init__(self, message, title="Query", cancel=False):
-        self.message = core.element.Text(core.Vector(38, 27), message, justify="L")
+        self.message = core.element.Text(core.Vector(38, 27), message[:14], justify="L")
         self.title = core.element.Text(core.Vector(5, 5), title, justify="L")
         if cancel:
             bttn_yes = core.Vector(42, 56)
-            bttn_no = core.Vector(84, 56)
-            self.bttn_cancel = core.element.TextBox(core.Vector(126, 56), "Cancel")
+            bttn_no = core.Vector(66, 56)
+            self.bttn_cancel = core.element.TextBox(core.Vector(108, 56), "Cancel")
         else:
             bttn_yes = core.Vector(31, 56)
             bttn_no = core.Vector(94, 56)
