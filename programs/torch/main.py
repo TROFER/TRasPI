@@ -6,7 +6,7 @@ core.asset.Template("True", path="torch/True.template")
 core.asset.Template("False", path="torch/False.template")
 
 ####MAINWINDOW####
-class Mainwindow(core.std.Menu):
+class Mainwindow(core.std.MenuSingle):
 
     core.hardware.Backlight.fill(225, 225, 225)
 
