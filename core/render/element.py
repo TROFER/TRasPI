@@ -78,7 +78,7 @@ class TextBox(Text):
 
     def _offset(self, value: Vector):
         value = super()._offset(value)
-        self.rect.pos = value
+        self.rect.pos = value - Vector(2, 0)
         self.rect.pos_2 = self.font_size()
         return value
 
