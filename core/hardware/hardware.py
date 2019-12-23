@@ -1,10 +1,16 @@
 try:
-    from gfxhat import backlight, touch
+    from gfxhat import backlight, touch, lcd
 except ModuleNotFoundError:
     from core.hardware.dummy import backlight, touch
 from core.render.single import Singleton
 from core.render.enums import Button as CoreButton
 import colorsys
+
+class DisplayFunctions(metaclass=Singleton):
+
+    def clear():
+        lcd.clear(), lcd.show()
+        backlight.set_all(0, 0, 0), backlight.show()
 
 class Backlight(metaclass=Singleton):
 
