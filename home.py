@@ -3,7 +3,7 @@ import time
 
 class Mainwindow(core.render.Window):
 
-    template = core.asset.Template("home", path="window.template")
+    template = core.asset.Template("std::window", path="window.template")
 
     def __init__(self):
         self.index = 0

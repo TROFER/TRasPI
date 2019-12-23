@@ -22,7 +22,7 @@ class Item:
         pass
 
     def render(self, index):
-        self.icon.pos = core.Vector(2, 15 + 10 * index)
+        self.icon.pos = core.Vector(5, 20 + 10 * index)
         self.icon.render()
         self.label.pos = core.Vector(12, 20 + 10 * index)
         self.label.render()
