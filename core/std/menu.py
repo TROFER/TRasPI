@@ -42,8 +42,8 @@ class MenuElement:
         for elm in self.elements:
             elm.render()
 
-    def select(self):
-        pass
+    def select(self, window):
+        self._select(window)
 
     def hover(self):
         pass
@@ -97,7 +97,7 @@ class Menu(core.render.Window):
             self._update()
 
     def select(self):
-        return self.items[self.c_index].select()
+        return self.items[self.c_index].select(self)
 
 class Handle(core.render.Handler):
 
