@@ -34,10 +34,12 @@ class _Settings(core.std.Menu):
     @core.render.Window.focus
     def edit(self, element, window):
         if element.data["type"] == "bool":
-            res = yield core.std.Query(element.data["desc"])
+            res = yield core.std.Query(element.data["desc"], cancel=True)
+            if res is None:
+                res = element.data["value"]
         elif element.data["type"] == "int":
             res = yield core.std.Numpad(element.data["min"], element.data["max"], element.data["value"], element.data["desc"])
-        element.data["value"] = res
+        element.data["value"] = res 
         self.save()
 
     def load(self):
@@ -59,6 +61,7 @@ class Application(_Settings):
 
     def __init__(self):
         super()._init__("test")
+
 
 
 ## Notes ##
