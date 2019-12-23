@@ -45,6 +45,7 @@ class Handle(core.render.Handler):
 
     def press(self):
         core.hardware.Backlight.fill(225, 225, 225)
+        core.hardware.Button.set_led(False)
         self.window.finish()
 
 #######RGB#######
