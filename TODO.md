@@ -16,3 +16,9 @@ Test and Tweak Power Menu
 Re-organise / Rename folders assets and files
 Load programs into programs folder?
 Make programs use a .cfg file which can be edited using a program
+
+# Feature Ideas, Please Ignore
+Web interface
+Camera thing
+Music player
+Serial interface
