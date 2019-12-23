@@ -31,5 +31,5 @@ while count < ATTEMPT:
         raise OSError from e
         continue
 
-time.sleep(5)
+# time.sleep(5)
 # os.system("halt") # Turn off the device

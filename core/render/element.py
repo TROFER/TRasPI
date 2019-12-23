@@ -8,12 +8,12 @@ __all__ = ["Text"]
 class Text(Element):
 
     def __init__(self, pos: Vector, text="Default Text", font="std", size=11, colour=0, justify='C'):
-        self._pos = pos
+        super().__init__(pos)
         self._text, self._size, self.colour, self.justify, self._font = str(text), size, colour, justify, Font(font, size)
-        self._calc_justify()
+        self.pos = pos
 
     def render(self):
-        self.Render.draw.text(self.position, self._text, self.colour, self._font.font)
+        self.Render.draw.text(self.pos_abs, self._text, self.colour, self._font.font)
 
     def font(self, name=None) -> Font:
         if name is not None:
@@ -23,36 +23,26 @@ class Text(Element):
     def text(self, text=None):
         if text is not None:
             self._text = str(text)
-            self._calc_justify()
+            self.pos = self.pos
         return self._text
 
     def size(self, size=None):
         if name is not None:
             self._size = size
-            self._calc_justify()
+            self.pos = self.pos
         return self._size
 
-    @property
-    def pos(self):
-        return self._pos
-
-    @pos.setter
-    def pos(self, value: Vector):
-        self._pos = value
-        self._calc_justify()
-        return self._pos
-
-    def _calc_justify(self):
-        fs = self._font_size()
+    def _offset(self, value: Vector):
+        fs = self.font_size()
         if self.justify == "L":
-            self.position = (self.pos[0], self.pos[1] - fs[1] // 2)
+            return Vector(value[0], value[1] - fs[1] // 2)
         elif self.justify == "R":
-            self.position = (self.pos[0] - fs[0], self.pos[1] - fs[1] // 2)
+            return Vector(value[0] - fs[0], value[1] - fs[1] // 2)
         else:
             self.justify = "C"
-            self.position = self.pos - fs // 2
+            return value - fs // 2
 
-    def _font_size(self):
+    def font_size(self):
         return self._font.font_size(self._text)
 
 class TextContainer(Text):
@@ -83,14 +73,14 @@ class TextContainer(Text):
 class TextBox(Text):
 
     def __init__(self, pos: Vector, *args, rect_colour=0, fill=None, width=1, **kwargs):
-        self.rect = Rectangle(pos, Vector(1, 1), rect_colour, fill, width)
+        self.rect = Rectangle(pos-Vector(2, 0), Vector(1, 1), rect_colour, fill, width)
         super().__init__(pos, *args, **kwargs)
-        # self.rect.colour = self.colour #This seems to be causing a probelm
 
-    def _calc_justify(self):
-        super()._calc_justify()
-        self.rect.pos = self.position
-        self.rect.pos_2(self._font_size())
+    def _offset(self, value: Vector):
+        value = super()._offset(value)
+        self.rect.pos = value
+        self.rect.pos_2 = self.font_size()
+        return value
 
     def render(self):
         super().render()
@@ -102,33 +92,37 @@ class Rectangle(Element):
         super().__init__(pos1)
         self.colour, self.fill = colour, fill
         self.width = width
-        if not rel:
-            self.pos_2 = self._calc_pos
+        self.rel = rel
         self.pos_2(pos2)
 
-    def _calc_pos(self, vec: Vector):
-        self.pos2 = vec - self.pos
-        self._abs_2 = vec
+    @property
+    def pos_2(self):
+        return self._pos_2
 
-    def pos_2(self, vec: Vector):
-        self.pos2 = vec
-        self._abs_2 = self.pos + vec
+    @pos_2.setter
+    def pos_2(self, value: Vector):
+        if self.rel:
+            self._pos_2 = value - self.pos
+            self._abs_2 = value
+        else:
+            self._pos_2 = vec
+            self._abs_2 = self.pos + vec
 
     def render(self):
-        self.Render.draw.rectangle([self.pos[0] - 2, self.pos[1], *self._abs_2], self.fill, self.colour, self.width)
+        self.Render.draw.rectangle([*self.pos_abs, *self._abs_2], self.fill, self.colour, self.width)
 
 class Image(Element):
 
     def __init__(self, pos: Vector, image: Image, justify=True):
         super().__init__(pos)
         self.image = image
-        self.pos = list(self.pos)
-        if justify:
-            self._calc_pos()
+        self.justify = justify
+        self.pos = pos
 
-    def _calc_pos(self):
-        self.image_w, self.image_h = self.image.image.size
-        self.pos[0], self.pos[1] = self.pos[0] - (self.image_w // 2), self.pos[1] - (self.image_h // 2)
+    def _offset(self, value: Vector):
+        if self.justify:
+            return value - Vector(*self.image.image.size) // 2
+        return value
 
     def render(self):
-        self.Render.image.paste(self.image.image, tuple(self.pos))
+        self.Render.image.paste(self.image.image, tuple(self.pos_abs))
