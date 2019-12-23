@@ -122,6 +122,10 @@ class Image(Element):
     def __init__(self, pos: Vector, image: Image):
         super().__init__(pos)
         self.image = image
+        print(pos)
+
+    def _calc_pos(self):
+        self.image_w, self.image_h = self.image.size
 
     def render(self):
         self.Render.image.paste(self.image.image, tuple(self.pos))

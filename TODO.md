@@ -2,11 +2,15 @@
 
 Weird thing that happens when changing windows
 TextBox does set box colour to white
+Button LED's do not turn off
+
+
 
 ## Features
 
+T - Centralise images
 Freeze / Pause renderer to save power
-T - Work on home.py #DONE? 
+T - Work on home.py #DONE?
 Error handle Loader
 Optimise Loader
 Test and Tweak Power Menu
