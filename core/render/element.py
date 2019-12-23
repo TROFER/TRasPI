@@ -123,7 +123,7 @@ class Image(Element):
         super().__init__(pos)
         self.image = image
         print(self.image)
-        print(self.image.size())
+        print(self.Image.image.size())
         if justify:
             self._calc_pos()
 
