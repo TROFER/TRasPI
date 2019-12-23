@@ -1,6 +1,7 @@
 import core
 import gpiozero
 import psutil
+import time
 
 class HardwareWindow(core.render.Window):
 
