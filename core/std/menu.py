@@ -4,21 +4,21 @@ __all__ = ["Menu", "MenuSingle"]
 
 class MenuElement:
 
-    def __init__(self, *element: core.element, data={}, select=lambda self: None, hover=None, dehover=None):
+    def __init__(self, *element: core.element, data={}, select=lambda self, window: None, hover=None, dehover=None):
         self.data = data
         self.elements = element
         self._rel_pos = [elm.pos for elm in self.elements]
         self._offset = 1
         self._index = -1
         self._select = select
-        self._hover = hover
-        self._dehover = dehover
+        self._hover = lambda s, w: (hover) if hover is None else hover
+        self._dehover = lambda s, w: (dehover) if dehover is None else dehover
 
     def _update(self, index):
         if index != self._index:
             self._index = index
             for i, elm in enumerate(self.elements):
-                elm.pos = self._rel_pos[i] + core.Vector(2, 12 + self._offset * self._index)
+                elm.pos = self._rel_pos[i] + core.Vector(3, 15 + self._offset * self._index)
 
     def render(self):
         for elm in self.elements:
@@ -27,11 +27,11 @@ class MenuElement:
     def select(self, window):
         self._select(self, window)
 
-    def hover(self):
-        pass
+    def hover(self, window):
+        self._hover(self, window)
 
-    def dehover(self):
-        pass
+    def dehover(self, window):
+        self._dehover(self, window)
 
 class Menu(core.render.Window):
 
@@ -67,11 +67,11 @@ class Menu(core.render.Window):
 
     def down(self):
         if self.c_index < len(self.items) - 1:
-            self.items[self.c_index].dehover()
+            self.items[self.c_index].dehover(self)
             self.c_index += 1
             if self.c_index >= self.index + self.visable:
                 self.index += 1
-            self.items[self.c_index].hover()
+            self.items[self.c_index].hover(self)
             self._update()
 
     def up(self):
