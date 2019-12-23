@@ -57,7 +57,7 @@ class BackItem(Item):
 
 class ProgramMenu(core.render.Window):
 
-    template = core.asset.Template("std::home", path="window.template")
+    template = core.asset.Template("std::window")
 
     def __init__(self, path="programs"):
         self.index = 0

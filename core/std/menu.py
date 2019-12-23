@@ -1,8 +1,108 @@
 import core
 
-__all__ = ["Menu"]
+__all__ = ["Menu", "MenuSingle"]
+
+'''class Item:
+
+    def __init__(self, name: str, image: str, path: str):
+        self.icon = core.element.Image(core.Vector(0, 0), core.asset.Image(image))
+        self.label = core.element.Text(core.Vector(0, 0), name, justify="L")
+        self.name = name
+        self.path = path
+
+    def select(self):
+        pass
+
+    def render(self, index):
+        self.icon.pos = core.Vector(5, 20 + 10 * index)
+        self.icon.render()
+        self.label.pos = core.Vector(12, 20 + 10 * index)
+        self.label.render()
+'''
+
+class MenuElement:
+
+    def __init__(self, *element: core.element, select=lambda self: None, hover=None, dehover=None):
+        self.elements = element
+        self._rel_pos = [elm.pos for elm in self.elements]
+        self._offset = 1
+        self._index = -1
+        self._select = select
+        self._hover = hover
+        self._dehover = dehover
+
+    def _update(self, index):
+        if index != self._index:
+            self._index = index
+            for i, elm in enumerate(self.elements):
+                elm.pos = self._rel_pos[i] + core.Vector(2, 12 + self._offset * self._index)
+
+    def render(self):
+        for elm in self.elements:
+            elm.render()
+
+    def select(self):
+        pass
+
+    def hover(self):
+        pass
+
+    def dehover(self):
+        pass
 
 class Menu(core.render.Window):
+
+    Element = MenuElement
+    template = core.asset.Template("std::window", path="window.template")
+
+    def __init__(self, *items: MenuElement, visable=4, offset=10):
+        self.visable = visable
+        self.items = items
+        self.items.append(MenuElement(core.element.Text(core.Vector(0, 0), "Return", justify="L"), select=lambda s, w: w.finish()))
+        for elm in self.items:
+            elm._offset = offset
+        self.c_items = []
+
+        self.index = 0
+        self.c_index = self.index
+        self._update()
+
+    def render(self):
+        for index, elm in enumerate(self.c_items):
+            elm.render(index)
+
+    def _update(self):
+        self.c_items.clear()
+        for elm in self.items[self.index:self.index + self.visable]:
+            self.c_items.append(elm)
+
+    def down(self):
+        if self.c_index < len(self.items) - 1:
+            self.items[self.c_index].dehover()
+            self.c_index += 1
+            if self.c_index >= self.index + self.visable:
+                self.index += 1
+            self.items[self.c_index].hover()
+            self._update()
+
+    def up(self):
+        if self.c_index > 0:
+            self.items[self.c_index].dehover()
+            self.c_index -= 1
+            if self.c_index < self.index:
+                self.index -= 1
+            self.items[self.c_index].hover()
+            self._update()
+
+class Handle(core.render.Handler):
+
+    key = core.render.Button.UP
+    window = Menu
+
+    def press(self):
+        self.window.up()
+
+class MenuSingle(core.render.Window):
 
     template = core.asset.Template("std::menu", path="menu.template")
 
@@ -41,7 +141,7 @@ class Menu(core.render.Window):
 class Handle(core.render.Handler):
 
     key = core.render.Button.UP
-    window = Menu
+    window = MenuSingle
 
     def press(self):
         self.window.up()
@@ -49,7 +149,7 @@ class Handle(core.render.Handler):
 class Handle(core.render.Handler):
 
     key = core.render.Button.DOWN
-    window = Menu
+    window = MenuSingle
 
     def press(self):
         self.window.down()
@@ -57,7 +157,7 @@ class Handle(core.render.Handler):
 class Handle(core.render.Handler):
 
     key = core.render.Button.CENTRE
-    window = Menu
+    window = MenuSingle
 
     def press(self):
         self.window.select()
