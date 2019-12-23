@@ -43,7 +43,7 @@ class MenuElement:
             elm.render()
 
     def select(self, window):
-        self._select(window)
+        self._select(self, window)
 
     def hover(self):
         pass
