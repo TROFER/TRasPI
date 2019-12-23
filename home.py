@@ -9,19 +9,19 @@ class Mainwindow(core.render.Window):
         self.index = 0
         self.functions = {0: core.system.ProgramMenu(), 1: core.std.Error("Not Ready"), 2: core.system.PowerMenu()}
         core.hardware.Backlight.gradient((240, 180, 240, 180, 240))
-        self.title1 = core.render.element.Text(core.Vector(3, 5), "TRasPi OS", justify="L")
-        self.buttons = [core.render.element.TextBox(core.Vector(64, 18), "Run Program"),
-        core.render.element.TextBox(core.Vector(64, 30), "System Settings"),
-        core.render.element.TextBox(core.Vector(64, 42), "Power Options")]
-        self.title2 = core.render.element.Text(core.Vector(126, 5), "TIME", justify="R")
+        self.title1 = core.element.Text(core.Vector(3, 5), "TRasPi OS", justify="L")
+        self.buttons = [core.element.TextBox(core.Vector(64, 18), "Run Program"),
+        core.element.TextBox(core.Vector(64, 30), "System Settings"),
+        core.element.TextBox(core.Vector(64, 42), "Power Options")]
+        self.title2 = core.element.Text(core.Vector(126, 5), "TIME", justify="R")
         self.clock(), self.update_arrow()
 
     def clock(self):
         self.title2.text(time.strftime('%I:%M%p'))
 
     def update_arrow(self):
-        self.left_arrow = core.render.element.Text(core.Vector(self.buttons[self.index].pos_abs[0] - 2, self.buttons[self.index].pos[1]), ">", justify="R")
-        self.right_arrow = core.render.element.Text(core.Vector(128 - self.buttons[self.index].pos_abs[0] + 2, self.buttons[self.index].pos[1]), "<", justify="L")
+        self.left_arrow = core.element.Text(core.Vector(self.buttons[self.index].pos_abs[0] - 2, self.buttons[self.index].pos[1]), ">", justify="R")
+        self.right_arrow = core.element.Text(core.Vector(128 - self.buttons[self.index].pos_abs[0] + 2, self.buttons[self.index].pos[1]), "<", justify="L")
 
     def render(self):
         self.clock()

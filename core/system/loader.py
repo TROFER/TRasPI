@@ -74,8 +74,8 @@ class ProgramMenu(core.render.Window):
                 self.contents.append(FolderItem(item, path))
         self.contents.append(BackItem())
         # Elements
-        self.title1 = core.render.element.Text(core.Vector(3, 5), "Programs", justify="L")
-        self.cursor = core.render.element.Text(core.Vector(12 + self.contents[self.cursor_index].label.font_size()[0] + 3, 20), "<", justify="L")
+        self.title1 = core.element.Text(core.Vector(3, 5), "Programs", justify="L")
+        self.cursor = core.element.Text(core.Vector(12 + self.contents[self.cursor_index].label.font_size()[0] + 3, 20), "<", justify="L")
 
     def render(self):
         self.title1.render()

@@ -1,4 +1,4 @@
-class PowerControls:
+class Power:
 
     @classmethod
     def halt():

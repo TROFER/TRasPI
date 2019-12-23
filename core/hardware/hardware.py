@@ -1,7 +1,7 @@
 try:
     from gfxhat import backlight, touch, lcd
 except ModuleNotFoundError:
-    from core.hardware.dummy import backlight, touch
+    from core.hardware.dummy import backlight, touch, lcd
 from core.render.single import Singleton
 from core.render.enums import Button as CoreButton
 import colorsys
