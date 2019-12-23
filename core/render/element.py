@@ -78,8 +78,8 @@ class TextBox(Text):
 
     def _offset(self, value: Vector):
         value = super()._offset(value)
-        self.rect.pos = value
-        self.rect.pos_2 = self.font_size()
+        self.rect.pos = value - Vector(2, 0)
+        self.rect.pos_2 = self.font_size() + Vector(2, 0)
         return value
 
     def render(self):
@@ -102,11 +102,11 @@ class Rectangle(Element):
     @pos_2.setter
     def pos_2(self, value: Vector):
         if self.rel:
+            self._pos_2 = value
+            self._abs_2 = self.pos + value
+        else:
             self._pos_2 = value - self.pos
             self._abs_2 = value
-        else:
-            self._pos_2 = vec
-            self._abs_2 = self.pos + vec
 
     def render(self):
         self.Render.draw.rectangle([*self.pos_abs, *self._abs_2], self.fill, self.colour, self.width)
