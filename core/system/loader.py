@@ -4,7 +4,6 @@ import importlib.util
 
 __all__ = ["ProgramMenu"]
 
-core.asset.Template("std::home", path="window.template")
 core.asset.Image("std::script", path="pyfile.icon")
 core.asset.Image("std::folder", path="folder.icon")
 core.asset.Image("std::return", path="return.icon")
@@ -26,7 +25,6 @@ class Item:
         self.icon.pos = core.Vector(2, 15 + 10 * index)
         self.icon.render()
         self.label.pos = core.Vector(12, 20 + 10 * index)
-        self.label._calc_justify()
         self.label.render()
 
 class FolderItem(Item):
@@ -59,7 +57,7 @@ class BackItem(Item):
 
 class ProgramMenu(core.render.Window):
 
-    template = core.asset.Template("std::home")
+    template = core.asset.Template("std::home", path="window.template")
 
     def __init__(self, path="programs"):
         self.index = 0
@@ -76,8 +74,8 @@ class ProgramMenu(core.render.Window):
                 self.contents.append(FolderItem(item, path))
         self.contents.append(BackItem())
         # Elements
-        self.title1 = core.render.element.Text(core.Vector(3, 5), "Programs", justify="L")
-        self.cursor = core.render.element.Text(core.Vector(12 + self.contents[self.cursor_index].label._font_size()[0] + 3, 20), "<", justify="L")
+        self.title1 = core.element.Text(core.Vector(3, 5), "Programs", justify="L")
+        self.cursor = core.element.Text(core.Vector(12 + self.contents[self.cursor_index].label.font_size()[0] + 3, 20), "<", justify="L")
 
     def render(self):
         self.title1.render()
@@ -87,8 +85,7 @@ class ProgramMenu(core.render.Window):
             item.render(index)
 
     def _update_cursor(self):
-        self.cursor.pos = core.Vector(12 + self.contents[self.cursor_index].label._font_size()[0] + 3, self.contents[self.cursor_index].label.pos[1])
-        self.cursor._calc_justify()
+        self.cursor.pos = core.Vector(12 + self.contents[self.cursor_index].label.font_size()[0] + 3, self.contents[self.cursor_index].label.pos[1])
 
     def up(self):
         if self.cursor_index > 0:

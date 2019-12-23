@@ -13,8 +13,8 @@ class Mainwindow(core.render.Window):
         self.API = "&appid=dd440727faee99efb0b572bc6d78e7b3"
         self.URL = "http://api.openweathermap.org/data/2.5/weather?"
         self.location = ["id=2641598", "Newport GB"]
-        self.title = core.render.element.Text(core.Vector(3, 5), f"For {self.location[1]}", colour=1, justify="L")
-        self.header1 = core.render.element.Text(core.Vector(3, 50), "Current Weather:", justify="L")
+        self.title = core.element.Text(core.Vector(3, 5), f"For {self.location[1]}", colour=1, justify="L")
+        self.header1 = core.element.Text(core.Vector(3, 50), "Current Weather:", justify="L")
         self.get_weather()
 
     def render(self):
@@ -29,12 +29,11 @@ class Mainwindow(core.render.Window):
         except URLError:
             yield core.std.Error("Unable To Connect")
             return self.finish()
-
-        self.tempreture = core.render.element.Text(core.Vector(3, 14), f"Temperature: {round(self.data['main']['temp'] - 273.1, 1)}°C", justify="L")
-        self.pressure = core.render.element.Text(core.Vector(3, 22), f"Pressure: {self.data['main']['pressure']}Pa", justify="L")
-        self.humidity = core.render.element.Text(core.Vector(3, 30), f"Humidity: {self.data['main']['humidity']}%", justify="L")
-        self.wind = core.render.element.Text(core.Vector(3, 38), f"Wind Speed: {self.data['wind']['speed']}Mph", justify="L")
-        self.weather = core.render.element.Text(core.Vector(3, 58), f"{self.data['weather'][0]['description'].capitalize()}", justify="L")
+        self.tempreture = core.element.Text(core.Vector(3, 14), f"Temperature: {round(self.data['main']['temp'] - 273.1, 1)}°C", justify="L")
+        self.pressure = core.element.Text(core.Vector(3, 22), f"Pressure: {self.data['main']['pressure']}Pa", justify="L")
+        self.humidity = core.element.Text(core.Vector(3, 30), f"Humidity: {self.data['main']['humidity']}%", justify="L")
+        self.wind = core.element.Text(core.Vector(3, 38), f"Wind Speed: {self.data['wind']['speed']}Mph", justify="L")
+        self.weather = core.element.Text(core.Vector(3, 58), f"{self.data['weather'][0]['description'].capitalize()}", justify="L")
 
 class Handle(core.render.Handler):
 

@@ -78,7 +78,24 @@ class Element(metaclass=MetaElement):
     Render = Render()
 
     def __init__(self, pos: Vector):
-        self.pos = pos
+        self._pos = pos
+        self._pos_abs = self._pos
 
     def render(self):
         pass
+
+    @property
+    def pos_abs(self):
+        return self._pos_abs
+
+    @property
+    def pos(self):
+        return self._pos
+
+    @pos.setter
+    def pos(self, value: Vector):
+        self._pos = value
+        self._pos_abs = self._offset(value)
+
+    def _offset(self, value: Vector):
+        return value
