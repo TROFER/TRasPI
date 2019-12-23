@@ -2,7 +2,7 @@ import core
 import gpiozero
 import psutil
 
-class MainWindow(core.render.Window):
+class HardwareWindow(core.render.Window):
 
     def __init__(self):
         self.time = time.time()
@@ -29,9 +29,9 @@ class MainWindow(core.render.Window):
 class Handle(core.render.Handler):
 
     key = core.render.Button.BACK
-    window = Mainwindow
+    window = HardwareWindow
 
     def press(self):
         self.window.finish()
 
-main = Mainwindow()
+main = HardwareWindow()
