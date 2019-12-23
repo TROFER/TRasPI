@@ -2,24 +2,6 @@ import core
 
 __all__ = ["Menu", "MenuSingle"]
 
-'''class Item:
-
-    def __init__(self, name: str, image: str, path: str):
-        self.icon = core.element.Image(core.Vector(0, 0), core.asset.Image(image))
-        self.label = core.element.Text(core.Vector(0, 0), name, justify="L")
-        self.name = name
-        self.path = path
-
-    def select(self):
-        pass
-
-    def render(self, index):
-        self.icon.pos = core.Vector(5, 20 + 10 * index)
-        self.icon.render()
-        self.label.pos = core.Vector(12, 20 + 10 * index)
-        self.label.render()
-'''
-
 class MenuElement:
 
     def __init__(self, *element: core.element, data={}, select=lambda self: None, hover=None, dehover=None):
@@ -56,7 +38,7 @@ class Menu(core.render.Window):
     Element = MenuElement
     template = core.asset.Template("std::window", path="window.template")
 
-    def __init__(self, *items: MenuElement, visable=4, offset=10):
+    def __init__(self, *items: MenuElement, visable=4, offset=10, title="Menu"):
         self.visable = visable
         self.items = list(items)
         self.items.append(MenuElement(core.element.Text(core.Vector(0, 0), "Return", justify="L"), select=lambda s, w: w.finish()))
@@ -66,17 +48,22 @@ class Menu(core.render.Window):
 
         self.index = 0
         self.c_index = self.index
+
+        self.cursor = core.element.Text(core.Vector(0, 0), "<", justify="R")
+
         self._update()
 
     def render(self):
         for elm in self.c_items:
             elm.render()
+        self.cursor.render()
 
     def _update(self):
         self.c_items.clear()
         for index, elm in enumerate(self.items[self.index:self.index + self.visable]):
             self.c_items.append(elm)
             elm._update(index)
+        self.cursor.pos = core.Vector(core.sys.WIDTH - 2, 12 + self.items[self.c_index]._offset * self.items[self.c_index]._index)
 
     def down(self):
         if self.c_index < len(self.items) - 1:
