@@ -1,4 +1,5 @@
 import core
+from core.hardware.power import PowerControls
 
 __all__ = ["PowerMenu"]
 
@@ -12,7 +13,7 @@ class PowerMenu(core.render.Window):
 
     def __init__(self):
         self.index = 2
-        self.functions = {0: core.hardware.PowerControls.halt, 1: core.hardware.PowerControls.restart, 2: self.finish}
+        self.functions = {0: PowerControls.halt, 1: PowerControls.restart, 2: self.finish}
         # Elements
         self.title = core.element.Text(core.Vector(3, 4), "Power Options", justify="L")
         self.powericon = core.element.Image(core.Vector(32, 20), core.asset.Image("std::powericon"))
