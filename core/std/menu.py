@@ -51,6 +51,14 @@ class MenuElement:
     def dehover(self):
         pass
 
+class Handle(core.render.Handler):
+
+    key = core.render.Button.UP
+    window = Menu
+
+    def press(self):
+        self.window.up()
+
 class Menu(core.render.Window):
 
     Element = MenuElement
@@ -96,6 +104,9 @@ class Menu(core.render.Window):
             self.items[self.c_index].hover()
             self._update()
 
+    def select(self):
+        return self.items[self.c_index].select()
+
 class Handle(core.render.Handler):
 
     key = core.render.Button.UP
@@ -103,6 +114,22 @@ class Handle(core.render.Handler):
 
     def press(self):
         self.window.up()
+
+class Handle(core.render.Handler):
+
+    key = core.render.Button.DOWN
+    window = Menu
+
+    def press(self):
+        self.window.down()
+
+class Handle(core.render.Handler):
+
+    key = core.render.Button.CENTRE
+    window = Menu
+
+    def press(self):
+        self.window.select()
 
 class MenuSingle(core.render.Window):
 
