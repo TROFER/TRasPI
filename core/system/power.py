@@ -33,18 +33,18 @@ class PowerMenu(core.render.Window):
 
     def up(self):
         if self.index + 1 < 3:
-            self.options[self.index].rect_colour = 1
+            self.options[self.index].rect.colour = 1
             self.index += 1
             print(self.index)
-            self.options[self.index].rect_colour = 0
+            self.options[self.index].rect.colour = 0
             self.redraw()
 
     def down(self):
         if self.index > 0:
-            self.options[self.index].rect_colour = 1
+            self.options[self.index].rect.colour = 1
             self.index -=1
             print(self.index)
-            self.options[self.index].rect_colour = 0
+            self.options[self.index].rect.colour = 0
             self.redraw()
 
     def select(self):

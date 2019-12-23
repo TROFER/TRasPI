@@ -1,13 +1,13 @@
-from core.render.single import Singleton
+class PowerControls:
 
-class PowerControls(metaclass=Singleton):
-
+    @classmethod
     def halt():
         print("WOULD HALT")
         # core.render.renderer.close()
         # core.Hardware.DisplayFunctions.clear()
         # os.system("halt")
 
+    @classmethod
     def restart():
         print("WOULD REBOOT")
         # core.render.renderer.close()

@@ -85,7 +85,7 @@ class TextBox(Text):
     def __init__(self, pos: Vector, *args, rect_colour=0, fill=None, width=1, **kwargs):
         self.rect = Rectangle(pos, Vector(1, 1), rect_colour, fill, width)
         super().__init__(pos, *args, **kwargs)
-        self.rect.colour = self.colour #This seems to be causing a probelm
+        # self.rect.colour = self.colour #This seems to be causing a probelm
 
     def _calc_justify(self):
         super()._calc_justify()
@@ -127,7 +127,7 @@ class Image(Element):
             self._calc_pos()
 
     def _calc_pos(self):
-        self.image_w, self.image_h = self.image._image.size
+        self.image_w, self.image_h = self.image.image.size
         self.pos[0], self.pos[1] = self.pos[0] - (self.image_w // 2), self.pos[1] - (self.image_h // 2)
 
     def render(self):
