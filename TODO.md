@@ -8,7 +8,7 @@ Button LED's do not turn off
 
 ## Features
 
-T - Centralise images
+T - Centralise images #DONE
 Freeze / Pause renderer to save power
 T - Work on home.py #DONE?
 Error handle Loader
