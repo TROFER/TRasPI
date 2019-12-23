@@ -21,7 +21,7 @@ class Handle(core.render.Handler):
         self.window.finish()
 
 class Warning(Info):
-  template = core.asset.Template("std::warning", path="info.template")
+  template = core.asset.Template("std::warning", path="warning.template")
 
 class Error(Info):
-    template = core.asset.Template("std::error", path="info.template")
+    template = core.asset.Template("std::error", path="error.template")
