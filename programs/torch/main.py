@@ -30,6 +30,9 @@ class Torch(core.render.Window):
             core.hardware.Backlight.fill(0, 0, 0)
             core.hardware.Button.led(False)
 
+    def render(self):
+        core.render.Render().pause()
+
 class Handle(core.render.Handler):
 
     key = core.render.Button.CENTRE
@@ -46,6 +49,7 @@ class Handle(core.render.Handler):
     def press(self):
         core.hardware.Backlight.fill(225, 225, 225)
         core.hardware.Button.led(False)
+        core.render.Render().resume()
         self.window.finish()
 
 #######RGB#######

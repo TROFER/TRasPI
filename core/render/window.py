@@ -46,6 +46,7 @@ class Window(metaclass=MetaWindow):
         parent.show()
         if generator is not None:
             parent._handle_focus(value, generator)
+        Render().resume()
         return value
 
     def _handle_focus(self, value, generator):
