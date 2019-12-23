@@ -21,7 +21,6 @@ class Mainwindow(core.render.Window):
         self.title.render(), self.header1.render()
         self.tempreture.render(), self.pressure.render(), self.humidity.render(), self.wind.render()
         self.weather.render()
-        core.render.Render().pause()
 
     @core.render.Window.focus
     def get_weather(self):
@@ -43,7 +42,6 @@ class Handle(core.render.Handler):
 
     def press(self):
         self.window.get_weather()
-        core.render.Render().resume()
 
 class Handle(core.render.Handler):
 
