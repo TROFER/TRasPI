@@ -1,7 +1,6 @@
 ## Bugs
 
 Weird thing that happens when changing windows
-TextBox does set box colour to white
 Button LED's do not turn off
 
 

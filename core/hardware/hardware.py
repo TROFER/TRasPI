@@ -6,7 +6,7 @@ from core.render.single import Singleton
 from core.render.enums import Button as CoreButton
 import colorsys
 
-class DisplayFunctions(metaclass=Singleton):
+class Display(metaclass=Singleton):
 
     def clear():
         lcd.clear(), lcd.show()
