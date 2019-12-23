@@ -44,7 +44,7 @@ class Core(_Settings):
     """ Core settings """
 
     def __init__(self):
-        super()._init__(core.sys.PATH+"core/system/system.cfg")
+        super().__init__(core.sys.PATH+"core/system/system.cfg") 
 
 class Application(_Settings):
     """ Application settings"""
