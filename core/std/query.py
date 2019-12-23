@@ -15,7 +15,7 @@ class Query(core.render.Window):
             self.bttn_cancel = core.element.TextBox(core.Vector(96, 56), "Cancel")
         else:
             bttn_yes = core.Vector(31, 56)
-            bttn_no = core.Vector(94, 56)
+            bttn_no = core.Vector(92, 56)
             self.bttn_cancel = None
         self.bttn_yes = core.element.TextBox(bttn_yes, "Yes")
         self.bttn_no = core.element.TextBox(bttn_no, "No")
