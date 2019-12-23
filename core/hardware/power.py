@@ -1,4 +1,6 @@
-class Power:
+from core.render.single import Singleton
+
+class PowerControls(metaclass=Singleton):
 
     def halt(self):
         print("WOULD HALT")
