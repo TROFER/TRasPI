@@ -122,6 +122,8 @@ class Image(Element):
     def __init__(self, pos: Vector, image: Image, justify=True):
         super().__init__(pos)
         self.image = image
+        print(self.image)
+        print(self.image.size)
         if justify:
             self._calc_pos()
 
