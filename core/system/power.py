@@ -18,9 +18,6 @@ class PowerMenu(core.render.Window):
         self.title = core.element.Text(core.Vector(3, 4), "Power Options", justify="L")
         self.powericon = core.element.Image(core.Vector(32, 25), core.asset.Image("std::powericon"))
         self.restarticon = core.element.Image(core.Vector(94, 25), core.asset.Image("std::restarticon"))
-        self.redraw()
-
-    def redraw(self):
         self.options = [core.element.TextBox(core.Vector(32, 40), "Turn Off", rect_colour=1),
         core.element.TextBox(core.Vector(94, 40), "Restart", rect_colour=1),
         core.render.element.TextBox(core.Vector(100, 57), "Cancel", rect_colour=0)]
@@ -35,17 +32,13 @@ class PowerMenu(core.render.Window):
         if self.index + 1 < 3:
             self.options[self.index].rect.colour = 1
             self.index += 1
-            print(self.index)
             self.options[self.index].rect.colour = 0
-            self.redraw()
 
     def down(self):
         if self.index > 0:
             self.options[self.index].rect.colour = 1
             self.index -=1
-            print(self.index)
             self.options[self.index].rect.colour = 0
-            self.redraw()
 
     def select(self):
         action = self.functions[self.index]
