@@ -5,6 +5,8 @@ import time
 
 class HardwareWindow(core.render.Window):
 
+    template = core.asset.Template("std::window")
+
     def __init__(self):
         self.time = time.time()
         core.hardware.Backlight.fill(255, 255, 255)
@@ -15,11 +17,13 @@ class HardwareWindow(core.render.Window):
         self.update()
 
     def update(self):
-        if time.time() - self.time > 1000:
+        if time.time() - self.time > 10:
             self.data = gpiozero.CPUTemperature(), psutil.cpu_percent(), psutil.virtual_memory()
             for index, label in enumerate(self.labels):
                 label.text(self.data[index])
             self.time = time.time()
+        else:
+            print("False")
 
     def render(self):
         self.update()
