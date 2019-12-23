@@ -18,7 +18,7 @@ class HardwareWindow(core.render.Window):
 
     def update(self):
         if time.time() - self.time > 1:
-            self.data = f"CPU Temperature: {gpiozero.CPUTemperature().temperature}°C", f"CPU Usage: {psutil.cpu_percent()}%",f"Memory Usage: {psutil.virtual_memory().percent}%"
+            self.data = f"CPU Temp: {gpiozero.CPUTemperature().temperature}°C", f"CPU Usage: {psutil.cpu_percent()}%", f"Memory Usage: {psutil.virtual_memory().percent}%"
             print(self.data)
             for index, label in enumerate(self.labels):
                 label.text(self.data[index])
