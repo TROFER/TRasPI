@@ -54,7 +54,7 @@ class Core(_Settings):
     """ Core settings """
 
     def __init__(self):
-        super().__init__(core.sys.PATH+"core/system/system.cfg") 
+        super().__init__(core.sys.PATH+"core/system/system.cfg")
 
 class Application(_Settings):
     """ Application settings"""
@@ -64,7 +64,7 @@ class Application(_Settings):
 
 def Action(name: str, ):
     return core.std.Menu.Element(
-
+        core.element.Text()
     )
 
 self.actions = {
