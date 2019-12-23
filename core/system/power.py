@@ -23,7 +23,7 @@ class PowerMenu(core.render.Window):
     def redraw(self):
         self.options = [core.element.TextBox(core.Vector(32, 40), "Turn Off", rect_colour=1),
         core.element.TextBox(core.Vector(94, 40), "Restart", rect_colour=1),
-        core.render.element.TextBox(core.Vector(100, 49), "Cancel", rect_colour=0)]
+        core.render.element.TextBox(core.Vector(100, 57), "Cancel", rect_colour=0)]
 
     def render(self):
         for option in self.options:
