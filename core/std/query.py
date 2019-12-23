@@ -10,9 +10,9 @@ class Query(core.render.Window):
         self.message = core.element.Text(core.Vector(38, 27), message[:14], justify="L")
         self.title = core.element.Text(core.Vector(5, 5), title, justify="L")
         if cancel:
-            bttn_yes = core.Vector(42, 56)
-            bttn_no = core.Vector(66, 56)
-            self.bttn_cancel = core.element.TextBox(core.Vector(108, 56), "Cancel")
+            bttn_yes = core.Vector(32, 56)
+            bttn_no = core.Vector(64, 56)
+            self.bttn_cancel = core.element.TextBox(core.Vector(96, 56), "Cancel")
         else:
             bttn_yes = core.Vector(31, 56)
             bttn_no = core.Vector(94, 56)
