@@ -28,6 +28,7 @@ class Mainwindow(core.render.Window):
             self.data = json.load(request.urlopen(self.URL+self.location[0]+self.API))
         except URLError:
             yield core.std.Error("Unable To Connect")
+            return self.finish()
         self.tempreture = core.element.Text(core.Vector(3, 14), f"Temperature: {round(self.data['main']['temp'] - 273.1, 1)}°C", justify="L")
         self.pressure = core.element.Text(core.Vector(3, 22), f"Pressure: {self.data['main']['pressure']}Pa", justify="L")
         self.humidity = core.element.Text(core.Vector(3, 30), f"Humidity: {self.data['main']['humidity']}%", justify="L")
