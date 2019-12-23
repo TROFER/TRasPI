@@ -17,13 +17,12 @@ class HardwareWindow(core.render.Window):
         self.update()
 
     def update(self):
-        if time.time() - self.time > 10:
+        if time.time() - self.time > 1:
             self.data = gpiozero.CPUTemperature(), psutil.cpu_percent(), psutil.virtual_memory()
+            print(self.data)
             for index, label in enumerate(self.labels):
                 label.text(self.data[index])
             self.time = time.time()
-        else:
-            print(time.time() - self.time)
 
     def render(self):
         self.update()
