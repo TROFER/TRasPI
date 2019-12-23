@@ -9,9 +9,9 @@ class HardwareWindow(core.render.Window):
         self.time = time.time()
         core.hardware.Backlight.fill(255, 255, 255)
         self.title = core.element.Text(core.Vector(3, 5), "HW_Info", justify="L")
-        self.labels = [core.element.Text(core.Vector(3, 10), justify="L"),
-        core.element.Text(core.Vector(3, 20), justify="L"),
-        core.element.Text(core.Vector(3, 30), justify="L")]
+        self.labels = [core.element.Text(core.Vector(3, 15), justify="L"),
+        core.element.Text(core.Vector(3, 25), justify="L"),
+        core.element.Text(core.Vector(3, 35), justify="L")]
         self.update()
 
     def update(self):
