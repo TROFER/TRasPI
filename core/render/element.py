@@ -126,6 +126,7 @@ class Image(Element):
             self._calc_pos()
 
     def _calc_pos(self):
+        tuple(self.pos)
         self.image_w, self.image_h = self.image._image.size
         self.pos[0], self.pos[1] = self.pos[0] - (self.image_w // 2), self.pos[1] - (self.image_h // 2)
 
