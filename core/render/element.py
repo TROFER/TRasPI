@@ -102,8 +102,8 @@ class Rectangle(Element):
     @pos_2.setter
     def pos_2(self, value: Vector):
         if self.rel:
-            self._pos_2 = vec
-            self._abs_2 = self.pos + vec
+            self._pos_2 = value
+            self._abs_2 = self.pos + value
         else:
             self._pos_2 = value - self.pos
             self._abs_2 = value
