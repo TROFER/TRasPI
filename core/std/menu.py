@@ -52,11 +52,13 @@ class Menu(core.render.Window):
         self.index = 0
         self.c_index = self.index
 
+        self.title = core.element.Text(core.Vector(3, 5), title, justify="L")
         self.cursor = core.element.Text(core.Vector(0, 0), "<", justify="R")
 
         self._update()
 
     def render(self):
+        self.title.render()
         for elm in self.c_items:
             elm.render()
         self.cursor.render()
