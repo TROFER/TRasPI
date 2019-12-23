@@ -13,7 +13,7 @@ class Mainwindow(core.render.Window):
         self.buttons = [core.element.TextBox(core.Vector(64, 18), "Run Program"),
         core.element.TextBox(core.Vector(64, 30), "System Settings"),
         core.element.TextBox(core.Vector(64, 42), "Power Options")]
-        self.title2 = core.element.Text(core.Vector(126, 5), "TIME", justify="R")
+        self.title2 = core.element.Text(core.Vector(126, 5), "TIME", justify="R") 
         self.clock(), self.update_arrow()
 
     def clock(self):

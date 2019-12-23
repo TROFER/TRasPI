@@ -5,7 +5,7 @@ class Power:
 
     @classmethod
     def halt(cls):
-        core.render.renderer.close()
+        core.render.renderer.close() 
         core.Hardware.Display.clear()
         time.sleep(1)
         os.system("halt")

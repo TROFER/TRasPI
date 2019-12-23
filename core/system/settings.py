@@ -57,17 +57,17 @@ class Core(_Settings):
         super().__init__(core.sys.PATH+"core/system/system.cfg")
 
 class Application(_Settings):
-    """ Application settings"""
+    """ Application settings""" 
 
     def __init__(self):
         super()._init__("test")
 
-def Action(name: str, ):
+def Action(name: str, func: callable):
     return core.std.Menu.Element(
-        core.element.Text(core.Vector(0, 0))
-    )
+        core.element.Text(core.Vector(0, 0), name, justify="L"),
+        select=func)
 
-self.actions = {
+actions = {
 "Exit Local User": quit
 }
 ## Notes ##
