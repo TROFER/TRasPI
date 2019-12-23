@@ -93,7 +93,7 @@ class Rectangle(Element):
         self.colour, self.fill = colour, fill
         self.width = width
         self.rel = rel
-        self.pos_2(pos2)
+        self.pos_2 = pos2
 
     @property
     def pos_2(self):
