@@ -64,7 +64,7 @@ class Application(_Settings):
 
 def Action(name: str, ):
     return core.std.Menu.Element(
-        core.element.Text()
+        core.element.Text(core.Vector(0, 0))
     )
 
 self.actions = {
