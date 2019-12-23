@@ -102,11 +102,11 @@ class Rectangle(Element):
     @pos_2.setter
     def pos_2(self, value: Vector):
         if self.rel:
-            self._pos_2 = value - self.pos
-            self._abs_2 = value
-        else:
             self._pos_2 = vec
             self._abs_2 = self.pos + vec
+        else:
+            self._pos_2 = value - self.pos
+            self._abs_2 = value
 
     def render(self):
         self.Render.draw.rectangle([*self.pos_abs, *self._abs_2], self.fill, self.colour, self.width)
