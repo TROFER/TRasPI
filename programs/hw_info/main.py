@@ -25,7 +25,7 @@ class HardwareWindow(core.render.Window):
         self.update()
         for label in self.labels:
             label.render()
-        title.render()
+        self.title.render()
 
 class Handle(core.render.Handler):
 
