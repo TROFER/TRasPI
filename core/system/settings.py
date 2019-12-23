@@ -1,6 +1,8 @@
 import core
 import json
 
+__all__ = ["SettingsWindow"]
+
 class SettingsWindow(core.std.MenuSingle):
     """ Open all the other settings windows. """
 
