@@ -58,7 +58,7 @@ class TextContainer(Text):
             self._hook[self] = [self]
         self._value = default
         self._func = func
-        super().__init__(pos, str(func(self._value)), *args, **kwargs)
+        super().__init__(pos, str(self._func(self._value)), *args, **kwargs)
 
     def value(self, value=None):
         if value is not None:
@@ -68,7 +68,7 @@ class TextContainer(Text):
 
     def _set_value(self, value):
         self._value = value
-        self.text(str(func(self._value)))
+        self.text(str(self._func(self._value)))
 
 class TextBox(Text):
 
