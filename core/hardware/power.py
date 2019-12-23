@@ -1,3 +1,5 @@
+import core
+
 class Power:
 
     @classmethod

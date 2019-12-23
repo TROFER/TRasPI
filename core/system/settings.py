@@ -39,7 +39,7 @@ class _Settings(core.std.Menu):
                 res = element.data["value"]
         elif element.data["type"] == "int":
             res = yield core.std.Numpad(element.data["min"], element.data["max"], element.data["value"], element.data["desc"])
-        element.data["value"] = res 
+        element.data["value"] = res
         self.save()
 
     def load(self):
@@ -54,7 +54,7 @@ class Core(_Settings):
     """ Core settings """
 
     def __init__(self):
-        super().__init__(core.sys.PATH+"core/system/system.cfg")
+        super().__init__(core.sys.PATH+"core/system/system.cfg") 
 
 class Application(_Settings):
     """ Application settings"""
@@ -62,8 +62,14 @@ class Application(_Settings):
     def __init__(self):
         super()._init__("test")
 
+def Action(name: str, ):
+    return core.std.Menu.Element(
 
+    )
 
+self.actions = {
+"Exit Local User": quit
+}
 ## Notes ##
 '''
 core settings
