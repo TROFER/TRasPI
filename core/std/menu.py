@@ -22,7 +22,8 @@ __all__ = ["Menu", "MenuSingle"]
 
 class MenuElement:
 
-    def __init__(self, *element: core.element, select=lambda self: None, hover=None, dehover=None):
+    def __init__(self, *element: core.element, data={}, select=lambda self: None, hover=None, dehover=None):
+        self.data = data
         self.elements = element
         self._rel_pos = [elm.pos for elm in self.elements]
         self._offset = 1
