@@ -2,6 +2,9 @@ import core
 
 __all__ = ["Menu", "MenuSingle"]
 
+_ME_OFF_X = 3
+_ME_OFF_Y = 15
+
 class MenuElement:
 
     def __init__(self, *element: core.element, data={}, select=lambda self, window: None, hover=None, dehover=None):
@@ -18,7 +21,7 @@ class MenuElement:
         if index != self._index:
             self._index = index
             for i, elm in enumerate(self.elements):
-                elm.pos = self._rel_pos[i] + core.Vector(3, 15 + self._offset * self._index)
+                elm.pos = self._rel_pos[i] + core.Vector(_ME_OFF_X, _ME_OFF_Y + self._offset * self._index)
 
     def render(self):
         for elm in self.elements:
@@ -63,7 +66,7 @@ class Menu(core.render.Window):
         for index, elm in enumerate(self.items[self.index:self.index + self.visable]):
             self.c_items.append(elm)
             elm._update(index)
-        self.cursor.pos = core.Vector(core.sys.WIDTH - 2, 12 + self.items[self.c_index]._offset * self.items[self.c_index]._index)
+        self.cursor.pos = core.Vector(core.sys.WIDTH - _ME_OFF_X, _ME_OFF_Y + self.items[self.c_index]._offset * self.items[self.c_index]._index)
 
     def down(self):
         if self.c_index < len(self.items) - 1:
