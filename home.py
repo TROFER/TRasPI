@@ -7,7 +7,7 @@ class Mainwindow(core.render.Window):
 
     def __init__(self):
         self.index = 0
-        self.functions = {0: core.system.ProgramMenu(), 1: core.system.SettingsWindow()), 2: core.system.PowerMenu()}
+        self.functions = {0: core.system.ProgramMenu(), 1: core.system.SettingsWindow(), 2: core.system.PowerMenu()}
         core.hardware.Backlight.gradient((240, 180, 240, 180, 240))
         self.title1 = core.element.Text(core.Vector(3, 5), "TRasPi OS", justify="L")
         self.buttons = [core.element.TextBox(core.Vector(64, 18), "Run Program"),
