@@ -24,7 +24,7 @@ class _Settings(core.std.Menu):
                 data = {**data, "key": name},
                 select = self.edit))
 
-        super().__init__(*elements, title=title, offset=core.asset.Font("std").size)
+        super().__init__(*elements, title=title)
 
     def render(self):
         self.title.render()
