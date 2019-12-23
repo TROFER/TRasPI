@@ -68,13 +68,14 @@ class Menu(core.render.Window):
         self._update()
 
     def render(self):
-        for index, elm in enumerate(self.c_items):
-            elm.render(index)
+        for elm in self.c_items:
+            elm.render()
 
     def _update(self):
         self.c_items.clear()
-        for elm in self.items[self.index:self.index + self.visable]:
+        for index, elm in enumerate(self.items[self.index:self.index + self.visable]):
             self.c_items.append(elm)
+            elm._update(index)
 
     def down(self):
         if self.c_index < len(self.items) - 1:
