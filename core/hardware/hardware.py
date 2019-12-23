@@ -6,27 +6,31 @@ from core.render.single import Singleton
 from core.render.enums import Button as CoreButton
 import colorsys
 
-class Display(metaclass=Singleton):
+class Display:
 
-    def clear():
+    @classmethod
+    def clear(cls):
         lcd.clear(), lcd.show()
         backlight.set_all(0, 0, 0), backlight.show()
 
-class Backlight(metaclass=Singleton):
+class Backlight:
 
-    def fill(r, g, b):
+    @classmethod
+    def fill(cls, r, g, b):
         backlight.set_all(r, g, b)
         backlight.show()
 
-    def gradient(colours):
+    @classmethod
+    def gradient(cls, colours):
         for led in range(5):
             _colours = colorsys.hsv_to_rgb(colours[led] / 360, 1, 1)
             backlight.set_pixel(led, int(_colours[0]*255), int(_colours[1]*255), int(_colours[2]*255))
         backlight.show()
 
-class Button(metaclass=Singleton):
+class Button:
 
-    def set_led(value: bool, *led: CoreButton):
+    @classmethod
+    def set_led(cls, value: bool, *led: CoreButton):
         if not led:
             led = (0, 1, 2, 3, 4, 5)
         for l in led:

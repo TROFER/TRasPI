@@ -41,8 +41,7 @@ class PowerMenu(core.render.Window):
             self.options[self.index].rect.colour = 0
 
     def select(self):
-        action = self.functions[self.index]
-        action()
+        self.functions[self.index]()
 
 class Handle(core.render.Handler):
 
