@@ -9,7 +9,9 @@ class SerialWindow(core.render.Window):
         with open("codes.json", 'r') as codes:
             self.codes = json.load(codes)
         while self.comand != "Return":
+            print("Done")
             self.command = super().__init__(**self.codes)
+        print("Finished")
         self.finish()
 
 main = SerialWindow()
