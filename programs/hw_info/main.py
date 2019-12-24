@@ -2,6 +2,7 @@ import core
 import gpiozero
 import psutil
 import time
+import socket
 
 class HardwareWindow(core.render.Window):
 
@@ -13,12 +14,15 @@ class HardwareWindow(core.render.Window):
         self.title = core.element.Text(core.Vector(3, 5), "HW_Info", justify="L")
         self.labels = [core.element.Text(core.Vector(3, 15), justify="L"),
         core.element.Text(core.Vector(3, 25), justify="L"),
-        core.element.Text(core.Vector(3, 35), justify="L")]
+        core.element.Text(core.Vector(3, 35), justify="L"),
+        core.element.Text(core.Vector(3, 45), justify="L")]
         self.update()
 
     def update(self):
         if time.time() - self.time > 1:
-            self.data = f"CPU Temp: {round(gpiozero.CPUTemperature().temperature, 1)}°C", f"CPU Usage: {psutil.cpu_percent()}%", f"Memory Usage: {psutil.virtual_memory().percent}%"
+            self.data = (f"CPU Temp: {round(gpiozero.CPUTemperature().temperature, 1)}°C",
+             f"CPU Usage: {psutil.cpu_percent()}%", f"Memory Usage: {psutil.virtual_memory().percent}%",
+             f"IP Address: {socket.gethostbyname(socket.getfqdn())}")
             for index, label in enumerate(self.labels):
                 label.text(self.data[index])
             self.time = time.time()
