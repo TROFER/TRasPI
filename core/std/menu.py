@@ -97,6 +97,7 @@ class Menu(core.render.Window):
     @core.render.Window.focus
     def select(self):
         command =  self.items[self.c_index]
+        print(command)
         if command is None:
             pass
         elif isinstance(command, core.render.Window):
