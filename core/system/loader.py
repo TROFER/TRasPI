@@ -62,9 +62,9 @@ class ProgramMenu(core.std.Menu):
         for item in os.listdir(f"{core.sys.PATH}{path}"):
             p = f"{core.sys.PATH}{path}/{item}"
             if "main.py" in os.listdir(p):
-                image, func = "std::folder", self._folder
-            elif os.path.isdir(p):
                 image, func = "std::script", self._program
+            elif os.path.isdir(p):
+                image, func = "std::folder", self._folder
             elements.append(core.std.Menu.Element(
                 core.element.Image(core.Vector(4, 0), core.asset.Image(image)),
                 core.element.Text(core.Vector(10, 0), item, justify="L"),
