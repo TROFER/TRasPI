@@ -5,6 +5,7 @@ import core
 class SerialWindow(core.render.Window):
 
     def __init__(self):
+        print("Innit")
         self.command = None
         with open("codes.json", 'r') as codes:
             self.codes = json.load(codes)
