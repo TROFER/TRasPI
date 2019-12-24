@@ -89,22 +89,20 @@ class Menu(core.render.Window):
             self.items[self.c_index].hover(self)
             self._update()
 
-    '''
     def select(self):
         return self.items[self.c_index].select(self)
-    '''
 
-    @core.render.Window.focus
-    def select(self):
-        command =  self.items[self.c_index]
-        print(command)
-        if command is None:
-            pass
-        elif isinstance(command, core.render.Window):
-            res = yield command
-            return res
-        else:
-            return command()
+    # @core.render.Window.focus
+    # def select(self):
+    #     command =  self.items[self.c_index]
+    #     print(command)
+    #     if command is None:
+    #         pass
+    #     elif isinstance(command, core.render.Window):
+    #         res = yield command
+    #         return res
+    #     else:
+    #         return command()
 
 class Handle(core.render.Handler):
 

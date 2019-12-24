@@ -62,9 +62,9 @@ class ProgramMenu(core.std.Menu):
         for item in os.listdir(f"{core.sys.PATH}{path}"):
             p = f"{core.sys.PATH}{path}/{item}"
             if "main.py" in os.listdir(p):
-                image, func = "std::folder", lambda s, w: None
+                image, func = "std::folder", self._folder
             elif os.path.isdir(p):
-                image, func = "std::script", lambda s, w: None
+                image, func = "std::script", self._program
             elements.append(core.std.Menu.Element(
                 core.element.Image(core.Vector(4, 0), core.asset.Image(image)),
                 core.element.Text(core.Vector(10, 0), item, justify="L"),
@@ -91,30 +91,6 @@ class ProgramMenu(core.std.Menu):
     def back(self):
         core.hardware.Backlight.fill(255, 255, 255)
         self.finish()
-
-class Handle(core.render.Handler):
-
-    key = core.render.Button.CENTRE
-    window = ProgramMenu
-
-    def press(self):
-        self.window.select()
-
-class Handle(core.render.Handler):
-
-    key = core.render.Button.UP
-    window = ProgramMenu
-
-    def press(self):
-        self.window.up()
-
-class Handle(core.render.Handler):
-
-    key = core.render.Button.DOWN
-    window = ProgramMenu
-
-    def press(self):
-        self.window.down()
 
 class Handle(core.render.Handler):
 
