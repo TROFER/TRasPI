@@ -82,11 +82,11 @@ class Menu(core.render.Window):
 
     def up(self):
         if self.c_index > 0:
-            self.items[self.c_index].dehover()
+            self.items[self.c_index].dehover(self)
             self.c_index -= 1
             if self.c_index < self.index:
                 self.index -= 1
-            self.items[self.c_index].hover()
+            self.items[self.c_index].hover(self)
             self._update()
 
     def select(self):
