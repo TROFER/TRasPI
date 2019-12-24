@@ -7,7 +7,7 @@ import core
 def write_code(element, window):
     try:
         port = window.serial # Grabs attributes from serialmenu
-        port.serial.write(element.data.encode())
+        port.write(element.data.encode()) #NEEDS TO BE CONVERTED TO BINARY
     except Exception as e:
         raise # REMOVE THIS WHEN YOU KNOW WHAT TYPE OF ERROR YOU GET, thanks <3
         yield core.std.Error(str(e))
