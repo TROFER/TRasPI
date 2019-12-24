@@ -12,10 +12,9 @@ class SettingsWindow(core.std.MenuSingle):
 class _Settings(core.std.Menu):
     """ Parent class for all settings """
 
-    def __init__(self, file: str):
+    def __init__(self, file: str, title: str):
         self._file = file # file to .cfg
         # Elements
-        self.title = core.element.Text(core.Vector(3, 5), "", justify="L")
 
         self.load()
         elements = []
@@ -25,7 +24,7 @@ class _Settings(core.std.Menu):
                 data = {**data, "key": name},
                 select = self.edit))
 
-        super().__init__(*elements)
+        super().__init__(*elements, title=title)
 
     def render(self):
         self.title.render()
@@ -54,13 +53,13 @@ class Core(_Settings):
     """ Core settings """
 
     def __init__(self):
-        super().__init__(core.sys.PATH+"core/system/system.cfg")
+        super().__init__(core.sys.PATH+"core/system/system.cfg", "Settings - Core")
 
 class Application(_Settings):
-    """ Application settings""" 
+    """ Application settings"""
 
     def __init__(self):
-        super()._init__("test")
+        super()._init__("test", "Settings - App")
 
 def Action(name: str, func: callable):
     return core.std.Menu.Element(

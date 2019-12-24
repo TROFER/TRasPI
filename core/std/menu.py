@@ -28,23 +28,24 @@ class MenuElement:
             elm.render()
 
     def select(self, window):
-        self._select(self, window)
+        return self._select(self, window)
 
     def hover(self, window):
-        self._hover(self, window)
+        return self._hover(self, window)
 
     def dehover(self, window):
-        self._dehover(self, window)
+        return self._dehover(self, window)
 
 class Menu(core.render.Window):
 
     Element = MenuElement
     template = core.asset.Template("std::window", path="window.template")
 
-    def __init__(self, *items: MenuElement, visable=4, offset=10, title="Menu"):
+    def __init__(self, *items: MenuElement, visable=4, offset=core.asset.Font("std").size, title="Menu", end=True):
         self.visable = visable
         self.items = list(items)
-        self.items.append(MenuElement(core.element.Text(core.Vector(0, 0), "Return", justify="L"), select=lambda s, w: w.finish()))
+        if end:
+            self.items.append(MenuElement(core.element.Text(core.Vector(0, 0), "Return", justify="L"), select=lambda s, w: w.finish()))
         for elm in self.items:
             elm._offset = offset
         self.c_items = []
@@ -52,11 +53,13 @@ class Menu(core.render.Window):
         self.index = 0
         self.c_index = self.index
 
+        self.title = core.element.Text(core.Vector(3, 5), title, justify="L")
         self.cursor = core.element.Text(core.Vector(0, 0), "<", justify="R")
 
         self._update()
 
     def render(self):
+        self.title.render()
         for elm in self.c_items:
             elm.render()
         self.cursor.render()
@@ -88,6 +91,16 @@ class Menu(core.render.Window):
 
     def select(self):
         return self.items[self.c_index].select(self)
+    # @core.render.Window.focus
+    # def select(self):
+    #     command =  self.menu_items[self.index][1]
+    #     if command is None:
+    #         pass
+    #     elif isinstance(command, core.render.Window):
+    #         res = yield command
+    #         return res
+    #     else:
+    #         return command()
 
 class Handle(core.render.Handler):
 

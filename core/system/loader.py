@@ -1,6 +1,7 @@
 import os
 import core
 import importlib.util
+import core.load.load
 
 __all__ = ["ProgramMenu"]
 
@@ -41,11 +42,7 @@ class ProgramItem(Item):
         super().__init__(name, "std::script", path)
 
     def select(self):
-        path = "{}{}/{}/main.py".format(core.sys.PATH, self.path, self.name)
-        spec = importlib.util.spec_from_file_location("module", path)
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-        return module.main
+        core.load.load.load(self.name, self.path)
 
 class BackItem(Item):
 
@@ -55,63 +52,45 @@ class BackItem(Item):
     def select(self):
         return None
 
-class ProgramMenu(core.render.Window):
-
-    template = core.asset.Template("std::window")
+class ProgramMenu(core.std.Menu):
 
     def __init__(self, path="programs"):
-        self.index = 0
-        self.cursor_index = self.index
         # Backlight
-        core.hardware.Backlight.gradient((240, 180, 240, 180, 240))
         # Index /programs
-        self.contents = []
+        elements = []
+
         for item in os.listdir(f"{core.sys.PATH}{path}"):
             p = f"{core.sys.PATH}{path}/{item}"
             if "main.py" in os.listdir(p):
-                self.contents.append(ProgramItem(item, path))
+                image, func = "std::folder", lambda s, w: None
             elif os.path.isdir(p):
-                self.contents.append(FolderItem(item, path))
-        self.contents.append(BackItem())
-        # Elements
-        self.title1 = core.element.Text(core.Vector(3, 5), "Programs", justify="L")
-        self.cursor = core.element.Text(core.Vector(12 + self.contents[self.cursor_index].label.font_size()[0] + 3, 20), "<", justify="L")
+                image, func = "std::script", lambda s, w: None
+            elements.append(core.std.Menu.Element(
+                core.element.Image(core.Vector(4, 0), core.asset.Image(image)),
+                core.element.Text(core.Vector(10, 0), item, justify="L"),
+                data = (item, path),
+                select = func))
+        elements.append(core.std.Menu.Element(
+            core.element.Image(core.Vector(4, 0), core.asset.Image("std::return")),
+            core.element.Text(core.Vector(10, 0), "Return", justify="L"),
+            select = lambda s, w: w.back))
 
-    def render(self):
-        self.title1.render()
-        self.cursor.render()
-        for index in range(min(VISABLE, len(self.contents))):
-            item = self.contents[self.index + index]
-            item.render(index)
-
-    def _update_cursor(self):
-        self.cursor.pos = core.Vector(12 + self.contents[self.cursor_index].label.font_size()[0] + 3, self.contents[self.cursor_index].label.pos[1])
-
-    def up(self):
-        if self.cursor_index > 0:
-            self.cursor_index -= 1
-            if self.cursor_index < self.index:
-                self.index -= 1
-            self._update_cursor()
-
-    def down(self):
-        if self.cursor_index + 1 < len(self.contents):
-            self.cursor_index += 1
-            if self.cursor_index >= self.index + VISABLE:
-                self.index += 1
-            self._update_cursor()
-
-    @core.render.Window.focus
-    def select(self):
-        res = self.contents[self.cursor_index].select()
-        if res is not None:
-            yield res
-        else:
-            self.finish()
+        super().__init__(*elements, title=path, end=False)
 
     def show(self):
         super().show()
         core.hardware.Backlight.gradient((240, 180, 240, 180, 240))
+
+    @core.render.Window.focus
+    def _folder(self, element, window):
+        yield ProgramMenu("{}/{}".format(element.data[1], element.data[0]))
+    @core.render.Window.focus
+    def _program(self, element, window):
+        yield core.load.load.load(*element.data)
+
+    def back(self):
+        core.hardware.Backlight.fill(255, 255, 255)
+        self.finish()
 
 class Handle(core.render.Handler):
 

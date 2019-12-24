@@ -48,5 +48,11 @@ class Screen(metaclass=Singleton):
     def render(self):
         self.active.render()
 
+    def pause(self):
+        pass
+
+    def resume(self):
+        pass
+
 def render():
     Screen().render()

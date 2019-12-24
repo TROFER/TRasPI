@@ -26,6 +26,7 @@ class Render(metaclass=Singleton):
         self._frame_event = mp.Event()
         self._render_event = mp.Event()
         self._process_event = mp.Event()
+        self._pause_event = mp.Event()
 
     def frame(self):
         self._buffer.put(self.image)
@@ -49,6 +50,15 @@ class Render(metaclass=Singleton):
 
     def close(self):
         self._render_event.clear()
+
+    def pause(self):
+        Screen().pause()
+        self._pause_event.clear()
+        self._pause_event.wait()
+
+    def resume(self):
+        Screen().resume()
+        self._pause_event.set()
 
     def _render_cache(self):
         cache = [[2 for y in range(HEIGHT)] for x in range(WIDTH)]

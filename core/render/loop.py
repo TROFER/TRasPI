@@ -1,5 +1,6 @@
 from core.render.renderer import Render
 from core.render.screen import render
+from core.hardware.hardware import Display, Backlight, Button
 
 def loop(func: callable=None):
     if func is None:
@@ -16,4 +17,10 @@ def loop(func: callable=None):
         print("Exiting", e)
         raise
     finally:
-        renderer.close()
+        close()
+
+def close():
+    Render().close()
+    Backlight.fill(0, 0, 0)
+    Button.led(False)
+    Display.clear()
