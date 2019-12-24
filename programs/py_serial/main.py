@@ -6,12 +6,13 @@ import core
 @core.render.Window.focus
 def write_code(element, window):
     try:
-        port = window.serial # Grabs attributes from serialmenu
+        port = window.serial # Grabs attributes from SerialMenu
         port.write(element.data.encode()) #NEEDS TO BE CONVERTED TO BINARY
-    except Exception as e:
-        raise # REMOVE THIS WHEN YOU KNOW WHAT TYPE OF ERROR YOU GET, thanks <3
-        yield core.std.Error(str(e))
-    #send(code)
+        yield core.std.Info(str(port.read()))
+    except ValueError:
+        yield core.std.Error("Bad Write Data")
+    except SerialException:
+        yield core.std.Error("Device Error")
 
 class SerialMenu(core.std.Menu):
 
@@ -38,7 +39,7 @@ class SerialMenu(core.std.Menu):
         # This function is run when the window is first loaded
         try:
             for port in ["/dev/ttyUSB0", "/dev/ttyAMA0"]:
-                self.serial = serial.Serial(port, baudrate=9600, stopbits=1)
+                self.serial = serial.Serial(port, baudrate=9600, stopbits=1, timeout=10)
                 break
         except IOError:
             yield core.std.Error("Port Error")
