@@ -62,7 +62,8 @@ class ProgramMenu(core.std.Menu):
         for item in os.listdir(f"{core.sys.PATH}{path}"):
             p = f"{core.sys.PATH}{path}/{item}"
             print(item, p)
-            if "main.py" in os.listdir(p):
+            self.temp = os.listdir(p)
+            if "main.py" in self.temp:
                 image, func = "std::folder", self._folder
             elif os.path.isdir(p):
                 image, func = "std::script", self._program
