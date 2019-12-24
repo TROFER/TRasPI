@@ -73,7 +73,7 @@ class ProgramMenu(core.std.Menu):
         elements.append(core.std.Menu.Element(
             core.element.Image(core.Vector(4, 0), core.asset.Image("std::return")),
             core.element.Text(core.Vector(10, 0), "Return", justify="L"),
-            select = lambda s, w: w.back))
+            select = lambda s, w: w.back()))
 
         super().__init__(*elements, title=path, end=False)
 
