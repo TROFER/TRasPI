@@ -63,6 +63,7 @@ class ProgramMenu(core.std.Menu):
             p = f"{core.sys.PATH}{path}/{item}"
             print(item, p)
             self.temp = os.listdir(p)
+            print(self.temp)
             if "main.py" in self.temp:
                 image, func = "std::folder", self._folder
             elif os.path.isdir(p):
