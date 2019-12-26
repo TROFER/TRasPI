@@ -51,7 +51,7 @@ class Menu(core.render.Window):
         self._c_elements = []
 
         self._index = 0
-        self._c_index = self.index
+        self._c_index = self._index
 
         self._title = core.element.Text(core.Vector(3, 5), title, justify="L")
         self._cursor = core.element.Text(core.Vector(0, 0), "<", justify="R")
