@@ -69,7 +69,7 @@ class Menu(core.render.Window):
         for index, elm in enumerate(self._elements[self._index:self._index + self._visable]):
             self._c_elements.append(elm)
             elm._update(index)
-        self._cursor.pos = core.Vector(core.sys.WIDTH - _ME_OFF_X, _ME_OFF_Y + self._elements[self.c_index]._offset * self._elements[self._c_index]._index)
+        self._cursor.pos = core.Vector(core.sys.WIDTH - _ME_OFF_X, _ME_OFF_Y + self._elements[self._c_index]._offset * self._elements[self._c_index]._index)
 
     def _down(self):
         if self._c_index < len(self._elements) - 1:
