@@ -14,6 +14,7 @@ class PlayerWindow(core.render.Window):
         self.track = track
         self.state = 'ST'
         self.select_index = 1
+        self.track.load()
         # Elements
         self.title = core.element.Text(core.Vector(3, 5), "Music Player", justify="L")
         self.header = core.element.Text(core.Vector(64, 20), self.track.name)
@@ -90,7 +91,6 @@ class Track:
         self.filename = filename #Full filename eg. .wav, .mp3
         self.name = name
         self.artist = artist
-        self.load()
 
     @core.render.Window.focus
     def load(self):
