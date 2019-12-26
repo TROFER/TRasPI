@@ -98,7 +98,7 @@ class Handle(core.render.Handler):
     window = Menu
 
     def press(self):
-        self.window.up()
+        self.window._up()
 
 class Handle(core.render.Handler):
 
@@ -106,7 +106,7 @@ class Handle(core.render.Handler):
     window = Menu
 
     def press(self):
-        self.window.down()
+        self.window._down()
 
 class Handle(core.render.Handler):
 
@@ -114,7 +114,7 @@ class Handle(core.render.Handler):
     window = Menu
 
     def press(self):
-        self.window.select()
+        self.window._select()
 
 class MenuSingle(core.render.Window):
 
