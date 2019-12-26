@@ -1,79 +1,84 @@
 import core
 import os
-from pygame import mixer
-mixer.init()
-
-
-
-
-class PlayerWindow(core.render.Window):
-
-    def __init__(self, element, window):
-        self.music = music
-        self.state = "STOP"
-        #Elements
-        self.title = core.element.Text(core.Vector(64, 16), self.music)
-        self.buttons =[core.element.TextBox(core.Vector(32, 50), "||", rect_colour=1),
-        core.element.TextBox(core.Vector(64, 50), ">",  rect_colour=1),
-        core.element.TextBox(core.Vector(96, 50), "STOP", rect_colour=0)]
-
-    def pause(self):
-        pass
-
-    def play(self):
-        print("Playing")
-        pygame.mixer.Sound.play(self.music)
-
-    def stop(self):
-        print("Stoping")
-        pygame.mixer.Sound.stop(self.music)
-
-
-    def render(self):
-        for button in self.buttons:
-            button.render()
-        title.render()
-
+import pygame
+# import audio_metadata
 
 @core.render.Window.focus
-def play_track(element, window):
-    PlayerWindow(element.data)
+class PlayerWindow(core.render.Window):
 
-class MusicList(core.std.Menu):
+    template = core.asset.Template("std::window")
+
+    def __init__(self, element, window):
+        self.track = element.data
+        self.state = 'ST'
+        self.select_index = 1
+        # Elements
+        self.title = core.element.Text(core.Vector(3, 5), "Music Player", justify="L")
+        self.header = core.element.Text(core.Vector(64, 15), self.track.name)
+        self.media_controls = [core.element.TextBox(core.Vector(32, 50), "||", rect_colour=1),
+        core.element.TextBox(core.Vector(64, 50), ">", rect_colour=0),
+        core.element.TextBox(core.Vector(96, 50), "\u25A0", rect_colour=1)]
+
+    def left(self):
+        if self.select_index > 0:
+            self.media_controls[self.select_index].rect_colour = 1
+            self.select_index - 1
+            self.media_controls[self.select_index].rect_colour = 0
+
+    def right(self):
+        if self.select_index + 1 <= len(self.media_controls)-1:
+            self.media_controls[self.select_index].rect_colour = 1
+            self.select_index + 1
+            self.media_controls[self.select_index].rect_colour = 0
+
+    def select(self):
+        if self.select_index == 0:
+            self.track.pause()
+        elif self.select_index == 1:
+            self.track.play()
+        elif self.select_index == 2: # Change to else once tested
+            self.track.stop()
+
+@core.render.Window.focus
+class Track:
+
+    def __init__(self, filename, name, artist=None):
+        self.filename = filename #Full filename eg. .wav, .mp3
+        self.name = name
+        self.artist = artist
+        try:
+            self.track = pygame.mixer.Sound(f"{core.sys.PATH}user/music/{filename}")
+        except pygame.error:
+            yield core.std.Error("Track Load Error")
+
+    def play(self):
+        if PlayerWindow.state = 'PA'
+            pygame.mixer.unpause(), PlayerWindow.state = "PL"
+        elif PlayerWindow.state = 'ST':
+            pygame.mixer.play(self.track), PlayerWindow.state = "PL"
+
+    def pause(self):
+        pygame.mixer.pause(), PlayerWindow.state = "PA"
+
+    def stop(self):
+        pygame.mixer.stop(), PlayerWindow.state = "ST"
+
+class StartScreen(core.std.menu):
 
     def __init__(self):
         mixer.init()
+        self.library = []
+        for file in os.listdir(f"{core.sys.PATH}user/music/"):
+            if file.contains(".wav") or file.contains(".mp3"):
+                self.library.append(Track(filename, track[:len(track)-3].capitalise()))
 
-        self.music_index = []
-
-        self.load_music()
-
-        elements = []
-
-        for music in self.music_index:
+        for track in self.library:
             elements.append(core.std.Menu.Element(
-                core.element.Text(core.Vector(0, 0), self.music_index, justify="L"),
-                data = self.music_index,
-                select = play_track)
-        super().__init__(*elements, title="Music Player")
+                core.element.Text(core.Vector(0, 0), self.track.name, justify="L"),
+                data = track,
+                select = PlayerWindow)
+            super().__init__(*elements, title="Open Track")
 
-    @core.render.Window.focus
-    def show(self):
-        super().show()
-        core.hardware.Backlight.fill(225, 225, 225)
-        # This function is run when the window is first loaded
-
-    def load_music(self):
-        for music in os.listdir(f"{core.sys.PATH}user/music"):
-            print(music)
-            if '.mp3' or '.wav' in music:
-                try:
-                    print("Loading Tracks")
-                    self.music_index.append(mixer.Sound(f"{core.sys.PATH}user/music/{music}"))
-                    print("Done")
-                except ValueError:
-                    print("Failed to load some tracks")
-        print(self.music_index)
 
 class Handle(core.render.Handler):
 
@@ -81,15 +86,7 @@ class Handle(core.render.Handler):
     window = PlayerWindow
 
     def press(self):
-        self.window.pause()
-
-class Handle(core.render.Handler):
-
-    key = core.render.Button.CENTRE
-    window = PlayerWindow
-
-    def press(self):
-        self.window.play()
+        self.window.left()
 
 class Handle(core.render.Handler):
 
@@ -97,6 +94,22 @@ class Handle(core.render.Handler):
     window = PlayerWindow
 
     def press(self):
-        self.window.stop()
+        self.window.right()
 
-main = MusicList()
+class Handle(core.render.Handler):
+
+    key = core.render.Button.CENTRE
+    window = PlayerWindow
+
+    def press(self):
+        self.window.select()
+
+class Handle(core.render.Handler):
+
+    key = core.render.Button.BACK
+    window = PlayerWindow
+
+    def press(self):
+        self.window.finish()
+
+main = StartScreen()
