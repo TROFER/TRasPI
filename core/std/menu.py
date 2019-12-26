@@ -9,32 +9,32 @@ class MenuElement:
 
     def __init__(self, *element: core.element, data={}, select=lambda self, window: None, hover=None, dehover=None):
         self.data = data
-        self.elements = element
+        self._elements = element
         self._rel_pos = [elm.pos for elm in self.elements]
         self._offset = 1
         self._index = -1
-        self._select = select
-        self._hover = lambda s, w: (hover) if hover is None else hover
-        self._dehover = lambda s, w: (dehover) if dehover is None else dehover
+        self._select_func = select
+        self._hover_func = lambda s, w: (hover) if hover is None else hover
+        self._dehover_func = lambda s, w: (dehover) if dehover is None else dehover
 
     def _update(self, index):
         if index != self._index:
             self._index = index
-            for i, elm in enumerate(self.elements):
+            for i, elm in enumerate(self._elements):
                 elm.pos = self._rel_pos[i] + core.Vector(_ME_OFF_X, _ME_OFF_Y + self._offset * self._index)
 
     def render(self):
-        for elm in self.elements:
+        for elm in self._elements:
             elm.render()
 
-    def select(self, window):
-        return self._select(self, window)
+    def _select(self, window):
+        return self._select_func(self, window)
 
-    def hover(self, window):
-        return self._hover(self, window)
+    def _hover(self, window):
+        return self._hover_func(self, window)
 
-    def dehover(self, window):
-        return self._dehover(self, window)
+    def _dehover(self, window):
+        return self._dehover_func(self, window)
 
 class Menu(core.render.Window):
 
@@ -42,67 +42,55 @@ class Menu(core.render.Window):
     template = core.asset.Template("std::window", path="window.template")
 
     def __init__(self, *items: MenuElement, visable=4, offset=core.asset.Font("std").size, title="Menu", end=True):
-        self.visable = visable
-        self.items = list(items)
+        self._visable = visable
+        self._elements = list(items)
         if end:
-            self.items.append(MenuElement(core.element.Text(core.Vector(0, 0), "Return", justify="L"), select=lambda s, w: w.finish()))
-        for elm in self.items:
+            self._elements.append(MenuElement(core.element.Text(core.Vector(0, 0), "Return", justify="L"), select=lambda s, w: w.finish()))
+        for elm in self._elements:
             elm._offset = offset
-        self.c_items = []
+        self._c_elements = []
 
-        self.index = 0
-        self.c_index = self.index
+        self._index = 0
+        self._c_index = self.index
 
-        self.title = core.element.Text(core.Vector(3, 5), title, justify="L")
-        self.cursor = core.element.Text(core.Vector(0, 0), "<", justify="R")
+        self._title = core.element.Text(core.Vector(3, 5), title, justify="L")
+        self._cursor = core.element.Text(core.Vector(0, 0), "<", justify="R")
 
         self._update()
 
     def render(self):
-        self.title.render()
-        for elm in self.c_items:
+        self._title.render()
+        for elm in self._c_elements:
             elm.render()
-        self.cursor.render()
+        self._cursor.render()
 
     def _update(self):
-        self.c_items.clear()
-        for index, elm in enumerate(self.items[self.index:self.index + self.visable]):
-            self.c_items.append(elm)
+        self._c_elements.clear()
+        for index, elm in enumerate(self._elements[self._index:self._index + self._visable]):
+            self._c_elements.append(elm)
             elm._update(index)
-        self.cursor.pos = core.Vector(core.sys.WIDTH - _ME_OFF_X, _ME_OFF_Y + self.items[self.c_index]._offset * self.items[self.c_index]._index)
+        self._cursor.pos = core.Vector(core.sys.WIDTH - _ME_OFF_X, _ME_OFF_Y + self._elements[self.c_index]._offset * self._elements[self._c_index]._index)
 
-    def down(self):
-        if self.c_index < len(self.items) - 1:
-            self.items[self.c_index].dehover(self)
-            self.c_index += 1
-            if self.c_index >= self.index + self.visable:
-                self.index += 1
-            self.items[self.c_index].hover(self)
+    def _down(self):
+        if self._c_index < len(self._elements) - 1:
+            self._elements[self._c_index]._dehover(self)
+            self._c_index += 1
+            if self._c_index >= self._index + self._visable:
+                self._index += 1
+            self._elements[self._c_index]._hover(self)
             self._update()
 
-    def up(self):
-        if self.c_index > 0:
-            self.items[self.c_index].dehover(self)
-            self.c_index -= 1
-            if self.c_index < self.index:
-                self.index -= 1
-            self.items[self.c_index].hover(self)
+    def _up(self):
+        if self._c_index > 0:
+            self._elements[self._c_index]._dehover(self)
+            self._c_index -= 1
+            if self._c_index < self._index:
+                self._index -= 1
+            self._elements[self._c_index]._hover(self)
             self._update()
 
-    def select(self):
-        return self.items[self.c_index].select(self)
-
-    # @core.render.Window.focus
-    # def select(self):
-    #     command =  self.items[self.c_index]
-    #     print(command)
-    #     if command is None:
-    #         pass
-    #     elif isinstance(command, core.render.Window):
-    #         res = yield command
-    #         return res
-    #     else:
-    #         return command()
+    def _select(self):
+        return self._elements[self._c_index]._select(self)
 
 class Handle(core.render.Handler):
 
@@ -134,15 +122,15 @@ class MenuSingle(core.render.Window):
 
     def __init__(self, **items):
         items["Return"] = self.finish
-        self.menu_items = [(core.element.Text(core.Vector(3, 32), f'{text[:20]}>', size=11, justify="L", colour=1), func) for text, func in items.items()]
+        self.menu_elements = [(core.element.Text(core.Vector(3, 32), f'{text[:20]}>', size=11, justify="L", colour=1), func) for text, func in items.items()]
         self.down_arrow, self.up_arrow = core.element.Text(core.Vector(64, 50), '\\/'), core.element.Text(core.Vector(64, 14), '/\\')
         self.index = 0
 
     def render(self):
-        self.menu_items[self.index][0].render()
+        self.menu_elements[self.index][0].render()
         if self.index > 0:
             self.up_arrow.render()
-        if self.index < len(self.menu_items)-1:
+        if self.index < len(self.menu_elements)-1:
             self.down_arrow.render()
 
     def up(self):
@@ -150,12 +138,12 @@ class MenuSingle(core.render.Window):
             self.index -= 1
 
     def down(self):
-        if self.index < len(self.menu_items)-1:
+        if self.index < len(self.menu_elements)-1:
             self.index += 1
 
     @core.render.Window.focus
     def select(self):
-        command =  self.menu_items[self.index][1]
+        command =  self.menu_elements[self.index][1]
         if command is None:
             pass
         elif isinstance(command, core.render.Window):
