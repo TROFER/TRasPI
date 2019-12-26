@@ -10,7 +10,7 @@ class MenuElement:
     def __init__(self, *element: core.element, data={}, select=lambda self, window: None, hover=None, dehover=None):
         self.data = data
         self._elements = element
-        self._rel_pos = [elm.pos for elm in self.elements]
+        self._rel_pos = [elm.pos for elm in self._elements]
         self._offset = 1
         self._index = -1
         self._select_func = select
