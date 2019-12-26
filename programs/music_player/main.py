@@ -17,20 +17,20 @@ class PlayerWindow(core.render.Window):
         # Elements
         self.title = core.element.Text(core.Vector(3, 5), "Music Player", justify="L")
         self.header = core.element.Text(core.Vector(64, 20), self.track.name)
-        self.buttons = [core.element.Image(core.Vector(32, 45), pause),
-        core.element.Image(core.Vector(64, 45), play),
-        core.element.Image(core.Vector(96, 45), stop)]
+        self.buttons = [core.element.Image(core.Vector(32, 50), core.asset.Image("pause")),
+        core.element.Image(core.Vector(64, 50), core.asset.Image("play")),
+        core.element.Image(core.Vector(96, 50), core.asset.Image("stop"))]
         self.cursor = core.element.Text(core.Vector(64, 40), "\\/")
 
     def left(self):
         if self.select_index > 0:
             self.select_index -= 1
-            self.cursor.pos[0] = self.buttons[self.select_index].pos[0]
+            self.cursor.pos = core.Vector(self.buttons[self.select_index].pos[0], 40)
 
     def right(self):
-        if self.select_index + 1 <= len(self.media_controls)-1:
+        if self.select_index + 1 <= len(self.buttons)-1:
             self.select_index += 1
-            self.cursor.pos[0] = self.buttons[self.select_index].pos[0]
+            self.cursor.pos = core.Vector(self.buttons[self.select_index].pos[0], 40)
 
     def select(self):
         if self.select_index == 0:
@@ -118,7 +118,7 @@ class StartScreen(core.std.Menu):
         self.library = []
         elements = []
         for file in os.listdir(f"{core.sys.PATH}user/music/"):
-            if ".wav" in file or ".mp3" in file:
+            if ".wav" in file or ".ogg" in file:
                 self.library.append(Track(file, file[:len(file)-4]))
 
         for track in self.library:
