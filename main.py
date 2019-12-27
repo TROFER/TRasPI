@@ -1,11 +1,17 @@
 import importlib
 import time
 import os
+import json
 
 try:
     import core
 except ImportError as e:
     raise OSError("FAILURE TO LOAD CORE!") from e
+try:
+    with open (f"{core.sys.PATH}core/system/system.cfg", 'r') as file:
+        system_config = json.load(file)
+except:
+    print("Failed to load system config file, continuing")
 try:
     module = importlib.import_module("home")
 except Exception as e:

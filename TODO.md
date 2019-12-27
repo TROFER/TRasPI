@@ -7,14 +7,11 @@ Button LED's do not turn off
 
 ## Features
 
-T - Centralise images #DONE
-Freeze / Pause renderer to save power
-T - Work on home.py #DONE?
+##High Priority
 Error handle Loader
-Optimise Loader
-Test and Tweak Power Menu
-Re-organise / Rename folders assets and files
-Load programs into programs folder?
+Freeze / Pause renderer to save power
+
+#Low Priority
 Make programs use a .cfg file which can be edited using a program
 
 # Feature Ideas, Please Ignore
