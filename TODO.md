@@ -1,9 +1,6 @@
 ## Bugs
 
 Weird thing that happens when changing windows
-Button LED's do not turn off
-
-
 
 ## Features
 
