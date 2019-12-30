@@ -126,3 +126,13 @@ class Image(Element):
 
     def render(self):
         self.Render.image.paste(self.image.image, tuple(self.pos_abs))
+
+class Line(Element):
+
+    def __init__(self, pos1, pos2, colour, width):
+        self.pos1, self.pos2 = pos1, pos2
+        self.colour = colour
+        self.width = width
+
+    def render(self):
+        self.Render.draw.line((self.pos1, self.pos2), self.colour, self.width)

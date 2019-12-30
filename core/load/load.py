@@ -1,4 +1,5 @@
 from core.sys import PATH
+import core.system.log
 from core.render.window import Window
 import importlib.util
 
@@ -18,4 +19,6 @@ def load(program: str, path: str="programs", file: str="main"):
         return module.main
     except FileNotFoundError:
         return FileNotFoundError("'{}.py' not in '{}{}'".format(file, path, program))
+    except BaseException as error:
+        log.log(file, type='Error', desc=error)
     return None
