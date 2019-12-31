@@ -1,5 +1,6 @@
 **__pycache__
 .vscode
 .idea
+/programs/pong
 test**
 **old_**
