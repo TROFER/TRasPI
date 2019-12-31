@@ -1,0 +1,11 @@
+{
+  "apt-get update" : "apt-get update",
+  "apt-get upgrade" : "apt-get upgrade",
+  "force restart" : "restart",
+  "force shutdown" : "halt",
+  "git pull" : "git pull",
+  "git fetch" : "git fetch --all",
+  "git reset" : "git reset --hard origin/master",
+  "disable tv service": "/usr/bin/tvservice -o",
+  "enable tv service" : "/opt/vc/bin/tvservice -p"
+}
