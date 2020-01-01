@@ -5,6 +5,9 @@ import core
 @core.render.Window.focus
 def execute(element, window):
     try:
+        if element.data == 0:
+            core.render.close()
+            quit()
         os.system(element.data)
         yield core.std.Info("Executed")
     except:
@@ -28,6 +31,6 @@ class CommandCenter(core.std.Menu):
     @core.render.Window.focus
     def show(self):
         super().show()
-        core.hardware.Backlight.fill(225, 225, 225)
+        core.hardware.Backlight.fill(225, 0, 0)
 
 main = CommandCenter()

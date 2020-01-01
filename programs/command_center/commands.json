@@ -7,5 +7,6 @@
   "git fetch" : "git fetch --all",
   "git reset" : "git reset --hard origin/master",
   "disable tv service": "/usr/bin/tvservice -o",
-  "enable tv service" : "/opt/vc/bin/tvservice -p"
+  "enable tv service" : "/opt/vc/bin/tvservice -p",
+  "stop local instance" : 0
 }
