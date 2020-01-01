@@ -89,7 +89,6 @@ class ProgramMenu(core.std.Menu):
         yield core.load.load.load(*element.data)
 
     def back(self):
-        core.hardware.Backlight.fill(255, 255, 255)
         self.finish()
 
 class Handle(core.render.Handler):
