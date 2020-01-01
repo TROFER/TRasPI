@@ -5,9 +5,11 @@ import core
 @core.render.Window.focus
 def execute(element, window):
     try:
-        if element.data == 0:
+
+        if element.data == 0:       #Custom Python Commands
             core.render.close()
             quit()
+
         os.system(element.data)
         yield core.std.Info("Executed")
     except:
@@ -15,11 +17,11 @@ def execute(element, window):
 
 class CommandCenter(core.std.Menu):
 
+    self.data = []
+
     def __init__(self):
         with open(f"{core.sys.PATH}programs/command_center/commands.json", "r") as file:
-            self.data = json.load(file)
-
-        elements = []
+            self.data[0] = json.load(file)
 
         for key, value in self.data.items():
             elements.append(core.std.Menu.Element(
