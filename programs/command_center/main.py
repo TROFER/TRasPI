@@ -4,8 +4,11 @@ import core
 
 @core.render.Window.focus
 def execute(element, window):
-    os.system(element.data)
-    yield core.std.Info("Executed")
+    try:
+        os.system(element.data)
+        yield core.std.Info("Executed")
+    except:
+        yield core.std.Error("Unknown Error")
 
 class CommandCenter(core.std.Menu):
 
