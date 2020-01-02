@@ -20,7 +20,7 @@ def load(program: str, path: str="programs", file: str="main"):
     except FileNotFoundError:
         return FileNotFoundError("'{}.py' not in '{}{}'".format(file, path, program))
     except BaseException as error:
-        raise_error()
+        raise_error(error)
     return None
 
 @core.render.Window.focus
