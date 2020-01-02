@@ -1,0 +1,6 @@
+This program requires the installation of Music Player Daemon
+
+To install use:
+apt-get install mpd
+sudo nano /etc/mpd.conf
+apt-get install ncmpcpp

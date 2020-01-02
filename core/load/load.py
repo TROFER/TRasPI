@@ -20,5 +20,5 @@ def load(program: str, path: str="programs", file: str="main"):
     except FileNotFoundError:
         return FileNotFoundError("'{}.py' not in '{}{}'".format(file, path, program))
     except BaseException as error:
-        log.log(file, type='Error', desc=error)
+        print("Error")
     return None
