@@ -17,11 +17,11 @@ def execute(element, window):
 
 class CommandCenter(core.std.Menu):
 
-    self.data = []
-
     def __init__(self):
         with open(f"{core.sys.PATH}programs/command_center/commands.json", "r") as file:
-            self.data[0] = json.load(file)
+            self.data = json.load(file)
+
+        elements = []
 
         for key, value in self.data.items():
             elements.append(core.std.Menu.Element(

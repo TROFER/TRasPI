@@ -4,6 +4,7 @@ from core.render.window import Window
 import importlib.util
 
 loading_count = 0
+@core.render.Window.focus
 def load(program: str, path: str="programs", file: str="main"):
     global loading_count
     path = "{}{}/{}/main.py".format(PATH, path, program)
@@ -19,10 +20,6 @@ def load(program: str, path: str="programs", file: str="main"):
         return module.main
     except FileNotFoundError:
         return FileNotFoundError("'{}.py' not in '{}{}'".format(file, path, program))
-    except BaseException as error:
-        raise_error(error)
+    except:
+        yield core.std.Error("Load Error")
     return None
-
-@core.render.Window.focus
-def raise_error(Error):
-    yield core.std.Error(Error)

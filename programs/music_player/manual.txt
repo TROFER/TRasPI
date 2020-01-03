@@ -1,6 +1,10 @@
 This program requires the installation of Music Player Daemon
 
 To install use:
-apt-get install mpd
-sudo nano /etc/mpd.conf
-apt-get install ncmpcpp
+apt-get update
+apt-get install mpd mpc
+
+Trouble Shooting:
+Access Denied / ALSA initialisation error:
+  *Disable and re-enable ALSA in 'dietpi-config' / audio
+  *Make sure device is set to the 3.5 audio jack

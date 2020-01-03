@@ -1,145 +1,105 @@
 import core
 import os
-import pygame
-# import audio_metadata
+import programs.music_player.player
+import programs.music_player.track
+import time
 
-class PlayerWindow(core.render.Window):
+class PlaylistScreen(core.std.Menu):
+    self.library = []
+    elements = []
+    try:
+        for file in os.listdir(f"{core.sys.PATH}user/music/playlists"):
+            if ".json" in file:
+                playlist = []
+                for tracks in json.load(file):
+                    trackinstance = track.Track(tracks)
+                    playlist.append(trackinstance)
+                self.libary.append(playlist)
+    except:
+        self.lib_empty()
+        self.finish()
 
-    template = core.asset.Template("std::window")
-    pause = core.asset.Image("pause", path=f"{core.sys.PATH}programs/music_player/pause.icon")
-    play = core.asset.Image("play", path=f"{core.sys.PATH}programs/music_player/play.icon")
-    stop = core.asset.Image("stop", path=f"{core.sys.PATH}programs/music_player/stop.icon")
-
-    def __init__(self, track):
-        self.track = track
-        self.state = 'ST'
-        self.select_index = 1
-        self.track.load()
-        # Elements
-        self.title = core.element.Text(core.Vector(3, 5), "Music Player", justify="L")
-        self.header = core.element.Text(core.Vector(64, 20), self.track.name)
-        self.buttons = [core.element.Image(core.Vector(32, 50), core.asset.Image("pause")),
-        core.element.Image(core.Vector(64, 50), core.asset.Image("play")),
-        core.element.Image(core.Vector(96, 50), core.asset.Image("stop"))]
-        self.cursor = core.element.Text(core.Vector(64, 40), "\\/")
-
-    def left(self):
-        if self.select_index > 0:
-            self.select_index -= 1
-            self.cursor.pos = core.Vector(self.buttons[self.select_index].pos[0], 40)
-
-    def right(self):
-        if self.select_index + 1 <= len(self.buttons)-1:
-            self.select_index += 1
-            self.cursor.pos = core.Vector(self.buttons[self.select_index].pos[0], 40)
-
-    def select(self):
-        if self.select_index == 0:
-            pygame.mixer.pause()
-            self.state = "PA"
-        elif self.select_index == 1:
-            if self.state == "ST":
-                self.track.play()
-                self.state = "PL"
-            else:
-                pygame.mixer.unpause()
-                self.state = "PL"
-        elif self.select_index == 2:
-            pygame.mixer.stop()
-            self.state = "ST"
-
-    def render(self):
-        for button in self.buttons:
-            button.render()
-        self.title.render(), self.header.render(), self.cursor.render()
-
-class Handle(core.render.Handler):
-
-    key = core.render.Button.LEFT
-    window = PlayerWindow
-
-    def press(self):
-        self.window.left()
-
-class Handle(core.render.Handler):
-
-    key = core.render.Button.RIGHT
-    window = PlayerWindow
-
-    def press(self):
-        self.window.right()
-
-class Handle(core.render.Handler):
-
-    key = core.render.Button.CENTRE
-    window = PlayerWindow
-
-    def press(self):
-        self.window.select()
-
-class Handle(core.render.Handler):
-
-    key = core.render.Button.BACK
-    window = PlayerWindow
-
-    def press(self):
-        self.window.finish()
-
-class Track:
-
-    def __init__(self, filename, name, artist=None):
-        self.filename = filename #Full filename eg. .wav, .mp3
-        self.name = name
-        self.artist = artist
-
-    @core.render.Window.focus
-    def load(self):
-        try:
-            self.track = pygame.mixer.Sound(f"{core.sys.PATH}user/music/{self.filename}")
-        except pygame.error:
-            yield core.std.Error("Track Load Error")
-
-    def play(self):
-        self.track.play()
-
-    def unpause(self):
-        pygame.mixer.unpause()
-
-    def pause(self):
-        self.track.pause()
-
-    def stop(self):
-        self.track.stop()
-
-class StartScreen(core.std.Menu):
-
-    def __init__(self):
-        pygame.mixer.init()
-        self.library = []
-        elements = []
-        try:
-            for file in os.listdir(f"{core.sys.PATH}user/music/"):
-                if ".wav" in file or ".ogg" in file:
-                    self.library.append(Track(file, file[:len(file)-4]))
-        except:
-            self.lib_empty()
-            self.finish()
-
-        for track in self.library:
-            elements.append(core.std.Menu.Element(
-                core.element.Text(core.Vector(0, 0), track.name, justify="L"),
-                data = track,
-                select = self.start))
-        super().__init__(*elements, title="Open Track")
+    for playlist in self.library:
+        elements.append(core.std.Menu.Element(
+            core.element.Text(core.Vector(0, 0), playlist.name, justify="L"),
+            data = track,
+            select = self.start))
+        super().__init__(*elements, title="Open Playlist")
 
     @core.render.Window.focus
     def start(self, element, window):
-        player = PlayerWindow(element.data)
+        player = player.PlayerWindow(element.data)
         yield player
 
     @core.render.Window.focus
     def lib_empty(self):
         yield core.std.Warning("Libary is empty")
 
+
+class StartScreen(core.render.Window):
+
+    template = core.asset.Template("std::window", path="window.template")
+    cursor = core.asset.Image("cursor", path=f"{core.sys.PATH}programs/music_player/assets/cursor.icon")
+    quit = core.asset.Image("quit", path=f"{core.sys.PATH}programs/music_player/assets/quit.icon")
+    radio = core.asset.Image("radio", path=f"{core.sys.PATH}programs/music_player/assets/radio.icon")
+    track = core.asset.Image("track", path=f"{core.sys.PATH}programs/music_player/assets/track.icon")
+    playlist = core.asset.Image("playlist", path=f"{core.sys.PATH}programs/music_player/assets/playlist.icon")
+
+    def __init__(self):
+        self.index = 1
+        self.labels = ['Open Radio', 'Open Music File', 'Open Playlist', 'Quit']
+        # Elements
+        self.title = core.element.Text(core.Vector(3, 5), "Music Player", justify="L")
+        self.body = [core.element.Image(core.Vector(25, 32), core.asset.Image("radio")),
+        core.element.Image(core.Vector(50, 32), core.asset.Image("track")),
+        core.element.Image(core.Vector(75, 32), core.asset.Image("playlist")),
+        core.element.Image(core.Vector(100, 32), core.asset.Image("quit"))]
+        self.current_item = core.element.TextBox(core.Vector(64, 50), self.labels[self.index])
+        self.cursor = core.element.Image(core.Vector(25 * (self.index + 1), 18), core.asset.Image("cursor"))
+
+    def render(self):
+        self.title.render()
+        for icon in self.body:
+            icon.render()
+        self.current_item = core.element.TextBox(core.Vector(64, 50), self.labels[self.index])
+        self.cursor = core.element.Image(core.Vector(25 * (self.index + 1), 18), core.asset.Image("cursor"))
+        self.current_item.render(), self.cursor.render()
+
+    def select(self):
+        if self.index == 2:
+            window = PlayerWindow()
+            yield window
+
+    def up(self):
+        if self.index < len(self.labels) - 1:
+            self.index += 1
+
+    def down(self):
+        if self.index != 0:
+            self.index -= 1
+
+class Handle(core.render.Handler):
+
+    key = core.render.Button.CENTRE
+    window = StartScreen
+
+    def press(self):
+        self.window.select()
+
+class Handle(core.render.Handler):
+
+    key = core.render.Button.RIGHT
+    window = StartScreen
+
+    def press(self):
+        self.window.up()
+
+class Handle(core.render.Handler):
+
+    key = core.render.Button.LEFT
+    window = StartScreen
+
+    def press(self):
+        self.window.down()
 
 main = StartScreen()
