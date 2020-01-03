@@ -5,7 +5,6 @@ import core
 @core.render.Window.focus
 def execute(element, window):
     try:
-
         if element.data == 0:       #Custom Python Commands
             core.render.close()
             quit()
