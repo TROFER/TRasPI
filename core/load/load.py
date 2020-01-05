@@ -1,11 +1,11 @@
 import sys
 from core.sys import PATH
-import core.system.log import Log
+from core.system.log import Log
 from core.render.window import Window
 import importlib.util
 
 loading_count = 0
-@core.render.Window.focus
+@Window.focus
 def load(program: str, path: str="programs", file: str="main"):
     global loading_count
     path = "{}{}/{}/".format(PATH, path, program)
@@ -23,19 +23,12 @@ def load(program: str, path: str="programs", file: str="main"):
         yield module.main
         sys.path.remove(path)
     except FileNotFoundError:
-<<<<<<< HEAD
         return FileNotFoundError("'{}.py' not in '{}{}'".format(file, path, program))
     except GeneratorExit:
         pass
     except KeyboardInterrupt:
         print("KeyboardInterrupt Raised: Exiting")
     except BaseException as error:
-        Log.Error(program, error)
+        #Log.Error(program, error)
         yield core.std.Error("Program Error")
-=======
-        return FileNotFoundError("'{}.py' not in '{}{}'".format(file, file_path, program))
-    #except:
-    #    print(error)
-    #    yield core.std.Error("Load Error")
->>>>>>> ed7d0292343dcc26f09bba03cb7de4454edf7613
     return None

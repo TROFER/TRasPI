@@ -6,17 +6,18 @@ def make_log(entry):
         log = open(f"{core.sys.PATH}core/log.txt", 'a')
     except IOError:
         log = open(f"{core.sys.PATH}core/log.txt", "w+")
+    log.close()
 
 class Log:
 
     @classmethod
     def error(cls, name, traceback):
-        make_log(f"[Error]@({time.strftime("%I:%M:%S")}) '{traceback}' appid={name}")
+        make_log(f"[Error]@({time.strftime('%I:%M:%S')}) '{traceback}' appid={name}")
 
     @classmethod
     def warning(cls, name, description):
-        make_log(f"[Warning]@({time.strftime("%I:%M:%S")}) '{description}' appid={name}")
+        make_log(f"[Warning]@({time.strftime('%I:%M:%S')}) '{description}' appid={name}")
 
     @classmethod
     def infomation(cls, name, infomation):
-        make_log(f"[Information]@({time.strftime("%I:%M:%S")}) '{infomation}' appid={name}")
+        make_log(f"[Information]@({time.strftime('%I:%M:%S')}) '{infomation}' appid={name}")
