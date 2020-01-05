@@ -20,6 +20,7 @@ def load(program: str, path: str="programs", file: str="main"):
         return module.main
     except FileNotFoundError:
         return FileNotFoundError("'{}.py' not in '{}{}'".format(file, path, program))
-    except:
-        yield core.std.Error("Load Error")
+    #except:
+    #    print(error)
+    #    yield core.std.Error("Load Error")
     return None

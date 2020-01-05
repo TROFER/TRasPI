@@ -181,6 +181,8 @@ class Track:
 
 class StartScreen(core.render.Window):
 
+    print("Loading")
+
     template = core.asset.Template("std::window", path="window.template")
     cursor = core.asset.Image("cursor", path=f"{core.sys.PATH}programs/music_player/assets/cursor.icon")
     quit = core.asset.Image("quit", path=f"{core.sys.PATH}programs/music_player/assets/quit.icon")
