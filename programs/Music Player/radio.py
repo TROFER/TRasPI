@@ -4,7 +4,7 @@ import os
 class StartScreen(core.std.Menu):
 
     def __init__(self):
-        with open(f"{core.sys.PATH}programs/music_player/radio_stations.json", "r") as file:
+        with open(f"{core.sys.PATH}programs/Music Player/radio_stations.json", "r") as file:
             self.data = json.load(file)
 
         elements = []
@@ -24,9 +24,9 @@ class StartScreen(core.std.Menu):
 class PlayerWindow(core.render.Window):
 
     template = core.asset.Template("std::window")
-    play = core.asset.Image("play", path=f"{core.sys.PATH}programs/music_player/assets/play.icon")
-    stop = core.asset.Image("stop", path=f"{core.sys.PATH}programs/music_player/assets/stop.icon")
-    cursor = core.asset.Image("cursor", path=f"{core.sys.PATH}programs/music_player/assets/cursor.icon")
+    play = core.asset.Image("play", path=f"{core.sys.PATH}programs/Music Player/assets/play.icon")
+    stop = core.asset.Image("stop", path=f"{core.sys.PATH}programs/Music Player/assets/stop.icon")
+    cursor = core.asset.Image("cursor", path=f"{core.sys.PATH}programs/Music Player/assets/cursor.icon")
 
     class ScrollingText(core.element.TextBox):
 

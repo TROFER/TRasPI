@@ -17,7 +17,7 @@ def execute(element, window):
 class CommandCenter(core.std.Menu):
 
     def __init__(self):
-        with open(f"{core.sys.PATH}programs/command_center/commands.json", "r") as file:
+        with open(f"{core.sys.PATH}programs/Command Center/commands.json", "r") as file:
             self.data = json.load(file)
 
         elements = []

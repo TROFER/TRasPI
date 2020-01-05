@@ -1,6 +1,7 @@
 import sys
 from core.sys import PATH
 from core.system.log import Log
+from core.render.window import Window
 import core
 import importlib.util
 

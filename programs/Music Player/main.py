@@ -1,16 +1,16 @@
 import core
 import os
 import time
-from programs.music_player import playlist, radio, single_track
+from programs.Music Player import playlist, radio, single_track
 
 class PlayerWindow(core.render.Window):
 
     template = core.asset.Template("std::window")
-    pause = core.asset.Image("pause", path=f"{core.sys.PATH}programs/music_player/assets/pause.icon")
-    play = core.asset.Image("play", path=f"{core.sys.PATH}programs/music_player/assets/play.icon")
-    stop = core.asset.Image("stop", path=f"{core.sys.PATH}programs/music_player/assets/stop.icon")
-    next = core.asset.Image("next", path=f"{core.sys.PATH}programs/music_player/assets/next.icon")
-    cursor = core.asset.Image("cursor", path=f"{core.sys.PATH}programs/music_player/assets/cursor.icon")
+    pause = core.asset.Image("pause", path=f"{core.sys.PATH}programs/Music Player/assets/pause.icon")
+    play = core.asset.Image("play", path=f"{core.sys.PATH}programs/Music Player/assets/play.icon")
+    stop = core.asset.Image("stop", path=f"{core.sys.PATH}programs/Music Player/assets/stop.icon")
+    next = core.asset.Image("next", path=f"{core.sys.PATH}programs/Music Player/assets/next.icon")
+    cursor = core.asset.Image("cursor", path=f"{core.sys.PATH}programs/Music Player/assets/cursor.icon")
 
     class ScrollingText(core.element.TextBox):
 
@@ -184,11 +184,11 @@ class StartScreen(core.render.Window):
     print("Loading")
 
     template = core.asset.Template("std::window", path="window.template")
-    cursor = core.asset.Image("cursor", path=f"{core.sys.PATH}programs/music_player/assets/cursor.icon")
-    quit = core.asset.Image("quit", path=f"{core.sys.PATH}programs/music_player/assets/quit.icon")
-    radio = core.asset.Image("radio", path=f"{core.sys.PATH}programs/music_player/assets/radio.icon")
-    track = core.asset.Image("track", path=f"{core.sys.PATH}programs/music_player/assets/track.icon")
-    playlist = core.asset.Image("playlist", path=f"{core.sys.PATH}programs/music_player/assets/playlist.icon")
+    cursor = core.asset.Image("cursor", path=f"{core.sys.PATH}programs/Music Player/assets/cursor.icon")
+    quit = core.asset.Image("quit", path=f"{core.sys.PATH}programs/Music Player/assets/quit.icon")
+    radio = core.asset.Image("radio", path=f"{core.sys.PATH}programs/Music Player/assets/radio.icon")
+    track = core.asset.Image("track", path=f"{core.sys.PATH}programs/Music Player/assets/track.icon")
+    playlist = core.asset.Image("playlist", path=f"{core.sys.PATH}programs/Music Player/assets/playlist.icon")
 
     def __init__(self):
         self.index = 1

@@ -11,7 +11,7 @@ class HardwareWindow(core.render.Window):
     def __init__(self):
         self.time = time.time()
         core.hardware.Backlight.fill(200, 170, 170)
-        self.title = core.element.Text(core.Vector(3, 5), "HW_Info", justify="L")
+        self.title = core.element.Text(core.Vector(3, 5), "HW Info", justify="L")
         self.labels = [core.element.Text(core.Vector(3, 15), justify="L"),
         core.element.Text(core.Vector(3, 25), justify="L"),
         core.element.Text(core.Vector(3, 35), justify="L"),

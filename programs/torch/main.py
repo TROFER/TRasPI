@@ -2,8 +2,8 @@ import core
 import colorsys
 import time
 
-core.asset.Template("True", path="torch/True.template")
-core.asset.Template("False", path="torch/False.template")
+core.asset.Template("True", path="Torch/True.template")
+core.asset.Template("False", path="Torch/False.template")
 
 ####MAINWINDOW####
 class Mainwindow(core.std.MenuSingle):

@@ -20,7 +20,7 @@ class SerialMenu(core.std.Menu):
 
         self.serial = None
 
-        with open(f"{core.sys.PATH}programs/py_serial/codes.json", "r") as file:
+        with open(f"{core.sys.PATH}programs/Py Serial/codes.json", "r") as file:
             self.data = json.load(file)
 
         elements = []

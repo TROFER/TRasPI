@@ -1,7 +1,6 @@
 **__pycache__
 .vscode
 .idea
-/programs/music_player/main old.py
 /core/log.txt
 /user/music
 test**
