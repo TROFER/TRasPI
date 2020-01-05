@@ -1,3 +1,4 @@
+import sys
 from core.sys import PATH
 import core.system.log import Log
 from core.render.window import Window
@@ -7,9 +8,10 @@ loading_count = 0
 @core.render.Window.focus
 def load(program: str, path: str="programs", file: str="main"):
     global loading_count
-    path = "{}{}/{}/main.py".format(PATH, path, program)
+    path = "{}{}/{}/".format(PATH, path, program)
+    file_path = path + "main.py"
     try:
-        spec = importlib.util.spec_from_file_location("module<{}:{}>".format(loading_count, program), path)
+        spec = importlib.util.spec_from_file_location("module<{}:{}>".format(loading_count, program), file_path)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
         if not hasattr(module, "main"):
@@ -17,8 +19,11 @@ def load(program: str, path: str="programs", file: str="main"):
         if not isinstance(module.main, Window):
             return TypeError("'main' <{}> is not of type <{}>".format(type(module.main).__name__, Window.__name__))
         loading_count += 1
-        return module.main
+        sys.path.insert(0, path)
+        yield module.main
+        sys.path.remove(path)
     except FileNotFoundError:
+<<<<<<< HEAD
         return FileNotFoundError("'{}.py' not in '{}{}'".format(file, path, program))
     except GeneratorExit:
         pass
@@ -27,4 +32,10 @@ def load(program: str, path: str="programs", file: str="main"):
     except BaseException as error:
         Log.Error(program, error)
         yield core.std.Error("Program Error")
+=======
+        return FileNotFoundError("'{}.py' not in '{}{}'".format(file, file_path, program))
+    #except:
+    #    print(error)
+    #    yield core.std.Error("Load Error")
+>>>>>>> ed7d0292343dcc26f09bba03cb7de4454edf7613
     return None
