@@ -1,6 +1,7 @@
 import core
 import os
 import time
+from programs.music_player import playlist, radio, single_track
 
 class PlayerWindow(core.render.Window):
 
@@ -209,14 +210,12 @@ class StartScreen(core.render.Window):
 
     def select(self):
         if self.index == 0:
-            window = None
+            window = radio.main
         elif self.index == 1:
-            window = None
+            window = single_track.main
         elif self.index == 2:
-            window = None
+            window = playlist.main
         elif self.index == 3:
-            window = None
-        else:
             self.finish()
         yield window
 
