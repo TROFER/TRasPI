@@ -1,5 +1,5 @@
 from core.sys import PATH
-import core.system.log
+import core.system.log import Log
 from core.render.window import Window
 import importlib.util
 
@@ -20,7 +20,11 @@ def load(program: str, path: str="programs", file: str="main"):
         return module.main
     except FileNotFoundError:
         return FileNotFoundError("'{}.py' not in '{}{}'".format(file, path, program))
-    #except:
-    #    print(error)
-    #    yield core.std.Error("Load Error")
+    except GeneratorExit:
+        pass
+    except KeyboardInterrupt:
+        print("KeyboardInterrupt Raised: Exiting")
+    except BaseException as error:
+        Log.Error(program, error)
+        yield core.std.Error("Program Error")
     return None

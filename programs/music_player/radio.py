@@ -46,7 +46,7 @@ class PlayerWindow(core.render.Window):
         self.header = ScrollingText(self.playlist[self.track_number].description)
         self.title = core.element.Text(core.Vector(3, 5), "Radio Player", justify="L")
         self.buttons = [core.element.Image(core.Vector(42, 50), core.asset.Image("play")),
-        core.element.Image(core.Vector(84, 50), core.asset.Image("stop")]
+        core.element.Image(core.Vector(84, 50), core.asset.Image("stop"))]
         self.cursor = core.element.Image(core.Vector(42 * (self.cursor_pos + 1), 18), core.asset.Image("cursor"))
 
     def volume_up(self):

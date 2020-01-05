@@ -2,6 +2,8 @@
 .vscode
 .idea
 /programs/music_player/main old.py
+/core/log.txt
+/user/music
 test**
 TrasPi Setup Guide.txt
 **old_**

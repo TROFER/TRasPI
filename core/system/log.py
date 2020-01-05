@@ -1,12 +1,22 @@
 import core
 import time
 
-def log(appid=None, type='None', desc='None'):
-    if appid is None:
-        print("Cannot create log missing 'appid'")
-        return
+def make_log(entry):
     try:
-        logfile =  open(f"{core.sys.PATH}core/log.txt", 'a')
+        log = open(f"{core.sys.PATH}core/log.txt", 'a')
     except IOError:
-        logfile = open(f"{core.sys.PATH}core/log.txt", 'w+')
-    logfile.write(f"[{type}] -{time.time()}- {desc}")
+        log = open(f"{core.sys.PATH}core/log.txt", "w+")
+
+class Log:
+
+    @classmethod
+    def error(cls, name, traceback):
+        make_log(f"[Error]@({time.strftime("%I:%M:%S")}) '{traceback}' appid={name}")
+
+    @classmethod
+    def warning(cls, name, description):
+        make_log(f"[Warning]@({time.strftime("%I:%M:%S")}) '{description}' appid={name}")
+
+    @classmethod
+    def infomation(cls, name, infomation):
+        make_log(f"[Information]@({time.strftime("%I:%M:%S")}) '{infomation}' appid={name}")
