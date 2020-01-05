@@ -10,14 +10,4 @@ Access Denied / ALSA initialisation error:
   *Make sure device is set to the 3.5 audio jack
 
 Developer Notes:
-  Main:
-    *Track Class
-    *Start Screen ?
-    *Start Screen
-
-  Playlist.py
-    *Start Screen
-
-  Radio.py
-    *Start Screen
-    imports threading
+ N/A
