@@ -1,11 +1,11 @@
 import sys
 from core.sys import PATH
 from core.system.log import Log
-from core.render.window import Window
+import core
 import importlib.util
 
 loading_count = 0
-@Window.focus
+@core.render.Window.focus
 def load(program: str, path: str="programs", file: str="main"):
     global loading_count
     path = "{}{}/{}/".format(PATH, path, program)
@@ -29,6 +29,6 @@ def load(program: str, path: str="programs", file: str="main"):
     except KeyboardInterrupt:
         print("KeyboardInterrupt Raised: Exiting")
     except BaseException as error:
-        #Log.Error(program, error)
+        Log.error(program, error)
         yield core.std.Error("Program Error")
     return None

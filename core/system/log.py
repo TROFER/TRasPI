@@ -1,11 +1,13 @@
 import core
 import time
 
-def make_log(entry):
+def make_log(string):
     try:
         log = open(f"{core.sys.PATH}core/log.txt", 'a')
+        log.write('\n')
     except IOError:
-        log = open(f"{core.sys.PATH}core/log.txt", "w+")
+        log = open(f"{core.sys.PATH}core/log.txt", "w")
+    log.write(string)
     log.close()
 
 class Log:
