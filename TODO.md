@@ -6,7 +6,6 @@ Weird thing that happens when changing windows
 New GUI for music player, includes scrolling text, volume controls
 
 ##High Priority
-Error handle Loader
 Freeze / Pause renderer to save power
 Allow for completely ending OS during exit
 
