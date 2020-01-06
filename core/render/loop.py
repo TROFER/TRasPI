@@ -1,15 +1,23 @@
 from core.error import RenderError
 from core.render.renderer import Render
 from core.render.screen import render
-from core.hardware.hardware import Display, Backlight, Button
+from core.hardware.hardware import Backlight, Button
+from core.hardware.display import Display
+
+def open():
+    Render().start()
+    Backlight.fill(255, 255, 255)
+    Button.led(True)
+    Display.clear()
+    Display.contrast(40)
 
 def loop(func: callable=None):
     if func is None:
         func = lambda: None
 
-    renderer = Render()
+    open()
     try:
-        renderer.start()
+        renderer = Render()
         while renderer._render_event.is_set():
             func()
             render()

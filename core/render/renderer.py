@@ -10,7 +10,7 @@ import multiprocessing as mp
 import PIL.ImageDraw
 
 try:
-    from gfxhat import lcd
+    from driver.gfxhat import lcd
 except ModuleNotFoundError:
     from core.hardware.dummy import lcd
 

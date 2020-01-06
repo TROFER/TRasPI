@@ -1,5 +1,5 @@
 try:
-    from gfxhat import backlight, touch, lcd
+    from driver.gfxhat import backlight, touch, lcd
 except ModuleNotFoundError:
     from core.hardware.dummy import backlight, touch, lcd
 from core.render.single import Singleton
