@@ -55,7 +55,7 @@ class Render(metaclass=Singleton):
         Screen().pause()
         self._pause_event.clear()
         if empty:
-            self._changes.wait()
+            self._changes.join()
         if wait:
             self._pause_event.wait()
 
