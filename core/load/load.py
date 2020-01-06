@@ -1,12 +1,9 @@
 import sys
 from core.sys import PATH
-from core.system.log import Log
 from core.render.window import Window
-import core
 import importlib.util
 
 loading_count = 0
-@core.render.Window.focus
 def load(program: str, path: str="programs", file: str="main"):
     global loading_count
     path = "{}{}/{}/".format(PATH, path, program)
@@ -21,15 +18,8 @@ def load(program: str, path: str="programs", file: str="main"):
             return TypeError("'main' <{}> is not of type <{}>".format(type(module.main).__name__, Window.__name__))
         loading_count += 1
         sys.path.insert(0, path)
-        yield module.main
-        sys.path.remove(path)
+        return module.main
+        # sys.path.remove(path) # ADD THIS LATER
     except FileNotFoundError:
         return FileNotFoundError("'{}.py' not in '{}{}'".format(file, path, program))
-    except GeneratorExit as error:
-        Log.error("Generator", error)
-    except KeyboardInterrupt:
-        print("KeyboardInterrupt Raised: Exiting")
-    except BaseException as error:
-        Log.error(program, error)
-        yield core.std.Error("Program Error")
     return None

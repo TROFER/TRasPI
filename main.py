@@ -15,21 +15,26 @@ except:
 try:
     module = importlib.import_module("home")
 except Exception as e:
-    raise OSError("FAILURE TO BOOT!") from e
+    raise core.error.FatalCoreException("FAILURE TO BOOT!") from e
 
 if not hasattr(module, "main"):
     msg = "FAIL! '{}' has no 'main'!".format(module.__name__)
-    raise OSError(msg)
+    raise core.error.FatalCoreException(msg)
 
 if not isinstance(module.main, core.render.Window):
     msg = "FAIL! {}.main <{} '{}'> is not an instance of 'core.render.Window'!".format(module.__name__, type(module.main).__name__, module.main)
-    raise OSError(msg)
+    raise core.error.FatalCoreException(msg)
 
-try:
-    module.main.show()
-    core.render.loop()
-except Exception as e:
-    raise OSError from e
-
-# time.sleep(5)
-# os.system("halt") # Turn off the device
+while True:
+    try:
+        module.main.show()
+        core.render.loop()
+    except core.error.RenderError as e:
+        try:
+            core.render.loop()
+        except core.error.RenderError as e:
+            try:
+                raise core.error.FatalCoreException() from e
+            except core.error.FatalCoreException as e:
+                core.system.log.Log.error("MAIN", e.log())
+                print(e.log())
