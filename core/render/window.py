@@ -1,3 +1,4 @@
+import core.error
 from core.vector import Vector
 from core.render.enums import Button, Event
 from core.render.handle import Handler
@@ -57,6 +58,8 @@ class Window(metaclass=MetaWindow):
                 window.show()
         except StopIteration as e:
             return e.value
+        except GeneratorExit as e:
+            raise core.error.FocusError(window) from e
 
     @staticmethod
     def focus(func):

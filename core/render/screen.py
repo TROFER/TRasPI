@@ -1,3 +1,4 @@
+import core.error
 from core.render.single import Singleton
 try:
     from gfxhat import touch
@@ -22,7 +23,10 @@ class Screen(metaclass=Singleton):
         self.callstack.append((window, generator))
 
     def call_lost(self) -> tuple:
-        return self.callstack.pop()
+        try:
+            return self.callstack.pop()
+        except IndexError as e:
+            raise core.error.WindowStackError() from None
 
     def show(self, window):
         self.active = window
@@ -38,7 +42,10 @@ class Screen(metaclass=Singleton):
                     try:
                         func = getattr(handler(self.active), event)
                     except AttributeError:    return
-                    result = func()
+                    try:
+                        result = func()
+                    except Exception as e:
+                        raise core.error.EventError(handler) from e
                     if type(result).__name__ == "generator":
                         return self.active._handle_focus(None, result)
 

@@ -1,3 +1,4 @@
+from core.error import RenderError
 from core.render.renderer import Render
 from core.render.screen import render
 from core.hardware.hardware import Display, Backlight, Button
@@ -11,11 +12,9 @@ def loop(func: callable=None):
         renderer.start()
         while renderer._render_event.is_set():
             func()
-            render()
             renderer.frame()
-    except BaseException as e:
-        print("Exiting", e)
-        raise
+    except Exception as e:
+        raise RenderError("Main Render Loop") from e
     finally:
         close()
 
