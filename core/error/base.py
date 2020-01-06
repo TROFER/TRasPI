@@ -1,4 +1,4 @@
-__all__ = ["FatalCoreException", "WindowError", "RenderError", "AssetError", "HardwareError"]
+__all__ = ["FatalCoreException", "WindowError", "RenderError", "AssetError", "HardwareError", "FocusError", "EventError"]
 
 class MetaCoreError(type):
 
