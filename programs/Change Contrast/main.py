@@ -14,7 +14,7 @@ class MainWindow(core.render.Window):
     def render(self):
         self.title.render()
         self.message1.render()
-        self.messsage2.render()
+        self.message2.render()
 
     def up(self):
         if self.contrast < 63:
