@@ -1,7 +1,7 @@
 import core.error
 from core.render.single import Singleton
 try:
-    from gfxhat import touch
+    from driver.gfxhat import touch
 except ModuleNotFoundError:
     from core.hardware.dummy import touch
 

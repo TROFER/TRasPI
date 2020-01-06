@@ -3,11 +3,17 @@ from core.render.renderer import Render
 from core.render.screen import render
 from core.hardware.hardware import Display, Backlight, Button
 
+def open():
+    Render().start()
+    Backlight.fill(255, 255, 255)
+    Button.led(True)
+    Display.clear()
+
 def loop(func: callable=None):
     if func is None:
         func = lambda: None
 
-    renderer = Render()
+    open()
     try:
         renderer.start()
         while renderer._render_event.is_set():
