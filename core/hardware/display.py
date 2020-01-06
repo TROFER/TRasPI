@@ -6,7 +6,7 @@ __all__ = ["Display"]
 class _Display:
 
     def __init__(self):
-        lcd.setup()
+        lcd.st7567.setup()
         self.contrast(20)
 
     def clear(self):
