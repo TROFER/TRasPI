@@ -1,4 +1,4 @@
-__all__ = ["FatalCoreException", "WindowError", "RenderError", "AssetError", "HardwareError"]
+__all__ = ["FatalCoreException", "WindowError", "RenderError", "AssetError", "HardwareError", "FocusError", "EventError"]
 
 class MetaCoreError(type):
 
@@ -77,7 +77,7 @@ class EventError(CoreBaseException):
         self.handler = handler
 
     def __str__(self) -> str:
-        return "Window: {}".format(handler.window)
+        return "Window: {}".format("SELF.HANDLER.WINDOW")
 
 class FocusError(CoreBaseException):
 
