@@ -8,6 +8,7 @@ def open():
     Backlight.fill(255, 255, 255)
     Button.led(True)
     Display.clear()
+    Display.contrast(40)
 
 def loop(func: callable=None):
     if func is None:
