@@ -77,7 +77,7 @@ class EventError(CoreBaseException):
         self.handler = handler
 
     def __str__(self) -> str:
-        return "Window: {}".format(handler.window)
+        return "Window: {}".format(self.handler.window)
 
 class FocusError(CoreBaseException):
 
