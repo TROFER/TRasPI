@@ -2,6 +2,7 @@ import os
 import core
 import importlib.util
 import core.load.load
+from core.system.log import Log
 
 __all__ = ["ProgramMenu"]
 
@@ -86,7 +87,15 @@ class ProgramMenu(core.std.Menu):
         yield ProgramMenu("{}/{}".format(element.data[1], element.data[0]))
     @core.render.Window.focus
     def _program(self, element, window):
-        yield core.load.load.load(*element.data)
+        try:
+            yield core.load.load.load(*element.data)
+        except GeneratorExit as error:
+            Log.error("Generator", error)
+        except KeyboardInterrupt:
+            print("KeyboardInterrupt Raised: Exiting")
+        except BaseException as error:
+            Log.error(program, error)
+            yield core.std.Error("Program Error")
 
     def back(self):
         self.finish()

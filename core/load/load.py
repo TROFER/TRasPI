@@ -25,8 +25,8 @@ def load(program: str, path: str="programs", file: str="main"):
         sys.path.remove(path)
     except FileNotFoundError:
         return FileNotFoundError("'{}.py' not in '{}{}'".format(file, path, program))
-    except GeneratorExit:
-        pass
+    except GeneratorExit as error:
+        Log.error("Generator", error)
     except KeyboardInterrupt:
         print("KeyboardInterrupt Raised: Exiting")
     except BaseException as error:
