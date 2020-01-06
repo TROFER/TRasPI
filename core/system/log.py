@@ -14,12 +14,12 @@ class Log:
 
     @classmethod
     def error(cls, name, traceback):
-        make_log(f"[Error]@({time.strftime('%I:%M:%S')}) '{traceback}' appid={name}")
+        make_log(f"[Error]({time.strftime('%d.%m.%y@%I:%M:%S')}) '{traceback}' appid={name}")
 
     @classmethod
     def warning(cls, name, description):
-        make_log(f"[Warning]@({time.strftime('%I:%M:%S')}) '{description}' appid={name}")
+        make_log(f"[Warning]({time.strftime('%d.%m.%y@%I:%M:%S')}) '{description}' appid={name}")
 
     @classmethod
     def infomation(cls, name, infomation):
-        make_log(f"[Information]@({time.strftime('%I:%M:%S')}) '{infomation}' appid={name}")
+        make_log(f"[Information]({time.strftime('%d.%m.%y@%I:%M:%S')}) '{infomation}' appid={name}")
