@@ -19,16 +19,16 @@ class MainWindow(core.render.Window):
     def up(self):
         if self.contrast < 63:
             self.contrast += 1
-            core.render.Renderer.pause(empty=True)
+            core.render.Render().pause(empty=True)
             core.hardware.Display.contrast(self.contrast)
-            core.render.renderer.resume()
+            core.render.Render().resume()
 
     def down(self):
         if self.contrast > 0:
             self.contrast -= 1
-            core.render.Renderer.pause(empty=True)
+            core.render.Render().pause(empty=True)
             core.hardware.Display.contrast(self.contrast)
-            core.render.renderer.resume()
+            core.render.Render().resume()
 
 class Handle(core.render.Handler):
 
