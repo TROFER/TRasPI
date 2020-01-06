@@ -1,6 +1,7 @@
 ## Bugs
 
 Weird thing that happens when changing windows
+/command centre button press twice
 
 ## Features
 New GUI for music player, includes scrolling text, volume controls
