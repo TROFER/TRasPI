@@ -7,7 +7,7 @@ class _Display:
 
     def __init__(self):
         lcd.st7567.setup()
-        self.contrast(20)
+        self.contrast(20) #Sets system contrast value
 
     def clear(self):
         lcd.clear()
