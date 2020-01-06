@@ -51,10 +51,13 @@ class Render(metaclass=Singleton):
     def close(self):
         self._render_event.clear()
 
-    def pause(self):
+    def pause(self, wait=False, empty=False):
         Screen().pause()
         self._pause_event.clear()
-        self._pause_event.wait()
+        if empty:
+            self._changes.wait()
+        if wait:
+            self._pause_event.wait()
 
     def resume(self):
         Screen().resume()
