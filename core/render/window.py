@@ -59,6 +59,7 @@ class Window(metaclass=MetaWindow):
         except StopIteration as e:
             return e.value
         except GeneratorExit as e:
+            print("FOCUS WINDOW", e)
             raise core.error.FocusError(window) from e
 
     @staticmethod

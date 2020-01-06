@@ -87,15 +87,11 @@ class ProgramMenu(core.std.Menu):
         yield ProgramMenu("{}/{}".format(element.data[1], element.data[0]))
     @core.render.Window.focus
     def _program(self, element, window):
-        try:
-            yield core.load.load.load(*element.data)
-        except GeneratorExit as error:
-            Log.error("Generator", error)
-        except KeyboardInterrupt:
-            print("KeyboardInterrupt Raised: Exiting")
-        except BaseException as error:
-            Log.error(program, error)
-            yield core.std.Error("Program Error")
+        result = core.load.load.load(*element.data)
+        if isinstance(result, core.render.Window):
+            yield result
+        else:
+            yield core.std.Error(result)
 
     def back(self):
         self.finish()
