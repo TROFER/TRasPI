@@ -9,7 +9,7 @@ class MainWindow(core.render.Window):
         self.contrast = 20
         self.title = core.element.Text(core.Vector(3, 5), "Ajust Contrast", justify="L")
         self.message1 = core.element.Text(core.Vector(64, 15), "UP -Increse Contrast")
-        self.message1 = core.element.Text(core.Vector(64, 25), "DOWN -Decrese Contrast")
+        self.message2 = core.element.Text(core.Vector(64, 25), "DOWN -Decrese Contrast")
 
     def render(self):
         self.title.render()
