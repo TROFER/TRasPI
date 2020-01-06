@@ -37,4 +37,4 @@ while True:
                 raise core.error.FatalCoreException() from e
             except core.error.FatalCoreException as e:
                 core.system.log.Log.error(e.log())
-                print(e.log())
+                print("MAIN", e.log())
