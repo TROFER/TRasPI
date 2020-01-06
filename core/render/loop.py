@@ -12,6 +12,7 @@ def loop(func: callable=None):
         renderer.start()
         while renderer._render_event.is_set():
             func()
+            render()
             renderer.frame()
     except Exception as e:
         raise RenderError("Main Render Loop") from e

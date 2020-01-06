@@ -25,17 +25,6 @@ if not isinstance(module.main, core.render.Window):
     msg = "FAIL! {}.main <{} '{}'> is not an instance of 'core.render.Window'!".format(module.__name__, type(module.main).__name__, module.main)
     raise core.error.FatalCoreException(msg)
 
-def error_handle(func):
-    def error_handle():
-        try:
-            return func()
-        except core.error.RenderError as e:
-            try:
-                return func()
-            except core.error.RenderError as e:
-                raise core.error.FatalCoreException(e) from e
-    return error_handle
-
 while True:
     try:
         module.main.show()
