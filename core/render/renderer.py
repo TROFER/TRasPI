@@ -33,7 +33,7 @@ class Render(metaclass=Singleton):
         self._frame_event.set()
         self._next()
         self._buffer.join()
-        self._pause_event.wait()
+        # self._pause_event.wait()
 
     def _next(self):
         self.image = Screen().template().copy()
