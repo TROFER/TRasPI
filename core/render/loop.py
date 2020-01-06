@@ -1,7 +1,8 @@
 from core.error import RenderError
 from core.render.renderer import Render
 from core.render.screen import render
-from core.hardware.hardware import Display, Backlight, Button
+from core.hardware.hardware import Backlight, Button
+from core.hardware.display import Display
 
 def open():
     Render().start()
