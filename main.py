@@ -29,5 +29,11 @@ while True:
     try:
         module.main.show()
         core.render.loop()
-    except core.error.FatalCoreException as e:
-        print(e.log())
+    except core.error.RenderError as e:
+        try:
+            core.render.loop()
+        except core.error.RenderError as e
+            try:
+                raise core.error.FatalCoreException() from e
+            except core.error.FatalCoreException as e:
+                print(e.log())
