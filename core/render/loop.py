@@ -6,8 +6,8 @@ from core.hardware.display import Display
 
 def open():
     Render().start()
-    Backlight.fill(255, 255, 255)
-    Button.led(True)
+    #Backlight.fill(255, 255, 255)
+    #Button.led(True)
     Display.clear()
     # Display.contrast(40)
 
