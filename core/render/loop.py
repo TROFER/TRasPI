@@ -15,7 +15,7 @@ def loop(func: callable=None):
 
     open()
     try:
-        renderer.start()
+        renderer = Render()
         while renderer._render_event.is_set():
             func()
             render()
