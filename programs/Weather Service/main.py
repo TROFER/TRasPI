@@ -8,7 +8,7 @@ core.asset.Template("weather", path="Weather Service/gui.template")
 class Mainwindow(core.render.Window):
 
     def __init__(self):
-        core.hardware.Backlight.fill(255, 255, 255)
+        core.hardware.Backlight.fill(225, 225, 0)
         self.template = core.asset.Template("weather")
         self.API = "&appid=dd440727faee99efb0b572bc6d78e7b3"
         self.URL = "http://api.openweathermap.org/data/2.5/weather?"
@@ -26,7 +26,7 @@ class Mainwindow(core.render.Window):
     def get_weather(self):
         try:
             self.data = json.load(request.urlopen(self.URL+self.location[0]+self.API))
-        except URLError:
+        except:
             yield core.std.Error("Unable To Connect")
             return self.finish()
         self.tempreture = core.element.Text(core.Vector(3, 14), f"Temperature: {round(self.data['main']['temp'] - 273.1, 1)}°C", justify="L")
