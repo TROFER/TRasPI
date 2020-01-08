@@ -1,6 +1,6 @@
 import core
 import json
-
+'''
 __all__ = ["SettingsWindow"]
 
 class SettingsWindow(core.render.Window):
@@ -76,7 +76,7 @@ def Action(name: str, func: callable):
     return core.std.Menu.Element(
         core.element.Text(core.Vector(0, 0), name, justify="L"),
         select=func)
-
+'''
 ## Notes ##
 '''
 core settings
