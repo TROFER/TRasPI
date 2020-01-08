@@ -14,7 +14,7 @@ General polish of menus and programs, add features not added initially:
   *Sorting on program menu*
   *Torch opens to torch by default*
   *weather service logs changes conditions*
-  *System settings is useful* -Link to command centre and integrate contrast values into core settings
+  *System settings is useful* -Link to command centre and integrate contrast values into core settings, program start screen should have its own window design.
 
 ##High Priority
 Freeze / Pause renderer to save power
