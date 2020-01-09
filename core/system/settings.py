@@ -13,11 +13,14 @@ class SettingsWindow(core.render.Window):
     core.asset.Image("cursor", path="cursor.icon")
 
     def __init__(self):
+        self.functions = {0 : CoreSettings(), 1: cmd.Cmd()}
         self.index = 0
+        self.messages = ["Edit System Config", "Command Prompt"]
         self.title = core.element.Text(core.Vector(3, 5), "Settings", justify="L")
         self.core_icon = core.element.Image(core.Vector(42, 32), core.asset.Image("core"))
         self.cmd_icon = core.element.Image(core.Vector(84, 32), core.asset.Image("cmd"))
         self.cursor = core.element.Image(core.Vector(42 * (self.index + 1), 18), core.asset.Image("cursor"))
+        self.message = core.element.Text(core.Vector(64, 50), self.messages[self.index])
 
     def left(self):
         if self.index > 0:
@@ -29,48 +32,49 @@ class SettingsWindow(core.render.Window):
 
     def select(self):
         if self.index == 0:
-            window = Core()
+            yield self.core
         elif self.index == 1:
-            window = cmd.cmd()
-        yield window
+            yield self.cmd
 
     def render(self):
         self.title.render()
         self.core_icon.render(), self.cmd_icon.render()
-        core.element.Image(core.Vector(42 * (self.index + 1), 18), core.asset.Image("cursor"))
+        self.cursor = core.element.Image(core.Vector(42 * (self.index + 1), 18), core.asset.Image("cursor"))
+        self.message = core.element.Text(core.Vector(64, 50), self.messages[self.index])
+        self.message.render()
         self.cursor.render()
 
 class Handle(core.render.Handler):
 
-    key = core.render.Button.UP
-    window = StartScreen
+    key = core.render.Button.LEFT
+    window = SettingsWindow
 
     def press(self):
         self.window.left()
 
 class Handle(core.render.Handler):
 
-    key = core.render.Button.UP
-    window = StartScreen
+    key = core.render.Button.RIGHT
+    window = SettingsWindow
 
     def press(self):
         self.window.right()
 
-    class Handle(core.render.Handler):
+class Handle(core.render.Handler):
 
-        key = core.render.Button.UP
-        window = StartScreen
+    key = core.render.Button.CENTRE
+    window = SettingsWindow
 
-        def press(self):
-            self.window.select()
+    def press(self):
+        self.window.select()
 
-    class Handle(core.render.Handler):
+class Handle(core.render.Handler):
 
-        key = core.render.Button.UP
-        window = StartScreen
+    key = core.render.Button.BACK
+    window = SettingsWindow
 
-        def press(self):
-            self.window.finish()
+    def press(self):
+        self.window.finish()
 
 class _Settings(core.std.Menu):
     """ Parent class for all settings """
@@ -112,14 +116,11 @@ class _Settings(core.std.Menu):
         with open(self._file, "w") as file:
             json.dump(self.data, file)
 
-@core.render.Window.focus
-class Core(_Settings):
+class CoreSettings(_Settings):
     """ Core settings """
 
     def __init__(self):
         super().__init__(core.sys.PATH+"core/system/system.cfg", "Settings - Core")
-
-
 ## Notes ##
 '''
 core settings
