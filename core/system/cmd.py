@@ -14,10 +14,11 @@ def execute(element, window):
     except:
         yield core.std.Error("Unknown Error")
 
-class CommandCenter(core.std.Menu):
+@core.render.Window.focus
+class cmd(core.std.Menu):
 
     def __init__(self):
-        with open(f"{core.sys.PATH}programs/Command Center/commands.json", "r") as file:
+        with open(f"{core.sys.PATH}core/system/commands.json", "r") as file:
             self.data = json.load(file)
 
         elements = []

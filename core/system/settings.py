@@ -1,5 +1,6 @@
 import core
 import json
+import cmd
 
 __all__ = ["SettingsWindow"]
 
@@ -9,17 +10,67 @@ class SettingsWindow(core.render.Window):
     template = core.asset.Template("std::window")
     core.asset.Image("core", path="config.icon")
     core.asset.Image("cmd", path="cmd.icon")
+    core.asset.Image("cursor", path="cursor.icon")
 
     def __init__(self):
         self.index = 0
         self.title = core.element.Text(core.Vector(3, 5), "Settings", justify="L")
         self.core_icon = core.element.Image(core.Vector(42, 32), core.asset.Image("core"))
         self.cmd_icon = core.element.Image(core.Vector(84, 32), core.asset.Image("cmd"))
-        # Needs cursors
+        self.cursor = core.element.Image(core.Vector(42 * (self.index + 1), 18), core.asset.Image("cursor"))
+
+    def left(self):
+        if self.index > 0:
+            self.index -= 1
+
+    def right(self):
+        if self.index < 1:
+            self.index += 1
+
+    def select(self):
+        if self.index == 0:
+            window = Core()
+        elif self.index == 1:
+            window = cmd.cmd()
+        yield window
 
     def render(self):
         self.title.render()
         self.core_icon.render(), self.cmd_icon.render()
+        core.element.Image(core.Vector(42 * (self.index + 1), 18), core.asset.Image("cursor"))
+        self.cursor.render()
+
+class Handle(core.render.Handler):
+
+    key = core.render.Button.UP
+    window = StartScreen
+
+    def press(self):
+        self.window.left()
+
+class Handle(core.render.Handler):
+
+    key = core.render.Button.UP
+    window = StartScreen
+
+    def press(self):
+        self.window.right()
+
+    class Handle(core.render.Handler):
+
+        key = core.render.Button.UP
+        window = StartScreen
+
+        def press(self):
+            self.window.select()
+
+    class Handle(core.render.Handler):
+
+        key = core.render.Button.UP
+        window = StartScreen
+
+        def press(self):
+            self.window.finish()
 
 class _Settings(core.std.Menu):
     """ Parent class for all settings """
@@ -61,22 +112,13 @@ class _Settings(core.std.Menu):
         with open(self._file, "w") as file:
             json.dump(self.data, file)
 
+@core.render.Window.focus
 class Core(_Settings):
     """ Core settings """
 
     def __init__(self):
         super().__init__(core.sys.PATH+"core/system/system.cfg", "Settings - Core")
 
-class Application(_Settings):
-    """ Application settings"""
-
-    def __init__(self):
-        super()._init__("test", "Settings - App")
-
-def Action(name: str, func: callable):
-    return core.std.Menu.Element(
-        core.element.Text(core.Vector(0, 0), name, justify="L"),
-        select=func)
 
 ## Notes ##
 '''
