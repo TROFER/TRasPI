@@ -1,24 +1,25 @@
 import core
 import json
-'''
+
 __all__ = ["SettingsWindow"]
 
 class SettingsWindow(core.render.Window):
     """ Open all the other settings windows. """
 
-    template = core.asset.Template("std::window", path="window.template")
-    icon_core = core.asset.Template("core", path=f"{core.sys.PATH}core/resource/image/config_large.icon")
-    icon_cmd = core.asset.Template("cmd", path=f"{core.sys.PATH}core/resource/image/cmd.icon")
+    template = core.asset.Template("std::window")
+    core.asset.Image("core", path="config.icon")
+    core.asset.Image("cmd", path="cmd.icon")
 
     def __init__(self):
         self.index = 0
-        self.title1 = core.element.Text(core.Vector(3, 5), "Settings", justify="L")
-        self.core_icon = core.element.Image(core.Vector(42, 32), core.asset.Image("icon_core"))
-        self.core_icon = core.element.Image(core.Vector(84, 32), core.asset.Image("icon_cmd"))
+        self.title = core.element.Text(core.Vector(3, 5), "Settings", justify="L")
+        self.core_icon = core.element.Image(core.Vector(42, 32), core.asset.Image("core"))
+        self.cmd_icon = core.element.Image(core.Vector(84, 32), core.asset.Image("cmd"))
         # Needs cursors
 
-
-        super().__init__(Core=Core())
+    def render(self):
+        self.title.render()
+        self.core_icon.render(), self.cmd_icon.render()
 
 class _Settings(core.std.Menu):
     """ Parent class for all settings """
@@ -76,7 +77,7 @@ def Action(name: str, func: callable):
     return core.std.Menu.Element(
         core.element.Text(core.Vector(0, 0), name, justify="L"),
         select=func)
-'''
+
 ## Notes ##
 '''
 core settings

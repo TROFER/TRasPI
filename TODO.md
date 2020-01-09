@@ -25,12 +25,13 @@ Fix performance worsening substantially when the OS has errored multiple times
 Make programs use a .cfg file which can be edited using settings
 Move cursor image file from music player assets to system assets
 Noticed slight drop in rendering performance??? - Might need to make a benchmarking script
+Need to add timeout to Weather Service
 
 # Feature Ideas, Please Ignore
 Web interface
 Camera
 Clock Application, includes digital and analogue face(s), timer, alarm and stopwatch -Acts a Low power standby mode?
-Pong? 
+Pong?
 
 #Future changes
 Make base branch of Traspi which has no pre installed programs
