@@ -31,10 +31,7 @@ class SettingsWindow(core.render.Window):
             self.index += 1
 
     def select(self):
-        if self.index == 0:
-            yield self.core
-        elif self.index == 1:
-            yield self.cmd
+        yield self.functions[self.index] 
 
     def render(self):
         self.title.render()
