@@ -14,7 +14,7 @@ def execute(element, window):
     except:
         yield core.std.Error("Unknown Error")
 
-class Cmd(core.std.Menu):
+class CmdWindow(core.std.Menu):
 
     def __init__(self):
         with open(f"{core.sys.PATH}core/system/commands.json", "r") as file:

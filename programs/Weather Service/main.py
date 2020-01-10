@@ -26,7 +26,7 @@ class Mainwindow(core.render.Window):
     def get_weather(self):
         try:
             timeout = 3
-            self.data = json.load(request.urlopen(self.URL+self.location[0]+self.API, timeout=5))
+            self.data = json.load(request.urlopen(self.URL+self.location[0]+self.API, timeout=5)
         except:
             yield core.std.Error("Unable To Connect")
             return self.finish()

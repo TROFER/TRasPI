@@ -25,9 +25,9 @@ Fix performance worsening substantially when the OS has errored multiple times
 Make programs use a .cfg file which can be edited using settings
 Move cursor image file from music player assets to system assets
 Noticed slight drop in rendering performance??? - Might need to make a benchmarking script
-Need to add timeout to Weather Service #DONE
+Need to add timeout to Weather Service (Ignoring timeout?) -Failing to initialise
 Error handling does not handle errors and does not provide useful debug information:
-  Line[23:loop] AttributeError: 'Mainwindow' object has no attribute 'tempreture'
+  Line[23:loop] AttributeError: 'Mainwindow' object has no attribute 'temperature'
   Line[34:loop] RenderError: Main Render Loop
   Line[37:<module>] FatalCoreException:
 

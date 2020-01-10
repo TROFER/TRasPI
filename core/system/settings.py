@@ -1,6 +1,6 @@
 import core
 import json
-import cmd
+import core.system.cmd
 
 __all__ = ["SettingsWindow"]
 
@@ -13,7 +13,7 @@ class SettingsWindow(core.render.Window):
     core.asset.Image("cursor", path="cursor.icon")
 
     def __init__(self):
-        self.functions = {0 : CoreSettings(), 1: cmd.Cmd()}
+        self.functions = {0 : CoreSettings(), 1: cmd.CmdWindow()}
         self.index = 0
         self.messages = ["Edit System Config", "Command Prompt"]
         self.title = core.element.Text(core.Vector(3, 5), "Settings", justify="L")
@@ -30,8 +30,10 @@ class SettingsWindow(core.render.Window):
         if self.index < 1:
             self.index += 1
 
+    @core.render.Window.focus
     def select(self):
-        yield self.functions[self.index] 
+        #print(self.functions[self.index])
+        yield self.functions[self.index]
 
     def render(self):
         self.title.render()
@@ -118,15 +120,3 @@ class CoreSettings(_Settings):
 
     def __init__(self):
         super().__init__(core.sys.PATH+"core/system/system.cfg", "Settings - Core")
-## Notes ##
-'''
-core settings
-program settings -edits config
-
-
-Stuff to change (Core Settings):
-bluetooth state
-wifi conections?
-exit local session
-git pull?
-'''
