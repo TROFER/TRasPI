@@ -62,15 +62,18 @@ class ProgramMenu(core.std.Menu):
 
         for item in os.listdir(f"{core.sys.PATH}{path}"):
             p = f"{core.sys.PATH}{path}/{item}"
-            if "main.py" in os.listdir(p):
-                image, func = "std::script", self._program
-            elif os.path.isdir(p):
-                image, func = "std::folder", self._folder
-            elements.append(core.std.Menu.Element(
-                core.element.Image(core.Vector(4, 0), core.asset.Image(image)),
-                core.element.Text(core.Vector(10, 0), item, justify="L"),
-                data = (item, path),
-                select = func))
+            try:
+                if "main.py" in os.listdir(p):
+                    image, func = "std::script", self._program
+                elif os.path.isdir(p):
+                    image, func = "std::folder", self._folder
+                elements.append(core.std.Menu.Element(
+                    core.element.Image(core.Vector(4, 0), core.asset.Image(image)),
+                    core.element.Text(core.Vector(10, 0), item, justify="L"),
+                    data = (item, path),
+                    select = func))
+            except NotADirectoryError:
+                pass
         elements.append(core.std.Menu.Element(
             core.element.Image(core.Vector(4, 0), core.asset.Image("std::return")),
             core.element.Text(core.Vector(10, 0), "Return", justify="L"),
@@ -91,7 +94,7 @@ class ProgramMenu(core.std.Menu):
         if isinstance(result, core.render.Window):
             yield result
         else:
-            yield core.std.Error(result)
+            yield core.std.Error(str(result))
 
     def back(self):
         self.finish()

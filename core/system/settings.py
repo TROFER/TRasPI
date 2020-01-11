@@ -1,6 +1,6 @@
 import core
 import json
-import core.system.cmd
+from core.system import cmd
 
 __all__ = ["SettingsWindow"]
 
@@ -13,7 +13,7 @@ class SettingsWindow(core.render.Window):
     core.asset.Image("cursor", path="cursor.icon")
 
     def __init__(self):
-        self.functions = {0 : CoreSettings(), 1: cmd.CmdWindow()}
+        self.functions = {0 : CoreSettings(), 1: cmd.CommandPrompt()}
         self.index = 0
         self.messages = ["Edit System Config", "Command Prompt"]
         self.title = core.element.Text(core.Vector(3, 5), "Settings", justify="L")
@@ -32,8 +32,8 @@ class SettingsWindow(core.render.Window):
 
     @core.render.Window.focus
     def select(self):
-        #print(self.functions[self.index])
         yield self.functions[self.index]
+        core.hardware.Backlight.gradient((240, 180, 240, 180, 240))
 
     def render(self):
         self.title.render()
@@ -93,7 +93,6 @@ class _Settings(core.std.Menu):
         super().__init__(*elements, title=title)
 
     def render(self):
-        self.title.render()
         super().render()
 
     @core.render.Window.focus

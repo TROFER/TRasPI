@@ -14,7 +14,7 @@ def execute(element, window):
     except:
         yield core.std.Error("Unknown Error")
 
-class CmdWindow(core.std.Menu):
+class CommandPrompt(core.std.Menu):
 
     def __init__(self):
         with open(f"{core.sys.PATH}core/system/commands.json", "r") as file:
@@ -34,4 +34,5 @@ class CmdWindow(core.std.Menu):
         super().show()
         core.hardware.Backlight.fill(225, 0, 0)
 
-main = CommandCenter()
+main = CommandPrompt()
+ 

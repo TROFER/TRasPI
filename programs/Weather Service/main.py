@@ -2,6 +2,7 @@ import core
 import json
 from urllib.error import HTTPError, URLError
 from urllib import request
+import time
 
 core.asset.Template("weather", path="Weather Service/gui.template")
 
@@ -13,11 +14,15 @@ class Mainwindow(core.render.Window):
         self.API = "&appid=dd440727faee99efb0b572bc6d78e7b3"
         self.URL = "http://api.openweathermap.org/data/2.5/weather?"
         self.location = ["id=2641598", "Newport GB"]
+        self.time = time.time()
         self.title = core.element.Text(core.Vector(3, 5), f"For {self.location[1]}", colour=1, justify="L")
         self.header1 = core.element.Text(core.Vector(3, 50), "Current Weather:", justify="L")
         self.get_weather()
 
     def render(self):
+        if time.time() - self.time > 1:
+            self.get_weather()
+            self.time = time.time()
         self.title.render(), self.header1.render()
         self.tempreture.render(), self.pressure.render(), self.humidity.render(), self.wind.render()
         self.weather.render()
@@ -25,8 +30,7 @@ class Mainwindow(core.render.Window):
     @core.render.Window.focus
     def get_weather(self):
         try:
-            timeout = 3
-            self.data = json.load(request.urlopen(self.URL+self.location[0]+self.API, timeout=5)
+            self.data = json.load(request.urlopen(self.URL+self.location[0]+self.API, timeout=5))
         except:
             yield core.std.Error("Unable To Connect")
             return self.finish()

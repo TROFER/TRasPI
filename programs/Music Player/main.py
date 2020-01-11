@@ -1,7 +1,7 @@
 import core
 import os
 import time
-from programs.Music Player import playlist, radio, single_track
+playlist, radio, single_track = __import__("playlist.py"), __import__("radio.py"), __import__("single_track.py")
 
 class PlayerWindow(core.render.Window):
 
