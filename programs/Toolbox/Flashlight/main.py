@@ -168,4 +168,4 @@ class EMG(core.render.Window):
         def press(self):
             self.window.finish(1)
 
-main = Mainwindow()
+main = Flashlight()
