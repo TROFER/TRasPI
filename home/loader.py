@@ -1,8 +1,5 @@
 import os
 import core
-import importlib.util
-import core.load.load
-from core.system.log import Log
 
 __all__ = ["ProgramMenu"]
 
@@ -90,9 +87,14 @@ class ProgramMenu(core.std.Menu):
         yield ProgramMenu("{}/{}".format(element.data[1], element.data[0]))
     @core.render.Window.focus
     def _program(self, element, window):
-        result = core.load.load.load(*element.data)
-        if isinstance(result, core.render.Window):
-            yield result
+        try:
+            result = core.asset.Program("Module", path="{}/{}/".format(element.data[1], element.data[0]))
+        except core.error.SystemLoadError as e:
+            result = "ERROR"
+        if isinstance(result.window, core.render.Window):
+            result.import_path()
+            yield result.window
+            result.import_path()
         else:
             yield core.std.Error(str(result))
 

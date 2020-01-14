@@ -17,7 +17,7 @@ def execute(element, window):
 class CommandPrompt(core.std.Menu):
 
     def __init__(self):
-        with open(f"{core.sys.PATH}core/system/commands.json", "r") as file:
+        with open(f"{core.sys.PATH}home/commands.json", "r") as file:
             self.data = json.load(file)
 
         elements = []
@@ -35,4 +35,3 @@ class CommandPrompt(core.std.Menu):
         core.hardware.Backlight.fill(225, 0, 0)
 
 main = CommandPrompt()
- 

@@ -1,21 +1,16 @@
-__all__ = ["FatalCoreException", "WindowError", "RenderError", "AssetError", "HardwareError", "FocusError", "EventError"]
+__all__ = ["FatalCoreException", "WindowError", "RenderError", "AssetError", "HardwareError", "FocusError", "EventError", "SystemError"]
 
 class MetaCoreError(type):
 
-    node = "NODE"
-
     def __new__(cls, name, bases, dct):
         if "__str__" in dct:
-            def new_str(func):
+            def wrap(func):
                 def _str_(self):
-                    return "{}: {}".format(self.__class__.__name__, func(self))
+                    s = func(self)
+                    return "<{}{}>".format(self.__class__.__name__, ": {}".format(s) if s else "")
                 return _str_
-            dct["__str__"] = new_str(dct["__str__"])
+            dct["__str__"] = wrap(dct["__str__"])
         return super().__new__(cls, name, bases, dct)
-
-    def __call__(cls, *args, **kwargs):
-        self = super().__call__(*args, **kwargs)
-        return self
 
 class CoreBaseException(Exception, metaclass=MetaCoreError):
 
@@ -24,11 +19,10 @@ class CoreBaseException(Exception, metaclass=MetaCoreError):
 
     def __str__(self) -> str:
         return self.msg.__str__()
-
     def __repr__(self) -> str:
         return self.__str__()
 
-    def log(self):
+    def _log(self):
         _string = "{}\n\t".format(self)
         _string += self._log_()
         return _string
@@ -38,8 +32,7 @@ class CoreBaseException(Exception, metaclass=MetaCoreError):
         if self.__cause__:
             if isinstance(self.__cause__, CoreBaseException):
                 _string += "{}\n\t".format(self.__cause__._log_())
-            else: # 'tb_frame', 'tb_lasti', 'tb_lineno', 'tb_next'
-                # .__traceback__.tb_frame.f_code.co_filename
+            else:
                 _string += "Line[{}:{}] {}: {}\n\t".format(self.__cause__.__traceback__.tb_lineno, self.__cause__.__traceback__.tb_frame.f_code.co_name, self.__cause__.__class__.__name__, self.__cause__)
         _string += "Line[{}:{}] {}".format(self.__traceback__.tb_lineno, self.__cause__.__traceback__.tb_frame.f_code.co_name, self)
         return _string
@@ -77,7 +70,7 @@ class EventError(CoreBaseException):
         self.handler = handler
 
     def __str__(self) -> str:
-        return "Window: {}".format("SELF.HANDLER.WINDOW")
+        return "Window: {} {}".format("SELF.HANDLER.WINDOW", self.handler)
 
 class FocusError(CoreBaseException):
 
@@ -85,4 +78,7 @@ class FocusError(CoreBaseException):
         self.window = window
 
     def __str__(self) -> str:
-        return "{}".format(self.window)
+        return "WINDOW {}".format(self.window)
+
+class SystemError(CoreBaseException):
+    pass
