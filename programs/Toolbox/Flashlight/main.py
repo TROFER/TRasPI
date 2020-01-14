@@ -12,7 +12,8 @@ class Flashlight(core.render.Window):
     def __init__(self):
         self.state, self.brightness, self.step = True, 3, [25, 50, 75, 100]
         self.text = core.element.Text(core.Vector(64, 50), "Press Back to exit")
-        self.icon_states = [core.element.Image(core.Vector(64, 32), core.asset.Image("True"), core.element.Image(core.Vector(64, 32), core.asset.Image("False")]
+        self.icon_states = [core.element.Image(core.Vector(64, 32), core.asset.Image("True")),
+         core.element.Image(core.Vector(64, 32), core.asset.Image("False"))]
         self.refresh()
 
     def inc_brightness(self):
