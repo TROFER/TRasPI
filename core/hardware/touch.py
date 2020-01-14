@@ -18,7 +18,7 @@ class _Touch:
         if rate is None:
             touch.enable_repeat(False)
         else:
-            touch.enable_repeat(False)
+            touch.enable_repeat(True)
             touch.repeat_rate(rate)
 
     def led(self, button, index=False):
