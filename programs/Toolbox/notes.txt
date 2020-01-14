@@ -3,9 +3,9 @@ Notes:
 Make Flashlight high quality
   *Step brightness (Rather than liner)
   *Better interface (Title Bar?)
+  *Right / Left changes window
 
 Make location app that gets your location using the internet
   *Returns long, latitude co-cords
 
 Unit converter:
- 
