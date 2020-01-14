@@ -6,9 +6,9 @@ from core.hardware.display import Display
 
 def open():
     Render().start()
-    #Backlight.fill(255, 255, 255)
-    #Button.led(True)
+    Backlight.fill(255, 255, 255)
     Display.clear()
+    #Button.led(True)
     # Display.contrast(40)
 
 def loop(func: callable=None):

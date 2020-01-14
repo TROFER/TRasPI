@@ -16,6 +16,14 @@ except ModuleNotFoundError:
 
 __all__ = ["Render"]
 
+def clear_queue(q):
+    data = []
+    try:
+        while True:
+            data.append(q.get(False))
+    except queue.Empty: pass
+    return data
+
 class Render(metaclass=Singleton):
 
     def __init__(self):
@@ -45,12 +53,18 @@ class Render(metaclass=Singleton):
     def start(self):
         if not self._render_event.is_set():
             self._render_event.set()
+            self._frame_event.clear()
+            self._process_event.clear()
             self._next()
             mp.Process(target=self._render_loop).start()
             mp.Process(target=self._render_cache).start()
 
     def close(self):
         self._render_event.clear()
+        clear_queue(self._buffer)
+        clear_queue(self._changes)
+        self._frame_event.set()
+        self._process_event.set()
 
     def pause(self, wait=False, empty=False):
         Screen().pause()
