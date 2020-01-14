@@ -42,7 +42,7 @@ class Flashlight(core.render.Window):
 class Handle(core.render.Handler):
 
     key = core.render.Button.CENTRE
-    window = Mainwindow
+    window = Flashlight
 
     def press(self):
         self.window.toggle()
@@ -50,7 +50,7 @@ class Handle(core.render.Handler):
 class Handle(core.render.Handler):
 
     key = core.render.Button.BACK
-    window = Mainwindow
+    window = Flashlight
 
     def press(self):
         core.hardware.Button.led(False)
@@ -59,7 +59,7 @@ class Handle(core.render.Handler):
 class Handle(core.render.Handler):
 
     key = core.render.Button.UP
-    window = Mainwindow
+    window = Flashlight
 
     def press(self):
         self.window.inc_brightness()
@@ -67,7 +67,7 @@ class Handle(core.render.Handler):
 class Handle(core.render.Handler):
 
     key = core.render.Button.DOWN
-    window = Mainwindow
+    window = Flashlight
 
     def press(self):
         self.window.dec_brightness()
@@ -75,7 +75,7 @@ class Handle(core.render.Handler):
 class Handle(core.render.Handler):
 
     key = core.render.Button.RIGHT
-    window = Mainwindow
+    window = Flashlight
 
     def press(self):
         core.hardware.Button.led(False)
@@ -115,7 +115,7 @@ class RGB(core.render.Window):
 class Handle(core.render.Handler):
 
     key = core.render.Button.RIGHT
-    window = Mainwindow
+    window = RGB
 
     def press(self):
         EMG = EMG()
@@ -126,7 +126,7 @@ class Handle(core.render.Handler):
 class Handle(core.render.Handler):
 
     key = core.render.Button.LEFT
-    window = Mainwindow
+    window = RGB
 
     def press(self):
         self.window.finish(1)
@@ -134,7 +134,7 @@ class Handle(core.render.Handler):
 class Handle(core.render.Handler):
 
     key = core.render.Button.BACK
-    window = Mainwindow
+    window = RGB
 
     def press(self):
         self.window.finish(0)
@@ -155,7 +155,7 @@ class EMG(core.render.Window):
     class Handle(core.render.Handler):
 
         key = core.render.Button.BACK
-        window = Mainwindow
+        window = EMG
 
         def press(self):
             self.window.finish(0)
@@ -163,7 +163,7 @@ class EMG(core.render.Window):
     class Handle(core.render.Handler):
 
         key = core.render.Button.LEFT
-        window = Mainwindow
+        window = EMG
 
         def press(self):
             self.window.finish(1)
