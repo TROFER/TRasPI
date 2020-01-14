@@ -40,8 +40,7 @@ class Flashlight(core.render.Window):
 
     def render(self):
         self.text.render()
-        if self.state:
-            self.icon_states[int(self.state)].render()
+        self.icon_states[int(self.state)].render()
 
 class Handle(core.render.Handler):
 
