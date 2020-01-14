@@ -110,7 +110,7 @@ class RGB(core.render.Window):
             self.refresh()
 
     def render(self):
-        self.label_hue = core.element.Text(core.Vector(64, 10), self.hue)
+        self.label_hue = core.element.Text(core.Vector(64, 10), f"Hue:{self.hue}")
         self.icon.render()
         self.text.render()
         self.label_hue.render()
@@ -163,12 +163,17 @@ class EMG(core.render.Window):
     def __init__(self):
         self.colours = [(255, 0, 0), (0, 0, 0), (0, 0, 255)]
         self.index = 0
+        self.text = core.element.Text(core.Vector(64, 50), "Press Back to exit")
         self.icon = core.element.Image(core.Vector(64, 32), core.asset.Image("EMG"))
 
     def render(self):
         self.icon.render()
+        self.text.render()
         core.hardware.Backlight.fill(*self.colours[self.index])
-        self.index += 1
+        if self.index < 2:
+            self.index += 1
+        else:
+            self.index = 0
         time.sleep(1)
 
 class Handle(core.render.Handler):
