@@ -82,8 +82,8 @@ class Handle(core.render.Handler):
 
     def press(self):
         core.hardware.Button.led(False)
-        RGB = RGB()
-        res = yield RGB
+        rgb = RGB()
+        res = yield rgb
         if res == 0:
             self.window.finish()
 
@@ -121,8 +121,8 @@ class Handle(core.render.Handler):
     window = RGB
 
     def press(self):
-        EMG = EMG()
-        res = yield EMG
+        emg = EMG()
+        res = yield emg
         if res == 0:
             self.window.finish(0)
 
