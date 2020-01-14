@@ -1,5 +1,6 @@
 from core.sys import PATH
 import os.path
+import core.error
 
 class Asset(type):
 
@@ -35,7 +36,7 @@ class Asset(type):
                 try:
                     path = cls._instances[cls][name]._path
                 except KeyError:
-                    raise AttributeError("No Asset: <{}> called '{}'".format(cls.__name__, name)) from None
+                    raise core.error.AssetNameError("No Asset: <{}> called '{}'".format(cls.__name__, name)) from None
                 name += "_new"
                 self = super().__call__(name, path, *args, **kwargs)
                 return self
@@ -43,14 +44,14 @@ class Asset(type):
                 try:
                     return cls._instances[cls][name]
                 except KeyError:
-                    raise AttributeError("No Asset: <{}> called '{}'".format(cls.__name__, name)) from None
+                    raise core.error.AssetNameError("No Asset: <{}> called '{}'".format(cls.__name__, name)) from None
         else:
             for prefix in ("", PATH+"core/resource/"+cls.__name__.lower()+"/", PATH+"programs/", PATH):
                 if os.path.exists(prefix+path):
                     path = prefix + path
                     break
             else:
-                raise FileNotFoundError("Asset <{}>: '{}'".format(cls.__name__, path))
+                raise core.error.AssetLoadFileError("{}: '{}'".format(cls.__name__, path))
             self = super().__call__(name, path, *args, **kwargs)
             cls._instances[cls][name] = self
             return self
