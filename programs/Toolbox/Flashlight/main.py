@@ -24,7 +24,7 @@ class Flashlight(core.render.Window):
             self.refresh()
 
     def toggle(self):
-        self.state != self.state
+        self.state = not self.state
         self.refresh()
 
     def refresh(self):
