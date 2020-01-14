@@ -93,7 +93,7 @@ class RGB(core.render.Window):
         self.hue = 0
         self.icon = core.element.Image(core.Vector(64, 32), core.asset.Image("RGB"))
         self.text = core.element.Text(core.Vector(64, 50), "Press Back to exit")
-        self.label_hue = core.element.Text(core.Vector(64, 10), self.hue)
+        self.label_hue = core.element.Text(core.Vector(64, 10), f"Hue:{self.hue}")
 
     def refresh(self):
         R, G, B = colorsys.hsv_to_rgb(self.hue / 100, 1, 1)
@@ -128,11 +128,27 @@ class Handle(core.render.Handler):
 
 class Handle(core.render.Handler):
 
+    key = core.render.Button.UP
+    window = RGB
+
+    def press(self):
+        self.window.inc_hue()
+
+class Handle(core.render.Handler):
+
+    key = core.render.Button.DOWN
+    window = RGB
+
+    def press(self):
+        self.window.dec_hue()
+
+class Handle(core.render.Handler):
+
     key = core.render.Button.LEFT
     window = RGB
 
     def press(self):
-        self.window.finish(1)
+        self.window.finish()
 
 class Handle(core.render.Handler):
 
@@ -169,6 +185,6 @@ class Handle(core.render.Handler):
     window = EMG
 
     def press(self):
-        self.window.finish(1)
+        self.window.finish()
 
 main = Flashlight()
