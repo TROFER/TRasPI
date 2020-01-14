@@ -29,10 +29,10 @@ class Flashlight(core.render.Window):
 
     def refresh(self):
         if self.state:
-            core.hardware.Backlight.Fill(int(2.55 * self.step[self.brightness]), int(2.55 * self.step[self.brightness]),
+            core.hardware.Backlight.fill(int(2.55 * self.step[self.brightness]), int(2.55 * self.step[self.brightness]),
              int(2.55 * self.step[self.brightness]))
         else:
-            core.hardware.Backlight.Fill(0, 0, 0)
+            core.hardware.Backlight.fill(0, 0, 0)
         core.hardware.Button.led(self.state)
 
     def render(self):
@@ -148,7 +148,7 @@ class EMG(core.render.Window):
 
     def render(self):
         self.icon.render()
-        core.hardware.Backlight.Fill(*self.colours[self.index])
+        core.hardware.Backlight.fill(*self.colours[self.index])
         self.index += 1
         time.sleep(1)
 
