@@ -2,10 +2,10 @@ import core
 import colorsys
 import time
 
-core.asset.Image("True", path=f"{core.sys.PATH}/programs/Toolbox/Flashlight/assets/True.icon")
-core.asset.Image("False", path=f"{core.sys.PATH}/programs/Toolbox/Flashlight/assets/False.icon")
-core.asset.Image("RGB", path=f"{core.sys.PATH}/programs/Toolbox/Flashlight/assets/rgb.icon")
-core.asset.Image("EMG", path=f"{core.sys.PATH}/programs/Toolbox/Flashlight/assets/emg.icon")
+core.asset.Image("True", path=f"{core.sys.PATH}programs/Toolbox/Flashlight/assets/True.icon")
+core.asset.Image("False", path=f"{core.sys.PATH}programs/Toolbox/Flashlight/assets/False.icon")
+core.asset.Image("RGB", path=f"{core.sys.PATH}programs/Toolbox/Flashlight/assets/rgb.icon")
+core.asset.Image("EMG", path=f"{core.sys.PATH}programs/Toolbox/Flashlight/assets/emg.icon")
 
 class Flashlight(core.render.Window):
 
