@@ -36,7 +36,7 @@ class Flashlight(core.render.Window):
         core.hardware.Button.led(self.state)
 
     def render(self):
-        self.image = core.element.Image(core.Vector(64, 32), core.asset.Image(self.state))
+        self.image = core.element.Image(core.Vector(64, 32), core.asset.Image(str(self.state)))
         self.text.render()
 
 class Handle(core.render.Handler):
