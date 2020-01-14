@@ -161,7 +161,7 @@ class Handle(core.render.Handler):
 class EMG(core.render.Window):
 
     def __init__(self):
-        self.colours = [(255, 0, 0), (0, 0, 0), (0, 0, 255)]
+        self.colours = [(255, 0, 0), (255, 255, 255), (0, 0, 255)]
         self.index = 0
         self.text = core.element.Text(core.Vector(64, 50), "Press Back to exit")
         self.icon = core.element.Image(core.Vector(64, 32), core.asset.Image("EMG"))
@@ -174,7 +174,7 @@ class EMG(core.render.Window):
             self.index += 1
         else:
             self.index = 0
-        time.sleep(1)
+        time.sleep(0.1)
 
 class Handle(core.render.Handler):
 
