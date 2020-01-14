@@ -88,7 +88,7 @@ class ProgramMenu(core.std.Menu):
     @core.render.Window.focus
     def _program(self, element, window):
         try:
-            result = core.asset.Program("Module", path="{}/{}".format(element.data[1], element.data[0]))
+            result = core.asset.Program("Module", path="{}/{}/".format(element.data[1], element.data[0]))
         except core.error.SystemLoadError as e:
             result = "ERROR"
         if isinstance(result.window, core.render.Window):
