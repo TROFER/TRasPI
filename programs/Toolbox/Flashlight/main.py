@@ -2,18 +2,24 @@ import core
 import colorsys
 import time
 
-core.asset.Image("True", path=f"{core.sys.PATH}programs/Toolbox/Flashlight/assets/True.icon")
-core.asset.Image("False", path=f"{core.sys.PATH}programs/Toolbox/Flashlight/assets/False.icon")
-core.asset.Image("RGB", path=f"{core.sys.PATH}programs/Toolbox/Flashlight/assets/rgb.icon")
-core.asset.Image("EMG", path=f"{core.sys.PATH}programs/Toolbox/Flashlight/assets/emg.icon")
+core.asset.Image(
+    "True", path=f"{core.sys.PATH}programs/Toolbox/Flashlight/assets/True.icon")
+core.asset.Image(
+    "False", path=f"{core.sys.PATH}programs/Toolbox/Flashlight/assets/False.icon")
+core.asset.Image(
+    "RGB", path=f"{core.sys.PATH}programs/Toolbox/Flashlight/assets/rgb.icon")
+core.asset.Image(
+    "EMG", path=f"{core.sys.PATH}programs/Toolbox/Flashlight/assets/emg.icon")
+
 
 class Flashlight(core.render.Window):
 
     def __init__(self):
         self.state, self.brightness, self.step = True, 3, [25, 50, 75, 100]
-        self.text = core.element.Text(core.Vector(64, 50), "Press Back to exit")
+        self.text = core.element.Text(
+            core.Vector(64, 55), "Press Back to exit")
         self.icon_states = [core.element.Image(core.Vector(64, 20), core.asset.Image("False")),
-         core.element.Image(core.Vector(64, 20), core.asset.Image("True"))]
+                            core.element.Image(core.Vector(64, 20), core.asset.Image("True"))]
         self.refresh()
 
     def inc_brightness(self):
@@ -33,14 +39,15 @@ class Flashlight(core.render.Window):
     def refresh(self):
         if self.state:
             core.hardware.Backlight.fill(int(2.55 * self.step[self.brightness]), int(2.55 * self.step[self.brightness]),
-             int(2.55 * self.step[self.brightness]))
+                                         int(2.55 * self.step[self.brightness]))
         else:
-            core.hardware.Backlight.fill(0, 0, 0)
+            core.hardware.Backlight.fill(25, 25, 25)
         core.hardware.Button.led(self.state)
 
     def render(self):
         self.text.render()
         self.icon_states[int(self.state)].render()
+
 
 class Handle(core.render.Handler):
 
@@ -49,6 +56,7 @@ class Handle(core.render.Handler):
 
     def press(self):
         self.window.toggle()
+
 
 class Handle(core.render.Handler):
 
@@ -59,6 +67,7 @@ class Handle(core.render.Handler):
         core.hardware.Button.led(False)
         self.window.finish()
 
+
 class Handle(core.render.Handler):
 
     key = core.render.Button.UP
@@ -67,6 +76,7 @@ class Handle(core.render.Handler):
     def press(self):
         self.window.inc_brightness()
 
+
 class Handle(core.render.Handler):
 
     key = core.render.Button.DOWN
@@ -74,6 +84,7 @@ class Handle(core.render.Handler):
 
     def press(self):
         self.window.dec_brightness()
+
 
 class Handle(core.render.Handler):
 
@@ -87,17 +98,21 @@ class Handle(core.render.Handler):
         if res == 0:
             self.window.finish()
 
+
 class RGB(core.render.Window):
 
     def __init__(self):
         self.hue = 0
-        self.icon = core.element.Image(core.Vector(64, 32), core.asset.Image("RGB"))
-        self.text = core.element.Text(core.Vector(64, 50), "Press Back to exit")
-        self.label_hue = core.element.Text(core.Vector(64, 10), f"Hue:{self.hue}")
+        self.icon = core.element.Image(
+            core.Vector(64, 32), core.asset.Image("RGB"))
+        self.text = core.element.Text(
+            core.Vector(64, 55), "Press Back to exit")
+        self.label_hue = core.element.Text(
+            core.Vector(64, 10), f"Hue:{self.hue}")
 
     def refresh(self):
         R, G, B = colorsys.hsv_to_rgb(self.hue / 100, 1, 1)
-        core.hardware.Backlight.fill(int(R*100), int(G*100), int(B*100))
+        core.hardware.Backlight.fill(int(R * 100), int(G * 100), int(B * 100))
 
     def inc_hue(self):
         if self.hue < 360:
@@ -106,14 +121,16 @@ class RGB(core.render.Window):
 
     def dec_hue(self):
         if self.hue > 0:
-            self.hue -=1
+            self.hue -= 1
             self.refresh()
 
     def render(self):
-        self.label_hue = core.element.Text(core.Vector(64, 10), f"Hue:{self.hue}")
+        self.label_hue = core.element.Text(
+            core.Vector(64, 10), f"Hue:{self.hue}")
         self.icon.render()
         self.text.render()
         self.label_hue.render()
+
 
 class Handle(core.render.Handler):
 
@@ -126,6 +143,7 @@ class Handle(core.render.Handler):
         if res == 0:
             self.window.finish(0)
 
+
 class Handle(core.render.Handler):
 
     key = core.render.Button.UP
@@ -133,6 +151,7 @@ class Handle(core.render.Handler):
 
     def press(self):
         self.window.inc_hue()
+
 
 class Handle(core.render.Handler):
 
@@ -142,6 +161,7 @@ class Handle(core.render.Handler):
     def press(self):
         self.window.dec_hue()
 
+
 class Handle(core.render.Handler):
 
     key = core.render.Button.LEFT
@@ -149,6 +169,7 @@ class Handle(core.render.Handler):
 
     def press(self):
         self.window.finish()
+
 
 class Handle(core.render.Handler):
 
@@ -158,13 +179,16 @@ class Handle(core.render.Handler):
     def press(self):
         self.window.finish(0)
 
+
 class EMG(core.render.Window):
 
     def __init__(self):
         self.colours = [(255, 0, 0), (255, 255, 255), (0, 0, 255)]
         self.index = 0
-        self.text = core.element.Text(core.Vector(64, 55), "Press Back to exit")
-        self.icon = core.element.Image(core.Vector(64, 32), core.asset.Image("EMG"))
+        self.text = core.element.Text(
+            core.Vector(64, 55), "Press Back to exit")
+        self.icon = core.element.Image(
+            core.Vector(64, 32), core.asset.Image("EMG"))
 
     def render(self):
         self.icon.render()
@@ -176,6 +200,7 @@ class EMG(core.render.Window):
             self.index = 0
         time.sleep(0.1)
 
+
 class Handle(core.render.Handler):
 
     key = core.render.Button.BACK
@@ -184,6 +209,7 @@ class Handle(core.render.Handler):
     def press(self):
         self.window.finish(0)
 
+
 class Handle(core.render.Handler):
 
     key = core.render.Button.LEFT
@@ -191,5 +217,6 @@ class Handle(core.render.Handler):
 
     def press(self):
         self.window.finish()
+
 
 main = Flashlight()
