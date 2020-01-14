@@ -152,20 +152,20 @@ class EMG(core.render.Window):
         self.index += 1
         time.sleep(1)
 
-    class Handle(core.render.Handler):
+class Handle(core.render.Handler):
 
-        key = core.render.Button.BACK
-        window = EMG
+    key = core.render.Button.BACK
+    window = EMG
 
-        def press(self):
-            self.window.finish(0)
+    def press(self):
+        self.window.finish(0)
 
-    class Handle(core.render.Handler):
+class Handle(core.render.Handler):
 
-        key = core.render.Button.LEFT
-        window = EMG
+    key = core.render.Button.LEFT
+    window = EMG
 
-        def press(self):
-            self.window.finish(1)
+    def press(self):
+        self.window.finish(1)
 
 main = Flashlight()
