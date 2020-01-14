@@ -9,10 +9,7 @@ import multiprocessing as mp
 #     import threading as mp
 import PIL.ImageDraw
 
-try:
-    from driver.gfxhat import lcd
-except ModuleNotFoundError:
-    from core.hardware.dummy import lcd
+from core.hardware.display import Display
 
 __all__ = ["Render"]
 
@@ -106,7 +103,7 @@ class Render(metaclass=Singleton):
                 continue
             if pixel is None:
                 self._process_event.set()
-                lcd.show()
+                Display.show()
             else:
-                lcd.set_pixel(*pixel)
+                Display.pixel(*pixel)
             self._changes.task_done()
