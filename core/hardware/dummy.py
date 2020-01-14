@@ -3,10 +3,17 @@ from core.sys import WIDTH, HEIGHT
 
 __all__ = ["lcd", "touch", "backlight"]
 
+class _st7567(metaclass=Singleton):
+    def __init__(self):
+        pass
+    def setup(self):
+        pass
+
 class _lcd(metaclass=Singleton):
 
     def __init__(self):
         self.buffer = [["#" for y in range(HEIGHT)] for x in range(WIDTH)]
+        self.st7567 = _st7567()
 
     def set_pixel(self, x, y, value):
         if value == 1:
@@ -19,7 +26,7 @@ class _lcd(metaclass=Singleton):
         for x in range(WIDTH):
             print(" ".join([self.buffer[x][y] for y in range(HEIGHT)]))
 
-    def contrast(self):
+    def contrast(self, value=None):
         pass
 
 class _touch(metaclass=Singleton):

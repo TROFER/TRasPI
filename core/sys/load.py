@@ -24,13 +24,14 @@ def module(file: str, path: str=""):
     file_path = path + file + ".py"
 
     try:
-        spec = importlib.util.spec_from_file_location("module<{}>".format(_loading_count), file_path)
+        spec = importlib.util.spec_from_file_location("module<{}>".format(_loading_count), PATH+file_path)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
 
         _loading_count += 1
         return module
     except FileNotFoundError as e:
+        raise
         raise core.error.SystemLoadModuleError("'{}.py' not in '{}'".format(file, path)) from e
 
 def import_path(path):

@@ -1,4 +1,8 @@
-from driver.gfxhat import touch
+try:
+    from driver.gfxhat import touch
+except ImportError as e:
+    print(e)
+    from core.hardware.dummy import touch
 
 __all__ = ["Touch"]
 

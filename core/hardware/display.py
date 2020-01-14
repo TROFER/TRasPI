@@ -1,5 +1,9 @@
 import core.error
-from driver.gfxhat import lcd
+try:
+    from driver.gfxhat import lcd
+except ImportError as e:
+    print(e)
+    from core.hardware.dummy import lcd
 
 __all__ = ["Display"]
 

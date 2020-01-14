@@ -1,12 +1,12 @@
 from core.asset.asset import Asset
-import core.system
+import core.sys
 
 __all__ = ["Program"]
 
 class Program(metaclass=Asset):
 
     def __init__(self):
-        self._module = core.system.load.window("main", self._path)
+        self._module = core.sys.load.window("main", self._path)
         self._set_path = False
 
     def __repr__(self) -> str:

@@ -1,4 +1,8 @@
-from driver.gfxhat import backlight
+try:
+    from driver.gfxhat import backlight
+except ImportError as e:
+    print(e)
+        from core.hardware.dummy import backlight
 
 __all__ = ["Backlight"]
 
