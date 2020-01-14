@@ -46,7 +46,7 @@ class Asset(type):
                     raise AttributeError("No Asset: <{}> called '{}'".format(cls.__name__, name)) from None
         else:
             for prefix in ("", PATH+"core/resource/"+cls.__name__.lower()+"/", PATH+"programs/", PATH):
-                if os.path.isfile(prefix+path):
+                if os.path.isvalidpath(prefix+path):
                     path = prefix + path
                     break
             else:
