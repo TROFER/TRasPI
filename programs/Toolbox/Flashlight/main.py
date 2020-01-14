@@ -12,8 +12,8 @@ class Flashlight(core.render.Window):
     def __init__(self):
         self.state, self.brightness, self.step = True, 3, [25, 50, 75, 100]
         self.text = core.element.Text(core.Vector(64, 50), "Press Back to exit")
-        self.icon_states = [core.element.Image(core.Vector(64, 32), core.asset.Image("False")),
-         core.element.Image(core.Vector(64, 32), core.asset.Image("True"))]
+        self.icon_states = [core.element.Image(core.Vector(64, 20), core.asset.Image("False")),
+         core.element.Image(core.Vector(64, 20), core.asset.Image("True"))]
         self.refresh()
 
     def inc_brightness(self):
@@ -163,7 +163,7 @@ class EMG(core.render.Window):
     def __init__(self):
         self.colours = [(255, 0, 0), (255, 255, 255), (0, 0, 255)]
         self.index = 0
-        self.text = core.element.Text(core.Vector(64, 50), "Press Back to exit")
+        self.text = core.element.Text(core.Vector(64, 55), "Press Back to exit")
         self.icon = core.element.Image(core.Vector(64, 32), core.asset.Image("EMG"))
 
     def render(self):
