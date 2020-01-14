@@ -152,6 +152,9 @@ class Handle(core.render.Handler):
     def press(self):
         self.window.inc_hue()
 
+    def held(self):
+        self.window.inc_hue()
+
 
 class Handle(core.render.Handler):
 
@@ -159,6 +162,9 @@ class Handle(core.render.Handler):
     window = RGB
 
     def press(self):
+        self.window.dec_hue()
+
+    def held(self):
         self.window.dec_hue()
 
 
@@ -216,6 +222,7 @@ class Handle(core.render.Handler):
     window = EMG
 
     def press(self):
+        core.hardware.Backlight.fill(225, 225, 225)
         self.window.finish()
 
 
