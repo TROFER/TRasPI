@@ -1,6 +1,6 @@
 import core
 import json
-from core.system import cmd
+from home import cmd
 
 __all__ = ["SettingsWindow"]
 
