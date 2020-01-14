@@ -45,8 +45,11 @@ class Screen(metaclass=Singleton):
                     try:
                         result = func()
                     except Exception as e:
-                        print("EVENT ERROR", e)
-                        raise core.error.EventError(handler) from e
+                        # print("EVENT ERROR", e)
+                        try: # TEMPORARY
+                            raise core.error.EventError(handler) from e
+                        except core.error.EventError as e:
+                            print(e._log())
                     if type(result).__name__ == "generator":
                         return self.active._handle_focus(None, result)
 

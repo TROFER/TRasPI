@@ -30,8 +30,7 @@ def module(file: str, path: str=""):
 
         _loading_count += 1
         return module
-    except FileNotFoundError as e:
-        raise
+    except ImportError as e:
         raise core.error.SystemLoadModuleError("'{}.py' not in '{}'".format(file, path)) from e
 
 def import_path(path):
