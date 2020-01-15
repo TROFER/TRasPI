@@ -1,16 +1,17 @@
 import core
 import os
 import time
+import pygame
 playlist, radio, single_track = __import__("playlist.py"), __import__("radio.py"), __import__("single_track.py")
 
 class PlayerWindow(core.render.Window):
 
-    template = core.asset.Template("std::window")
-    pause = core.asset.Image("pause", path=f"{core.sys.PATH}programs/Music Player/assets/pause.icon")
-    play = core.asset.Image("play", path=f"{core.sys.PATH}programs/Music Player/assets/play.icon")
-    stop = core.asset.Image("stop", path=f"{core.sys.PATH}programs/Music Player/assets/stop.icon")
-    next = core.asset.Image("next", path=f"{core.sys.PATH}programs/Music Player/assets/next.icon")
-    cursor = core.asset.Image("cursor", path=f"{core.sys.PATH}programs/Music Player/assets/cursor.icon")
+    core.asset.Template("std::window")
+    core.asset.Image("pause", path=f"{core.sys.PATH}programs/Music Player/assets/pause.icon")
+    core.asset.Image("play", path=f"{core.sys.PATH}programs/Music Player/assets/play.icon")
+    core.asset.Image("stop", path=f"{core.sys.PATH}programs/Music Player/assets/stop.icon")
+    core.asset.Image("next", path=f"{core.sys.PATH}programs/Music Player/assets/next.icon")
+    core.asset.Image("cursor", path=f"{core.sys.PATH}programs/Music Player/assets/cursor.icon")
 
     class ScrollingText(core.element.TextBox):
 
@@ -43,13 +44,13 @@ class PlayerWindow(core.render.Window):
         self.cursor_pos = 1
         # Scrolling Text
         # Window Elements
-        self.header = ScrollingText(self.playlist[self.track_number].description)
+        #self.header = ScrollingText(self.playlist[self.track_number].description)
         self.track_indicator = core.element.Text(core.Vector(64, 25), f"{self.track_number}/{len(playlist)}")
         self.title = core.element.Text(core.Vector(3, 5), "Music Player", justify="L")
         self.buttons = [core.element.Image(core.Vector(25, 50), core.asset.Image("pause")),
         core.element.Image(core.Vector(50, 50), core.asset.Image("play")),
         core.element.Image(core.Vector(75, 50), core.asset.Image("stop")),
-        cor.element.Image(core.Vector(100, 50), core.asset.Image("next"))]
+        core.element.Image(core.Vector(100, 50), core.asset.Image("next"))]
         self.cursor = core.element.Image(core.Vector(25 * (self.cursor_pos + 1), 50), core.asset.Image("cursor"))
 
     def volume_up(self):

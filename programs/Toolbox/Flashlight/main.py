@@ -96,7 +96,10 @@ class Handle(core.render.Handler):
         rgb = RGB()
         res = yield rgb
         if res == 0:
+            core.hardware.Button.led(False)
             self.window.finish()
+        core.hardware.Backlight.fill(25, 25, 25)
+        
 
 
 class RGB(core.render.Window):
@@ -109,6 +112,7 @@ class RGB(core.render.Window):
             core.Vector(64, 55), "Press Back to exit")
         self.label_hue = core.element.Text(
             core.Vector(64, 10), f"Hue:{self.hue}")
+        self.refresh()
 
     def refresh(self):
         R, G, B = colorsys.hsv_to_rgb(self.hue / 100, 1, 1)
@@ -142,6 +146,7 @@ class Handle(core.render.Handler):
         res = yield emg
         if res == 0:
             self.window.finish(0)
+        self.window.refresh()
 
 
 class Handle(core.render.Handler):
