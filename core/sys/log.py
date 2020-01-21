@@ -33,7 +33,7 @@ def exception_info(error: Exception) -> dict:
 class Log:
 
     @classmethod
-    def log(cls, , _error, _message=None, _type):
+    def log(cls, _error, _message=None, _type):
         _error = exception_info(_error)
         try:
             logfile = json.load(open(f"{core.sys.PATH}core/error/eventlog.txt", 'r'))
