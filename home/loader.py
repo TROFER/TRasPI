@@ -1,5 +1,5 @@
 import core
-from core.sys.config import config
+from core.sys.config import Config
 import os
 
 core.asset.Image("std::script", path="pyfile.icon")
