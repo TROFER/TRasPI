@@ -8,12 +8,11 @@ try:
 except core.error.SystemLoadError as e:
     raise core.error.FatalCoreException("FAILURE TO BOOT!") from e
 
-module.main.show()
-
 application = core.Application()
 
 try:
     with application:
+        module.main.show()
         application.run()
 except core.error.FatalCoreException as e:
     core.sys.log(e)
