@@ -116,10 +116,10 @@ class RGB(core.render.Window):
 
     def refresh(self):
         R, G, B = colorsys.hsv_to_rgb(self.hue / 100, 1, 1)
-        core.hardware.Backlight.fill(int(R * 100), int(G * 100), int(B * 100))
+        core.hardware.Backlight.fill(int(R * 255), int(G * 255), int(B * 255))
 
     def inc_hue(self):
-        if self.hue < 360:
+        if self.hue < 360: 
             self.hue += 1
             self.refresh()
 
