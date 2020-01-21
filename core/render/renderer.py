@@ -64,6 +64,7 @@ class Renderer(metaclass=Singleton):
         self._process_event.set()
 
     def pause(self, wait=False, empty=False):
+        print("PAUSE")
         Screen().pause()
         self._pause_event.clear()
         if empty:
@@ -72,6 +73,7 @@ class Renderer(metaclass=Singleton):
             self._pause_event.wait()
 
     def resume(self):
+        print("RESUME")
         Screen().resume()
         self._pause_event.set()
 

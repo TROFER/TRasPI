@@ -30,7 +30,9 @@ class Render(metaclass=Singleton):
     def update(self):
         if self.render._render_event.is_set() and not self.render._pause_event.is_set():
             try:
+                print("Screen Render")
                 self.screen.render()
+                print("Render stack")
                 self.render.frame()
             except Exception as e:
                 raise RenderError("Main Render Loop") from e
