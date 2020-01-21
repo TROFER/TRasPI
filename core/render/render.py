@@ -19,12 +19,14 @@ class Render(metaclass=Singleton):
         self.screen = Screen()
 
     def open(self):
+        print("WHITE BACKLIGHT")
         Backlight.fill(255, 255, 255)
         Display.contrast(Config("std::system")["display_contrast"]["value"])
         Display.clear()
         self.render.open()
     def close(self):
         self.render.close()
+        print("BLACK BACKLIGHT")
         Backlight.fill(0, 0, 0)
         Button.led(False)
         Display.clear()
