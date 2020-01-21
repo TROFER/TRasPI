@@ -1,7 +1,7 @@
 import core
 import os
 
-from core.sys.log import exception_info # TEMP
+import core.sys.log # TEMP
 
 core.asset.Image("std::script", path="pyfile.icon")
 core.asset.Image("std::folder", path="folder.icon")
@@ -47,7 +47,8 @@ class ProgramMenu(core.std.Menu):
         try:
             program = core.asset.Program("Module", path=element.data+"/")
         except core.error.SystemLoadError as e:
-            exception_info(e)
+            print(core.sys.log.exception_info(e))
+            core.sys.log.Log.log(e)
             return (yield core.std.Error(""))
 
         program.import_path()
