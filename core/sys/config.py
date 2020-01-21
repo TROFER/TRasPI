@@ -1,5 +1,5 @@
+from core.asset.asset import Asset
 import json
-import core
 
 class Config(metaclass=Asset):
 

@@ -1,9 +1,7 @@
 import core
-from core.sys.config import config
+from core.sys.config import Config
 import os
 import colorsys
-
-import core.sys.log # TEMP
 
 core.asset.Image("std::script", path="pyfile.icon")
 core.asset.Image("std::folder", path="folder.icon")
@@ -50,7 +48,7 @@ class ProgramMenu(core.std.Menu):
             program = core.asset.Program("Module", path=element.data+"/")
         except core.error.SystemLoadError as e:
             print(core.sys.log.exception_info(e))
-            core.sys.log.Log.log(e)
+            core.sys.log(e)
             return (yield core.std.Error("LOAD"))
 
         program.import_path()
