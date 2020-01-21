@@ -9,7 +9,9 @@ class Mainwindow(core.render.Window):
     def __init__(self):
         self.index = 0
         self.functions = {0: home.ProgramMenu(), 1: home.SettingsWindow(), 2: home.PowerMenu()}
-        core.hardware.Backlight.gradient((240, 180, 240, 180, 240))
+        R, G, B = colorsys.hsv_to_rgb(core.sys.Config(
+            "std::system")["system_colour"]["value"] / 100, 1, 1)
+        core.hardware.Backlight.fill(int(R * 255), int(G * 255), int(B * 255))
         self.title1 = core.element.Text(core.Vector(3, 5), "TRasPi OS", justify="L")
         self.buttons = [core.element.TextBox(core.Vector(64, 18), "Run Program"),
         core.element.TextBox(core.Vector(64, 30), "System Settings"),
