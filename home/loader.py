@@ -1,105 +1,55 @@
-import os
 import core
-
-__all__ = ["ProgramMenu"]
+import os
 
 core.asset.Image("std::script", path="pyfile.icon")
 core.asset.Image("std::folder", path="folder.icon")
 core.asset.Image("std::return", path="return.icon")
 
-VISABLE = 4
-
-class Item:
-
-    def __init__(self, name: str, image: str, path: str):
-        self.icon = core.element.Image(core.Vector(0, 0), core.asset.Image(image))
-        self.label = core.element.Text(core.Vector(0, 0), name, justify="L")
-        self.name = name
-        self.path = path
-
-    def select(self):
-        pass
-
-    def render(self, index):
-        self.icon.pos = core.Vector(5, 20 + 10 * index)
-        self.icon.render()
-        self.label.pos = core.Vector(12, 20 + 10 * index)
-        self.label.render()
-
-class FolderItem(Item):
-
-    def __init__(self, name, path):
-        super().__init__(name, "std::folder", path)
-
-    def select(self):
-        return ProgramMenu("{}/{}".format(self.path, self.name))
-
-class ProgramItem(Item):
-
-    def __init__(self, name, path):
-        super().__init__(name, "std::script", path)
-
-    def select(self):
-        core.load.load.load(self.name, self.path)
-
-class BackItem(Item):
-
-    def __init__(self, name="Return", path=None):
-        super().__init__(name, "std::return", path)
-
-    def select(self):
-        return None
+__all__ = ["ProgramMenu"]
 
 class ProgramMenu(core.std.Menu):
 
-    def __init__(self, path="programs"):
-        # Backlight
-        # Index /programs
+    def __init__(self, path="programs/"):
         elements = []
 
-        for item in os.listdir(f"{core.sys.PATH}{path}"):
-            p = f"{core.sys.PATH}{path}/{item}"
-            try:
-                if "main.py" in os.listdir(p):
-                    image, func = "std::script", self._program
-                elif os.path.isdir(p):
-                    image, func = "std::folder", self._folder
-                elements.append(core.std.Menu.Element(
-                    core.element.Image(core.Vector(4, 0), core.asset.Image(image)),
-                    core.element.Text(core.Vector(10, 0), item, justify="L"),
-                    data = (item, path),
-                    select = func))
-            except NotADirectoryError:
-                pass
+        for diritem in os.listdir(core.sys.PATH + path):
+            item_path = path + diritem
+            print(item_path)
+
+            if os.path.isdir(core.sys.PATH + item_path):
+                if "main.py" in os.listdir(core.sys.PATH + item_path): # Script
+                    image, func = "std::script", self._select_program
+                else: # Folder
+                    image, func = "std::folder", self._select_folder
+
+            elements.append(core.std.Menu.Element(
+                core.element.Image(core.Vector(4, 0), core.asset.Image(image)),
+                core.element.Text(core.Vector(10, 0), diritem.title(), justify="L"),
+                data = item_path,
+                select = func
+            ))
+
         elements.append(core.std.Menu.Element(
             core.element.Image(core.Vector(4, 0), core.asset.Image("std::return")),
             core.element.Text(core.Vector(10, 0), "Return", justify="L"),
-            select = lambda s, w: w.back()))
+            select = lambda s,w: w.finish()
+        ))
 
         super().__init__(*elements, title=path, end=False)
 
-    def show(self):
-        super().show()
-        core.hardware.Backlight.gradient((240, 180, 240, 180, 240))
+        @core.render.Window.focus
+        def _select_folder(self, element, window):
+            yield ProgramMenu(element.data+"/")
+        @core.render.Window.focus
+        def _select_program(self, element, window):
+            try:
+                program = core.asset.Program("Module", path=element.data+"/")
+            except core.error.SystemLoadError as e:
+                return (yield core.std.Error(""))
 
-    @core.render.Window.focus
-    def _folder(self, element, window):
-        yield ProgramMenu("{}/{}".format(element.data[1], element.data[0]))
-    @core.render.Window.focus
-    def _program(self, element, window):
-        try:
-            result = core.asset.Program("Module", path="{}/{}/".format(element.data[1], element.data[0]))
-        except core.error.SystemLoadError as e:
-            result = "ERROR"
-        if isinstance(result.window, core.render.Window):
-            result.import_path()
-            yield result.window
-            result.import_path()
-        else:
-            yield core.std.Error(str(result))
-
-    def back(self):
-        self.finish()
+            program.import_path()
+            yield program.window
+            program.import_path()
 
 class Handle(core.render.Handler):
 
@@ -108,6 +58,3 @@ class Handle(core.render.Handler):
 
     def press(self):
         pass
-        # self.window.change_sort() Wait for sort to be implemented
-
-main = ProgramMenu()
