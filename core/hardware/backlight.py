@@ -15,11 +15,9 @@ class _Backlight:
         backlight.set_pixel(x, r, g, b)
 
     def all(self, r, g, b):
-        print("_BL RGB", r,g,b)
         backlight.set_all(r, g, b)
 
     def show(self):
-        print("_BL SHOW")
         backlight.show()
 
 Backlight = _Backlight()

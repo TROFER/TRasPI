@@ -21,7 +21,6 @@ class Backlight:
 
     @classmethod
     def fill(cls, r, g, b):
-        print("BL RGB", r,g,b)
         backlight.set_all(r, g, b)
         cls.show()
 
@@ -34,7 +33,6 @@ class Backlight:
 
     @classmethod
     def show(cls):
-        print("BACKLIGHT SHOW")
         backlight.show()
 
 class Button:
