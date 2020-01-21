@@ -1,6 +1,7 @@
 import core.error
 from core.sys.single import Singleton
 from core.hardware.touch import Touch
+import core.sys.log
 
 __all__ = ["Screen"]
 
@@ -45,7 +46,8 @@ class Screen(metaclass=Singleton):
                         try: # TEMPORARY
                             raise core.error.EventError(handler) from e
                         except core.error.EventError as e:
-                            print(e._log())
+                            core.sys.log.Log.log(e)
+                            print(e)
                         return
                     if type(result).__name__ == "generator":
                         return self.active._handle_focus(None, result)
