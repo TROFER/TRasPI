@@ -19,14 +19,12 @@ class Render(metaclass=Singleton):
         self.screen = Screen()
 
     def open(self):
-        print("WHITE BACKLIGHT")
         Backlight.fill(255, 255, 255)
         Display.contrast(Config("std::system")["display_contrast"]["value"])
         Display.clear()
         self.render.open()
     def close(self):
         self.render.close()
-        print("BLACK BACKLIGHT")
         Backlight.fill(0, 0, 0)
         Button.led(False)
         Display.clear()
@@ -34,23 +32,15 @@ class Render(metaclass=Singleton):
     def update(self):
         if self.render._render_event.is_set() and self.render._pause_event.is_set():
             try:
-                # print("Screen Render")
                 self.screen.render()
-                # print("Render stack")
                 self.render.frame()
             except Exception as e:
                 raise RenderError("Main Render Loop") from e
-        else:
-            print(self.render)
-            print(self.render._render_event.is_set())
-            print(self.render._pause_event.is_set())
-            print("OH NO")
-            raise core.error.RenderError("TEST") from None
 
     def pause(self):
-        pass
+        self.render.pause()
     def resume(self):
-        pass
+        self.render.resume()
 
     def __enter__(self):
         self.open()

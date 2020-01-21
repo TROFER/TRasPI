@@ -38,7 +38,6 @@ class Renderer(metaclass=Singleton):
         self._frame_event.set()
         self._next()
         self._buffer.join()
-        # self._pause_event.wait()
 
     def _next(self):
         self.image = Screen().template().copy()
@@ -64,19 +63,15 @@ class Renderer(metaclass=Singleton):
         self._frame_event.set()
         self._process_event.set()
 
-    def pause(self, wait=False, empty=False):
+    def pause(self):
         print("PAUSE")
-        # Screen().pause()
-        # self._pause_event.clear()
-        # if empty:
-        #     self._changes.join()
-        # if wait:
-        #     self._pause_event.wait()
+        Screen().pause()
+        self._pause_event.clear()
 
     def resume(self):
         print("RESUME")
-        # Screen().resume()
-        # self._pause_event.set()
+        Screen().resume()
+        self._pause_event.set()
 
     def _render_cache(self):
         cache = [[2 for y in range(HEIGHT)] for x in range(WIDTH)]
