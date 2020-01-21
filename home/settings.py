@@ -1,6 +1,7 @@
 import core
 import json
 from home import cmd
+import colorsys
 
 __all__ = ["SettingsWindow"]
 
