@@ -24,7 +24,6 @@ class MenuElement:
                 elm.pos = self._rel_pos[i] + core.Vector(_ME_OFF_X, _ME_OFF_Y + self._offset * self._index)
 
     def render(self):
-        print("Render")
         for elm in self._elements:
             elm.render()
 
