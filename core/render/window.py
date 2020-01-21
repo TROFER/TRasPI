@@ -50,7 +50,7 @@ class Window(metaclass=MetaWindow):
         if generator is not None:
             # print("FIN PASS FOCUS")
             parent._handle_focus(value, generator)
-        Renderer().resume()
+        # Renderer().resume() # I HATE THIS
         # print("FIN END")
         return value
 

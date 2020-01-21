@@ -15,13 +15,11 @@ class Config(metaclass=Asset):
     @property
     def config(self):
         return self._config
-        
+
     def __getitem__(self, key):
         return self._config[key]
-        
+
     def __setitem__(self, key, value):
         return self._config[key] = value
 
-config = dict
-
-        
+Config("std::system", path="system.cfg")
