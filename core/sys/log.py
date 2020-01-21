@@ -33,7 +33,7 @@ def exception_info(error: Exception) -> dict:
 class Log:
 
     @classmethod
-    def log(cls, _type, _error, message=None):
+    def log(cls, , _error, _message=None, _type):
         _error = exception_info(_error)
         try:
             logfile = json.load(open(f"{core.sys.PATH}core/error/eventlog.txt", 'r'))
@@ -42,6 +42,6 @@ class Log:
         try:
             logfile.append(_error)
         except:
-            logfile.append(f"[{_type}] {message}")
+            logfile.append(f"[{_type}] {_message}")
         with open(f"{core.sys.PATH}core/error/eventlog.txt", 'w') as oldfile:
             json.dump(logfile, oldfile)
