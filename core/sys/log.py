@@ -41,5 +41,6 @@ class Log:
         except (IOError, json.JSONDecodeError):
             data = []
         with open(f"{core.sys.PATH}core/error/eventlog.txt", 'w') as eventlog:
-            json.dump(data.append(_error), eventlog)
+            data.append(_error)
+            json.dump(data, eventlog)
 
