@@ -13,7 +13,8 @@ module.main.show()
 application = core.Application()
 
 try:
-    application.run()
+    with application:
+        application.run()
 except core.error.FatalCoreException as e:
     # core.system.log.Log.error("MAIN", e._log())
     print(e._log())
