@@ -4,6 +4,7 @@ from core.render.screen import Screen
 from core.hardware.hardware import Backlight, Button
 from core.hardware.display import Display
 from core.sys.single import Singleton
+from core.sys.config import Config
 
 # from core.sys.config import Config
 
@@ -18,9 +19,10 @@ class Render(metaclass=Singleton):
         self.screen = Screen()
 
     def open(self):
-        self.render.open()
         Backlight.fill(255, 255, 255)
+        Display.contrast(Config("std::system")["display_contrast"]["value"])
         Display.clear()
+        self.render.open()
     def close(self):
         self.render.close()
         Backlight.fill(0, 0, 0)
