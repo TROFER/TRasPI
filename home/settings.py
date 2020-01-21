@@ -105,7 +105,7 @@ class _Settings(core.std.Menu):
                 res = element.data["value"]
         elif element.data["type"] == "int":
             res = yield core.std.Numpad(element.data["min"], element.data["max"], element.data["value"], element.data["desc"])
-        element.data["value"] = res
+        self.data[element.data["key"]]["value"] = element.data["value"] = res
         self.save()
 
     def load(self):
