@@ -29,7 +29,7 @@ class Screen(metaclass=Singleton):
     def show(self, window):
         self.active = window
         self.bind_handles()
-        print("SSHOW", self.active)
+        # print("SSHOW", self.active)
 
     def bind_handles(self):
         for key, handler in enumerate(self.active._handles):
@@ -42,7 +42,7 @@ class Screen(metaclass=Singleton):
                         func = getattr(handler(self.active), event)
                     except AttributeError:    return
                     try:
-                        print("EVENT", ch, event, handler)
+                        # print("EVENT", ch, event, handler)
                         return func()
                     except Exception as e:
                         # print("EVENT ERROR", e)

@@ -14,7 +14,7 @@ class Application(metaclass=Singleton):
         try:
             while self.running:
                 self.delta_time.next()
-                print("RENDER UPDATE", self.delta_time.value)
+                # print("RENDER UPDATE", self.delta_time.value)
                 self.render.update()
         except core.error.RenderError as e:
             raise core.error.FatalCoreException from e
