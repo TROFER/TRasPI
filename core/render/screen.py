@@ -29,6 +29,7 @@ class Screen(metaclass=Singleton):
     def show(self, window):
         self.active = window
         self.bind_handles()
+        print("SSHOW", self.active)
 
     def bind_handles(self):
         for key, handler in enumerate(self.active._handles):
