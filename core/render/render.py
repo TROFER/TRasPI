@@ -28,7 +28,7 @@ class Render(metaclass=Singleton):
         Display.clear()
 
     def update(self):
-        if self.render._render_event.is_set() and not self.render._pause_event.is_set():
+        if self.render._render_event.is_set() and self.render._pause_event.is_set():
             try:
                 print("Screen Render")
                 self.screen.render()
