@@ -1,5 +1,5 @@
 import core
-from programs.music_player import main
+# from music_player import main
 # Needs to import main from main import Track, PlayerWindow
 
 class StartScreen(core.std.Menu): #Open playlist window
