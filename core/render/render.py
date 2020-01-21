@@ -37,6 +37,9 @@ class Render(metaclass=Singleton):
             except Exception as e:
                 raise RenderError("Main Render Loop") from e
         else:
+            print(self.render)
+            print(self.render._render_event.is_set())
+            print(self.render._pause_event.is_set())
             print("OH NO")
             raise core.error.RenderError("TEST") from None
 
