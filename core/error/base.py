@@ -1,18 +1,6 @@
 __all__ = ["FatalCoreException", "WindowError", "RenderError", "AssetError", "HardwareError", "FocusError", "EventError", "SystemError"]
 
-class MetaCoreError(type):
-
-    def __new__(cls, name, bases, dct):
-        if "__str__" in dct:
-            def wrap(func):
-                def _str_(self):
-                    s = func(self)
-                    return "<{}{}>".format(self.__class__.__name__, ": {}".format(s) if s else "")
-                return _str_
-            dct["__str__"] = wrap(dct["__str__"])
-        return super().__new__(cls, name, bases, dct)
-
-class CoreBaseException(Exception, metaclass=MetaCoreError):
+class CoreBaseException(Exception):
 
     def __init__(self, msg=""):
         self.msg = msg
