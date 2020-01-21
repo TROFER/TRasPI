@@ -45,6 +45,8 @@ class ProgramMenu(core.std.Menu):
         try:
             program = core.asset.Program("Module", path=element.data+"/")
         except core.error.SystemLoadError as e:
+            print(e)
+            print(e._log())
             return (yield core.std.Error(""))
 
         program.import_path()
