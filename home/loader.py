@@ -1,4 +1,5 @@
 import core
+from core.sys.config import config
 import os
 
 import core.sys.log # TEMP
@@ -53,6 +54,9 @@ class ProgramMenu(core.std.Menu):
 
         program.import_path()
         yield program.window
+        R, G, B = colorsys.hsv_to_rgb(core.sys.Config(
+            "std::system")["system_colour"]["value"] / 100, 1, 1)
+        core.hardware.Backlight.fill(int(R * 255), int(G * 255), int(B * 255))
         program.import_path()
 
 class Handle(core.render.Handler):
