@@ -70,7 +70,11 @@ class Window(metaclass=MetaWindow):
                 return Screen().active._handle_focus(None, result)
         return focus
 
-Screen().show(Window())
+@Window.focus
+def callback(error):
+    print("CALLBACK", error)
+
+Screen(callback).show(Window())
 
 class MetaElement(type):
 

@@ -52,12 +52,7 @@ class ProgramMenu(core.std.Menu):
             return (yield core.std.Error("LOAD"))
 
         program.import_path()
-        try:
-            yield program.window
-        except Exception as e:
-            core.sys.log.Log.log(e)
-            print(e)
-            raise
+        yield program.window
         program.import_path()
 
 class Handle(core.render.Handler):
