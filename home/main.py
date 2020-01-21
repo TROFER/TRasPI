@@ -1,6 +1,7 @@
 import core
 import home
 import time
+import colorsys
 
 class Mainwindow(core.render.Window):
 

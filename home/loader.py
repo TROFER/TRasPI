@@ -1,6 +1,7 @@
 import core
 from core.sys.config import Config
 import os
+import colorsys
 
 core.asset.Image("std::script", path="pyfile.icon")
 core.asset.Image("std::folder", path="folder.icon")
