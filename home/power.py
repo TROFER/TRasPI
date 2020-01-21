@@ -1,5 +1,6 @@
 import core
 from core.hardware.power import Power
+import colorsys
 
 __all__ = ["PowerMenu"]
 
