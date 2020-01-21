@@ -39,15 +39,19 @@ class Window(metaclass=MetaWindow):
         pass
 
     def show(self):
+        # print("SHOW", self)
         Screen().show(self)
         Renderer().clear()
 
     def finish(self, value=None):
+        # print("FIN START")
         parent, generator = Screen().call_lost()
         parent.show()
         if generator is not None:
+            # print("FIN PASS FOCUS")
             parent._handle_focus(value, generator)
-        Renderer().resume()
+        # Renderer().resume() # I HATE THIS
+        # print("FIN END")
         return value
 
     def _handle_focus(self, value, generator):
@@ -59,7 +63,7 @@ class Window(metaclass=MetaWindow):
         except StopIteration as e:
             return e.value
         except GeneratorExit as e:
-            print("FOCUS WINDOW", e)
+            # print("FOCUS WINDOW", e)
             raise core.error.FocusError(window) from e
 
     @staticmethod

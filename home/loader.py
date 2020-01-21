@@ -50,7 +50,7 @@ class ProgramMenu(core.std.Menu):
         except core.error.SystemLoadError as e:
             print(core.sys.log.exception_info(e))
             core.sys.log.Log.log(e)
-            return (yield core.std.Error(""))
+            return (yield core.std.Error("LOAD"))
 
         program.import_path()
         yield program.window

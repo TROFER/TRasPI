@@ -1,14 +1,16 @@
 import core.error
 from core.sys.single import Singleton
 from core.hardware.touch import Touch
+import core.sys.log
 
 __all__ = ["Screen"]
 
 class Screen(metaclass=Singleton):
 
-    def __init__(self):
+    def __init__(self, error_callback: callable=lambda e: None):
         self.active = None
         self.callstack = []
+        self.callback = error_callback
 
         Touch.repeat(50)
 
@@ -27,6 +29,7 @@ class Screen(metaclass=Singleton):
     def show(self, window):
         self.active = window
         self.bind_handles()
+        # print("SSHOW", self.active)
 
     def bind_handles(self):
         for key, handler in enumerate(self.active._handles):
@@ -39,16 +42,16 @@ class Screen(metaclass=Singleton):
                         func = getattr(handler(self.active), event)
                     except AttributeError:    return
                     try:
-                        result = func()
+                        # print("EVENT", ch, event, handler)
+                        return func()
                     except Exception as e:
                         # print("EVENT ERROR", e)
                         try: # TEMPORARY
                             raise core.error.EventError(handler) from e
                         except core.error.EventError as e:
-                            print(e._log())
+                            core.sys.log.Log.log(e)
+                            self.callback(e)
                         return
-                    if type(result).__name__ == "generator":
-                        return self.active._handle_focus(None, result)
 
                 return handle
             Touch.bind(key, wrap(handler))
@@ -61,3 +64,5 @@ class Screen(metaclass=Singleton):
 
     def resume(self):
         pass
+
+# from core.std.popup import Error

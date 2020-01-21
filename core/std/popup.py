@@ -25,3 +25,11 @@ class Warning(Info):
 
 class Error(Info):
     template = core.asset.Template("std::error", path="error.template")
+
+import core.render.screen
+
+@core.render.Window.focus
+def event_error_callback(error):
+    yield Error("EVENT")
+
+core.render.screen.Screen().callback = event_error_callback
