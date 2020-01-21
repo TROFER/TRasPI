@@ -32,6 +32,8 @@ class CommandPrompt(core.std.Menu):
     @core.render.Window.focus
     def show(self):
         super().show()
-        core.hardware.Backlight.fill(225, 0, 0)
+        R, G, B = colorsys.hsv_to_rgb(core.sys.Config(
+            "std::system")["system_colour"]["value"] / 100, 1, 1)
+        core.hardware.Backlight.fill(int(R * 255), int(G * 255), int(B * 255))
 
 main = CommandPrompt()

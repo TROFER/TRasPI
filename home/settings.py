@@ -33,7 +33,9 @@ class SettingsWindow(core.render.Window):
     @core.render.Window.focus
     def select(self):
         yield self.functions[self.index]
-        core.hardware.Backlight.gradient((240, 180, 240, 180, 240))
+        R, G, B = colorsys.hsv_to_rgb(core.sys.Config(
+            "std::system")["system_colour"]["value"] / 100, 1, 1)
+        core.hardware.Backlight.fill(int(R * 255), int(G * 255), int(B * 255))
 
     def render(self):
         self.title.render()

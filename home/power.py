@@ -14,6 +14,9 @@ class PowerMenu(core.render.Window):
     def __init__(self):
         self.index = 2
         self.functions = {0: Power.halt, 1: Power.restart, 2: self.finish}
+        R, G, B = colorsys.hsv_to_rgb(core.sys.Config(
+            "std::system")["system_colour"]["value"] / 100, 1, 1)
+        core.hardware.Backlight.fill(int(R * 255), int(G * 255), int(B * 255))
         # Elements
         self.title = core.element.Text(core.Vector(3, 4), "Power Options", justify="L")
         self.powericon = core.element.Image(core.Vector(32, 25), core.asset.Image("std::powericon"))
