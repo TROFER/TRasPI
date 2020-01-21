@@ -20,6 +20,6 @@ class Config(metaclass=Asset):
         return self._config[key]
 
     def __setitem__(self, key, value):
-        return self._config[key] = value
+        self._config[key] = value
 
 Config("std::system", path="system.cfg")
