@@ -34,8 +34,6 @@ class Render(metaclass=Singleton):
                 self.render.frame()
             except Exception as e:
                 raise RenderError("Main Render Loop") from e
-            finally:
-                self.close()
 
     def pause(self):
         pass

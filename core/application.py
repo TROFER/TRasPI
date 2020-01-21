@@ -1,4 +1,5 @@
 import core.render
+import core.error
 from core.sys.single import Singleton
 from core.sys.deltatime import DeltaTime
 
@@ -10,9 +11,14 @@ class Application(metaclass=Singleton):
         self.render = core.render.Render()
 
     def run(self):
-        while self.running:
-            self.delta_time.next()
-            self.render.update()
+        try:
+            while self.running:
+                self.delta_time.next()
+                self.render.update()
+        except core.error.RenderError as e:
+            raise core.error.FatalCoreException from e
+        finally:
+            self.close()
 
     def open(self):
         self.render.open()
