@@ -37,19 +37,19 @@ class ProgramMenu(core.std.Menu):
 
         super().__init__(*elements, title=path, end=False)
 
-        @core.render.Window.focus
-        def _select_folder(self, element, window):
-            yield ProgramMenu(element.data+"/")
-        @core.render.Window.focus
-        def _select_program(self, element, window):
-            try:
-                program = core.asset.Program("Module", path=element.data+"/")
-            except core.error.SystemLoadError as e:
-                return (yield core.std.Error(""))
+    @core.render.Window.focus
+    def _select_folder(self, element, window):
+        yield ProgramMenu(element.data+"/")
+    @core.render.Window.focus
+    def _select_program(self, element, window):
+        try:
+            program = core.asset.Program("Module", path=element.data+"/")
+        except core.error.SystemLoadError as e:
+            return (yield core.std.Error(""))
 
-            program.import_path()
-            yield program.window
-            program.import_path()
+        program.import_path()
+        yield program.window
+        program.import_path()
 
 class Handle(core.render.Handler):
 
