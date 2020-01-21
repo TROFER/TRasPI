@@ -12,6 +12,7 @@ class Text(Element):
         self.pos = pos
 
     def render(self):
+        print("RENDER TEXT")
         self.Render.draw.text(self.pos_abs, self._text, self.colour, self._font.font)
 
     def font(self, name=None) -> Font:
