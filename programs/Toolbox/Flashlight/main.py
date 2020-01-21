@@ -91,6 +91,7 @@ class Handle(core.render.Handler):
     key = core.render.Button.RIGHT
     window = Flashlight
 
+    @core.render.Window.focus
     def press(self):
         core.hardware.Button.led(False)
         rgb = RGB()
@@ -141,6 +142,7 @@ class Handle(core.render.Handler):
     key = core.render.Button.RIGHT
     window = RGB
 
+    @core.render.Window.focus
     def press(self):
         emg = EMG()
         res = yield emg
