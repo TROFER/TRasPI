@@ -40,8 +40,9 @@ class Log:
         except IOError:
             logfile = open(f"{core.sys.PATH}core/error/eventlog.txt", 'w')
         try:
-            logfile.append(_error)
+            newfile = logfile.append(_error)
         except:
             logfile.append(f"[{_type}] {_message}")
         with open(f"{core.sys.PATH}core/error/eventlog.txt", 'w') as oldfile:
             json.dump(logfile, oldfile)
+        logfile.close()
