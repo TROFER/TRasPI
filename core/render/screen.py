@@ -7,7 +7,7 @@ __all__ = ["Screen"]
 
 class Screen(metaclass=Singleton):
 
-    def __init__(self, error_callback: callable):
+    def __init__(self, error_callback: callable=lambda e: None):
         self.active = None
         self.callstack = []
         self.callback = error_callback
