@@ -39,15 +39,19 @@ class Window(metaclass=MetaWindow):
         pass
 
     def show(self):
+        print("SHOW", self)
         Screen().show(self)
         Renderer().clear()
 
     def finish(self, value=None):
+        print("FIN START")
         parent, generator = Screen().call_lost()
         parent.show()
         if generator is not None:
+            print("FIN PASS FOCUS")
             parent._handle_focus(value, generator)
         Renderer().resume()
+        print("FIN END")
         return value
 
     def _handle_focus(self, value, generator):

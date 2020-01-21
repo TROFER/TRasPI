@@ -30,7 +30,6 @@ import core.render.screen
 
 @core.render.Window.focus
 def event_error_callback(error):
-    print("TRYING TO YIELD")
     yield Error("EVENT")
 
 core.render.screen.Screen().callback = event_error_callback
