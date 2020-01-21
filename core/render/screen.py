@@ -1,5 +1,5 @@
 import core.error
-from core.render.single import Singleton
+from core.sys.single import Singleton
 from core.hardware.touch import Touch
 
 __all__ = ["Screen"]
@@ -61,6 +61,3 @@ class Screen(metaclass=Singleton):
 
     def resume(self):
         pass
-
-def render():
-    Screen().render()

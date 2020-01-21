@@ -1,25 +1,22 @@
+"""
 from core.error import RenderError
-from core.render.renderer import Render
+from core.render.renderer import Renderer
 from core.render.screen import render
 from core.hardware.hardware import Backlight, Button
 from core.hardware.display import Display
 
 def open():
-    Render().start()
+    Renderer().start()
     Backlight.fill(255, 255, 255)
     Display.clear()
     #Button.led(True)
     # Display.contrast(40)
 
-def loop(func: callable=None):
-    if func is None:
-        func = lambda: None
-
+def loop():
     open()
     try:
-        renderer = Render()
+        renderer = Renderer()
         while renderer._render_event.is_set():
-            func()
             render()
             renderer.frame()
     except Exception as e:
@@ -28,7 +25,9 @@ def loop(func: callable=None):
         close()
 
 def close():
-    Render().close()
+    Renderer().close()
     Backlight.fill(0, 0, 0)
     Button.led(False)
     Display.clear()
+
+"""

@@ -1,5 +1,4 @@
 from core.render.window import Element, Vector
-from core.render.renderer import Render
 from core.asset.font import Font
 from core.asset.image import Image
 

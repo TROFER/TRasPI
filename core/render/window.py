@@ -3,7 +3,7 @@ from core.vector import Vector
 from core.render.enums import Button, Event
 from core.render.handle import Handler
 from core.render.screen import Screen
-from core.render.renderer import Render
+from core.render.renderer import Renderer
 from core.asset import Template
 
 
@@ -40,14 +40,14 @@ class Window(metaclass=MetaWindow):
 
     def show(self):
         Screen().show(self)
-        Render().clear()
+        Renderer().clear()
 
     def finish(self, value=None):
         parent, generator = Screen().call_lost()
         parent.show()
         if generator is not None:
             parent._handle_focus(value, generator)
-        Render().resume()
+        Renderer().resume()
         return value
 
     def _handle_focus(self, value, generator):
@@ -75,12 +75,12 @@ Screen().show(Window())
 class MetaElement(type):
 
     def __new__(cls, name, bases, attrs):
-        attrs["Render"] = Render()
+        attrs["Render"] = Renderer()
         return super().__new__(cls, name, bases, attrs)
 
 class Element(metaclass=MetaElement):
 
-    Render = Render()
+    Render = Renderer()
 
     def __init__(self, pos: Vector):
         self._pos = pos

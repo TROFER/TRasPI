@@ -1,4 +1,4 @@
-from core.render.single import Singleton
+from core.sys.single import Singleton
 from core.sys import WIDTH, HEIGHT
 
 __all__ = ["lcd", "touch", "backlight"]

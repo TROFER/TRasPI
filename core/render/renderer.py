@@ -1,4 +1,4 @@
-from core.render.single import Singleton
+from core.sys.single import Singleton
 from core.sys import WIDTH, HEIGHT
 from core.render.screen import Screen
 import queue
@@ -11,7 +11,7 @@ import PIL.ImageDraw
 
 from core.hardware.display import Display
 
-__all__ = ["Render"]
+__all__ = ["Renderer"]
 
 def clear_queue(q):
     data = []
@@ -21,7 +21,7 @@ def clear_queue(q):
     except queue.Empty: pass
     return data
 
-class Render(metaclass=Singleton):
+class Renderer(metaclass=Singleton):
 
     def __init__(self):
         self.draw = None
@@ -47,7 +47,7 @@ class Render(metaclass=Singleton):
     def clear(self):
         self._next()
 
-    def start(self):
+    def open(self):
         if not self._render_event.is_set():
             self._render_event.set()
             self._frame_event.clear()

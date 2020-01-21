@@ -1,4 +1,4 @@
-__all__ = ["Singleton", "CachePath"]
+__all__ = ["Singleton"]
 
 class Singleton(type):
 
