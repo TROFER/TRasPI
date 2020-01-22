@@ -1,10 +1,11 @@
 import core
+import json
 # from music_player import main
 # Needs to import main from main import Track, PlayerWindow
 
 class StartScreen(core.std.Menu): #Open playlist window
 
-    def __init__(self)
+    def __init__(self):
         self.library = []
         try:
             for file in os.listdir(f"{core.sys.PATH}user/music/playlists"):
@@ -17,6 +18,7 @@ class StartScreen(core.std.Menu): #Open playlist window
         except:
             self.lib_empty(), self.finish()
 
+        elements = []
         for playlist in self.library:
             elements.append(core.std.Menu.Element(
                 core.element.Text(core.Vector(0, 0), playlist.name, justify="L"),

@@ -2,7 +2,6 @@ import core
 import os
 import time
 import pygame
-# playlist, radio, single_track = __import__("playlist.py"), __import__("radio.py"), __import__("single_track.py")
 import playlist
 import radio
 import single_track

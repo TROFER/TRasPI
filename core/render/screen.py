@@ -1,7 +1,7 @@
 import core.error
 from core.sys.single import Singleton
 from core.hardware.touch import Touch
-import core.sys.log
+from core.sys.log import Log
 
 __all__ = ["Screen"]
 
@@ -49,7 +49,7 @@ class Screen(metaclass=Singleton):
                         try: # TEMPORARY
                             raise core.error.EventError(handler) from e
                         except core.error.EventError as e:
-                            core.sys.log.Log.log(e)
+                            Log.log(e)
                             self.callback(e)
                         return
 

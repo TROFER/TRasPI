@@ -34,13 +34,16 @@ class Log:
 
     @classmethod
     def log(cls, error):
-        _error = exception_info(error)
         try:
-            with open(f"{core.sys.PATH}core/error/eventlog.txt", 'r') as eventlog:
+            _error = exception_info(error)
+        except AttributeError:
+            print("Attribute Error: Log not created")
+        try:
+            with open(f"{core.sys.PATH}core/error/eventlog.json", 'r') as eventlog:
                 data = json.load(eventlog)
         except (IOError, json.JSONDecodeError):
             data = []
-        with open(f"{core.sys.PATH}core/error/eventlog.txt", 'w') as eventlog:
+        with open(f"{core.sys.PATH}core/error/eventlog.json", 'w') as eventlog:
             data.append(_error)
             json.dump(data, eventlog)
 
