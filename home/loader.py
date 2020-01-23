@@ -47,7 +47,9 @@ class ProgramMenu(core.std.Menu):
     def _select_program(self, element, window):
         try:
             program = core.asset.Program("Module", path=element.data+"/")
-        except core.error.SystemLoadError as e:
+        except GeneratorExit:
+            pass
+        except BaseException as e:
             Log.log(e)
             return (yield core.std.Error("Load Err"))
 

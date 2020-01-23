@@ -9,11 +9,11 @@ import single_track
 class PlayerWindow(core.render.Window):
 
     core.asset.Template("std::window")
-    core.asset.Image("pause", path=f"{core.sys.PATH}programs/Music Player/assets/pause.icon")
-    core.asset.Image("play", path=f"{core.sys.PATH}programs/Music Player/assets/play.icon")
-    core.asset.Image("stop", path=f"{core.sys.PATH}programs/Music Player/assets/stop.icon")
-    core.asset.Image("next", path=f"{core.sys.PATH}programs/Music Player/assets/next.icon")
-    core.asset.Image("cursor", path=f"{core.sys.PATH}programs/Music Player/assets/cursor.icon")
+    core.asset.Image("pause", path=f"{core.sys.PATH}programs/Music Player/assets/player_pause.icon")
+    core.asset.Image("play", path=f"{core.sys.PATH}programs/Music Player/assets/player_play.icon")
+    core.asset.Image("stop", path=f"{core.sys.PATH}programs/Music Player/assets/player_stop.icon")
+    core.asset.Image("next", path=f"{core.sys.PATH}programs/Music Player/assets/player_next.icon")
+    core.asset.Image("cursor", path=f"{core.sys.PATH}core/resource/image/cursor.icon")
 
     class ScrollingText(core.element.TextBox):
 
