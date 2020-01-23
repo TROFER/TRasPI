@@ -17,7 +17,6 @@ class ProgramMenu(core.std.Menu):
 
         for diritem in os.listdir(core.sys.PATH + path):
             item_path = path + diritem
-            print(item_path)
 
             if os.path.isdir(core.sys.PATH + item_path):
                 if "main.py" in os.listdir(core.sys.PATH + item_path): # Script
@@ -51,7 +50,7 @@ class ProgramMenu(core.std.Menu):
             pass
         except BaseException as e:
             Log.log(e)
-            return (yield core.std.Error("Load Err"))
+            return (yield core.std.Error("Load Error"))
 
         program.import_path()
         yield program.window

@@ -25,9 +25,10 @@ class StartScreen(core.std.Menu):
 class PlayerWindow(core.render.Window):
 
     template = core.asset.Template("std::window")
-    play = core.asset.Image("play", path=f"{core.sys.PATH}programs/Music Player/assets/player_play.icon")
-    stop = core.asset.Image("stop", path=f"{core.sys.PATH}programs/Music Player/assets/player_stop.icon")
-    cursor = core.asset.Image("cursor", path=f"{core.sys.PATH}core/resource/image/cursor.icon")
+    core.asset.Image("play", path=f"{core.sys.PATH}programs/Music Player/assets/player_play.icon")
+    core.asset.Image("stop", path=f"{core.sys.PATH}programs/Music Player/assets/player_stop.icon")
+    core.asset.Image(
+        "cursor", path=f"{core.sys.PATH}core/resource/image/cursor.icon")
 
     class ScrollingText(core.element.TextBox):
 
