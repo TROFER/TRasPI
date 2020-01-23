@@ -24,7 +24,7 @@ def exception_info(error: Exception) -> dict:
         "type": error.__class__.__name__,
         "message" : str(error),
         "line": stack[-1]["line"],
-        "time": time.strftime("%d/%m/%y @ %S:%H:%M"),
+        "time": time.strftime("%d/%m/%y @ %H:%M:%S"),
 
         "stack": stack,
         "cause": cause

@@ -187,11 +187,12 @@ class StartScreen(core.render.Window):
     print("Loading")
 
     template = core.asset.Template("std::window", path="window.template")
-    cursor = core.asset.Image("cursor", path=f"{core.sys.PATH}programs/Music Player/assets/cursor.icon")
-    quit = core.asset.Image("quit", path=f"{core.sys.PATH}programs/Music Player/assets/quit.icon")
-    radio = core.asset.Image("radio", path=f"{core.sys.PATH}programs/Music Player/assets/radio.icon")
-    track = core.asset.Image("track", path=f"{core.sys.PATH}programs/Music Player/assets/track.icon")
-    playlist = core.asset.Image("playlist", path=f"{core.sys.PATH}programs/Music Player/assets/playlist.icon")
+    core.asset.Image(
+        "cursor", path=f"{core.sys.PATH}core/resource/image/cursor.icon")
+    core.asset.Image("quit", path=f"{core.sys.PATH}programs/Music Player/assets/quit.icon")
+    core.asset.Image("radio", path=f"{core.sys.PATH}programs/Music Player/assets/radio.icon")
+    core.asset.Image("track", path=f"{core.sys.PATH}programs/Music Player/assets/track.icon")
+    core.asset.Image("playlist", path=f"{core.sys.PATH}programs/Music Player/assets/playlist.icon")
 
     def __init__(self):
         self.index = 1
