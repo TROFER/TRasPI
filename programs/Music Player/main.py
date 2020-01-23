@@ -214,6 +214,7 @@ class StartScreen(core.render.Window):
         self.cursor = core.element.Image(core.Vector(25 * (self.index + 1), 18), core.asset.Image("cursor"))
         self.current_item.render(), self.cursor.render()
 
+    @core.render.Window.focus
     def select(self):
         if self.index == 0:
             window = radio.main

@@ -85,7 +85,7 @@ class PlayerWindow(core.render.Window):
 class Handle(core.render.Handler):
 
     key = core.render.Button.LEFT
-    window = StartScreen
+    window = PlayerWindow
 
     def press(self):
         self.window.left()
@@ -93,7 +93,7 @@ class Handle(core.render.Handler):
 class Handle(core.render.Handler):
 
     key = core.render.Button.RIGHT
-    window = StartScreen
+    window = PlayerWindow
 
     def press(self):
         self.window.right()
@@ -101,7 +101,7 @@ class Handle(core.render.Handler):
 class Handle(core.render.Handler):
 
     key = core.render.Button.CENTRE
-    window = StartScreen
+    window = PlayerWindow
 
     def press(self):
         self.window.select()
@@ -109,7 +109,7 @@ class Handle(core.render.Handler):
 class Handle(core.render.Handler):
 
     key = core.render.Button.UP
-    window = StartScreen
+    window = PlayerWindow
 
     def press(self):
         self.window.volume_up()
@@ -117,7 +117,7 @@ class Handle(core.render.Handler):
 class Handle(core.render.Handler):
 
     key = core.render.Button.DOWN
-    window = StartScreen
+    window = PlayerWindow
 
     def press(self):
         self.window.volume_down()
@@ -125,7 +125,7 @@ class Handle(core.render.Handler):
 class Handle(core.render.Handler):
 
     key = core.render.Button.BACK
-    window = StartScreen
+    window = PlayerWindow
 
     def press(self):
         self.window.finish()
