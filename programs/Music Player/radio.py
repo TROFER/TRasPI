@@ -1,26 +1,21 @@
 import core
+import time
 import os
 import json
 
-class StartScreen(core.std.Menu):
+class ScrollingText(core.element.TextBox):
 
-    def __init__(self):
-        with open(f"{core.sys.PATH}programs/Music Player/radio_stations.json", "r") as file:
-            self.data = json.load(file)
+        def __init__(self, info):
+            self.start = 0
+            self.info = info
+            if len(self.info) < 10:
+                self.end = len(info)
+            else:
+                self.end = 10
+            self.text_time = time.time()
+            super().__init__(core.Vector(64, 15),
+                             self.info[self.start:self.end])
 
-        elements = []
-
-        for key, value in self.data.items():
-            elements.append(core.std.Menu.Element(
-                core.element.Text(core.Vector(0, 0), key, justify="L"),
-                data = value,
-                select = PlayerWindow))
-        super().__init__(*elements, title="Radio Stations")
-
-    @core.render.Window.focus
-    def show(self):
-        super().show()
-        core.hardware.Backlight.fill(225, 225, 225)
 
 class PlayerWindow(core.render.Window):
 
@@ -30,22 +25,12 @@ class PlayerWindow(core.render.Window):
     core.asset.Image(
         "cursor", path=f"{core.sys.PATH}core/resource/image/cursor.icon")
 
-    class ScrollingText(core.element.TextBox):
-
-        def __init__(self, info):
-            self.start = 0
-            self.info = info
-            if len(self.info) < 10:
-                self.end = len()
-            self.text_time = time.time()
-            super().__init__(core.Vector(64, 15), self.info[self.start:self.end])
-
-    def __init__(self, url, info):
-        self.url = url
+    def __init__(self, element, window):
+        print(element.data)
         self.cursor_pos = 0
-        self.info = info
+        self.data = element.data
+        self.header, self.url = ScrollingText(self.data[0]), self.data[1]
         self.volume = 50
-        self.header = ScrollingText(self.playlist[self.track_number].description)
         self.title = core.element.Text(core.Vector(3, 5), "Radio Player", justify="L")
         self.buttons = [core.element.Image(core.Vector(42, 50), core.asset.Image("play")),
         core.element.Image(core.Vector(84, 50), core.asset.Image("stop"))]
@@ -129,5 +114,25 @@ class Handle(core.render.Handler):
 
     def press(self):
         self.window.finish()
+
+class StartScreen(core.std.Menu):
+
+    def __init__(self):
+        with open(f"{core.sys.PATH}programs/Music Player/radio_stations.json", "r") as file:
+            self.data = json.load(file)
+
+        elements = []
+
+        for key, value in self.data.items():
+            elements.append(core.std.Menu.Element(
+                core.element.Text(core.Vector(0, 0), key, justify="L"),
+                data=(key, value),
+                select=player))
+        super().__init__(*elements, title="Radio Stations")
+
+    @core.render.Window.focus
+    def show(self):
+        super().show()
+        core.hardware.Backlight.fill(225, 225, 225)
 
 main = StartScreen()

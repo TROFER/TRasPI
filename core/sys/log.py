@@ -24,10 +24,8 @@ def exception_info(error: Exception) -> dict:
         "type": error.__class__.__name__,
         "message" : str(error),
         "line": stack[-1]["line"],
-        "time": time.strftime("%d/%m/%y @ %H:%M:%S"),
-
-        "stack": stack,
-        "cause": cause
+        "stack": trace[-1][],
+        "time": time.strftime("%d/%m/%y @ %H:%M:%S")
     }
 
 class Log:
@@ -36,6 +34,7 @@ class Log:
     def log(cls, error):
         try:
             _error = exception_info(error)
+            print(_error)
         except AttributeError:
             print("Attribute Error: Log not created")
         try:

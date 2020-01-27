@@ -1,16 +1,29 @@
-# TRasPI
+# TRasPi Operating System
 Raspberry Pi code
 
-Roadmap:
-https://trello.com/b/GIqJAKub/gcse-computer-science-corsework
+For a list of future changes see TODO.odt 
 
 # Scripting Guide
 
-### Main
-All scripts **must** contain a *main* function as an entry point.  
-* Optionally, it can take arguments (note: keyword arguments are not supported)  
+## Main
+All programs **must** have a *main.py* file inside their folder, if this is not provided the program manager will not detect it an assume it to be a package.
 
-#### core.std
+## core.std...
+Programs can use the inbuilt standard windows, these provide features such as data input as well as standardised error, warning and information windows.
+
+All programs **must** *yield* to change the current window, the function must also call an *@core.render.Window.focus* when defined
+
+### core.std.menu
+Takes two arguments, elements and title
+
+
+#### elements
+elements *type: tuple*, must contain a render element in addition to a data and selection argument
+
+`elements.append(core.std.Menu.Element(
+                core.element.Text(core.Vector(0, 0), "Example Label", justify="L"),
+                data = label_data,
+                select = write_code))`
 
 ### std.menu
 Takes a list of items, callable objects and runs or returns the selected item
@@ -38,5 +51,6 @@ The Config files can be read through *core.config*:
 Scripts should be located in *programs* folder in the main directory.  
 
 
-### Setting up the GFX-hat
-The script on the pimoroni git hub page are bugged with dietpi and wont actually enable the SPI Bus this is paramount for the use of the LCD and must be enabled manually by editing the config file to avoid errors
+# Setup
+
+
