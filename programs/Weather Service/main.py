@@ -3,13 +3,16 @@ import json
 from urllib.error import HTTPError, URLError
 from urllib import request
 import time
+import colorsys
 
 core.asset.Template("weather", path="Weather Service/gui.template")
 
 class Mainwindow(core.render.Window):
 
     def __init__(self):
-        core.hardware.Backlight.fill(225, 225, 0)
+        R, G, B = colorsys.hsv_to_rgb(core.sys.Config(
+            "std::system")["system_colour"]["value"] / 100, 1, 1)
+        core.hardware.Backlight.fill(int(R * 255), int(G * 255), int(B * 255))
         self.template = core.asset.Template("weather")
         self.API = "&appid=dd440727faee99efb0b572bc6d78e7b3"
         self.URL = "http://api.openweathermap.org/data/2.5/weather?"

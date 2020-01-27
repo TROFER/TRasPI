@@ -3,6 +3,8 @@ import gpiozero
 import psutil
 import time
 import socket
+import colorsys
+dfsf
 
 class HardwareWindow(core.render.Window):
 
@@ -10,7 +12,9 @@ class HardwareWindow(core.render.Window):
 
     def __init__(self):
         self.time = time.time()
-        core.hardware.Backlight.fill(200, 170, 170)
+        R, G, B = colorsys.hsv_to_rgb(core.sys.Config(
+            "std::system")["system_colour"]["value"] / 100, 1, 1)
+        core.hardware.Backlight.fill(int(R * 255), int(G * 255), int(B * 255))
         self.title = core.element.Text(core.Vector(3, 5), "HW Info", justify="L")
         self.labels = [core.element.Text(core.Vector(3, 15), justify="L"),
         core.element.Text(core.Vector(3, 25), justify="L"),
