@@ -23,15 +23,15 @@ def module(file: str, path: str=""):
 
     try:
         spec = importlib.util.spec_from_file_location("module<{}>".format(_loading_count), PATH+file_path)
-        sys.path.insert(0, path) # ADD THIS LATER
+        import_path(path)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
-        sys.path.remove(path) # ADD THIS LATER
+        import_path(path)
 
         _loading_count += 1
         return module
-    except ImportError as e:
-        raise core.error.SystemLoadModuleError("'{}.py' not in '{}'".format(file, path)) from e
+    except Exception as e:
+        raise core.error.SystemLoadModuleError("Module Failed to Load! '{}{}'".format(path, file)) from e
 
 def import_path(path):
     if path in sys.path:

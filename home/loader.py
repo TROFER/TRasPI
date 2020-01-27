@@ -1,8 +1,6 @@
 import core
-from core.sys.config import Config
 import os
 import colorsys
-from core.sys.log import Log
 
 core.asset.Image("std::script", path="pyfile.icon")
 core.asset.Image("std::folder", path="folder.icon")
@@ -42,21 +40,22 @@ class ProgramMenu(core.std.Menu):
     @core.render.Window.focus
     def _select_folder(self, element, window):
         yield ProgramMenu(element.data+"/")
-        
+
     @core.render.Window.focus
     def _select_program(self, element, window):
         try:
             program = core.asset.Program("Module", path=element.data+"/")
-        except BaseException as e:
-            Log.log(e)
+        except core.error.SystemLoadError as e:
+            core.sys.log(e)
             return (yield core.std.Error("Load Error"))
 
         program.import_path()
         yield program.window
+        program.import_path()
+
         R, G, B = colorsys.hsv_to_rgb(core.sys.Config(
             "std::system")["system_colour"]["value"] / 100, 1, 1)
         core.hardware.Backlight.fill(int(R * 255), int(G * 255), int(B * 255))
-        program.import_path()
 
 class Handle(core.render.Handler):
 
