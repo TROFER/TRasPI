@@ -21,6 +21,7 @@ def exception_info(error: Exception) -> dict:
         })
 
     return {
+        "lineno": stack[-1]["lineno"],
         "type": error.__class__.__name__,
         "message" : str(error),
         "line": stack[-1]["line"],
@@ -44,4 +45,3 @@ class Log:
         with open(f"{core.sys.PATH}core/error/eventlog.json", 'w') as eventlog:
             data.append(_error)
             json.dump(data, eventlog)
-
