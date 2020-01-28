@@ -4,12 +4,10 @@ import psutil
 import time
 import socket
 import colorsys
-dfsf
 
 class HardwareWindow(core.render.Window):
 
     template = core.asset.Template("std::window")
-
     def __init__(self):
         self.time = time.time()
         R, G, B = colorsys.hsv_to_rgb(core.sys.Config(
