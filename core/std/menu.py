@@ -5,6 +5,13 @@ __all__ = ["Menu", "MenuSingle"]
 _ME_OFF_X = 3
 _ME_OFF_Y = 15
 
+_base_elements = {
+    "default": core.element.Text(core.Vector(0, 0), "", justify="R"),
+    "cursor": {
+        "default": core.element.Text(core.Vector(0, 0), "<", justify="R"),
+    },
+}
+
 class MenuElement:
 
     def __init__(self, *element: core.element, data={}, select=lambda self, window: None, hover=None, dehover=None):
@@ -41,7 +48,7 @@ class Menu(core.render.Window):
     Element = MenuElement
     template = core.asset.Template("std::window", path="window.template")
 
-    def __init__(self, *items: MenuElement, visable=4, offset=core.asset.Font("std").size, title="Menu", end=True):
+    def __init__(self, *items: MenuElement, visable=4, offset=core.asset.Font("std").size, title="Menu", end=True, cursor="default"):
         self._visable = visable
         self._elements = list(items)
         if end:
@@ -54,7 +61,7 @@ class Menu(core.render.Window):
         self._c_index = self._index
 
         self._title = core.element.Text(core.Vector(3, 5), title, justify="L")
-        self._cursor = core.element.Text(core.Vector(0, 0), "<", justify="R")
+        self._cursor = _base_elements["cursor"][cursor] if isinstance(cursor, str) else (cursor if isinstance(cursor, core.render.Element) else _base_elements["default"])
 
         self._update()
 
