@@ -6,6 +6,7 @@ class StartScreen(core.std.Menu):
     def __init__(self):
         self.library = []
         elements = []
+        player = Player()
         try:
             for file in os.listdir(f"{core.sys.PATH}user/music/"):
                 if ".wav" in file or ".ogg" in file:
@@ -18,7 +19,7 @@ class StartScreen(core.std.Menu):
             elements.append(core.std.Menu.Element(
                 core.element.Text(core.Vector(0, 0), track.name, justify="L"),
                 data = track,
-                select = self.start))
+                select = player))
         super().__init__(*elements, title="Open Track")
 
     @core.render.Window.focus
