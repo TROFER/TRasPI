@@ -1,7 +1,8 @@
 import core
 import json
+import radio
 
-class StartScreen(core.std.Menu):
+class SubwindowPlaylist(core.std.Menu):
 
     def __init__(self):
         self.library = []
@@ -24,7 +25,12 @@ class StartScreen(core.std.Menu):
                 data=track,
                 select=self.start))
 
-        super().__init__(*elements, title="Open Playlist")
+        super().__init__(*elements, title="Open Playlist", right=subwindow)
+
+    @core.render.Window.focus
+    def subwindow(self):
+        window = radio.main
+        yield window
 
     @core.render.Window.focus
     def start(self, element, window):
@@ -36,4 +42,4 @@ class StartScreen(core.std.Menu):
         yield core.std.Warning("Libary is empty")
 
 
-main = StartScreen()
+main = SubwindowPlaylist()

@@ -12,6 +12,7 @@ _base_elements = {
     },
 }
 
+
 class MenuElement:
 
     def __init__(self, *element: core.element, data={}, select=lambda self, window: None, hover=None, dehover=None):
@@ -22,13 +23,15 @@ class MenuElement:
         self._index = -1
         self._select_func = select
         self._hover_func = lambda s, w: (hover) if hover is None else hover
-        self._dehover_func = lambda s, w: (dehover) if dehover is None else dehover
+        self._dehover_func = lambda s, w: (
+            dehover) if dehover is None else dehover
 
     def _update(self, index):
         if index != self._index:
             self._index = index
             for i, elm in enumerate(self._elements):
-                elm.pos = self._rel_pos[i] + core.Vector(_ME_OFF_X, _ME_OFF_Y + self._offset * self._index)
+                elm.pos = self._rel_pos[i] + core.Vector(
+                    _ME_OFF_X, _ME_OFF_Y + self._offset * self._index)
 
     def render(self):
         for elm in self._elements:
@@ -43,16 +46,19 @@ class MenuElement:
     def _dehover(self, window):
         return self._dehover_func(self, window)
 
+
 class Menu(core.render.Window):
 
     Element = MenuElement
     template = core.asset.Template("std::window", path="window.template")
 
-    def __init__(self, *items: MenuElement, visable=4, offset=core.asset.Font("std").size, title="Menu", end=True, cursor="default"):
+    def __init__(self, *items: MenuElement, visable=4, offset=core.asset.Font("std").size, title="Menu", end=True, cursor="default", left=None, right=None):
+        self.left_func, self.right_func = left, right
         self._visable = visable
         self._elements = list(items)
         if end:
-            self._elements.append(MenuElement(core.element.Text(core.Vector(0, 0), "Return", justify="L"), select=lambda s, w: w.finish()))
+            self._elements.append(MenuElement(core.element.Text(core.Vector(
+                0, 0), "Return", justify="L"), select=lambda s, w: w.finish()))
         for elm in self._elements:
             elm._offset = offset
         self._c_elements = []
@@ -61,7 +67,8 @@ class Menu(core.render.Window):
         self._c_index = self._index
 
         self._title = core.element.Text(core.Vector(3, 5), title, justify="L")
-        self._cursor = _base_elements["cursor"][cursor] if isinstance(cursor, str) else (cursor if isinstance(cursor, core.render.Element) else _base_elements["default"])
+        self._cursor = _base_elements["cursor"][cursor] if isinstance(cursor, str) else (
+            cursor if isinstance(cursor, core.render.Element) else _base_elements["default"])
 
         self._update()
 
@@ -76,7 +83,8 @@ class Menu(core.render.Window):
         for index, elm in enumerate(self._elements[self._index:self._index + self._visable]):
             self._c_elements.append(elm)
             elm._update(index)
-        self._cursor.pos = core.Vector(core.sys.WIDTH - _ME_OFF_X, _ME_OFF_Y + self._elements[self._c_index]._offset * self._elements[self._c_index]._index)
+        self._cursor.pos = core.Vector(core.sys.WIDTH - _ME_OFF_X, _ME_OFF_Y +
+                                       self._elements[self._c_index]._offset * self._elements[self._c_index]._index)
 
     def _down(self):
         if self._c_index < len(self._elements) - 1:
@@ -99,6 +107,7 @@ class Menu(core.render.Window):
     def _select(self):
         return self._elements[self._c_index]._select(self)
 
+
 class Handle(core.render.Handler):
 
     key = core.render.Button.UP
@@ -106,6 +115,7 @@ class Handle(core.render.Handler):
 
     def press(self):
         self.window._up()
+
 
 class Handle(core.render.Handler):
 
@@ -115,6 +125,7 @@ class Handle(core.render.Handler):
     def press(self):
         self.window._down()
 
+
 class Handle(core.render.Handler):
 
     key = core.render.Button.CENTRE
@@ -123,14 +134,37 @@ class Handle(core.render.Handler):
     def press(self):
         self.window._select()
 
+
+class Handle(core.render.Handler):
+
+    key = core.render.Button.LEFT
+    window = Menu
+
+    def press(self):
+        if self.window.left_func is callable:
+            self.window.left_func()
+
+
+class Handle(core.render.Handler):
+
+    key = core.render.Button.RIGHT
+    window = Menu
+
+    def press(self):
+        if self.window.right_func is callable:
+            self.window.right_func()
+
+
 class MenuSingle(core.render.Window):
 
     template = core.asset.Template("std::menu", path="menu.template")
 
     def __init__(self, **items):
         items["Return"] = self.finish
-        self.menu_elements = [(core.element.Text(core.Vector(3, 32), f'{text[:20]}>', size=11, justify="L", colour=1), func) for text, func in items.items()]
-        self.down_arrow, self.up_arrow = core.element.Text(core.Vector(64, 50), '\\/'), core.element.Text(core.Vector(64, 14), '/\\')
+        self.menu_elements = [(core.element.Text(core.Vector(
+            3, 32), f'{text[:20]}>', size=11, justify="L", colour=1), func) for text, func in items.items()]
+        self.down_arrow, self.up_arrow = core.element.Text(core.Vector(
+            64, 50), '\\/'), core.element.Text(core.Vector(64, 14), '/\\')
         self.index = 0
 
     def render(self):
@@ -150,7 +184,7 @@ class MenuSingle(core.render.Window):
 
     @core.render.Window.focus
     def select(self):
-        command =  self.menu_elements[self.index][1]
+        command = self.menu_elements[self.index][1]
         if command is None:
             pass
         elif isinstance(command, core.render.Window):
@@ -158,6 +192,7 @@ class MenuSingle(core.render.Window):
             return res
         else:
             return command()
+
 
 class Handle(core.render.Handler):
 
@@ -167,6 +202,7 @@ class Handle(core.render.Handler):
     def press(self):
         self.window.up()
 
+
 class Handle(core.render.Handler):
 
     key = core.render.Button.DOWN
@@ -174,6 +210,7 @@ class Handle(core.render.Handler):
 
     def press(self):
         self.window.down()
+
 
 class Handle(core.render.Handler):
 

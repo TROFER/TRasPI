@@ -1,7 +1,7 @@
 import core
+import playlist
 
-
-class SingleTrack(core.std.Menu):
+class SubwindowTrack(core.std.Menu):
 
     def __init__(self):
         self.libary = []
@@ -20,7 +20,12 @@ class SingleTrack(core.std.Menu):
                     0, 0), musicfile.name, justify="L"),
                 data=musicfile,
                 select=start))
-        super().__init__(*elements, title="Music Player")
+        super().__init__(*elements, title="Music Player", right=subwindow)
+
+    @core.render.Window.focus
+    def subwindow(self):
+        window = playlist.main
+        yield window
 
     @core.render.Window.focus
     def lib_empty(self):
@@ -32,4 +37,4 @@ class SingleTrack(core.std.Menu):
         yield player
 
 
-main = SingleTrack()
+main = SubwindowTrack()
