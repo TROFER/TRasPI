@@ -19,7 +19,7 @@ class Main(core.std.Menu):
                     0, 0), musicfile.name, justify="L"),
                 data=musicfile,
                 select=start))
-        super().__init__(*elements, title="Music Player", left=self.finish, right=self.subwindow)
+        super().__init__(*elements, title="Music Player")
 
     @core.render.Window.focus
     def subwindow(self):
@@ -34,3 +34,19 @@ class Main(core.std.Menu):
     def start(self, element, window):
         player = LocalPlayer(element.data)
         yield player
+
+class Handle(core.render.Handler):
+
+    key = core.render.Button.LEFT
+    window = Main
+
+    def press(self):
+        self.window.finish()
+
+class Handle(core.render.Handler):
+
+    key = core.render.Button.RIGHT
+    window = Main
+
+    def press(self):
+        self.window.subwindow()

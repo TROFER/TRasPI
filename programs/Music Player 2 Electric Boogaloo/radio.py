@@ -88,7 +88,7 @@ class Main(core.std.Menu):
                 core.element.Text(core.Vector(0, 0), key, justify="L"),
                 data=(key, value),
                 select=self.play))
-        super().__init__(*elements, title="Music Player -Radio-", left=self.finish)
+        super().__init__(*elements, title="Music Player -Radio-")
 
     @core.render.Window.focus
     def index(self):
@@ -104,3 +104,11 @@ class Main(core.std.Menu):
     def play(self, element, window):
         window = RadioPlayer(element.data)
         yield window
+
+class Handle(core.render.Handler):
+
+    key = core.render.Button.LEFT
+    window = Main
+
+    def press(self):
+        self.window.finish()
