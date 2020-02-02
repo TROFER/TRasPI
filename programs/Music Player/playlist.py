@@ -25,7 +25,7 @@ class Main(core.std.Menu):
                 data=track,
                 select=self.start))
 
-        super().__init__(*elements, title="Open Playlist")
+        super().__init__(*elements, title="Music Pl.. -Playlist-")
 
     @core.render.Window.focus
     def subwindow(self):

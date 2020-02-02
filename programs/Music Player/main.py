@@ -2,7 +2,6 @@ import core
 import os
 import time
 import pygame
-import colorsys
 import single
 import playlist
 import radio
@@ -47,7 +46,7 @@ class LocalPlayer(core.render.Window):
 class Handle(core.render.Handler):
 
     key = core.render.Button.BACK
-    window = PlayerWindow
+    window = LocalPlayer
 
     def press(self):
         self.window.finish()
@@ -56,7 +55,7 @@ class Handle(core.render.Handler):
 class Handle(core.render.Handler):
 
     key = core.render.Button.CENTRE
-    window = PlayerWindow
+    window = LocalPlayer
 
     def press(self):
         self.window.toggle()
@@ -136,19 +135,4 @@ class Track:
     def stop(self):
         self.track.stop()
 
-
-class Main(core.render.Window):
-
-    def __init__(self):
-        R, G, B = colorsys.hsv_to_rgb(core.sys.Config(
-            "std::system")["system_colour"]["value"] / 100, 1, 1)
-        core.hardware.Backlight.fill(int(R * 255), int(G * 255), int(B * 255))
-        self.run(), self.finish()
-
-    @core.render.Window.focus
-    def run(self):
-        window = single.Main()
-        yield window
-
-
-main = Main()
+main = single.Main()

@@ -1,8 +1,12 @@
 import core
+import colorsys
 
 class Main(core.std.Menu):
 
     def __init__(self):
+        R, G, B = colorsys.hsv_to_rgb(core.sys.Config(
+            "std::system")["system_colour"]["value"] / 100, 1, 1)
+        core.hardware.Backlight.fill(int(R * 255), int(G * 255), int(B * 255))
         self.libary = []
         try:
             for file in os.listdir(f"{core.sys.PATH}user/music/"):
@@ -19,7 +23,7 @@ class Main(core.std.Menu):
                     0, 0), musicfile.name, justify="L"),
                 data=musicfile,
                 select=start))
-        super().__init__(*elements, title="Music Player")
+        super().__init__(*elements, title="Music Player -Track-")
 
     @core.render.Window.focus
     def subwindow(self):
