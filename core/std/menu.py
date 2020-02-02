@@ -52,8 +52,7 @@ class Menu(core.render.Window):
     Element = MenuElement
     template = core.asset.Template("std::window", path="window.template")
 
-    def __init__(self, *items: MenuElement, visable=4, offset=core.asset.Font("std").size, title="Menu", end=True, cursor="default", left=None, right=None):
-        self.left_func, self.right_func = left, right
+    def __init__(self, *items: MenuElement, visable=4, offset=core.asset.Font("std").size, title="Menu", end=True, cursor="default"):
         self._visable = visable
         self._elements = list(items)
         if end:
@@ -107,7 +106,6 @@ class Menu(core.render.Window):
     def _select(self):
         return self._elements[self._c_index]._select(self)
 
-
 class Handle(core.render.Handler):
 
     key = core.render.Button.UP
@@ -115,7 +113,6 @@ class Handle(core.render.Handler):
 
     def press(self):
         self.window._up()
-
 
 class Handle(core.render.Handler):
 
@@ -125,7 +122,6 @@ class Handle(core.render.Handler):
     def press(self):
         self.window._down()
 
-
 class Handle(core.render.Handler):
 
     key = core.render.Button.CENTRE
@@ -133,27 +129,6 @@ class Handle(core.render.Handler):
 
     def press(self):
         self.window._select()
-
-
-class Handle(core.render.Handler):
-
-    key = core.render.Button.LEFT
-    window = Menu
-
-    def press(self):
-        if self.window.left_func is callable:
-            self.window.left_func()
-
-
-class Handle(core.render.Handler):
-
-    key = core.render.Button.RIGHT
-    window = Menu
-
-    def press(self):
-        if self.window.right_func is callable:
-            self.window.right_func()
-
 
 class MenuSingle(core.render.Window):
 
