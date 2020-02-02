@@ -37,4 +37,4 @@ def import_path(path):
     if path in sys.path:
         sys.path.remove(path)
     else:
-        sys.path.append(path)
+        sys.path.insert(0, path)

@@ -1,8 +1,8 @@
 import core
 import json
-import radio
 
-class SubwindowPlaylist(core.std.Menu):
+
+class Main(core.std.Menu):
 
     def __init__(self):
         self.library = []
@@ -25,21 +25,19 @@ class SubwindowPlaylist(core.std.Menu):
                 data=track,
                 select=self.start))
 
-        super().__init__(*elements, title="Open Playlist", right=subwindow)
+        super().__init__(*elements, title="Open Playlist", left=self.finish, right=self.subwindow)
 
     @core.render.Window.focus
     def subwindow(self):
-        window = radio.main
+        window = radio.Main
         yield window
 
     @core.render.Window.focus
     def start(self, element, window):
-        player = player.PlayerWindow(element.data)
+        player = LocalPlayer(element.data)
         yield player
 
     @core.render.Window.focus
     def lib_empty(self):
         yield core.std.Warning("Libary is empty")
 
-
-main = SubwindowPlaylist()

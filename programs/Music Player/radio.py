@@ -19,8 +19,6 @@ class ScrollingText(core.element.TextBox):
 
 
 class PlayerWindow(core.render.Window):
-
-    template = core.asset.Template("std::window")
     core.asset.Image(
         "play", path=f"{core.sys.PATH}programs/Music Player/assets/player_play.icon")
     core.asset.Image(

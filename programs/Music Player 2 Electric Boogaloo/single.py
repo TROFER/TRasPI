@@ -1,7 +1,6 @@
 import core
-import playlist
 
-class SubwindowTrack(core.std.Menu):
+class Main(core.std.Menu):
 
     def __init__(self):
         self.libary = []
@@ -20,11 +19,11 @@ class SubwindowTrack(core.std.Menu):
                     0, 0), musicfile.name, justify="L"),
                 data=musicfile,
                 select=start))
-        super().__init__(*elements, title="Music Player", right=subwindow)
+        super().__init__(*elements, title="Music Player", left=self.finish, right=self.subwindow)
 
     @core.render.Window.focus
     def subwindow(self):
-        window = playlist.main
+        window = playlist.Main()
         yield window
 
     @core.render.Window.focus
@@ -33,8 +32,5 @@ class SubwindowTrack(core.std.Menu):
 
     @core.render.Window.focus
     def start(self, element, window):
-        player = Player(element.data)
+        player = LocalPlayer(element.data)
         yield player
-
-
-main = SubwindowTrack()

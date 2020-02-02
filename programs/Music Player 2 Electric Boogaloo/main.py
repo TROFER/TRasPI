@@ -2,11 +2,12 @@ import os
 import time
 import pygame
 import colorsys
+import single
+import playlist
+import radio
 
-import single_track
 
-
-class PlayerWindow:
+class LocalPlayer(core.render.Window):
 
     core.asset.Image(
         "play", path=f"{core.sys.PATH}programs/Music Player/asset/play.icon")
@@ -21,7 +22,7 @@ class PlayerWindow:
         self.state = False
         self.element_control_centre = [core.asset.Image(
             "stop"), core.asset.Image("play")]
-        self.stext = SText((64, 45), track.description)
+        self.stext = AnimatedText((64, 45), track.description)
         elements = [core.element.Text(core.Vector(64, 3), track.name),
                     core.element.Line(core.Vector(3, 47),
                                       core.Vector(125, 47), width=2),
@@ -60,7 +61,7 @@ class Handle(core.render.Handler):
         self.window.toggle()
 
 
-class SText(core.element.Text):
+class AnimatedText(core.element.Text):
 
     def __init__(self, pos, text, width):
         self.begin = 0
@@ -141,10 +142,12 @@ class Main(core.render.Window):
         R, G, B = colorsys.hsv_to_rgb(core.sys.Config(
             "std::system")["system_colour"]["value"] / 100, 1, 1)
         core.hardware.Backlight.fill(int(R * 255), int(G * 255), int(B * 255))
-        self.window = single_track.SingleTrack()
-        self.run()
-        self.finish()
+        self.run(), self.finish()
 
     @core.render.Window.focus
     def run(self):
-        yield self.window
+        window = single.Main()
+        yield window
+
+
+main = Main()

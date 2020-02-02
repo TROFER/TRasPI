@@ -1,33 +1,9 @@
+import core
 import os
 import time
 
 
 class RadioPlayer(core.render.Window):
-
-    class SText(core.element.Text):
-
-        def __init__(self, pos, text, width):
-            self.begin = 0
-            self.time = time.time()
-            self.text = text
-            if len(self.text) < width:
-                self.end = len(self.text)
-            else:
-                self.end = width
-            super().__init__(core.Vector(
-                pos[0], pos[1]), self.text[self.start:self.end])
-
-        def update(self):
-            if time.time() - self.time > 1:  # Speed
-                if self.start < len(self.text):
-                    self.start += 1
-                else:
-                    self.start = 0
-                if self.end < len(self.text):
-                    self.start += 1
-                else:
-                    self.end = 0
-            self.render()
 
     def __init__(self, station):
         core.asset.Image(
@@ -39,20 +15,19 @@ class RadioPlayer(core.render.Window):
         self.url = station[1]
         self.element_control_centre = [core.asset.Image(
             "stop"), core.asset.Image("play")]
-        self.stext = SText((65, 39), station[0], 10)
+        self.ext_data = AnimatedText((65, 39), station[0], 10)
         self.elements = [
             core.element.Text(core.Vector(64, 3), station[0]),
             core.element.Line(core.Vector(3, 47),
                               core.Vector(125, 47), width=2),
             core.element.Text(core.Vector(102, 57), self.volume.get()),
             core.element.Image(core.Vector(63, 55),
-                               self.element_control_centre[int(self.state)])
-        ]
+                               self.element_control_centre[int(self.state)])]
 
     def render(self):
         for element in self.elements:
             element.render()
-        self.stext.update()
+        self.ext_data.update()
 
     def vol_up(self):
         self.volume.increse()
@@ -103,7 +78,7 @@ class Handle(core.render.Handler):
         self.window.vol_down()
 
 
-class StartScreen(core.std.Menu):
+class Main(core.std.Menu):
 
     def __init__(self):
         self.index()
@@ -113,7 +88,7 @@ class StartScreen(core.std.Menu):
                 core.element.Text(core.Vector(0, 0), key, justify="L"),
                 data=(key, value),
                 select=self.play))
-        super().__init__(*elements, title="Music Player -Radio-")
+        super().__init__(*elements, title="Music Player -Radio-", left=self.finish)
 
     @core.render.Window.focus
     def index(self):
@@ -129,7 +104,3 @@ class StartScreen(core.std.Menu):
     def play(self, element, window):
         window = RadioPlayer(element.data)
         yield window
-
-    @core.render.Window.focus
-    def show(self):
-        super().show()
