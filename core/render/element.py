@@ -128,10 +128,10 @@ class Image(Element):
 
 class Line(Element):
 
-    def __init__(self, pos1, pos2, colour, width):
+    def __init__(self, pos1, pos2, colour=0, width=1):
         self.pos1, self.pos2 = pos1, pos2
         self.colour = colour
         self.width = width
 
     def render(self):
-        self.Render.draw.line((self.pos1, self.pos2), self.colour, self.width)
+        self.Render.draw.line((*self.pos1, *self.pos2), self.colour, self.width)

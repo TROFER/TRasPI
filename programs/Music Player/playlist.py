@@ -6,6 +6,11 @@ from track import Track
 from track import Track
 from player import LocalPlayer
 
+class Playlist:
+
+    def __init__(self, tracks, name):
+        self.tracks = tracks
+        self.name = name
 
 class Main(core.std.Menu):
 
@@ -19,7 +24,7 @@ class Main(core.std.Menu):
                         for tracks in json.load(playlist):
                             track = Track(tracks)
                             _playlist.append(track)
-                        self.library.append(playlist)
+                        self.library.append(Playlist(_playlist, file[:-5]))
         except NotADirectoryError:
             self.lib_error()
 
@@ -27,15 +32,15 @@ class Main(core.std.Menu):
         for playlist in self.library:
             elements.append(core.std.Menu.Element(
                 core.element.Text(core.Vector(
-                    0, 0), , justify="L"),
+                    0, 0), playlist.name, justify="L"),
                 data=track,
                 select=self.start))
 
-        super().__init__(*elements, title="Music Pl.. -Playlist-")
+        super().__init__(*elements, title="Music P.. -Playlist-")
 
     @core.render.Window.focus
     def subwindow(self):
-        window = radio.Main
+        window = radio.Main()
         yield window
 
     @core.render.Window.focus

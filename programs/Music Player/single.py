@@ -14,7 +14,6 @@ class Main(core.std.Menu):
         self.library = []
         try:
             for file in os.listdir(f"{core.sys.PATH}user/music/"):
-                print(file)
                 if ".wav" in file or ".ogg" in file:
                     self.library.append(Track(file))
         except NotADirectoryError:

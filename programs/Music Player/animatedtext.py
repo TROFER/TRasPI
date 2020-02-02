@@ -1,9 +1,10 @@
 import core
+import time
 
 class AnimatedText(core.element.Text):
 
     def __init__(self, pos, text, width):
-        self.begin = 0
+        self.start = 0
         self.time = time.time()
         self.text = text
         if len(self.text) < width:

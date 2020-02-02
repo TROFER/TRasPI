@@ -1,6 +1,9 @@
 import core
 import os
-import time
+import json
+from volume import Volume
+from animatedtext import AnimatedText
+
 
 
 class RadioPlayer(core.render.Window):
@@ -20,13 +23,14 @@ class RadioPlayer(core.render.Window):
             core.element.Text(core.Vector(64, 3), station[0]),
             core.element.Line(core.Vector(3, 47),
                               core.Vector(125, 47), width=2),
-            core.element.Text(core.Vector(102, 57), self.volume.get()),
             core.element.Image(core.Vector(63, 55),
                                self.element_control_centre[int(self.state)])]
 
     def render(self):
         for element in self.elements:
             element.render()
+        volume = core.element.Text(core.Vector(102, 57), self.volume.get())
+        volume.render()
         self.ext_data.update()
 
     def vol_up(self):
@@ -36,11 +40,11 @@ class RadioPlayer(core.render.Window):
         self.volume.decrese()
 
     def toggle(self):
-        self.state != self.state
         if self.state:
-            os.system(f"mpc play {self.url}")
+            os.system(f"mpc add {self.url}"), os.system(f"mpc play")
         else:
             os.system(f"mpc stop"), os.system(f"mpc clear")
+        self.state = not self.state
 
 
 class Handle(core.render.Handler):
@@ -93,12 +97,12 @@ class Main(core.std.Menu):
     @core.render.Window.focus
     def index(self):
         try:
-            with open(f"{core.sys.PATH}programs/Music Player/radio_stations.json", "r") as file:
+            with open(f"{core.sys.PATH}programs/Music Player/data/stations.json", "r") as file:
                 self.data = json.load(file)
         except IOError:
             window = core.std.Error("No Stations")
+            self.data = {}
             yield window
-            self.window.finish()
 
     @core.render.Window.focus
     def play(self, element, window):
