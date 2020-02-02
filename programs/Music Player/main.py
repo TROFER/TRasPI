@@ -2,151 +2,47 @@ import core
 import os
 import time
 import pygame
+import colorsys
+import single
 import playlist
 import radio
-import single_track
 
-class PlayerWindow(core.render.Window):
 
-    core.asset.Template("std::window")
-    core.asset.Image("pause", path=f"{core.sys.PATH}programs/Music Player/assets/player_pause.icon")
-    core.asset.Image("play", path=f"{core.sys.PATH}programs/Music Player/assets/player_play.icon")
-    core.asset.Image("stop", path=f"{core.sys.PATH}programs/Music Player/assets/player_stop.icon")
-    core.asset.Image("next", path=f"{core.sys.PATH}programs/Music Player/assets/player_next.icon")
-    core.asset.Image("cursor", path=f"{core.sys.PATH}core/resource/image/cursor.icon")
+class LocalPlayer(core.render.Window):
 
-    class ScrollingText(core.element.TextBox):
+    core.asset.Image(
+        "play", path=f"{core.sys.PATH}programs/Music Player/asset/play.icon")
+    core.asset.Image(
+        "pause", path=f"{core.sys.PATH}programs/Music Player/asset/pause.icon")
+    core.asset.Image(
+        "next", path=f"{core.sys.PATH}programs/Music Player/asset/next.icon")
+    core.asset.Image(
+        "prev", path=f"{core.sys.PATH}programs/Music Player/asset/prev.icon")
 
-        def __init__(self, info):
-            self.start = 0
-            self.info = info
-            if len(self.info) < 10:
-                self.end = len()
-            self.text_time = time.time()
-            super().__init__(core.Vector(64, 15), self.info[self.start:self.end])
+    def __init__(self, track):
+        self.state = False
+        self.element_control_centre = [core.asset.Image(
+            "stop"), core.asset.Image("play")]
+        self.stext = AnimatedText((64, 45), track.description)
+        elements = [core.element.Text(core.Vector(64, 3), track.name),
+                    core.element.Line(core.Vector(3, 47),
+                                      core.Vector(125, 47), width=2),
+                    core.element.Image(core.Vector(63, 55),
+                                       self.element_control_centre[int(self.state)]),
+                    core.element.Image(core.Vector(25, 50),
+                                       core.asset.Image("prev")),
+                    core.element.Image(core.Vector(75, 50),
+                                       core.asset.Image("next")),
+                    core.element.Text(core.Vector(102, 57), self.volume.get())]
 
-        def update(self, info):
-            if time.time() - self.text_time > 1:
-                if self.end < self.playlist[self.position].info():
-                    self.end += 1
-                else:
-                    self.end = 0
-                if self.start < self.playlist[self.position].info():
-                    self.start += 1
-                else:
-                    self.start = 0
-                self.text_time = time.time()
+    def render(self):
+        for element in self.elements:
+            element.render()
+        self.stext.render()
 
-    def __init__(self, playlist):
-        self.playlist = playlist
-        self.track_number = 0
-        self.state = 'ST'
-        self.volume = 50
-        os.system(f"amixer set Master {self.volume}%")
-        self.cursor_pos = 1
-        # Scrolling Text
-        # Window Elements
-        #self.header = ScrollingText(self.playlist[self.track_number].description)
-        self.track_indicator = core.element.Text(core.Vector(64, 25), f"{self.track_number}/{len(playlist)}")
-        self.title = core.element.Text(core.Vector(3, 5), "Music Player", justify="L")
-        self.buttons = [core.element.Image(core.Vector(25, 50), core.asset.Image("pause")),
-        core.element.Image(core.Vector(50, 50), core.asset.Image("play")),
-        core.element.Image(core.Vector(75, 50), core.asset.Image("stop")),
-        core.element.Image(core.Vector(100, 50), core.asset.Image("next"))]
-        self.cursor = core.element.Image(core.Vector(25 * (self.cursor_pos + 1), 50), core.asset.Image("cursor"))
+    def toggle(self):
+        self.state != self.state
 
-    def volume_up(self):
-        if self.volume <= 95:
-            self.volume += 5
-            os.system(f"amixer set Master {self.volume}%")
-
-    def volume_down(self):
-        if self.volume >= 5:
-            self.volume -= 5
-            os.system(f"amixer set Master {self.volume}%")
-
-    def left(self):
-        if self.cursor_pos != 0:
-            self.cursor_pos -= 1
-
-    def right(self):
-        if self.cursor_pos > len(self.buttons) - 1:
-            self.cursor_pos += 1
-
-    def select(self):
-        if self.cursor_pos == 0:
-            pygame.mixer.pause()
-            self.state, self.pause_time = 'PA', time.time()
-        elif self.cursor_pos == 1:
-            if self.state == 'PA': #Run when returning from paused state
-                self.endpoint += time.time() - self.pause_time
-                self.playlist[self.track_number].unpause()
-                self.state = 'PL'
-            elif self.state == 'ST': #Run when returning from stoped state
-                self.playlist[self.track_number].play()
-                self.state = 'PL'
-                self.endpoint = time.time() + self.playlist[self.track_number].length()
-        elif self.cursor_pos == 2:
-            pygame.mixer.stop()
-            self.state = 'ST'
-        elif self.cursor_pos == 3:
-            if self.track_number > len(self.playlist) - 1:
-                pygame.mixer.stop()
-                self.track_number += 1
-                self.playlist[self.track_number].play()
-                self.state = 'PL'
-
-    def render():
-        if self.state == 'PL':
-            if self.endpoint > time.time():
-                pygame.mixer.stop()
-                self.track_number += 1
-                self.playlist[self.track_number].play()
-        self.title.render()
-        self.header.render()
-        for button in self.buttons:
-            button.render()
-        self.cursor.render()
-
-class Handle(core.render.Handler):
-
-    key = core.render.Button.CENTRE
-    window = PlayerWindow
-
-    def press(self):
-        self.window.select()
-
-class Handle(core.render.Handler):
-
-    key = core.render.Button.LEFT
-    window = PlayerWindow
-
-    def press(self):
-        self.window.left()
-
-class Handle(core.render.Handler):
-
-    key = core.render.Button.RIGHT
-    window = PlayerWindow
-
-    def press(self):
-        self.window.right()
-
-class Handle(core.render.Handler):
-
-    key = core.render.Button.UP
-    window = PlayerWindow
-
-    def press(self):
-        self.window.volume_up()
-
-class Handle(core.render.Handler):
-
-    key = core.render.Button.UP
-    window = PlayerWindow
-
-    def press(self):
-        self.window.volume_down()
 
 class Handle(core.render.Handler):
 
@@ -156,11 +52,69 @@ class Handle(core.render.Handler):
     def press(self):
         self.window.finish()
 
+
+class Handle(core.render.Handler):
+
+    key = core.render.Button.CENTRE
+    window = PlayerWindow
+
+    def press(self):
+        self.window.toggle()
+
+
+class AnimatedText(core.element.Text):
+
+    def __init__(self, pos, text, width):
+        self.begin = 0
+        self.time = time.time()
+        self.text = text
+        if len(self.text) < width:
+            self.end = len(self.text)
+        else:
+            self.end = width
+        super().__init__(core.Vector(
+            pos[0], pos[1]), self.text[self.start:self.end])
+
+    def update(self):
+        if time.time() - self.time > 1:  # Speed
+            if self.start < len(self.text):
+                self.start += 1
+            else:
+                self.start = 0
+            if self.end < len(self.text):
+                self.start += 1
+            else:
+                self.end = 0
+        self.render()
+
+
+class Volume:
+
+    def __init__(self, step=5):
+        self.volume = 75
+        self.step = step
+        self.set()
+
+    def set(self):
+        os.system(f"amixer set Master {self.volume}%")
+
+    def get(self):
+        return "{self.volume}%"
+
+    def decrese(self):
+        self.volume -= self.step
+        self.set()
+
+    def increse(self):
+        self.volume += self.step
+        self.step()
+
+
 class Track:
 
     def __init__(self, filename):
         self.path = f"{core.sys.PATH}user/music/{filename}"
-        self.name = path[:len(path)-4]
+        self.name = path[-4:]
         self.description = f"{' '*3}{self.name}{' '*3}"
 
     def length(self):
@@ -182,80 +136,19 @@ class Track:
     def stop(self):
         self.track.stop()
 
-class StartScreen(core.render.Window):
 
-    print("Loading")
-
-    template = core.asset.Template("std::window", path="window.template")
-    core.asset.Image(
-        "cursor", path=f"{core.sys.PATH}core/resource/image/cursor.icon")
-    core.asset.Image("quit", path=f"{core.sys.PATH}programs/Music Player/assets/quit.icon")
-    core.asset.Image("radio", path=f"{core.sys.PATH}programs/Music Player/assets/radio.icon")
-    core.asset.Image("track", path=f"{core.sys.PATH}programs/Music Player/assets/track.icon")
-    core.asset.Image("playlist", path=f"{core.sys.PATH}programs/Music Player/assets/playlist.icon")
+class Main(core.render.Window):
 
     def __init__(self):
-        self.index = 1
-        self.labels = ['Open Radio', 'Open Music File', 'Open Playlist', 'Quit']
-        # Elements
-        self.title = core.element.Text(core.Vector(3, 5), "Music Player", justify="L")
-        self.body = [core.element.Image(core.Vector(25, 32), core.asset.Image("radio")),
-        core.element.Image(core.Vector(50, 32), core.asset.Image("track")),
-        core.element.Image(core.Vector(75, 32), core.asset.Image("playlist")),
-        core.element.Image(core.Vector(100, 32), core.asset.Image("quit"))]
-        self.current_item = core.element.TextBox(core.Vector(64, 50), self.labels[self.index])
-        self.cursor = core.element.Image(core.Vector(25 * (self.index + 1), 18), core.asset.Image("cursor"))
-
-    def render(self):
-        self.title.render()
-        for icon in self.body:
-            icon.render()
-        self.current_item = core.element.TextBox(core.Vector(64, 50), self.labels[self.index])
-        self.cursor = core.element.Image(core.Vector(25 * (self.index + 1), 18), core.asset.Image("cursor"))
-        self.current_item.render(), self.cursor.render()
+        R, G, B = colorsys.hsv_to_rgb(core.sys.Config(
+            "std::system")["system_colour"]["value"] / 100, 1, 1)
+        core.hardware.Backlight.fill(int(R * 255), int(G * 255), int(B * 255))
+        self.run(), self.finish()
 
     @core.render.Window.focus
-    def select(self):
-        if self.index == 0:
-            window = radio.main
-        elif self.index == 1:
-            window = single_track.main
-        elif self.index == 2:
-            window = playlist.main
-        elif self.index == 3:
-            self.finish()
+    def run(self):
+        window = single.Main()
         yield window
 
-    def up(self):
-        if self.index < len(self.labels) - 1:
-            self.index += 1
 
-    def down(self):
-        if self.index != 0:
-            self.index -= 1
-
-class Handle(core.render.Handler):
-
-    key = core.render.Button.CENTRE
-    window = StartScreen
-
-    def press(self):
-        self.window.select()
-
-class Handle(core.render.Handler):
-
-    key = core.render.Button.RIGHT
-    window = StartScreen
-
-    def press(self):
-        self.window.up()
-
-class Handle(core.render.Handler):
-
-    key = core.render.Button.LEFT
-    window = StartScreen
-
-    def press(self):
-        self.window.down()
-
-main = StartScreen()
+main = Main()

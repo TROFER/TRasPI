@@ -1,149 +1,106 @@
 import core
-import time
 import os
-import json
+import time
 
 
-class ScrollingText(core.element.TextBox):
+class RadioPlayer(core.render.Window):
 
-    def __init__(self, info):
-        self.start = 0
-        self.info = info
-        if len(self.info) < 10:
-            self.end = len(info)
-        else:
-            self.end = 10
-        self.text_time = time.time()
-        super().__init__(core.Vector(64, 15),
-                         self.info[self.start:self.end])
-
-
-class PlayerWindow(core.render.Window):
-    core.asset.Image(
-        "play", path=f"{core.sys.PATH}programs/Music Player/assets/player_play.icon")
-    core.asset.Image(
-        "stop", path=f"{core.sys.PATH}programs/Music Player/assets/player_stop.icon")
-    core.asset.Image(
-        "cursor", path=f"{core.sys.PATH}core/resource/image/cursor.icon")
-
-    def __init__(self, element, window):
-        print(element.data)
-        self.cursor_pos = 0
-        self.data = element.data
-        self.header, self.url = ScrollingText(self.data[0]), self.data[1]
-        self.volume = 50
-        self.title = core.element.Text(
-            core.Vector(3, 5), "Radio Player", justify="L")
-        self.buttons = [core.element.Image(core.Vector(42, 50), core.asset.Image("play")),
-                        core.element.Image(core.Vector(84, 50), core.asset.Image("stop"))]
-        self.cursor = core.element.Image(core.Vector(
-            42 * (self.cursor_pos + 1), 18), core.asset.Image("cursor"))
-
-    def volume_up(self):
-        if self.volume <= 95:
-            self.volume += 5
-            os.system(f"amixer set Master {self.volume}%")
-
-    def volume_down(self):
-        if self.volume >= 5:
-            self.volume -= 5
-            os.system(f"amixer set Master {self.volume}%")
-
-    def left(self):
-        if self.cursor_pos > 0:
-            self.cursor_pos -= 1
-
-    def right(self):
-        if self.cursor_pos < 2:
-            self.cursor_pos += 1
-
-    def select(self):
-        if self.cursor_pos == 0:
-            os.system(f"mpc play {self.url}")
-        else:
-            os.system(f"mpc stop")
-            os.system(f"mpc clear")
+    def __init__(self, station):
+        core.asset.Image(
+            "play", path=f"{core.sys.PATH}programs/Music Player/asset/play.icon")
+        core.asset.Image(
+            "stop", path=f"{core.sys.PATH}programs/Music Player/asset/stop.icon")
+        self.volume = Volume()
+        self.state = False
+        self.url = station[1]
+        self.element_control_centre = [core.asset.Image(
+            "stop"), core.asset.Image("play")]
+        self.ext_data = AnimatedText((65, 39), station[0], 10)
+        self.elements = [
+            core.element.Text(core.Vector(64, 3), station[0]),
+            core.element.Line(core.Vector(3, 47),
+                              core.Vector(125, 47), width=2),
+            core.element.Text(core.Vector(102, 57), self.volume.get()),
+            core.element.Image(core.Vector(63, 55),
+                               self.element_control_centre[int(self.state)])]
 
     def render(self):
-        self.header.render()
-        self.title.render()
-        for button in self.buttons:
-            button.render()
+        for element in self.elements:
+            element.render()
+        self.ext_data.update()
 
+    def vol_up(self):
+        self.volume.increse()
 
-class Handle(core.render.Handler):
+    def vol_down(self):
+        self.volume.decrese()
 
-    key = core.render.Button.LEFT
-    window = PlayerWindow
-
-    def press(self):
-        self.window.left()
-
-
-class Handle(core.render.Handler):
-
-    key = core.render.Button.RIGHT
-    window = PlayerWindow
-
-    def press(self):
-        self.window.right()
-
-
-class Handle(core.render.Handler):
-
-    key = core.render.Button.CENTRE
-    window = PlayerWindow
-
-    def press(self):
-        self.window.select()
-
-
-class Handle(core.render.Handler):
-
-    key = core.render.Button.UP
-    window = PlayerWindow
-
-    def press(self):
-        self.window.volume_up()
-
-
-class Handle(core.render.Handler):
-
-    key = core.render.Button.DOWN
-    window = PlayerWindow
-
-    def press(self):
-        self.window.volume_down()
+    def toggle(self):
+        self.state != self.state
+        if self.state:
+            os.system(f"mpc play {self.url}")
+        else:
+            os.system(f"mpc stop"), os.system(f"mpc clear")
 
 
 class Handle(core.render.Handler):
 
     key = core.render.Button.BACK
-    window = PlayerWindow
-
+    window = RadioPlayer
     def press(self):
         self.window.finish()
 
 
-class StartScreen(core.std.Menu):
+class Handle(core.render.Handler):
+
+    key = core.render.Button.CENTRE
+    window = RadioPlayer
+
+    def press(self):
+        self.window.toggle()
+
+
+class Handle(core.render.Handler):
+
+    key = core.render.Button.UP
+    window = RadioPlayer
+
+    def press(self):
+        self.window.vol_up()
+
+
+class Handle(core.render.Handler):
+
+    key = core.render.Button.DOWN
+    window = RadioPlayer
+
+    def press(self):
+        self.window.vol_down()
+
+
+class Main(core.std.Menu):
 
     def __init__(self):
-        with open(f"{core.sys.PATH}programs/Music Player/radio_stations.json", "r") as file:
-            self.data = json.load(file)
-
+        self.index()
         elements = []
-
         for key, value in self.data.items():
             elements.append(core.std.Menu.Element(
                 core.element.Text(core.Vector(0, 0), key, justify="L"),
                 data=(key, value),
-                select=player))
-        super().__init__(*elements, title="Radio Stations")
+                select=self.play))
+        super().__init__(*elements, title="Music Player -Radio-", left=self.finish)
 
     @core.render.Window.focus
-    def show(self):
-        super().show()
-        core.hardware.Backlight.fill(225, 225, 225)
+    def index(self):
+        try:
+            with open(f"{core.sys.PATH}programs/Music Player/radio_stations.json", "r") as file:
+                self.data = json.load(file)
+        except IOError:
+            window = core.std.Error("No Stations")
+            yield window
+            self.window.finish()
 
-
-main = StartScreen()
+    @core.render.Window.focus
+    def play(self, element, window):
+        window = RadioPlayer(element.data)
+        yield window
