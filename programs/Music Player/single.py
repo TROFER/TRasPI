@@ -1,5 +1,9 @@
 import core
 import colorsys
+import os
+import playlist
+from track import Track
+from player import LocalPlayer
 
 class Main(core.std.Menu):
 
@@ -7,19 +11,17 @@ class Main(core.std.Menu):
         R, G, B = colorsys.hsv_to_rgb(core.sys.Config(
             "std::system")["system_colour"]["value"] / 100, 1, 1)
         core.hardware.Backlight.fill(int(R * 255), int(G * 255), int(B * 255))
-        self.libary = []
+        self.library = []
         try:
             for file in os.listdir(f"{core.sys.PATH}user/music/"):
                 print(file)
                 if ".wav" in file or ".ogg" in file:
                     self.library.append(Track(file))
-        except Exception as e:
-            print("Magic error", e)
-            self.lib_empty()
-            self.finish()
+        except NotADirectoryError:
+            self.lib_error()
 
         elements = []
-        for musicfile in self.libary:
+        for musicfile in self.library:
             elements.append(core.std.Menu.Element(
                 core.element.Text(core.Vector(
                     0, 0), musicfile.name, justify="L"),
@@ -33,8 +35,8 @@ class Main(core.std.Menu):
         yield window
 
     @core.render.Window.focus
-    def lib_empty(self):
-        yield core.std.Warning("Libary is empty")
+    def lib_error(self):
+        yield core.std.Warning("Dir Error")
 
     @core.render.Window.focus
     def start(self, element, window):

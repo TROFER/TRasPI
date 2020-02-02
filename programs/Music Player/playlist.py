@@ -1,5 +1,10 @@
 import core
 import json
+import os
+import radio
+from track import Track
+from track import Track
+from player import LocalPlayer
 
 
 class Main(core.std.Menu):
@@ -9,19 +14,20 @@ class Main(core.std.Menu):
         try:
             for file in os.listdir(f"{core.sys.PATH}user/music/playlists"):
                 if ".json" in file:
-                    playlist = []
-                    for tracks in json.load(file):
-                        track = track.Track(tracks)
-                        playlist.append(track)
-                    self.libary.append(playlist)
-        except:
-            self.lib_empty(), self.finish()
+                    _playlist = []
+                    with open(f"{core.sys.PATH}user/music/playlists/{file}") as playlist:
+                        for tracks in json.load(playlist):
+                            track = Track(tracks)
+                            _playlist.append(track)
+                        self.library.append(playlist)
+        except NotADirectoryError:
+            self.lib_error()
 
         elements = []
         for playlist in self.library:
             elements.append(core.std.Menu.Element(
                 core.element.Text(core.Vector(
-                    0, 0), playlist.name, justify="L"),
+                    0, 0), , justify="L"),
                 data=track,
                 select=self.start))
 
@@ -38,8 +44,8 @@ class Main(core.std.Menu):
         yield player
 
     @core.render.Window.focus
-    def lib_empty(self):
-        yield core.std.Warning("Libary is empty")
+    def lib_error(self):
+        yield core.std.Warning("Dir Error")
 
 class Handle(core.render.Handler):
 
