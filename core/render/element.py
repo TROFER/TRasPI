@@ -123,6 +123,9 @@ class Image(Element):
             return value - Vector(*self.image.image.size) // 2
         return value
 
+    def _Image(self, image):
+        self.image = image
+
     def render(self):
         self.Render.image.paste(self.image.image, tuple(self.pos_abs))
 

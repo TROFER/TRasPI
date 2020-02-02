@@ -14,23 +14,21 @@ class RadioPlayer(core.render.Window):
         core.asset.Image(
             "stop", path=f"{core.sys.PATH}programs/Music Player/asset/stop.icon")
         self.volume = Volume()
-        self.state = False
+        self.state = True                       
         self.url = station[1]
-        self.element_control_centre = [core.asset.Image(
-            "stop"), core.asset.Image("play")]
-        self.ext_data = AnimatedText((65, 39), station[0], 10)
-        self.elements = [
-            core.element.Text(core.Vector(64, 3), station[0]),
-            core.element.Line(core.Vector(3, 47),
-                              core.Vector(125, 47), width=2),
-            core.element.Image(core.Vector(63, 55),
-                               self.element_control_centre[int(self.state)])]
+        self.centre = [core.asset.Image("stop"),
+         core.asset.Image("play")]
+        self.ext_data = AnimatedText((65, 25), station[0], 10)
+        self.elements = [core.element.Text(core.Vector(64, 3), station[0]),
+         core.element.Line(core.Vector(3, 40), core.Vector(125, 40), width=2),
+          core.element.Text(core.Vector(115, 60), self.volume.get())]
+        self.toggle()
 
     def render(self):
+        self.elements[2].text(self.volume.get())
+        core.element.Image(core.Vector(63, 55), self.centre[int(self.state)]).render()
         for element in self.elements:
             element.render()
-        volume = core.element.Text(core.Vector(102, 57), self.volume.get())
-        volume.render()
         self.ext_data.update()
 
     def vol_up(self):
