@@ -10,9 +10,11 @@ class Main(core.std.Menu):
         self.libary = []
         try:
             for file in os.listdir(f"{core.sys.PATH}user/music/"):
+                print(file)
                 if ".wav" in file or ".ogg" in file:
                     self.library.append(Track(file))
-        except:
+        except Exception as e:
+            print("Magic error", e)
             self.lib_empty()
             self.finish()
 
@@ -22,7 +24,7 @@ class Main(core.std.Menu):
                 core.element.Text(core.Vector(
                     0, 0), musicfile.name, justify="L"),
                 data=musicfile,
-                select=start))
+                select=self.start))
         super().__init__(*elements, title="Music Player -Track-")
 
     @core.render.Window.focus
