@@ -10,6 +10,7 @@ from animatedtext import AnimatedText
 class RadioPlayer(core.render.Window):
 
     def __init__(self, station):
+        os.system("mpc clear")
         core.asset.Image(
             "play", path=f"{core.sys.PATH}programs/Music Player/asset/play.icon")
         core.asset.Image(
@@ -19,7 +20,7 @@ class RadioPlayer(core.render.Window):
         self.url = station[1]
         self.centre = [core.asset.Image("stop"),
                        core.asset.Image("play")]
-        self.radio_text = AnimatedText((65, 35), station[0], 20)
+        self.radio_text = AnimatedText((64, 35), station[0], 20)
         self.time = time.time()
         self.elements = [core.element.Text(core.Vector(64, 3), station[0]),
                          core.element.Line(core.Vector(
@@ -29,7 +30,7 @@ class RadioPlayer(core.render.Window):
 
     def render(self):
         self.elements[2].text(self.volume.get())
-        core.element.Image(core.Vector(63, 53),
+        core.element.Image(core.Vector(64, 53),
                            self.centre[int(self.state)]).render()
         if time.time() - self.time > 1:
             os.system("mpc status")
@@ -102,7 +103,7 @@ class Main(core.std.Menu):
                 core.element.Text(core.Vector(0, 0), key, justify="L"),
                 data=(key, value),
                 select=self.play))
-        super().__init__(*elements, title="Music Player -Radio-")
+        super().__init__(*elements, title="Music Player -Radio-", end=False)
 
     @core.render.Window.focus
     def index(self):

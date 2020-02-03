@@ -1,6 +1,7 @@
 import core
 from animatedtext import AnimatedText
 from volume import Volume
+import pygame
 
 class LocalPlayer(core.render.Window):
 
@@ -13,27 +14,35 @@ class LocalPlayer(core.render.Window):
     core.asset.Image(
         "prev", path=f"{core.sys.PATH}programs/Music Player/asset/prev.icon")
 
-    def __init__(self, track):
+    def __init__(self, playlist):
+        pygame.mixer.init()
+        self.playlist = playlist
+        self.track_number = 0
         self.state = False
         self.centre = [core.asset.Image(
-            "stop"), core.asset.Image("play")]
+            "pause"), core.asset.Image("play")]
         self.volume = Volume()
-        self.trackinfo = AnimatedText((65, 35), track.description)
-        elements = [core.element.Text(core.Vector(64, 3), track.name),
-                    core.element.Line(core.Vector(3, 47),
-                                      core.Vector(125, 47), width=2),
-                    core.element.Image(core.Vector(63, 55),
-                                       self.element_control_centre[int(self.state)]),
-                    core.element.Image(core.Vector(25, 50),
+        self.trackinfo = AnimatedText((64, 35), self.playlist[self.track_number].description, width=20)
+        self.elements = [core.element.Text(core.Vector(64, 5), self.playlist[self.track_number].name),
+                    core.element.Line(core.Vector(3, 40),
+                                      core.Vector(125, 40), width=2),
+                    core.element.Image(core.Vector(44, 53),
                                        core.asset.Image("prev")),
-                    core.element.Image(core.Vector(75, 50),
+                    core.element.Image(core.Vector(84, 53),
                                        core.asset.Image("next")),
-                    core.element.Text(core.Vector(102, 57), self.volume.get())]
+                    core.element.Text(core.Vector(115, 53), self.volume.get()),
+                    core.element.Text(core.Vector(15, 53), f"{self.track_number}\{len(self.playlist)}")]
 
     def render(self):
+        self.elements[4].text(self.volume.get())
+        core.element.Image(core.Vector(64, 53),
+                           self.centre[int(self.state)]).render()
+        self.elements[5].text(f"{self.track_number+1}\{len(self.playlist)}")
         for element in self.elements:
             element.render()
-        self.stext.render()
+        self.trackinfo.render()
+        if self.state and time.time() > self.endpoint:
+            self.track_number +=1
 
     def toggle(self):
         if self.state:

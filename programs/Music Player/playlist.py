@@ -36,7 +36,7 @@ class Main(core.std.Menu):
                 data=track,
                 select=self.start))
 
-        super().__init__(*elements, title="Music P.. -Playlist-")
+        super().__init__(*elements, title="Music P.. -Playlist-", end=False)
 
     @core.render.Window.focus
     def subwindow(self):

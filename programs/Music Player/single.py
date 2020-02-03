@@ -26,7 +26,7 @@ class Main(core.std.Menu):
                     0, 0), musicfile.name, justify="L"),
                 data=musicfile,
                 select=self.start))
-        super().__init__(*elements, title="Music Player -Track-")
+        super().__init__(*elements, title="Music Player -Track-", end=False)
 
     @core.render.Window.focus
     def subwindow(self):
@@ -39,12 +39,12 @@ class Main(core.std.Menu):
 
     @core.render.Window.focus
     def start(self, element, window):
-        player = LocalPlayer(element.data)
+        player = LocalPlayer([element.data])
         yield player
 
 class Handle(core.render.Handler):
 
-    key = core.render.Button.LEFT
+    key = core.render.Button.BACK
     window = Main
 
     def press(self):
