@@ -1,5 +1,7 @@
 import core
 import os
+import time
+import subprocess
 import json
 from volume import Volume
 from animatedtext import AnimatedText
@@ -18,15 +20,20 @@ class RadioPlayer(core.render.Window):
         self.url = station[1]
         self.centre = [core.asset.Image("stop"),
          core.asset.Image("play")]
-        self.ext_data = AnimatedText((65, 25), station[0], 10)
+        self.ext_data = AnimatedText((65, 35), station[0], 20)
+        self.time = time.time()
         self.elements = [core.element.Text(core.Vector(64, 3), station[0]),
-         core.element.Line(core.Vector(3, 40), core.Vector(125, 40), width=2),
-          core.element.Text(core.Vector(115, 60), self.volume.get())]
+         core.element.Line(core.Vector(5, 40), core.Vector(125, 40), width=2),
+          core.element.Text(core.Vector(15, 53), self.volume.get())]
         self.toggle()
 
     def render(self):
         self.elements[2].text(self.volume.get())
-        core.element.Image(core.Vector(63, 55), self.centre[int(self.state)]).render()
+        core.element.Image(core.Vector(63, 53), self.centre[int(self.state)]).render()
+        if time.time() - self.time > 1:
+            os.system("mpc status")
+            self.ext_data.edit(str(subprocess.check_output("mpc status", shell=True).splitlines()[0])[1:])
+            self.time = time.time()
         for element in self.elements:
             element.render()
         self.ext_data.update()
