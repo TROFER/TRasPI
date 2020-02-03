@@ -1,5 +1,6 @@
 import core
 from animatedtext import AnimatedText
+from volume import Volume
 
 class LocalPlayer(core.render.Window):
 
@@ -14,9 +15,10 @@ class LocalPlayer(core.render.Window):
 
     def __init__(self, track):
         self.state = False
-        self.element_control_centre = [core.asset.Image(
+        self.centre = [core.asset.Image(
             "stop"), core.asset.Image("play")]
-        self.stext = AnimatedText((64, 45), track.description)
+        self.volume = Volume()
+        self.trackinfo = AnimatedText((65, 35), track.description)
         elements = [core.element.Text(core.Vector(64, 3), track.name),
                     core.element.Line(core.Vector(3, 47),
                                       core.Vector(125, 47), width=2),
@@ -34,7 +36,15 @@ class LocalPlayer(core.render.Window):
         self.stext.render()
 
     def toggle(self):
-        self.state != self.state
+        if self.state:
+            self.state = False
+            pygame.mixer.pause()
+            self.start = time.time()
+        if not self.state:
+            self.state = True
+            pygame.mixer.play()
+            self.endpoint += time.time() - self.start
+            self.start = 0
 
 
 class Handle(core.render.Handler):
@@ -55,23 +65,4 @@ class Handle(core.render.Handler):
         self.window.toggle()
 
 
-class Volume:
 
-    def __init__(self, step=5):
-        self.volume = 75
-        self.step = step
-        self.set()
-
-    def set(self):
-        os.system(f"amixer set Master {self.volume}%")
-
-    def get(self):
-        return "{self.volume}%"
-
-    def decrese(self):
-        self.volume -= self.step
-        self.set()
-
-    def increse(self):
-        self.volume += self.step
-        self.step()
