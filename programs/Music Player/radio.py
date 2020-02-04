@@ -41,12 +41,6 @@ class RadioPlayer(core.render.Window):
             element.render()
         self.radio_text.update()
 
-    def vol_up(self):
-        self.volume.increse()
-
-    def vol_down(self):
-        self.volume.decrese()
-
     def toggle(self):
         if self.state:
             os.system(f"mpc add {self.url}"), os.system(f"mpc play")
@@ -81,7 +75,7 @@ class Handle(core.render.Handler):
     window = RadioPlayer
 
     def press(self):
-        self.window.vol_up()
+        self.window.volume.increse()
 
 
 class Handle(core.render.Handler):
@@ -90,7 +84,7 @@ class Handle(core.render.Handler):
     window = RadioPlayer
 
     def press(self):
-        self.window.vol_down()
+        self.window.volume.decrese()
 
 
 class Main(core.std.Menu):
