@@ -3,6 +3,7 @@ from animatedtext import AnimatedText
 from volume import Volume
 import pygame
 
+
 class LocalPlayer(core.render.Window):
 
     core.asset.Image(
@@ -19,20 +20,23 @@ class LocalPlayer(core.render.Window):
         self.playlist = playlist
         self.track_number = 0
         self.state = False
+        self.pause = 0
         self.volume = Volume()
         # ELEMENTS
         self.centre = [core.asset.Image(
             "pause"), core.asset.Image("play")]
-        self.trackinfo = AnimatedText((64, 35), self.playlist[self.track_number].description, width=20)
+        self.trackinfo = AnimatedText(
+            (64, 35), self.playlist[self.track_number].description, width=20)
         self.elements = [core.element.Text(core.Vector(64, 5), self.playlist[self.track_number].name),
-                    core.element.Line(core.Vector(3, 40),
-                                      core.Vector(125, 40), width=2),
-                    core.element.Image(core.Vector(44, 53),
-                                       core.asset.Image("rest")),
-                    core.element.Image(core.Vector(84, 53),
-                                       core.asset.Image("next")),
-                    core.element.Text(core.Vector(115, 53), self.volume.get()),
-                    core.element.Text(core.Vector(15, 53), f"{self.track_number}\{len(self.playlist)}")]
+                         core.element.Line(core.Vector(3, 40),
+                                           core.Vector(125, 40), width=2),
+                         core.element.Image(core.Vector(44, 53),
+                                            core.asset.Image("rest")),
+                         core.element.Image(core.Vector(84, 53),
+                                            core.asset.Image("next")),
+                         core.element.Text(core.Vector(
+                             115, 53), self.volume.get()),
+                         core.element.Text(core.Vector(15, 53), f"{self.track_number}\{len(self.playlist)}")]
         self.play()
 
     def render(self):
@@ -54,12 +58,17 @@ class LocalPlayer(core.render.Window):
         for element in self.elements:
             element.render()
         self.trackinfo.render()
-    
+
     def play(self):
-        self.endpoint = self.playlist[self.track_number].length() + self.pause #Pause Definied in __init__
+        if not self.state:
+            self.endpoint = self.playlist[self.track_number].length(
+            ) + (time.time() - self.pause)
+            self.state = True
+        else:
+            self.endpoint = self.playlist[self.track_number].length()
         self.playlist[self.track_number].play()
-        self.state = True
-    
+        self.pause = 0
+
     def pause(self):
         self.start = time.time()
         self.state = False
@@ -77,10 +86,7 @@ class LocalPlayer(core.render.Window):
         self.stop
         self.track_number += 1
         self.play()
-    
-    def restart(self):
-        self.stop
-        self.play()
+
 
 class Handle(core.render.Handler):
 
@@ -102,11 +108,31 @@ class Handle(core.render.Handler):
 
 class Handle(core.render.Handler):
 
+    key = core.render.Button.RIGHT
+    window = LocalPlayer
+
+    def press(self):
+        self.window.skip()
+
+
+class Handle(core.render.Handler):
+
+    key = core.render.Button.LEFT
+    window = LocalPlayer
+
+    def press(self):
+        self.window.stop()
+        self.window.play()
+
+
+class Handle(core.render.Handler):
+
     key = core.render.Button.UP
     window = LocalPlayer
 
     def press(self):
         self.window.volume.increse()
+
 
 class Handle(core.render.Handler):
 
@@ -115,6 +141,3 @@ class Handle(core.render.Handler):
 
     def press(self):
         self.window.volume.decrese()
-
-
-
