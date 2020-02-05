@@ -4,7 +4,6 @@ from volume import Volume
 import pygame
 import time
 
-
 class LocalPlayer(core.render.Window):
 
     core.asset.Image(
@@ -25,7 +24,6 @@ class LocalPlayer(core.render.Window):
         self.pausestart = 0
         self.time = time.time()
         self.volume = Volume()
-        self.track_pos = 0
         # ELEMENTS
         self.centre = [core.asset.Image(
             "pause"), core.asset.Image("play")]
@@ -49,18 +47,17 @@ class LocalPlayer(core.render.Window):
                 if self.track_number != len(self.playlist):
                     self.track_number += 1
                     self.play()
-        core.element.Line(core.Vector(3, 40),
-                          core.Vector(125, 1.25 * (self.track_pos // (self.playlist[self.track_number].length() / 100)))), width = 2)
+            core.element.Line(core.Vector(0, 40),
+                              core.Vector((self.endpoint - time.time()) // (self.playlist[self.track_number].length() / 128), 40), width=2).render()
+        else:
+            core.element.Line(core.Vector(0, 40),
+                              core.Vector(128, 40), width=2).render()
         self.elements[3].text(self.volume.get())
         core.element.Image(core.Vector(64, 53),
                            self.centre[0 if self.state == 2 else 1]).render()
         self.elements[4].text(f"{self.track_number+1}\{len(self.playlist)}")
         for element in self.elements:
             element.render()
-        if time.time() - self.time > 1:
-            self.track_pos += 1
-        '''      self.trackinfo.edit(self.playlist[self.track_number].description)
-        self.trackinfo.render()'''  # NOT RENDERING
 
     @core.render.Window.focus
     def play(self):
@@ -87,7 +84,6 @@ class LocalPlayer(core.render.Window):
     def stop(self):
         pygame.mixer.stop()
         self.state = 0
-        self.track_pos = 0
 
     def toggle(self):
         if self.state == 2:
