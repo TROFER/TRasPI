@@ -20,11 +20,16 @@ class Main(core.std.Menu):
             for file in os.listdir(f"{core.sys.PATH}user/music/playlists"):
                 if ".json" in file:
                     _playlist = []
-                    with open(f"{core.sys.PATH}user/music/playlists/{file}") as playlist:
+                    with open(f"{core.sys.PATH}user/music/playlists/{file}", 'r') as playlist:
                         for tracks in json.load(playlist):
                             track = Track(tracks)
                             _playlist.append(track)
                         self.library.append(Playlist(_playlist, file[:-5]))
+                elif ".txt" in file:
+                    for tracks in playlist.read().splitlines():
+                        track = Track(tracks)
+                        _playlist.append(track)
+                    self.library.append(Playlist(_playlist, file.split(".")[0]))
         except NotADirectoryError:
             self.lib_error()
 
