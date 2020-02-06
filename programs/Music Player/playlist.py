@@ -38,7 +38,7 @@ class Main(core.std.Menu):
             elements.append(core.std.Menu.Element(
                 core.element.Text(core.Vector(
                     0, 0), playlist.name, justify="L"),
-                data=track,
+                data=playlist.tracks,
                 select=self.start))
 
         super().__init__(*elements, title="Music P.. -Playlist-", end=False)
