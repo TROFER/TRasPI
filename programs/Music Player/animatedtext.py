@@ -29,8 +29,6 @@ class AnimatedText(core.element.Text):
         self.buffer = [' ' for i in range(self.width)]
 
     def update(self):
-        print(self.buffer)
-        print(self.label)
         if self.state:
             if time.time() - self.time > self.speed: #Speed
                 del self.buffer[0]

@@ -14,12 +14,10 @@ class Track:
         self.track = pygame.mixer.Sound(self.path)
         return self.track.get_length()
 
-    def info(self):
-        return self.description
-
     def play(self):
         if self.track is None:
             self.track = pygame.mixer.Sound(self.path)
+            self.length = self.track.get_length()
         self.track.play()
 
     def unpause(self):

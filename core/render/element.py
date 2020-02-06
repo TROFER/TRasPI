@@ -136,5 +136,11 @@ class Line(Element):
         self.colour = colour
         self.width = width
 
+    def edit(self, pos1=None, pos2=None):
+        if pos1 is not None:
+            self.pos1 = pos1
+        if pos2 is not None:
+             self.pos2 = pos2
+
     def render(self):
         self.Render.draw.line((*self.pos1, *self.pos2), self.colour, self.width)
