@@ -28,6 +28,7 @@ class LocalPlayer(core.render.Window):
         self.pausestart = 0
         # PLAYER OBJECTS
         self.trackinfo = AnimatedText((64, 35), "Loading", width=20)
+        self.trackinfo.edit(self.playlist[self.track_number].description)
         self.volume = Volume()
         # PLAYER ELEMENTS
         self.centre = [core.asset.Image("pause"), core.asset.Image("play")]
@@ -42,10 +43,7 @@ class LocalPlayer(core.render.Window):
     def render(self):
         if self.state == 2:
             if self.endpoint < time.time():
-                self.stop()
-                if self.track_number != len(self.playlist)-1:
-                    self.track_number += 1
-                    self.play()
+                self.skip()
             core.element.Line(core.Vector(0, 40), core.Vector(constrain(
                 self.playlist[self.track_number].length - (self.endpoint - time.time()), 0, self.playlist[self.track_number].length, 0, 128), 40), width=2).render()
         core.element.Text(core.Vector(115, 53), self.volume.get()).render()
@@ -53,7 +51,6 @@ class LocalPlayer(core.render.Window):
                            self.centre[0 if self.state == 2 else 1]).render()
         core.element.Text(core.Vector(
             15, 53), f"{self.track_number+1}\{len(self.playlist)}").render()
-        self.trackinfo.edit(self.playlist[self.track_number].description)
         self.trackinfo.update()
         for element in self.elements:
             element.render()
@@ -61,8 +58,12 @@ class LocalPlayer(core.render.Window):
     @core.render.Window.focus
     def play(self):
         if self.state == 0:
-            self.playlist[self.track_number].play()
-            self.endpoint = self.playlist[self.track_number].length + time.time()
+            try:
+                self.playlist[self.track_number].play()
+                self.endpoint = self.playlist[self.track_number].length + time.time()
+            except FileNotFoundError:
+                yield core.std.Error("File not found")
+                return 
         elif self.state == 1:
             self.endpoint += (time.time() - self.pausestart)
             self.pausestart = 0
@@ -91,9 +92,11 @@ class LocalPlayer(core.render.Window):
             self.stop()
             self.track_number += 1
             self.play()
+            self.trackinfo.edit(self.playlist[self.track_number].description)
         else:
             window = core.std.Info("End of Queue")
             yield window
+            self.window.finish()
 
 
 class Handle(core.render.Handler):
