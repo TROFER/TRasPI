@@ -2,6 +2,7 @@ import core.error
 from core.sys.single import Singleton
 from core.hardware.touch import Touch
 from core.sys.log import Log
+import queue
 
 __all__ = ["Screen"]
 
@@ -11,6 +12,7 @@ class Screen(metaclass=Singleton):
         self.active = None
         self.callstack = []
         self.callback = error_callback
+        self.event_queue = queue.Queue()
 
         Touch.repeat(50)
 
@@ -37,12 +39,12 @@ class Screen(metaclass=Singleton):
                 Touch.bind(key, lambda c, e: None)
                 continue
             def wrap(handler):
-                def handle(ch, event):
+                def handle(event):
                     try:
                         func = getattr(handler(self.active), event)
                     except AttributeError:    return
                     try:
-                        print("EVENT", ch, event, handler)
+                        print("Process:", handler)
                         return func()
                     except Exception as e:
                         # print("EVENT ERROR", e)
@@ -53,11 +55,22 @@ class Screen(metaclass=Singleton):
                             self.callback(e)
                         return
 
-                return handle
+                def send_to_queue(ch, event):
+                    print("Event:", ch, event)
+                    self.event_queue.put((handle, event))
+
+                return send_to_queue
             Touch.bind(key, wrap(handler))
 
     def render(self):
         self.active.render()
+
+    def process_events(self):
+        try:
+            while True:
+                func, event = self.event_queue.get(False)
+                func(event)
+        except queue.Empty:    return
 
     def pause(self):
         pass
