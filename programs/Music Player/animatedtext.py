@@ -19,6 +19,7 @@ class AnimatedText(core.element.Text):
             self.label = f"{text}{' '*self.width}"
             if self.index > len(self.label):
                 self.toggle(True)
+            self.index = 0
 
     def toggle(self, state=None):
         if state is None:
@@ -31,7 +32,7 @@ class AnimatedText(core.element.Text):
     def update(self):
         if self.state:
             if time.time() - self.time > self.speed: #Speed
-                del self.buffer[0]
+                self.buffer.pop(0)
                 self.buffer.append(self.label[self.index])
                 if self.index < len(self.label)-1:
                     self.index +=1

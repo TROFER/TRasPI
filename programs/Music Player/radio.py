@@ -20,6 +20,8 @@ class RadioPlayer(core.render.Window):
         self.url = station[1]
         self.centre = [core.asset.Image("stop"),
                        core.asset.Image("play")]
+        os.system("mpc status")
+        self.prev = subprocess.check_output("mpc status", shell=True).decode().splitlines()[0]
         self.radio_text = AnimatedText((64, 35), station[0], 20)
         self.time = time.time()
         self.elements = [core.element.Text(core.Vector(64, 3), station[0]),
@@ -34,8 +36,11 @@ class RadioPlayer(core.render.Window):
                            self.centre[int(self.state)]).render()
         if time.time() - self.time > 1:
             os.system("mpc status")
-            self.radio_text.edit(subprocess.check_output(
-                "mpc status", shell=True).decode().splitlines()[0])
+            if subprocess.check_output("mpc status", shell=True).decode().splitlines()[0] != self.prev:
+                self.radio_text.edit(subprocess.check_output(
+                    "mpc status", shell=True).decode().splitlines()[0])
+                self.prev = subprocess.check_output(
+                    "mpc status", shell=True).decode().splitlines()[0]
             self.time = time.time()
         for element in self.elements:
             element.render()

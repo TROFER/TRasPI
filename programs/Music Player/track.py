@@ -13,10 +13,6 @@ class Track:
     @core.render.Window.focus
     def play(self):
         if self.track is None:
-            try:
-                self.track = pygame.mixer.Sound(self.path)
-            except IOError:
-                window = core.std.Error("Track load error")
-                yield window
+            self.track = pygame.mixer.Sound(self.path)
             self.length = self.track.get_length()
         self.track.play()
