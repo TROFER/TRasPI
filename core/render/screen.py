@@ -44,7 +44,7 @@ class Screen(metaclass=Singleton):
                         func = getattr(handler(self.active), event)
                     except AttributeError:    return
                     try:
-                        print("Process:", handler)
+                        # print("Process:", handler)
                         return func()
                     except Exception as e:
                         # print("EVENT ERROR", e)
@@ -56,7 +56,7 @@ class Screen(metaclass=Singleton):
                         return
 
                 def send_to_queue(ch, event):
-                    print("Event:", ch, event)
+                    # print("Event:", ch, event)
                     self.event_queue.put((handle, event))
 
                 return send_to_queue

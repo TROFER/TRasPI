@@ -32,8 +32,7 @@ class LocalPlayer(core.render.Window):
         self.volume = Volume()
         # PLAYER ELEMENTS
         self.centre = [core.asset.Image("pause"), core.asset.Image("play")]
-        self.elements = [core.element.Text(core.Vector(64, 5), self.playlist[self.track_number].name),
-                         core.element.Image(core.Vector(44, 53),
+        self.elements = [core.element.Image(core.Vector(44, 53),
                                             core.asset.Image("rest")),
                          core.element.Image(core.Vector(84, 53),
                                             core.asset.Image("next"))]
@@ -43,7 +42,9 @@ class LocalPlayer(core.render.Window):
     def render(self):
         if self.state == 2:
             if self.endpoint < time.time():
-                self.skip()
+                res = self.skip()
+                if not res:
+                    self.back()
             core.element.Line(core.Vector(0, 40), core.Vector(constrain(
                 self.playlist[self.track_number].length - (self.endpoint - time.time()), 0, self.playlist[self.track_number].length, 0, 128), 40), width=2).render()
         core.element.Text(core.Vector(115, 53), self.volume.get()).render()
@@ -51,6 +52,8 @@ class LocalPlayer(core.render.Window):
                            self.centre[0 if self.state == 2 else 1]).render()
         core.element.Text(core.Vector(
             15, 53), f"{self.track_number+1}\{len(self.playlist)}").render()
+        core.element.Text(core.Vector(64, 5),
+                          self.playlist[self.track_number].name).render()
         self.trackinfo.update()
         for element in self.elements:
             element.render()
@@ -63,20 +66,20 @@ class LocalPlayer(core.render.Window):
                 self.endpoint = self.playlist[self.track_number].length + time.time()
             except FileNotFoundError:
                 yield core.std.Error("File not found")
-                return 
+                return
         elif self.state == 1:
             self.endpoint += (time.time() - self.pausestart)
             self.pausestart = 0
-            pygame.mixer.unpause()
+            pygame.mixer.music.unpause()
         self.state = 2
 
     def pause(self):
         self.pausestart = time.time()
-        pygame.mixer.pause()
+        pygame.mixer.music.pause()
         self.state = 1
 
     def stop(self):
-        pygame.mixer.stop()
+        pygame.mixer.music.stop()
         self.state = 0
         self.track_pos = 0
 
@@ -96,7 +99,10 @@ class LocalPlayer(core.render.Window):
         else:
             window = core.std.Info("End of Queue")
             yield window
-            self.window.finish()
+            return False
+
+    def back(self):
+        self.finish()
 
 
 class Handle(core.render.Handler):
@@ -105,7 +111,7 @@ class Handle(core.render.Handler):
     window = LocalPlayer
 
     def press(self):
-        pygame.mixer.stop()
+        pygame.mixer.music.stop()
         self.window.finish()
 
 
