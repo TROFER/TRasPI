@@ -96,6 +96,7 @@ class LocalPlayer(core.render.Window):
             self.track_number += 1
             self.play()
             self.trackinfo.edit(self.playlist[self.track_number].description)
+            return True
         else:
             window = core.std.Info("End of Queue")
             yield window

@@ -14,9 +14,11 @@ class Volume:
         return f"{self.volume}%"
 
     def decrese(self):
-        self.volume -= self.step
-        self.set()
+        if self.volume > 0:
+            self.volume -= self.step
+            self.set()
 
     def increse(self):
-        self.volume += self.step
-        self.set()
+        if self.volume < 100:
+            self.volume += self.step
+            self.set()
