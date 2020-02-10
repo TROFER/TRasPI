@@ -54,11 +54,12 @@ class HardwareError(CoreBaseException):
 
 class EventError(CoreBaseException):
 
-    def __init__(self, handler):
+    def __init__(self, window, handler):
+        self.window = window
         self.handler = handler
 
     def __str__(self) -> str:
-        return "Window: {} {}".format("SELF.HANDLER.WINDOW", self.handler)
+        return "Window: {} {}".format(self.window, self.handler)
 
 class FocusError(CoreBaseException):
 

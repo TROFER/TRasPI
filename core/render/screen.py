@@ -49,7 +49,7 @@ class Screen(metaclass=Singleton):
                     except Exception as e:
                         # print("EVENT ERROR", e)
                         try: # TEMPORARY
-                            raise core.error.EventError(handler) from e
+                            raise core.error.EventError(self.active, handler) from e
                         except core.error.EventError as e:
                             Log.log(e)
                             self.callback(e)
