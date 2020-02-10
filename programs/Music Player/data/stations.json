@@ -2,7 +2,8 @@
     "BBC Radio 1" : "http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio1_mf_p",
     "BBC Radio 2" : "http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio2_mf_p",
     "BBC Radio 3" : "http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio3_mf_p",
+    "BBC Radio Solent": "http://bbcmedia.ic.llnwd.net/stream/bbcmedia_lrsolent_mf_p?s=1579718109&e=1579732509&h=462afacea3f2c0191fc227123ba30248",
+    "Jazz FM" : "http://edge-baueral-03-gos2.sharp-stream.com/jazzfmmobile.mp3",
     "Classic FM" : "http://media-ice.musicradio.com/ClassicFMMP3",
-    "BBC Radio Solent" : "http://bbcmedia.ic.llnwd.net/stream/bbcmedia_lrsolent_mf_p?s=1579718109&e=1579732509&h=462afacea3f2c0191fc227123ba30248",
     "Scala Radio" : "http://tx.planetradio.co.uk/icecast.php?i=scalahigh.aac"
 }
