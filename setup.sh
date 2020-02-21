@@ -7,6 +7,7 @@ make -j 4
 make install
 cd ..
 rm Python-3.8.1.tar.xz
+pip3 install --upgrade pip
 pip3 install smbus
 apt-get install libtiff4
 apt-get install libjpeg62
@@ -26,5 +27,5 @@ apt-get install git -y
 cd /home
 git clone https://github.com/TWoolhouse/TRasPI.git
 mkdir traspi 
-mv /home/TRasPI /home/traspi
+mv /home/TRasPI/ /home/traspi
 mkdir /home/traspi/user
