@@ -8,29 +8,29 @@ timeout = True
 
 class Main(core.render.Window):
 
+    core.asset.Template(
+        "background-clock", path=f"programs/Toolbox/Clock/package/{default}/background.template")
+    template = core.asset.Template("background-clock")
+
     def __init__(self):
         self.timer = 0
         self.timeout = 0
         self.data = self.load(default)
-        core.asset.Template(
-            "template", path=f"{core.sys.PATH}programs/Toolbox/Clock/package/{default}/template.template")
+        for f in range(len(self.data["fonts"])):
+            core.asset.Font(self.data["fonts"][f][0], int(self.data["fonts"][f][1]), path=f"{core.sys.PATH}programs/Toolbox/Clock/package/{default}/{self.data['fonts'][f][0]}")
         core.hardware.Backlight.gradient([int(val) for val in self.data["backlight"][0]], saturation=int(
             self.data["backlight"][1]), value=int(self.data["backlight"][2]))
         self.elements = [(core.element.Text(core.Vector(int(element["pos"][0]), int(element["pos"][1])), text="LDR", font=element["font"], size=int(
             element["size"]), colour=int(element["colour"]), justify=element["justify"]), element["format"]) for element in self.data["elements"]]
-        print(([int(val) for val in self.data["backlight"][0]], int(
-            self.data["backlight"][1]), int(self.data["backlight"][2])))
 
     def active(self):
-        print(([int(val) for val in self.data["backlight"][0]], int(
-            self.data["backlight"][1]), int(self.data["backlight"][2])))
         core.hardware.Backlight.gradient([int(val) for val in self.data["backlight"][0]], saturation=int(
             self.data["backlight"][1]), value=int(self.data["backlight"][2]))
         self.timeout = 0
 
     def inactive(self):
         core.hardware.Backlight.gradient([int(val) for val in self.data["backlight"][0]], saturation=int(
-            self.data["backlight"][1]), value=0.1)
+            self.data["backlight"][1]), value=0.6)
 
     def render(self):
         for element in self.elements:
@@ -41,7 +41,6 @@ class Main(core.render.Window):
             self.timer = time.time()
             if self.timeout == 60:
                 self.inactive()
-        print(self.timeout)
 
     def load(self, package):
         try: 

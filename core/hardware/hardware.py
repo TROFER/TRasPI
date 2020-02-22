@@ -26,11 +26,8 @@ class Backlight:
 
     @classmethod
     def gradient(cls, colours, saturation=1, value=1):
-        print(colours)
-        for led in range(5):
+        for led in range(6):
             _colours = colorsys.hsv_to_rgb(colours[led] / 360, saturation, value)
-            print(colorsys.hsv_to_rgb(
-                colours[led] / 360, saturation, value))
             backlight.set_pixel(led, int(_colours[0]*255), int(_colours[1]*255), int(_colours[2]*255))
         cls.show()
 
