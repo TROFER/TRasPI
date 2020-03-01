@@ -6,6 +6,8 @@ import time
 import colorsys
 
 core.asset.Template("weather", path="Weather Service/gui.template")
+refresh_speed = 600 # Secconds
+
 
 class Mainwindow(core.render.Window):
 
@@ -23,7 +25,7 @@ class Mainwindow(core.render.Window):
         self.get_weather()
 
     def render(self):
-        if time.time() - self.time > 1:
+        if time.time() - self.time > refresh_speed:
             self.get_weather()
             self.time = time.time()
         self.title.render(), self.header1.render()

@@ -8,7 +8,7 @@ class Track:
 
     def __init__(self, filename):
         self.path = f"{core.sys.PATH}user/music/{filename}"
-        self.name = os.path.basename(self.path)[:-4]
+        self.name = f"{os.path.basename(self.path)[:-4]}"[:10]
         try:
             self.tags = TinyTag.get(self.path)
             self.length = self.tags.duration
