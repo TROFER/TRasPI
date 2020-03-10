@@ -1,6 +1,7 @@
 import core
 import json
 import os
+import random
 import radio
 from track import Track
 from track import Track
@@ -32,6 +33,17 @@ class Main(core.std.Menu):
                     self.library.append(Playlist(_playlist, file.split(".")[0]))
         except NotADirectoryError:
             self.lib_error()
+
+
+        lib = []
+
+        try:
+            for file in os.listdir(f"{core.sys.PATH}user/music/"):
+                if ".wav" in file or ".ogg" in file:
+                    lib.append(Track(file))
+        except NotADirectoryError:
+            self.lib_error()
+        self.library.append(Playlist(random.shuffle(lib), "Shuffle All"))
 
         elements = []
         for playlist in self.library:
