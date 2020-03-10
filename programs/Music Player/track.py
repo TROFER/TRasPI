@@ -10,8 +10,13 @@ class Track:
         self.path = f"{core.sys.PATH}user/music/{filename}"
         self.name = f"{os.path.basename(self.path)[:-4]}"[:19]
         try:
-            self.tags = TinyTag.get(self.path)
-            self.length = self.tags.duration
+            try:
+                self.tags = TinyTag.get(self.path)
+                self.length = self.tags.duration
+            except UnicodeDecodeError:
+                print(self.name)
+                self.name = "UTF-8 Error"
+                self.length = 0
             self.description = f"{self.tags.title}, {self.tags.artist}, {self.tags.genre}, {self.tags.year}"
         except FileNotFoundError:
             self.description = ""
