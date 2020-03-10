@@ -13,11 +13,11 @@ class Track:
             try:
                 self.tags = TinyTag.get(self.path)
                 self.length = self.tags.duration
+                self.description = f"{self.tags.title}, {self.tags.artist}, {self.tags.genre}, {self.tags.year}"
             except UnicodeDecodeError:
                 print(self.name)
                 self.name = "UTF-8 Error"
                 self.length = 0
-            self.description = f"{self.tags.title}, {self.tags.artist}, {self.tags.genre}, {self.tags.year}"
         except FileNotFoundError:
             self.description = ""
             self.length = 0
