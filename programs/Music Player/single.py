@@ -13,7 +13,9 @@ class Main(core.std.Menu):
         core.hardware.Backlight.fill(int(R * 255), int(G * 255), int(B * 255))
         self.library = []
         try:
-            for file in os.listdir(f"{core.sys.PATH}user/music/"):
+            lib = os.listdir(f"{core.sys.PATH}user/music/")
+            lib.sort()
+            for file in lib:
                 if ".wav" in file or ".ogg" in file:
                     self.library.append(Track(file))
         except NotADirectoryError:
@@ -23,7 +25,7 @@ class Main(core.std.Menu):
         for musicfile in self.library:
             elements.append(core.std.Menu.Element(
                 core.element.Text(core.Vector(
-                    0, 0), musicfile.name, justify="L"),
+                    0, 0), musicfile.name[:19], justify="L"),
                 data=musicfile,
                 select=self.start))
         super().__init__(*elements, title="Music Player -Track-", end=False)

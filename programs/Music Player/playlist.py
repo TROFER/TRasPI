@@ -43,7 +43,8 @@ class Main(core.std.Menu):
                     lib.append(Track(file))
         except NotADirectoryError:
             self.lib_error()
-        self.library.append(Playlist(random.shuffle(lib), "Shuffle All"))
+        random.shuffle(lib)
+        self.library.append(Playlist(lib, "Shuffle All"))
 
         elements = []
         for playlist in self.library:

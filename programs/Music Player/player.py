@@ -1,4 +1,5 @@
 import core
+import colorsys
 from animatedtext import AnimatedText
 from volume import Volume
 import pygame
@@ -26,6 +27,8 @@ class LocalPlayer(core.render.Window):
         self.track_number = 0
         self.state = 0
         self.pausestart = 0
+        self.timeout = 0
+        self.timeout_sync = 0
         # PLAYER OBJECTS
         self.trackinfo = AnimatedText((64, 35), "Loading", width=20)
         self.trackinfo.edit(self.playlist[self.track_number].description)
@@ -40,6 +43,12 @@ class LocalPlayer(core.render.Window):
         self.play()
 
     def render(self):
+        if time.time() - self.timeout_sync > 1 and self.timeout <= 60:
+            if self.timeout == 60:
+                self.inactive()
+            else:
+                self.timeout +=1
+                self.timeout_sync = time.time()
         if self.state == 2:
             if self.endpoint < time.time():
                 res = self.skip()
@@ -51,9 +60,9 @@ class LocalPlayer(core.render.Window):
         core.element.Image(core.Vector(64, 53),
                            self.centre[0 if self.state == 2 else 1]).render()
         core.element.Text(core.Vector(
-            15, 53), f"{self.track_number+1}\{len(self.playlist)}").render()
+            1, 53), f"{self.track_number+1}\{len(self.playlist)}", justify="L").render()
         core.element.Text(core.Vector(64, 5),
-                          self.playlist[self.track_number].name).render()
+                          f"{self.playlist[self.track_number].name}"[:20]).render()
         self.trackinfo.update()
         for element in self.elements:
             element.render()
@@ -105,6 +114,17 @@ class LocalPlayer(core.render.Window):
     def back(self):
         self.finish()
 
+    def active(self):
+        R, G, B = colorsys.hsv_to_rgb(core.sys.Config(
+            "std::system")["system_colour"]["value"] / 100, 1, 1)
+        core.hardware.Backlight.fill(int(R * 255), int(G * 255), int(B * 255))
+        self.timeout = 0
+
+    def inactive(self):
+        R, G, B = colorsys.hsv_to_rgb(core.sys.Config(
+            "std::system")["system_colour"]["value"] / 100, 1, 0.3)
+        core.hardware.Backlight.fill(int(R * 255), int(G * 255), int(B * 255))
+
 
 class Handle(core.render.Handler):
 
@@ -114,6 +134,7 @@ class Handle(core.render.Handler):
     def press(self):
         pygame.mixer.music.stop()
         self.window.finish()
+        self.window.active()
 
 
 class Handle(core.render.Handler):
@@ -123,6 +144,7 @@ class Handle(core.render.Handler):
 
     def press(self):
         self.window.toggle()
+        self.window.active()
 
 
 class Handle(core.render.Handler):
@@ -132,6 +154,7 @@ class Handle(core.render.Handler):
 
     def press(self):
         self.window.skip()
+        self.window.active()
 
 
 class Handle(core.render.Handler):
@@ -143,6 +166,7 @@ class Handle(core.render.Handler):
         self.window.stop()
         self.window.track_pos = 0
         self.window.play()
+        self.window.active()
 
 
 class Handle(core.render.Handler):
@@ -152,6 +176,7 @@ class Handle(core.render.Handler):
 
     def press(self):
         self.window.volume.increse()
+        self.window.active()
 
 
 class Handle(core.render.Handler):
@@ -161,3 +186,4 @@ class Handle(core.render.Handler):
 
     def press(self):
         self.window.volume.decrese()
+        self.window.active()
