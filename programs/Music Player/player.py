@@ -19,7 +19,7 @@ class LocalPlayer(core.render.Window):
     core.asset.Image(
         "next", path=f"{core.sys.PATH}programs/Music Player/asset/next.icon")
     core.asset.Image(
-        "rest", path=f"{core.sys.PATH}programs/Music Player/asset/prev.icon")
+        "reset", path=f"{core.sys.PATH}programs/Music Player/asset/prev.icon")
 
     def __init__(self, playlist):
         pygame.mixer.init()
@@ -36,7 +36,7 @@ class LocalPlayer(core.render.Window):
         # PLAYER ELEMENTS
         self.centre = [core.asset.Image("pause"), core.asset.Image("play")]
         self.elements = [core.element.Image(core.Vector(44, 53),
-                                            core.asset.Image("rest")),
+                                            core.asset.Image("reset")),
                          core.element.Image(core.Vector(84, 53),
                                             core.asset.Image("next"))]
         # PLAYER START
