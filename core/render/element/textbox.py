@@ -16,9 +16,13 @@ class TextBox(Text):  # ASK TOM
 
         def copy(self):
             return self.anchor, self.line_col, self.fill, self.width
+            
+        def volatile(self):
+            super().volatile()
+            self._offset()
 
-        def _offset(self, value: Vector):
-            value = super()._offset(value)
+        def _offset(self):
+            value = super()._offset(self.anchor)
             self.rect.pos = value - Vector(2, 0)
             self.rect.pos_2 = self.font_size() + Vector(2, 0)
             return value
