@@ -7,4 +7,4 @@ import core.input
 from core.render import element
 
 import core.application
-from core.controller import Interface, interface
+from core.interface import Interface, interface

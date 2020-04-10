@@ -1,5 +1,5 @@
 import asyncio
-from core.controller import Interface
+from core.interface import Interface
 
 class Window:
 
