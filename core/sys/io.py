@@ -1,4 +1,5 @@
 import random
+import asyncio
 
 
 def _gen_map(dictionary):
@@ -21,17 +22,18 @@ class Encrypt:
 class Compress:
 
     @classmethod
-    def rle(cls, data):  # Compresses text using RLE
+    async def rle(cls, data):  # Compresses text using RLE
         output = ''
         prev_char = ''
         count = 0
-        for char in data:
+        for i, char in enumerate(data):
             if char != prev_char and prev_char != '':
                 output = output + (f"{count}{prev_char}")
                 count = 1
             else:
                 count += 1
             prev_char = char
+            await asyncio.sleep(0)
         return output
 
     @classmethod
