@@ -12,6 +12,8 @@ class Render:
         self.__window_stack = []
         self.__event_queue = queues.Queue()
 
+        self.__set_active(self.__active)
+
     def execute(self):
         self.__active.render()
         self.__pipeline.execute()
@@ -21,12 +23,14 @@ class Render:
 
     async def window_focus(self, window: "Window"):
         self.__window_stack.append(self.__active)
-        await self.__set_active(window)
+        self.__set_active(window)
+        await self.__active.show()
 
     async def window_pop(self):
-        await self.__set_active(self.__window_stack.pop())
+        self.__set_active(self.__window_stack.pop())
+        await self.__active.show()
 
-    async def __set_active(self, window: "Window"):
+    def __set_active(self, window: "Window"):
         self.__active = window
         try:
             while True:
@@ -34,7 +38,6 @@ class Render:
         except queues.Empty: pass
         self.__bind_handles()
         self.__pipeline.template = self.__active.template
-        await self.__active.show()
 
     def initialize(self):
         self.__pipeline.open()
