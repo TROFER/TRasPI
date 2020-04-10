@@ -1,5 +1,5 @@
 from core.sys.constants import Constant
-if Constant.platform == "GFXHAT":
+if Constant.pipeline == "GFXHAT":
     _FLAG = True
     from core.driver.gfxhat import lcd as lcd
 else:
