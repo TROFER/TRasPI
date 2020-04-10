@@ -17,6 +17,11 @@ class Interface:
         self.__async = _async
 
     def run(self, application: "Application"):
+        self.__application = application
         asyncio.run(self.__async.main(application))
 
+    def render(self, obj: "Primative"):
+        return self.__application.render.submit(obj)
+
 Interface = Interface(AsyncController())
+interface = Interface

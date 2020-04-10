@@ -2,17 +2,17 @@ import core
 
 class TWin(core.render.Window):
     def __init__(self):
-        self.prim = core.render.primative.Test("Main")
+        self.prim = core.element.Text(core.Vector(0, 5), "Hello", justify="L")
 
     def render(self):
-        core.Application().render.submit(self.prim)
+        core.interface.render(self.prim)
 
 class SubWin(core.render.Window):
     def __init__(self):
-        self.prim = core.render.primative.Test("Sub")
+        self.prim = core.element.Text(core.Vector(0, 5), "World", justify="L")
 
     def render(self):
-        core.Application().render.submit(self.prim)
+        core.interface.render(self.prim)
 
 class Handle(core.input.Handler):
 
@@ -20,9 +20,11 @@ class Handle(core.input.Handler):
 
     class press:
 
+        @core.input.event
         async def up(self):
             print("Press up on", self.window)
 
+        @core.input.event
         async def centre(self):
             print("Awaiting")
             val = await SubWin()
@@ -34,9 +36,11 @@ class Handle(core.input.Handler):
 
     class press:
 
+        @core.input.event
         async def up(self):
             print("Press up on", self.window)
 
+        @core.input.event
         async def centre(self):
             print("Returning")
             self.window.finish("DONE")

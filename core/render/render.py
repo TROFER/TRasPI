@@ -1,8 +1,8 @@
 import queue as queues
 
 from core.render.primative import Primative
-
-_keys = ["up", "down", "back", "left", "centre", "right"]
+from core.hw.key import Key
+from core.input.keys import name as key_names
 
 class Render:
 
@@ -51,10 +51,11 @@ class Render:
     def __bind_handles(self):
         handler = self.__active._event_handler_
         if handler is None:
-            pass
+            for key in range(len(key_names)):
+                Key.bind(key, lambda x: None)
 
         def wrap(key, handler):
-            key = _keys[key]
+            key = key_names[key]
             def event(event):
                 try:
                     cls = getattr(handler, event)
@@ -70,6 +71,5 @@ class Render:
                 self.__event_queue.put((event, event_type))
             return submit
 
-        for key in range(len(_keys)):
-            print("Bound Key", key, wrap(key, handler))
-            # Touch.bind(key, wrap(key, handler))
+        for key in range(len(key_names)):
+            Key.bind(key, wrap(key, handler))

@@ -5,12 +5,18 @@ __all__ = ["Primative"]
 class Primative:
 
     def __init__(self):
-        pass
+        self._widget = (self,)
     def __repr__(self):
         pass
 
-    def render(self):
-        return core.driver.pipeline.widget.Widget()
+    def render(self, image: PIL.ImageDraw.ImageDraw):
+        raise TypeError("Needs Render Function")
+
+    def copy(self):
+        raise TypeError("Needs copy Constructor")
+
+    def volatile(self):
+        return False
 
 class Test:
 
