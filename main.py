@@ -22,7 +22,7 @@ class Handle(core.input.Handler):
 
         @core.input.event
         async def up(self):
-            print("Press up on", self.window)
+            print("Press up on", self)
 
         @core.input.event
         async def centre(self):
