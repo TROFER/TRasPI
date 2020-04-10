@@ -62,7 +62,7 @@ class Render:
 
         def wrap(key, handler):
             key = key_names[key]
-            def event(event):
+            async def event(event):
                 print("Proc", event, key, handler)
                 try:
                     cls = getattr(handler, event)
@@ -70,7 +70,7 @@ class Render:
                 except AttributeError: return
                 cls.window = self.__active
                 try:
-                    return func()
+                    await func()
                 except Exception as e:
                     print("Event Error", e)
 
