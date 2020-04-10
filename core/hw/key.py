@@ -14,6 +14,7 @@ class Key:
             touch.setup()
 
         def bind(self, button, function):
+            print(button, function)
             touch.on(button, function)
 
         def repeat(self, rate=None):
