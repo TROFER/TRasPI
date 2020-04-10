@@ -165,6 +165,8 @@ class MenuSingle(core.render.Window):
         elif isinstance(command, core.render.Window):
             res = yield command
             return res
+        elif type(command) == str:
+            return self.finish(command)
         else:
             return command()
 

@@ -1,0 +1,9 @@
+[
+    {
+        "One-time key" : "core.sys.io.Encrypt.otk"
+    },
+    {
+        "Run lengh encode" : "core.sys.io.Compress.rle",
+        "Pycompress" : "core.sys.io.Compress.py"
+    }
+]

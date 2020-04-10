@@ -1,11 +1,11 @@
 import core
-import importer
-import exporter
-import viewer
+import dataimport
+
 
 
 class Main(core.render.Window):
 
+    core.hardware.Backlight.fill(10, 114, 211)
     template = core.asset.Template("std::window")
     core.asset.Image(
         "import", path=f"{core.sys.PATH}programs/Databank/asset/import.icon")
@@ -29,6 +29,13 @@ class Main(core.render.Window):
         for label in self.labels:
             label.render()
         self.title.render()
+
+    @core.render.Window.focus
+    def subwindow(self):
+        #subwindows = [importer.Main, exporter.Main, viewer.Main]
+        subwindows = [dataimport.Main]
+        yield subwindows[self.index]()
+
 
 
 class Handle(core.render.Handler):
@@ -69,9 +76,7 @@ class Handle(core.render.Handler):
     key = core.render.Button.CENTRE
     window = Main
 
-    @core.render.Window.focus
     def press(self):
-        subwindows = [importer.Main, exporter.Main, viewer.Main]
-        yield subwindow[self.window.index]()
+        self.window.subwindow()
 
 main = Main()
