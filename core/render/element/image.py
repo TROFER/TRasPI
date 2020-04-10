@@ -1,3 +1,7 @@
+import PIL.ImageDraw
+from core.vector import Vector
+from core.render.primative import Primative
+
 class Image(Primative):
 
     def __init__(self, anchor, just_w='C', just_h=None):

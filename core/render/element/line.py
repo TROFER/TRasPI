@@ -1,3 +1,7 @@
+import PIL.ImageDraw
+from core.vector import Vector
+from core.render.primative import Primative
+
 class Line(Primative):
 
     def __init__(self, pos1, pos2, colour=0, width=1, joint=None):
