@@ -26,6 +26,9 @@ class Display:
         def contrast(self, value: int):
             lcd.contrast(value)
 
+        def rotation(self, rotated=False):
+            lcd.rotation(180 if rotated else 0)
+
     else: # DUMMY
         def __init__(self):
             lcd.setup()
@@ -42,5 +45,9 @@ class Display:
 
         def contrast(self, value: int):
             return
+
+        def rotation(self, rotated=False):
+            # DO THIS
+            pass
 
 Display = Display()

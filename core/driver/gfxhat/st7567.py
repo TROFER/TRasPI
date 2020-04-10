@@ -87,6 +87,7 @@ class ST7567:
         self.spi_bus = spi_bus
         self.spi_cs = spi_cs
         self.spi_speed = spi_speed
+        self.rotated = False
         self.clear()
 
     def setup(self):
@@ -150,6 +151,9 @@ class ST7567:
         :param y: Y position (from 0 to 63)
         :param value: pixel state 1 = On, 0 = Off
         """
+        if self.rotated:
+            x = (WIDTH - 1) - x
+            y = (HEIGHT - 1) - y
         offset = ((y // 8) * WIDTH) + x
         bit = y % 8
         self.buf[offset] &= ~(1 << bit)

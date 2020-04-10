@@ -2,6 +2,7 @@ import core
 
 class TWin(core.render.Window):
     def __init__(self):
+        super().__init__()
         self.prim = core.element.Text(core.Vector(0, 5), "Hello", justify="L")
 
     def render(self):
@@ -9,6 +10,7 @@ class TWin(core.render.Window):
 
 class SubWin(core.render.Window):
     def __init__(self):
+        super().__init__()
         self.prim = core.element.Text(core.Vector(0, 5), "World", justify="L")
 
     def render(self):
