@@ -35,9 +35,7 @@ class Application(metaclass=_Active):
         try:
             self.initialize()
             while self.running:
-                # print("Process")
                 await self.render.process()
-                # print("Execute")
                 self.render.execute()
         finally:
             self.terminate()

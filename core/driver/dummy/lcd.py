@@ -17,7 +17,7 @@ def clear():
 def show():
     os.system(_clear_sys_)
     for y in __image:
-        print("".join(" " if i else "#" for i in y))
+        print("".join("#" if i else " " for i in y))
 
 def set_pixel(x: int, y: int, value: int):
     __image[y][x] = value

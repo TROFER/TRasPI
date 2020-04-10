@@ -11,21 +11,29 @@ class Render:
         self.__wgt_r = set() # Currently Rendered Widgets
         self.__wgt_s = set() # Submitted Widgets
         self._scene = False
+        self.__update = True
 
-        self.__template = PIL.Image.new("1", (Constant.width, Constant.height))
+        self.__template = PIL.Image.new("1", (Constant.width, Constant.height), 1)
+        # self.__template
         self.__image = self.__template.copy()
         self.__draw = PIL.ImageDraw.Draw(self.__image)
 
         self.__renderer = Renderer()
 
-    def submit(self, wgt: callable):
+    def submit(self, wgt):
         self.__wgt_s.add(wgt.render)
+
+        if all(i==j for i,j in zip(wgt.copy(), wgt._widget)):
+            wgt._widget = wgt.copy()
+            wgt.volatile()
+            self.__update = True
 
     def scene(self, flag: bool=None):
         self._scene = not self._scene if flag is None else flag
 
     def execute(self):
-        if self.__wgt_s != self.__wgt_r:
+        if self.__update or self.__wgt_s != self.__wgt_r:
+            self.__update = False
             self.__wgt_r = self.__wgt_s.copy()
             self.__wgt_s.clear()
 
