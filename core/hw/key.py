@@ -25,7 +25,7 @@ class Key:
                 touch.set_repeat_rate(rate)
 
         def led(self, button, state=False):
-            touch.set_led(button, index)
+            touch.set_led(button, state)
 
     else: # DUMMY
 

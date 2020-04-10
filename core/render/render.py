@@ -57,6 +57,7 @@ class Render:
         def wrap(key, handler):
             key = key_names[key]
             def event(event):
+                print("Proc", event, key, handler)
                 try:
                     cls = getattr(handler, event)
                     func = getattr(cls, key)
@@ -68,8 +69,10 @@ class Render:
                     print("Event Error", e)
 
             def submit(ch, event_type):
+                print("Event", ch, event_type, handler)
                 self.__event_queue.put((event, event_type))
             return submit
 
         for key in range(len(key_names)):
+            print("Bind Key", key, handler)
             Key.bind(key, wrap(key, handler))
