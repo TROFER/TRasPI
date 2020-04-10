@@ -46,6 +46,7 @@ class Handle(core.input.Handler):
         async def centre(self):
             print("Returning")
             self.finish("DONE")
+            print("Finished")
 
 if __name__ == "__main__":
 
