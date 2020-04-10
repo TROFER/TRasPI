@@ -51,11 +51,14 @@ class Render:
                 await func(event)
         except queues.Empty:    return
 
+    async def __null_binding(self, event):
+        return None
+
     def __bind_handles(self):
         handler = self.__active._event_handler_
         if handler is None:
             for key in range(len(key_names)):
-                Key.bind(key, lambda x: None)
+                Key.bind(key, self.__null_binding)
 
         def wrap(key, handler):
             key = key_names[key]
