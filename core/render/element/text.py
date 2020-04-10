@@ -22,6 +22,7 @@ class Text(Primative):
         return self.anchor, self.text, self.size, self.colour, self.justify, self.font
 
     def volatile(self):
+        self.text = str(self.text)
         self.pos = self._offset(self.anchor)
 
     def _offset(self, value: Vector):
