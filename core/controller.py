@@ -20,6 +20,9 @@ class Interface:
         self.__application = application
         asyncio.run(self.__async.main(application))
 
+    def application(self) -> "Application":
+        return self.__application
+
     def render(self, obj: "Primative"):
         return self.__application.render.submit(obj)
 

@@ -14,9 +14,9 @@ class Window:
         return self.focus().__await__()
 
     async def focus(self):
-        await Interface.render.window_focus(self)
+        await Interface.application().render.window_focus(self)
         await self.__event.wait()
-        await Interface.render.window_pop(self)
+        await Interface.application().render.window_pop(self)
         return self.__finish
 
     def finish(self, value=None):
