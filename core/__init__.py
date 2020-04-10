@@ -1,8 +1,7 @@
-from core.vector import Vector
+# import core.error
 import core.sys
-import core.asset
 import core.render
-from core.render import element
-import core.hardware
-import core.std
-from core.application import Application
+import core.input
+
+from core.application import app as Application
+from core.controller import Interface

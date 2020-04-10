@@ -1,37 +1,49 @@
-import core.render
-import core.error
-from core.sys.single import Singleton
-from core.sys.deltatime import DeltaTime
+from core.driver.pipeline.render import Render as Pipeline
+from core.render import Render
 
-class Application(metaclass=Singleton):
+class _Active(type):
 
-    def __init__(self):
+    __instance = None
+    def __call__(cls, *args, new=False, **kwargs):
+        if new or cls.__instance is None:
+            return super().__call__(*args, **kwargs)
+        return cls.__instance
+
+    def activate(cls, obj):
+        cls.__instance = obj
+
+    def active(cls):
+        return cls.__instance
+
+class Application(metaclass=_Active):
+
+    def __init__(self, window: "Window"):
+        self.running = False
+        self.render = Render(Pipeline(), window)
+
+    def initialize(self):
+        self.__class__.activate(self)
         self.running = True
-        self.delta_time = DeltaTime()
-        self.render = core.render.Render()
+        self.render.initialize()
 
-    def run(self):
+    def terminate(self):
+        self.running = False
+        self.render.terminate()
+        self.__class__.activate(None)
+
+    async def main(self):
         try:
+            self.initialize()
             while self.running:
-                self.delta_time.next()
-                self.render.update()
-        except core.error.RenderError as e:
-            raise core.error.FatalCoreException from e
+                # print("Process")
+                await self.render.process()
+                # print("Execute")
+                self.render.execute()
         finally:
-            self.close()
+            self.terminate()
 
-    def open(self):
-        self.render.open()
-    def close(self):
-        self.render.close()
+def main(application: Application):
+    application.main()
 
-    def pause(self, update=True):
-        pass
-    def resume(self):
-        pass
-
-    def __enter__(self):
-        self.open()
-        return self
-    def __exit__(self, exc_type, exc_value, traceback):
-        return self.close()
+def app() -> Application:
+    return _Active.active(Application)
