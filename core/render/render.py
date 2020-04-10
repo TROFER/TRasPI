@@ -70,7 +70,7 @@ class Render:
                 except AttributeError: return
                 cls.window = self.__active
                 try:
-                    await func()
+                    await func(self.__active)
                 except Exception as e:
                     print("Event Error", e)
 
