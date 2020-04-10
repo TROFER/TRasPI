@@ -1,6 +1,5 @@
 import asyncio
-
-from core.application import Application
+from core.controller import Interface
 
 class Window:
 
@@ -15,9 +14,9 @@ class Window:
         return self.focus().__await__()
 
     async def focus(self):
-        Application().render.window_focus(self)
+        await Interface.render.window_focus(self)
         await self.__event.wait()
-        Application().render.window_pop(self)
+        await Interface.render.window_pop(self)
         return self.__finish
 
     def finish(self, value=None):
