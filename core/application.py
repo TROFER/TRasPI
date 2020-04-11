@@ -1,5 +1,9 @@
+import threading
 from core.driver.pipeline.render import Render as Pipeline
-from core.render import Render
+from core.render.render import Render
+from core.render.window import Window
+
+from core.interface import Interface
 
 class _Active(type):
 
@@ -17,9 +21,10 @@ class _Active(type):
 
 class Application(metaclass=_Active):
 
-    def __init__(self, window: "Window"):
+    def __init__(self, window: Window):
         self.running = False
-        self.render = Render(Pipeline(), window)
+        self.render = Render(Pipeline())
+        self.__window = window
 
     def initialize(self):
         self.__class__.activate(self)
@@ -32,13 +37,9 @@ class Application(metaclass=_Active):
         self.__class__.activate(None)
 
     async def main(self):
-        try:
-            self.initialize()
-            while self.running:
-                await self.render.process()
-                self.render.execute()
-        finally:
-            self.terminate()
+        Interface.schedule(self.render.execute())
+        Interface.schedule(self.render.process())
+        Interface.schedule(self.__window.focus())
 
 def main(application: Application):
     application.main()

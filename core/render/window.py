@@ -16,16 +16,12 @@ class Window:
     async def focus(self):
         await Interface.application().render.window_focus(self)
         await self.__event.wait()
-        print("WAITED")
-        await Interface.application().render.window_pop(self)
-        print("POPING MY GUY")
+        await Interface.application().render.window_pop()
         return self.__finish
 
     def finish(self, value=None):
-        print("Finishing in func", value)
         self.__finish = value
         self.__event.set()
-        print("Set event")
         return value
 
     def render(self):

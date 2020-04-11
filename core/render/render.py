@@ -3,20 +3,24 @@ import queue as queues
 from core.render.primative import Primative
 from core.hw.key import Key
 from core.input.keys import name as key_names
+from core.render.window import Window
+from core.interface import Interface
 
 class Render:
 
-    def __init__(self, pipeline, window: "Window"):
+    def __init__(self, pipeline):
         self.__pipeline = pipeline
-        self.__active = window
+        self.__active = Window()
         self.__window_stack = []
         self.__event_queue = queues.Queue()
 
         self.__set_active(self.__active)
 
-    def execute(self):
+    async def execute(self):
         self.__active.render()
         self.__pipeline.execute()
+        if Interface.active():
+            Interface.schedule(self.execute())
 
     def submit(self, obj: Primative):
         self.__pipeline.submit(obj)
@@ -48,8 +52,10 @@ class Render:
         try:
             while True:
                 func, event = self.__event_queue.get(False)
-                await func(event)
-        except queues.Empty:    return
+                Interface.schedule(func(event))
+        except queues.Empty:
+            if Interface.active():
+                Interface.schedule(self.process())
 
     async def __null_binding(self, event):
         return None
@@ -63,7 +69,6 @@ class Render:
         def wrap(key, handler):
             key = key_names[key]
             async def event(event):
-                print("Proc", event, key, handler)
                 try:
                     cls = getattr(handler, event)
                     func = getattr(cls, key)
@@ -75,10 +80,8 @@ class Render:
                     print("Event Error", e)
 
             def submit(ch, event_type):
-                print("Event", ch, event_type, handler)
                 self.__event_queue.put((event, event_type))
             return submit
 
         for key in range(len(key_names)):
-            print("Bind Key", key, handler)
             Key.bind(key, wrap(key, handler))

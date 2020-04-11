@@ -1,4 +1,3 @@
-import PIL.ImageDraw
 from core.vector import Vector
 from core.render.primative import Primative
 
@@ -6,35 +5,35 @@ __all__ = ["Image"]
 
 class Image(Primative):
 
-    def __init__(self, anchor, just_w='C', just_h=None):
+    def __init__(self, anchor: Vector, just_w: str='C', just_h: str=None):
         super().__init__()
         self.image, self.just_w, self.just_h = image, just_w, just_h
         self.anchor = anchor
-        self.pos = self._offset()
+        self._calc_pos()
 
-    def render(self):
+    def render(self, image: "PIL.ImageDraw.ImageDraw"):
+        pass
         # ASK TOM
 
     def copy(self):
         return self.pos, self.just_w, self.just_h
 
-    def _offset(self):
-        img_w, img_h = self.image_size()
-        pos = []
+    def _calc_pos(self):
+        size = Vector(1, 1) # image asset image size
+
         if self.just_w == 'R':
-            pos[0] = self.anchor[0] - img_w
+            off_w = self.anchor[0] - img_w
         elif self.just_w == 'L':
-            pos[0] = self.anchor[0]
+            off_w = self.anchor[0]
         else:
-            pos[0] = self.anchor[0] - (img_w // 2)
+            off_w = self.anchor[0] - (img_w // 2)
 
         if self.just_h == 'B':
-            pos[1] = self.anchor[1] + img_h
+            off_h = self.anchor[1] + img_h
         elif self.just_h == 'T':
-            pos[1] = self.anchor[1]
+            off_h = self.anchor[1]
         else:
-            pos[1] = self.anchor[1] + (img_h // 2)
-        return pos
+            off_h = self.anchor[1] + (img_h // 2)
 
-    def image_size(self):
-        return  # IMAGE SIZE
+        self.pos = Vector(off_w, off_h)
+

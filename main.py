@@ -51,5 +51,4 @@ class Handle(core.input.Handler):
 if __name__ == "__main__":
 
     app = core.application.Application(TWin())
-
     core.Interface.run(app)

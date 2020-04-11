@@ -1,20 +1,17 @@
 from core.input.keys import name as key_names
+from core.render.window import Window
 
 class _MetaHandler(type):
-    def __new__(cls, name, bases, dct):
-        if "window" not in dct:
-            raise TypeError
-        return super().__new__(cls, name, bases, dct)
 
     def __init__(cls, name, bases, dct):
-        if cls.window is not None:
-            cls.window._event_handler_ = cls
-        del cls.window, dct["window"]
+        if not issubclass(cls.window, Window):
+            raise TypeError
+        cls.window._event_handler_ = cls
         return super().__init__(name, bases, dct)
 
 class Handler(metaclass=_MetaHandler):
 
-    window = None
+    window = Window
 
     class press:
         pass

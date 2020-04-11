@@ -8,13 +8,12 @@ else:
 
 class Key:
 
-    if _FLAG: # GXHAT
+    if _FLAG: # GFXHAT
 
         def __init__(self):
             touch.setup()
 
         def bind(self, button, function):
-            print(button, function)
             touch.on(button, function)
 
         def repeat(self, rate=None):

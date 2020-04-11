@@ -12,7 +12,7 @@ else:
 
 class Backlight:
 
-    if _FLAG:  # GXHAT
+    if _FLAG:  # GFXHAT
 
         def __init__(self):
             backlight.setup()
