@@ -16,4 +16,4 @@ class Constant(metaclass=MetaConstant):
     height = 64
     path = os.path.dirname(os.path.abspath(sys.argv[0])).replace("\\", "/") + "/"
     platform = "NT" if os.name == "nt" else "POSIX"
-    pipeline = "Dummy" # "GFXHAT" or "DUMMY"
+    pipeline = "GFXHAT" # "GFXHAT" or "DUMMY"
