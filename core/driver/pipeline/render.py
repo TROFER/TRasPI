@@ -23,7 +23,7 @@ class Render:
     def submit(self, wgt):
         self.__wgt_s.add(wgt.render)
 
-        if all(i==j for i,j in zip(wgt.copy(), wgt._widget)):
+        if not all(i==j for i,j in zip(wgt.copy(), wgt._widget)):
             wgt._widget = wgt.copy()
             wgt.volatile()
             self.__update = True
@@ -62,15 +62,13 @@ class Renderer:
         self.event_frame = mp.Event()
         self.event_pixel = mp.Event()
 
-        self.cache_frame = [[2 for y in range(Constant.height)] for x in range(Constant.width)]
-
     def open(self):
         if not self.event_open.is_set():
             self.event_open.set()
             self.event_frame.clear()
             self.event_pixel.clear()
-            mp.Process(target=self.thread_frame).start()
-            mp.Process(target=self.thread_pixel).start()
+            mp.Process(target=self.thread_frame, name="FrameThread").start()
+            mp.Process(target=self.thread_pixel, name="PixelThread").start()
 
     def close(self):
         self.event_open.clear()
@@ -78,6 +76,7 @@ class Renderer:
         self.event_pixel.set()
 
     def thread_frame(self):
+        self.cache_frame = [[2 for y in range(Constant.height)] for x in range(Constant.width)]
         while self.event_open.is_set():
             self.event_frame.wait()
             try:
