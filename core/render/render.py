@@ -1,5 +1,6 @@
 import queue as queues
 
+import core.error
 from core.render.primative import Primative
 from core.hw.key import Key
 from core.input.keys import name as key_names
@@ -57,31 +58,21 @@ class Render:
             if Interface.active():
                 Interface.schedule(self.process())
 
-    async def __null_binding(self, event):
-        return None
-
     def __bind_handles(self):
-        handler = self.__active._event_handler_
-        if handler is None:
-            for key in range(len(key_names)):
-                Key.bind(key, self.__null_binding)
-
         def wrap(key, handler):
             key = key_names[key]
             async def event(event):
                 try:
-                    cls = getattr(handler, event)
-                    func = getattr(cls, key)
+                    func = getattr(getattr(handler, event), key)
                 except AttributeError: return
-                cls.window = self.__active
                 try:
                     await func(self.__active)
                 except Exception as e:
-                    print("Event Error", e)
+                    raise core.error.Event(e, key, event, handler, self.__active)
 
             def submit(ch, event_type):
                 self.__event_queue.put((event, event_type))
             return submit
 
         for key in range(len(key_names)):
-            Key.bind(key, wrap(key, handler))
+            Key.bind(key, wrap(key, self.__active._event_handler_))

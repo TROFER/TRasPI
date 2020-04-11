@@ -1,6 +1,7 @@
 import asyncio
 import concurrent
 import threading
+import core.error
 
 class AsyncController:
 
@@ -22,9 +23,15 @@ class AsyncController:
             self.loop.close()
 
     async def executor_cpu(self, func):
-        return await self.loop.run_in_executor(self._executor_cpu, func)
+        try:
+            return await self.loop.run_in_executor(self._executor_cpu, func)
+        except Exception as e:
+            raise core.error.ExecutorProcessCPU(e) from e
     async def executor_cpu(self, func):
-        return await self.loop.run_in_executor(self._executor_io, func)
+        try:
+            return await self.loop.run_in_executor(self._executor_io, func)
+        except Exception as e:
+            raise core.error.ExecutorProcessIO(e) from e
 
 class Interface:
 
