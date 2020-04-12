@@ -7,4 +7,6 @@ import core.input
 from core.render import element
 
 import core.application
+
+from core.type.program import Program as app
 from core.interface import Interface, interface
