@@ -7,6 +7,8 @@ from core.input.keys import name as key_names
 from core.render.window import Window
 from core.interface import Interface
 
+__all__ = ["Render"]
+
 class Render:
 
     def __init__(self, pipeline):
@@ -66,7 +68,7 @@ class Render:
                     func = getattr(getattr(handler, event), key)
                 except AttributeError: return
                 try:
-                    await func(self.__active)
+                    await func(None, self.__active)
                 except Exception as e:
                     raise core.error.Event(e, key, event, handler, self.__active)
 

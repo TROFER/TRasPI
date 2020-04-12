@@ -1,5 +1,7 @@
 import enum
 
+__all__ = ["Key", "name"]
+
 @enum.unique
 class Key(enum.IntEnum):
     UP = 0

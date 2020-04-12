@@ -2,7 +2,7 @@ import multiprocessing as mp
 import ctypes
 import PIL.ImageDraw
 import PIL.Image
-from core.sys.constants import Constant
+from core.sys.attributes import SysConstant
 from core.driver.pipeline.display import Display
 
 class Render:
@@ -13,7 +13,7 @@ class Render:
         self._scene = False
         self.__update = True
 
-        self.__template = PIL.Image.new("1", (Constant.width, Constant.height), 1)
+        self.__template = PIL.Image.new("1", (SysConstant.width, SysConstant.height), 1)
         # self.__template
         self.__image = self.__template.copy()
         self.__draw = PIL.ImageDraw.Draw(self.__image)
@@ -32,6 +32,8 @@ class Render:
         self._scene = not self._scene if flag is None else flag
 
     def execute(self):
+        if not self.__renderer.event_pause.is_set():
+            return
         if self.__update or self.__wgt_s != self.__wgt_r:
             self.__update = False
             self.__wgt_r = self.__wgt_s.copy()
@@ -52,6 +54,11 @@ class Render:
     def close(self):
         self.__renderer.close()
 
+    def pause(self):
+        self.__renderer.event_pause.clear()
+    def resume(self):
+        self.__renderer.event_pause.set()
+
 class Renderer:
 
     def __init__(self):
@@ -59,12 +66,14 @@ class Renderer:
         self.buffer_frame = mp.JoinableQueue()
         self.buffer_pixel = mp.JoinableQueue()
 
+        self.event_pause = mp.Event()
         self.event_frame = mp.Event()
         self.event_pixel = mp.Event()
 
     def open(self):
         if not self.event_open.is_set():
             self.event_open.set()
+            self.event_pause.set()
             self.event_frame.clear()
             self.event_pixel.clear()
             mp.Process(target=self.thread_frame, name="FrameThread").start()
@@ -76,8 +85,9 @@ class Renderer:
         self.event_pixel.set()
 
     def thread_frame(self):
-        self.cache_frame = [[2 for y in range(Constant.height)] for x in range(Constant.width)]
+        self.cache_frame = [[2 for y in range(SysConstant.height)] for x in range(SysConstant.width)]
         while self.event_open.is_set():
+            self.event_pause.wait()
             self.event_frame.wait()
             try:
                 frame = self.buffer_frame.get(False)
@@ -89,6 +99,7 @@ class Renderer:
 
     def thread_pixel(self):
         while self.event_open.is_set():
+            self.event_pause.wait()
             try:
                 pixel = self.buffer_pixel.get(False)
             except mp.queues.Empty: continue
@@ -103,8 +114,8 @@ class Renderer:
     def calculate_pixel(self, frame: PIL.Image.Image):
             data = iter(frame.getdata())
 
-            for y in range(Constant.height):
-                for x in range(Constant.width):
+            for y in range(SysConstant.height):
+                for x in range(SysConstant.width):
                     pixel = next(data)
                     if pixel != self.cache_frame[x][y]:
                         self.buffer_pixel.put((x, y, 1 if pixel == 0 else 0))

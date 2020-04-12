@@ -1,13 +1,14 @@
-from core.sys.constants import Constant
-import SystemConfig
-import colorsys
+from core.sys.attributes import SysConstant
 from core.vector import Vector
-if Constant.pipeline == "GFXHAT":
+if SysConstant.pipeline == "GFXHAT":
     _FLAG = True
     from core.driver.gfxhat import backlight
 else:
     _FLAG = False
     from core.driver.dummy import backlight
+
+from core.sys.attributes import SysConfig
+import colorsys
 
 
 class Backlight:
@@ -47,7 +48,7 @@ class Backlight:
         else:
             _hsv = colorsys.rgb_to_hsv(*(Vector(*colour) / 255))
         if not force:
-            _hsv = hsv.map((1, 1, SystemConfig.brightness / 100))
+            _hsv = hsv.map((1, 1, SysConfig.brightness / 100))
         rgb = colorsys.hsv_to_rgb(*_hsv)
         return (*(Vector(*rgb) * 255))
 

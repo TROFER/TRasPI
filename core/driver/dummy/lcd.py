@@ -1,17 +1,17 @@
 import os
-from core.sys.constants import Constant
+from core.sys.attributes import SysConstant
 
-_clear_sys_ = "cls" if Constant.platform == "NT" else "clear"
-__image = [[2 for x in range(Constant.width)] for y in range(Constant.height)]
+_clear_sys_ = "cls" if SysConstant.platform == "NT" else "clear"
+__image = [[2 for x in range(SysConstant.width)] for y in range(SysConstant.height)]
 
 def setup():
     for y in __image:
-        for x in range(Constant.width):
+        for x in range(SysConstant.width):
             y[x] = 2
 
 def clear():
     for y in __image:
-        for x in range(Constant.width):
+        for x in range(SysConstant.width):
             y[x] = 0
 
 def show():

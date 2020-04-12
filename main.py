@@ -22,10 +22,10 @@ class Handle(core.input.Handler):
 
     class press:
         @core.input.event
-        async def up(self):
-            print("Press up on", self)
+        async def up(null, window):
+            print("Press up on", window)
         @core.input.event
-        async def centre(self):
+        async def centre(null, window):
             print("Awaiting")
             val = await SubWin()
             print(val)
@@ -36,12 +36,12 @@ class Handle(core.input.Handler):
 
     class press:
         @core.input.event
-        async def up(self):
+        async def up(null, window):
             print("Press up on", self)
         @core.input.event
-        async def centre(self):
+        async def centre(null, window):
             print("Returning")
-            self.finish("DONE")
+            window.finish("DONE")
             print("Finished")
 
 if __name__ == "__main__":

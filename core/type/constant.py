@@ -1,5 +1,4 @@
-import sys
-import os
+__all__ = ["Constant"]
 
 class MetaConstant(type):
 
@@ -12,8 +11,4 @@ class MetaConstant(type):
         super().__setattr__(name, value)
 
 class Constant(metaclass=MetaConstant):
-    width = 128
-    height = 64
-    path = os.path.dirname(os.path.abspath(sys.argv[0])).replace("\\", "/") + "/"
-    platform = "NT" if os.name == "nt" else "POSIX"
-    pipeline = "GFXHAT" # "GFXHAT" or "DUMMY"
+    pass

@@ -1,6 +1,5 @@
 import PIL.ImageDraw
 from core.vector import Vector
-from core.render.primative import Primative
 from core.render.element.text import Text
 from core.render.element.rectangle import Rectangle
 
@@ -18,13 +17,8 @@ class TextBox(Text):  # ASK TOM
 
         def copy(self):
             return self.anchor, self.line_col, self.fill, self.width
-            
-        def volatile(self):
-            super().volatile()
-            self._offset()
 
-        def _offset(self):
-            value = super()._offset(self.anchor)
-            self.rect.pos = value - Vector(2, 0)
+        def _calc_pos(self):
+            super()._calc_pos()
+            self.rect.pos = self.pos - Vector(2, 0)
             self.rect.pos_2 = self.font_size() + Vector(2, 0)
-            return value

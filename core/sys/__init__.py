@@ -1,2 +1,2 @@
-from core.sys.constants import Constant as const
-from core.sys.config import SystemConfig as var
+from core.sys.attributes import SysConstant as const
+from core.sys.attributes import SysConfig as var

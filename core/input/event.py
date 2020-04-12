@@ -1,6 +1,8 @@
 from core.input.keys import name as key_names
 from core.render.window import Window
 
+__all__ = ["Handler", "event"]
+
 class _MetaHandler(type):
 
     def __init__(cls, name, bases, dct):

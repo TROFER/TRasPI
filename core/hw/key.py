@@ -1,5 +1,5 @@
-from core.sys.constants import Constant
-if Constant.pipeline == "GFXHAT":
+from core.sys.attributes import SysConstant
+if SysConstant.pipeline == "GFXHAT":
     _FLAG = True
     from core.driver.gfxhat import touch
 else:

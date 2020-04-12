@@ -1,3 +1,5 @@
+__all__ = ["Config"]
+
 class _MetaConfig(type):
 
     def __new__(cls, name, bases, dct):
@@ -33,6 +35,3 @@ class _MetaConfig(type):
 
 class Config(metaclass=_MetaConfig):
     pass
-
-class SystemConfig(Config):
-    brightness = 65

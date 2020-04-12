@@ -1,6 +1,8 @@
 import asyncio
 from core.interface import Interface
 
+__all__ = ["Window"]
+
 class Window:
 
     _event_handler_ = None
