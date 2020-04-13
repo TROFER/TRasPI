@@ -11,14 +11,14 @@ class TextBox(Text):  # ASK TOM
         super().__init__(anchor, *args, **kwargs)
         self.rect = Rectangle(anchor-Vector(2, 0), Vector(1, 1), line_col, fill, width)
 
-        def render(self, image: "PIL.ImageDraw.ImageDraw"):
-            super().render(image)
-            self.rect.render(image)
+    def render(self, image: "PIL.ImageDraw.ImageDraw"):
+        super().render(image)
+        self.rect.render(image)
 
-        def copy(self):
-            return self.anchor, self.line_col, self.fill, self.width
+    def copy(self):
+        return self.anchor, self.line_col, self.fill, self.width
 
-        def _calc_pos(self):
-            super()._calc_pos()
-            self.rect.pos = self.pos - Vector(2, 0)
-            self.rect.pos_2 = self.font_size() + Vector(2, 0)
+    def _calc_pos(self):
+        super()._calc_pos()
+        self.rect.pos = self.pos - Vector(2, 0)
+        self.rect.pos_2 = self.font_size() + Vector(2, 0)
