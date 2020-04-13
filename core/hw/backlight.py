@@ -22,11 +22,8 @@ class Backlight:
             backlight.set_pixel(zone, r, g, b)
 
         def all(self, r: int, g: int, b: int):
-            try:
-                backlight.set_all(r, g, b)
-                backlight.show()
-            except Exception as e:
-                print("Cumming from here", e)
+            backlight.set_all(r, g, b)
+            backlight.show()
 
         def show(self):
             backlight.show()

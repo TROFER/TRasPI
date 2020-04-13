@@ -30,12 +30,9 @@ class MainWindow(Window):
             TextBox(Vector(127, 42), "Power Options", justify='R')
         ]
         self.panels = panels.panels
-    
+
     async def show(self):
-        try:
-            Backlight.fill(SysConfig.colour)
-        except Exception as e:
-            print(e)
+        Backlight.fill(SysConfig.colour)
 
     def render(self):
         for element in self.elements:
