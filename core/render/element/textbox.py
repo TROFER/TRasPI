@@ -9,7 +9,7 @@ class TextBox(Text):  # ASK TOM
 
     def __init__(self, anchor, *args, line_col=0, fill=None, width=1, **kwargs):
         super().__init__(anchor, *args, *kwargs)
-        self.rect = Rectangle(pos-Vector(2, 0), Vector(1, 1), line_col, fill, width)
+        self.rect = Rectangle(anchor-Vector(2, 0), Vector(1, 1), line_col, fill, width)
 
         def render(self):
             super().render()

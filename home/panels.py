@@ -11,8 +11,6 @@ if SysConstant.platform == "POSIX":
     import gpiozero
     import psutil
 
-# ADD PATHS
-
 
 class Panel:
 
@@ -21,7 +19,7 @@ class Panel:
     def __init__(self, title, fields, refresh=1):
         self.fields = fields
         self.speed = refresh
-        self.elements = [Text(Vector(4, POSITIONS[i]), func(), justify='L')
+        self.elements = [Text(Vector(4, self.POSITIONS[i]), func(self), justify='L')
                          for i, func in enumerate(self.fields)]
         self.elements.append(Text(Vector(4, 5), title, justify='L'))
 
@@ -36,21 +34,21 @@ class Panel:
 
 class WorldClock(Panel):
 
+    LOCATIONS = ["London", "New%20York", "Tokyo", "Moscow", "Berlin"]
+
     def __init__(self):
-
-        LOCATIONS = ["London", "New%20York", "Tokyo", "Moscow", "Berlin"]
-        FIELDS = [self.london, self.newyork,
-                  self.tokyo, self.moscow, self.berlin]
-
-        with open(f"{SysConstant.path}cache") as cache:
-            self.cache = cache.read().splitlines()
+        try:
+            with open(f"{SysConstant.path}/core/panels.cache") as cache:
+                self.cache = cache.read().splitlines()
+        except FileNotFoundError:
+            self.cache = [0, 0, 0, 0, 0, 0]
         if time.time() - int(self.cache[0]) > 46400:
-            for i, location in enumerate(LOCATIONS, start=1):
+            for i, location in enumerate(self.LOCATIONS, start=1):
                 self.cache[i] = self._request(location)
-            self.cache[0] = time.time()
-            with open(f"{SysConstant.path}cache", 'w') as cache:
-                cache.write("\n".join(self.cache))
-        super().__init__("World Clock", FIELDS, refresh=1)
+            self.cache[0] = int(time.time())
+            with open(f"{SysConstant.path}/core/panels.cache", 'w') as cache:
+                cache.write("\n".join(map(str, self.cache)))
+        super().__init__("World Clock", self.FIELDS, refresh=1)
 
     def _request(self, location):
 
@@ -63,34 +61,37 @@ class WorldClock(Panel):
 
     def london(self):
         time = datetime.datetime.now(datetime.timezone(
-            datetime.timedelta(seconds=self.cache[1])))
+            datetime.timedelta(seconds=int(self.cache[1]))))
         return f"Lond:{time.strftime('%H:%M')}"
 
     def newyork(self):
         time = datetime.datetime.now(datetime.timezone(
-            datetime.timedelta(seconds=self.cache[2])))
+            datetime.timedelta(seconds=int(self.cache[2]))))
         return f"NYok:{time.strftime('%H:%M')}"
 
     def tokyo(self):
         time = datetime.datetime.now(datetime.timezone(
-            datetime.timedelta(seconds=self.cache[3])))
+            datetime.timedelta(seconds=int(self.cache[3]))))
         return f"Toky:{time.strftime('%H:%M')}"
 
     def moscow(self):
         time = datetime.datetime.now(datetime.timezone(
-            datetime.timedelta(seconds=self.cache[4])))
+            datetime.timedelta(seconds=int(self.cache[4]))))
         return f"Mosc:{time.strftime('%H:%M')}"
 
     def berlin(self):
         time = datetime.datetime.now(datetime.timezone(
-            datetime.timedelta(seconds=self.cache[5])))
+            datetime.timedelta(seconds=int(self.cache[5]))))
         return f"berl:{time.strftime('%H:%M')}"
+
+    FIELDS = [london, newyork,
+              tokyo, moscow, berlin]
 
 
 class HWinfo(Panel):
 
     def __init__(self):
-        super().__init__("HW Info", FIELDS, refresh=1)
+        super().__init__("HW Info", self.FIELDS, refresh=1)
 
     def cpu_temp(self):
         return f"CPU°C: {round(gpiozero.CPUTemperature().temperature, 1)}°C"
@@ -104,9 +105,9 @@ class HWinfo(Panel):
     def storage_free(self):
         return f"Strg%: {int(psutil.disk_usage('/').used) // int(psutil.disk_usage('/').total) * 100}%"
 
-
     FIELDS = [cpu_temp, cpu_usage,
-        memory_usage, storage_free]
+              memory_usage, storage_free]
+
 
 class Weather(Panel):
 
@@ -119,8 +120,8 @@ class Weather(Panel):
         with open(f"{SysConstant.path}user/openweatherkey.txt") as key:
             key = key.read()
         self.data = json.load(request.urlopen(
-            f"{URL}q={location}&appid={key}"))
-        super().__init__("Weather", FIELDS, refresh=1)
+            f"{URL}q={self.LOCATION}&appid={key}"))
+        super().__init__("Weather", self.FIELDS, refresh=1)
 
     def temperature(self):
         return f"Temp: {round(self.data['main']['temp'] - 273.1, 1)}°C"
@@ -135,5 +136,6 @@ class Weather(Panel):
         return f"WSpd: {self.data['wind']['speed']}Mph"
 
     FIELDS = [temperature]
+
 
 panels = [WorldClock(), HWinfo(), Weather()]

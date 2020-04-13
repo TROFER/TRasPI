@@ -22,10 +22,9 @@ class MainWindow(Window):
         super().__init__()
         self.index = [0, 0]
         self.elements = [
-            Text(Vector(3, 5), f"{SysConfig.system_name}", justify='L'),
+            Text(Vector(3, 5), f"{SysConfig.name}", justify='L'),
             Text(Vector(126, 5), time.strftime("%I:%M%p"), justify='R'),
-            Text(Vector(self.elements[3+self.index][0].pos[0] - 2,
-                        self.elements[3+self.index][0].pos[1]), ">", justify='R'),
+            Text(Vector(0, 0), ">", justify='R'),
             TextBox(Vector(127, 18), "Run Program", justify='R'),
             TextBox(Vector(127, 30), "System Settings", justify='R'),
             TextBox(Vector(127, 42), "Power Options", justify='R')
@@ -42,7 +41,7 @@ class MainWindow(Window):
 
     def refresh(self):
         self.elements[1].text = time.strftime("%I:%M%p")
-        self.elements[2].anchor = Vector(self.elements[3+self.index][0].pos[0] - 2, self.elements[3+self.index][0].pos[1])
+        self.elements[2].anchor = Vector(self.elements[3+self.index][0].anchor[0] - 2, self.elements[3+self.index][0].anchor[1])
 
 class Handle(Handler):
 
