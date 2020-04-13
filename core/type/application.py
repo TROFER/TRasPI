@@ -19,7 +19,7 @@ class MetaApplication(type):
             raise TypeError
         if not isinstance(cls.window, Window):
             raise TypeError
-        dct["_program"] = Program(cls)
+        cls._program = Program(cls)
         return super().__init__(name, bases, dct)
 
 class Application(metaclass=MetaApplication):
