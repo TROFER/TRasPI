@@ -26,6 +26,7 @@ class Render:
 
     async def execute(self):
         await self.__executing.wait()
+        print("Render:", self.__active)
         self.__active.render()
         self.__pipeline.execute()
         if Interface.active():
