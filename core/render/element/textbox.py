@@ -11,9 +11,9 @@ class TextBox(Text):  # ASK TOM
         super().__init__(anchor, *args, **kwargs)
         self.rect = Rectangle(anchor-Vector(2, 0), Vector(1, 1), line_col, fill, width)
 
-        def render(self):
-            super().render()
-            self.rect.render()
+        def render(self, image: "PIL.ImageDraw.ImageDraw"):
+            super().render(image)
+            self.rect.render(image)
 
         def copy(self):
             return self.anchor, self.line_col, self.fill, self.width
