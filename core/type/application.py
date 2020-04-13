@@ -23,6 +23,7 @@ class MetaApplication(type):
 
 class Application(metaclass=MetaApplication):
 
+    @classmethod
     def interval(self, func: callable, delay: float=1, repeat: int=-1):
         """Calls func every 'delay' seconds 'repeat' number of times"""
         self._program.create_interval_func(func, delay, repeat)

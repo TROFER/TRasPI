@@ -7,6 +7,7 @@ class Program:
 
     def __init__(self, app: Application):
         self.application = app
+        self.application._program = self
         self.window_stack = [app.window]
         self._intervals = set()
 
