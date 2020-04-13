@@ -25,7 +25,7 @@ class SysConstant(Constant):
     height = 7
     path = os.path.dirname(os.path.abspath(sys.argv[0])).replace("\\", "/") + "/"
     platform = "NT" if os.name == "nt" else "POSIX"
-    pipeline = "DUMMY" # "GFXHAT" or "DUMMY"
+    pipeline = "GFXHAT" # "GFXHAT" or "DUMMY"
 
 # __all__ = ["Config"]
 
