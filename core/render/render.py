@@ -9,6 +9,8 @@ from core.input.keys import Key as KeyEnum
 from core.render.window import Window
 from core.interface import Interface
 
+import traceback
+
 __all__ = ["Render"]
 
 class Render:
@@ -31,6 +33,7 @@ class Render:
             self.__pipeline.execute()
         except Exception as e:
             print(f"{e.__class__.__name__}: {e}")
+            print(traceback.print_exception(e))
         if Interface.active():
             Interface.schedule(self.execute())
 
