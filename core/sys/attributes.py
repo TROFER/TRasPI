@@ -14,4 +14,6 @@ class SysConstant(Constant):
 
 
 class SysConfig(Config):
+    name = "Traspi"
     brightness = 65
+    accent = 12

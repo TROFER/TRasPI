@@ -36,9 +36,10 @@ class WorldClock(Panel):
     def __init__(self):
 
         LOCATIONS = ["London", "New%20York", "Tokyo", "Moscow", "Berlin"]
-        FIELDS = [self.london, self.newyork, self.tokyo, self.moscow, self.berlin]
+        FIELDS = [self.london, self.newyork,
+                  self.tokyo, self.moscow, self.berlin]
 
-        with open(f"{core.sys.PATH}") as cache: 
+        with open(f"{core.sys.PATH}") as cache:
             self.cache = cache.read().splitlines()
         if time.time() - int(self.cache[0]) > 46400:
             for i, location in enumerate(LOCATIONS, start=1):
@@ -60,46 +61,49 @@ class WorldClock(Panel):
     def london(self):
         time = datetime.datetime.now(datetime.timezone(
             datetime.timedelta(seconds=self.cache[1])))
-        return f"Lond:{time.strftime("%H:%M")}"
+        return f"Lond:{time.strftime('%H:%M')}"
 
     def newyork(self):
         time = datetime.datetime.now(datetime.timezone(
             datetime.timedelta(seconds=self.cache[2])))
-        return f"NYok:{time.strftime("%H:%M")}"
+        return f"NYok:{time.strftime('%H:%M')}"
 
     def tokyo(self):
         time = datetime.datetime.now(datetime.timezone(
             datetime.timedelta(seconds=self.cache[3])))
-        return f"Toky:{time.strftime("%H:%M")}"
-    
+        return f"Toky:{time.strftime('%H:%M')}"
+
     def moscow(self):
         time = datetime.datetime.now(datetime.timezone(
             datetime.timedelta(seconds=self.cache[4])))
-        return f"Mosc:{time.strftime("%H:%M")}"
-    
+        return f"Mosc:{time.strftime('%H:%M')}"
+
     def berlin(self):
         time = datetime.datetime.now(datetime.timezone(
             datetime.timedelta(seconds=self.cache[5])))
-        return f"berl:{time.strftime("%H:%M")}"
+        return f"berl:{time.strftime('%H:%M')}"
+
 
 class HWinfo(Panel):
 
-    FIELDS = [self.cpu_temp, self.cpu_usage, self.memory_usage, self.storage_free]
+    FIELDS = [self.cpu_temp, self.cpu_usage,
+              self.memory_usage, self.storage_free]
 
     def __init__(self):
         super().__init__("HW Info", FIELDS, refresh=1)
-    
+
     def cpu_temp(self):
         return f"CPU°C: {round(gpiozero.CPUTemperature().temperature, 1)}°C"
-    
+
     def cpu_usage(self):
         return f"CPU%: {psutil.cpu_percent()}%"
-    
+
     def memory_usage(self):
         return f"Mem%: {psutil.virtual_memory().percent}%"
 
     def storage_free(self):
         return f"Strg%: {int(psutil.disk_usage('/').used) // int(psutil.disk_usage('/').total) * 100}%"
+
 
 class Weather(Panel):
 
@@ -112,18 +116,21 @@ class Weather(Panel):
 
         with open(f"{core.sys.PATH}user/openweatherkey.txt") as key:
             key = key.read()
-        self.data = json.load(request.urlopen(f"{URL}q={location}&appid={key}"))
+        self.data = json.load(request.urlopen(
+            f"{URL}q={location}&appid={key}"))
         super().__init__("Weather", FIELDS, refresh=1)
-    
+
     def temperature(self):
         return f"Temp: {round(self.data['main']['temp'] - 273.1, 1)}°C"
 
     def pressure(self):
         return f"Pres: {self.data['main']['pressure']}Pa"
-    
+
     def humidity(self):
         return f"Humi: {self.data['main']['humidity']}%"
-    
+
     def wind_speed(self):
         return f"WSpd: {self.data['wind']['speed']}Mph"
 
+
+panels = [WorldClock(), HWinfo(), Weather()]
