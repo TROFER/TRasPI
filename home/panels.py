@@ -15,15 +15,15 @@ if SysConstant.platform == "POSIX":
 
 class Panel:
 
-    POSITIONS = [15, 25, 35, 45, 55]
+    POSITIONS = [25, 35, 45, 55, 64]
 
     def __init__(self, title, fields, refresh=1):
         self.fields = fields
         self.speed = refresh
         self.elements = [Text(Vector(4, self.POSITIONS[i]), func(self), justify='L')
                          for i, func in enumerate(self.fields)]
-        self.elements.append(Text(Vector(10, 4), title, justify='L'))
-        self.elements.append(Rectangle(Vector(9, 3), Vector(20, 60)))
+        self.elements.append(Text(Vector(3, 15), title, justify='L'))
+        self.elements.append(Rectangle(Vector(3, 12), Vector(64, 62)))
 
     def render(self):
         for element in self.elements:
@@ -36,7 +36,7 @@ class Panel:
 
 class WorldClock(Panel):
 
-    LOCATIONS = ["London", "New%20York", "Tokyo", "Moscow", "Berlin"]
+    LOCATIONS = ["London", "New%20York", "Tokyo", "Moscow"]
 
     def __init__(self):
         try:

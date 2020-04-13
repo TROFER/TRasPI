@@ -23,11 +23,11 @@ class MainWindow(Window):
         self.index = [0, 0]
         self.elements = [
             Text(Vector(3, 5), f"{SysConfig.name}", justify='L'),
-            Text(Vector(126, 5), time.strftime("%I:%M%p"), justify='R'),
+            Text(Vector(127, 5), time.strftime("%I:%M%p"), justify='R'),
             Text(Vector(0, 0), ">", justify='R'),
-            TextBox(Vector(127, 18), "Run Program", justify='R'),
-            TextBox(Vector(127, 30), "System Settings", justify='R'),
-            TextBox(Vector(127, 42), "Power Options", justify='R')
+            TextBox(Vector(125, 17), "Programs", justify='R'),
+            TextBox(Vector(125, 30), "Settings", justify='R'),
+            TextBox(Vector(125, 43), "Power Opt", justify='R')
         ]
         self.panels = panels.panels
         App.interval(self.refresh)
@@ -39,7 +39,7 @@ class MainWindow(Window):
     def render(self):
         for element in self.elements:
             Interface.render(element)
-        # self.panels[self.index[1]].render()
+        self.panels[self.index[1]].render()
 
     def refresh(self):
         self.elements[1].text = time.strftime("%I:%M%p")
