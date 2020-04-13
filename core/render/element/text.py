@@ -14,7 +14,7 @@ class Text(Primative):
         self._calc_pos()
 
     def render(self, image: "PIL.ImageDraw.ImageDraw"):
-        image.text(self.pos, self.text, self.colour, self.font)
+        image.text(self.pos, self.text, self.colour, self.font.font)
 
     def copy(self):
         return self.anchor, self.text, self.size, self.colour, self.justify, self.font
