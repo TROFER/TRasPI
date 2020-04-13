@@ -1,4 +1,4 @@
-from core.type.constant import Constant
-from core.type.config import Config
-from core.type.asset import Asset
-from core.type.program import Program
+from core.sys.attributes import Constant, Config
+from core.asset.base import Asset
+from core.asset.res_pool import Pool
+from core.type.application import Application

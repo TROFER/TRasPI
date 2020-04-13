@@ -14,7 +14,7 @@ class AsyncController:
     def run(self, application: "Application"):
         try:
             application.initialize()
-            asyncio.run_coroutine_threadsafe(application.main(), self.loop)
+            asyncio.run_coroutine_threadsafe(application.run(), self.loop)
             self.loop.run_forever()
         finally:
             self.loop.stop()
@@ -63,6 +63,41 @@ class Interface:
         if type == "IO":
             return await self.__async.executor_io(func)
         return await self.__async.executor_cpu(func)
+
+    class interval:
+        """Call func repeatedly, determinded by repeat, with a delay in seconds"""
+
+        def __init__(self, func: callable, delay: float=1, repeat: int=-1):
+            """Call func repeatedly, determinded by repeat, with a delay in seconds"""
+            self._cancel = False
+            self._event = asyncio.Event()
+            self.func = func
+            self.delay = delay
+            self.repeat = repeat
+            interface.schedule(self.run())
+
+        def cancel(self):
+            """Cancel the interval"""
+            self._cancel = True
+
+        def pause(self):
+            self._event.clear()
+        def resume(self):
+            self._event.set()
+
+        def __await__(self):
+            return self.run().__await__()
+
+        async def run(self):
+            await asyncio.sleep(self.delay)
+            while not self._cancel:
+                await self._event.wait()
+                self.func()
+                await asyncio.sleep(self.delay)
+
+        def __hash__(self) -> int:
+            return id(self)
+
 
 Interface = Interface(AsyncController())
 interface = Interface

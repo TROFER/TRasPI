@@ -1,4 +1,4 @@
-from core.type.asset import Asset
+from core.asset.base import Asset
 import PIL.ImageFont
 from core.vector import Vector
 
