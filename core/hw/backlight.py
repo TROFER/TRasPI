@@ -50,7 +50,7 @@ class Backlight:
         if not force:
             _hsv = hsv.map((1, 1, SysConfig.brightness / 100))
         rgb = colorsys.hsv_to_rgb(*_hsv)
-        return (*(Vector(*rgb) * 255))
+        return (Vector(*rgb) * 255)
 
     def fill(self, colour, hsv=True, force=False):
         self.all(self.__colour_to_rgb(colour, hsv, force))
