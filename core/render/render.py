@@ -33,7 +33,7 @@ class Render:
             self.__pipeline.execute()
         except Exception as e:
             print(f"{e.__class__.__name__}: {e}")
-            print(traceback.print_exception(e))
+            print(traceback.print_exception(e, e, e.__traceback__))
         if Interface.active():
             Interface.schedule(self.execute())
 
