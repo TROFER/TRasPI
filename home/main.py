@@ -32,10 +32,12 @@ class MainWindow(Window):
         self.panels = panels.panels
     
     async def show(self):
-        Backlight.fill(SysConfig.colour)
+        try:
+            Backlight.fill(SysConfig.colour)
+        except Exception as e:
+            print(e)
 
     def render(self):
-        print("Render")
         for element in self.elements:
             Interface.render(element)
         self.panels[self.index[1]].render()

@@ -22,8 +22,11 @@ class Backlight:
             backlight.set_pixel(zone, r, g, b)
 
         def all(self, r: int, g: int, b: int):
-            backlight.set_all(r, g, b)
-            backlight.show()
+            try:
+                backlight.set_all(r, g, b)
+                backlight.show()
+            except Exception as e:
+                print("Cumming from here", e)
 
         def show(self):
             backlight.show()
@@ -53,7 +56,7 @@ class Backlight:
         if not force:
             _hsv = _hsv.map((1, 1, SysConfig.brightness / 100))
         rgb = colorsys.hsv_to_rgb(*_hsv)
-        return (Vector(*rgb) * 255)
+        return (Vector(*rgb) * 255).int()
 
     def fill(self, colour, hsv=True, force=False):
         self.all(*self.__colour_to_rgb(colour, hsv, force))
