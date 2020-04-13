@@ -26,9 +26,11 @@ class Render:
 
     async def execute(self):
         await self.__executing.wait()
-        print("Render:", self.__active)
-        self.__active.render()
-        self.__pipeline.execute()
+        try:
+            self.__active.render()
+            self.__pipeline.execute()
+        except Exception as e:
+            print(e)
         if Interface.active():
             Interface.schedule(self.execute())
 
