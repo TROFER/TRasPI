@@ -1,12 +1,15 @@
 import json
 from urllib.error import HTTPError, URLError
 from urllib import request
+import time
 import datetime
 from core.render.element import Text
 from core.vector import Vector
 from core.interface import Interface
-import gpiozero
-import psutil
+from core.sys.attributes import SysConstant
+if SysConstant.platform == "POSIX":
+    import gpiozero
+    import psutil
 
 # ADD PATHS
 
@@ -39,13 +42,13 @@ class WorldClock(Panel):
         FIELDS = [self.london, self.newyork,
                   self.tokyo, self.moscow, self.berlin]
 
-        with open(f"{core.sys.PATH}") as cache:
+        with open(f"{SysConstant.path}cache") as cache:
             self.cache = cache.read().splitlines()
         if time.time() - int(self.cache[0]) > 46400:
             for i, location in enumerate(LOCATIONS, start=1):
                 self.cache[i] = self._request(location)
             self.cache[0] = time.time()
-            with open(f"{core.sys.PATH}", 'w') as cache:
+            with open(f"{SysConstant.path}cache", 'w') as cache:
                 cache.write("\n".join(self.cache))
         super().__init__("World Clock", FIELDS, refresh=1)
 
@@ -53,7 +56,7 @@ class WorldClock(Panel):
 
         URL = "http://api.openweathermap.org/data/2.5/weather?"
 
-        with open(f"{core.sys.PATH}user/openweatherkey.txt") as key:
+        with open(f"{SysConstant.path}user/openweatherkey.txt") as key:
             key = key.read()
         data = json.load(request.urlopen(f"{URL}q={location}&appid={key}"))
         return data["timezone"]
@@ -86,9 +89,6 @@ class WorldClock(Panel):
 
 class HWinfo(Panel):
 
-    FIELDS = [self.cpu_temp, self.cpu_usage,
-              self.memory_usage, self.storage_free]
-
     def __init__(self):
         super().__init__("HW Info", FIELDS, refresh=1)
 
@@ -105,16 +105,18 @@ class HWinfo(Panel):
         return f"Strg%: {int(psutil.disk_usage('/').used) // int(psutil.disk_usage('/').total) * 100}%"
 
 
+    FIELDS = [cpu_temp, cpu_usage,
+        memory_usage, storage_free]
+
 class Weather(Panel):
 
     LOCATION = "Isle%20of%20wight"
-    FIELDS = [self.temperature]
 
     def __init__(self):
 
         URL = "http://api.openweathermap.org/data/2.5/weather?"
 
-        with open(f"{core.sys.PATH}user/openweatherkey.txt") as key:
+        with open(f"{SysConstant.path}user/openweatherkey.txt") as key:
             key = key.read()
         self.data = json.load(request.urlopen(
             f"{URL}q={location}&appid={key}"))
@@ -132,5 +134,6 @@ class Weather(Panel):
     def wind_speed(self):
         return f"WSpd: {self.data['wind']['speed']}Mph"
 
+    FIELDS = [temperature]
 
 panels = [WorldClock(), HWinfo(), Weather()]

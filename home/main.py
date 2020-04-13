@@ -7,24 +7,29 @@ from core.render.element import Rectangle
 from core.vector import Vector
 from core.sys.attributes import SysConfig
 from core.hw.backlight import Backlight
+import core
 import time
-import panels
+from home import panels
 
+class App(core.type.Application):
+    pass
 
-class Main(Window):
+class MainWindow(Window):
 
     # template = core.asset.Template("std::window", path="window.template")
 
     def __init__(self):
+        super().__init__()
         self.index = [0, 0]
         self.elements = [
             Text(Vector(3, 5), f"{SysConfig.system_name}", justify='L'),
             Text(Vector(126, 5), time.strftime("%I:%M%p"), justify='R'),
-            Text(Vector(self.elements[3+self.index][0]].pos[0] - 2,
-                        self.elements[3+self.index][0]].pos[1]), ">", justify='R'),
+            Text(Vector(self.elements[3+self.index][0].pos[0] - 2,
+                        self.elements[3+self.index][0].pos[1]), ">", justify='R'),
             TextBox(Vector(127, 18), "Run Program", justify='R'),
             TextBox(Vector(127, 30), "System Settings", justify='R'),
-            TextBox(Vector(127, 42), "Power Options", justify='R')]
+            TextBox(Vector(127, 42), "Power Options", justify='R')
+        ]
         self.panels = panels.panels
     
     def show(self):
@@ -37,11 +42,11 @@ class Main(Window):
 
     def refresh(self):
         self.elements[1].text = time.strftime("%I:%M%p")
-        self.elements[2].anchor = Vector(self.elements[3+self.index][0]].pos[0] - 2, self.elements[3+self.index][0]].pos[1])
+        self.elements[2].anchor = Vector(self.elements[3+self.index][0].pos[0] - 2, self.elements[3+self.index][0].pos[1])
 
 class Handle(Handler):
 
-    window = Main
+    window = MainWindow
 
     class press:
 
@@ -65,3 +70,6 @@ class Handle(Handler):
         async def right(window):
             if window.index[1] < 2:
                 window.index[1] += 1
+
+App.window = MainWindow()
+main = App
