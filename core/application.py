@@ -58,7 +58,7 @@ class Application(metaclass=_Active):
     async def run(self):
         Interface.schedule(self.render.execute())
         Interface.schedule(self.render.process())
-        Interface.schedule(self.__home.application.focus())
+        Interface.schedule(self.__home.application.window.focus())
 
 def main(application: Application):
     application.main()

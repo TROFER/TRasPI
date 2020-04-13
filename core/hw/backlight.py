@@ -23,6 +23,7 @@ class Backlight:
 
         def all(self, r: int, g: int, b: int):
             backlight.set_all(r, g, b)
+            backlight.show()
 
         def show(self):
             backlight.show()
@@ -42,18 +43,20 @@ class Backlight:
             pass
 
     def __colour_to_rgb(self, colour, hsv, force):
+        if not hasattr(colour, "__iter__"):
+            colour = (colour,)
         if hsv:
             _hsv = Vector(*colour, *(1 for i in range(max(3-len(colour), 0))))
             _hsv = _hsv.map(Vector(1/360, 1, 1))
         else:
-            _hsv = colorsys.rgb_to_hsv(*(Vector(*colour) / 255))
+            _hsv = Vector(*colorsys.rgb_to_hsv(*(Vector(*colour) / 255)))
         if not force:
-            _hsv = hsv.map((1, 1, SysConfig.brightness / 100))
+            _hsv = _hsv.map((1, 1, SysConfig.brightness / 100))
         rgb = colorsys.hsv_to_rgb(*_hsv)
         return (Vector(*rgb) * 255)
 
     def fill(self, colour, hsv=True, force=False):
-        self.all(self.__colour_to_rgb(colour, hsv, force))
+        self.all(*self.__colour_to_rgb(colour, hsv, force))
 
     def gradient(self, colours, hsv=True, force=False):
         colours = [self.__colour_to_rgb(c, hsv, force) for c in colours]

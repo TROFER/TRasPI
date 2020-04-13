@@ -31,10 +31,11 @@ class MainWindow(Window):
         ]
         self.panels = panels.panels
     
-    def show(self):
+    async def show(self):
         Backlight.fill(SysConfig.colour)
 
     def render(self):
+        print("Render")
         for element in self.elements:
             Interface.render(element)
         self.panels[self.index[1]].render()

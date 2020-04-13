@@ -44,10 +44,15 @@ class Render:
 
     async def window_focus(self, window: "Window"):
         self.__disable()
+        print(1)
         self.__window_stack.append(self.__active)
+        print(2)
         await self.__active.hide()
+        print(3)
         self.__set_active(window)
+        print(4)
         await self.__active.show()
+        print(5)
         self.__enable()
 
     async def window_pop(self):
