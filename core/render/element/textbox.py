@@ -21,4 +21,4 @@ class TextBox(Text):  # ASK TOM
     def _calc_pos(self):
         super()._calc_pos()
         self.rect.pos = self.pos - Vector(2, 0)
-        self.rect.pos_2 = self.font_size() + Vector(2, 0)
+        self.rect.pos_2 = self.font.size + Vector(2, 0)
