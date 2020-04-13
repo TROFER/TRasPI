@@ -68,4 +68,4 @@ class Config(metaclass=_MetaConfig):
 class SysConfig(Config):
     name = "Traspi"
     brightness = 65
-    accent = 12
+    colour = 12
