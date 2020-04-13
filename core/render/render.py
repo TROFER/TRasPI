@@ -30,7 +30,7 @@ class Render:
             self.__active.render()
             self.__pipeline.execute()
         except Exception as e:
-            print(e)
+            print(f"{e.__class__.__name__}: {e}")
         if Interface.active():
             Interface.schedule(self.execute())
 
