@@ -6,6 +6,7 @@ from core.render.element import TextBox
 from core.render.element import Rectangle
 from core.vector import Vector
 from core.sys.attributes import SysConfig
+from core.hw.backlight import Backlight
 import time
 import panels
 
@@ -15,7 +16,6 @@ class Main(Window):
     # template = core.asset.Template("std::window", path="window.template")
 
     def __init__(self):
-        # Apply colour scheme
         self.index = [0, 0]
         self.elements = [
             Text(Vector(3, 5), f"{SysConfig.system_name}", justify='L'),
@@ -26,6 +26,9 @@ class Main(Window):
             TextBox(Vector(127, 30), "System Settings", justify='R'),
             TextBox(Vector(127, 42), "Power Options", justify='R')]
         self.panels = panels.panels
+    
+    def show(self):
+        Backlight.fill(SysConfig.colour)
 
     def render(self):
         for element in self.elements:
