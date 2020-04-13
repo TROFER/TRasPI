@@ -14,4 +14,4 @@ class Rectangle(Primative):
         return self.pos1, self.pos2, self.outline, self.fill, self.width
 
     def render(self, image: "PIL.ImageDraw.ImageDraw"):
-        image.rectangle([*pos1, *pos2], self.fill, self.outline, self.fill)
+        image.rectangle([*self.pos1, *self.pos2], self.fill, self.outline, self.fill)
