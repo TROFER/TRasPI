@@ -5,18 +5,16 @@ from core.asset.std import AssetPool as std
 
 __all__ = ["Text"]
 
-_FONT = PIL.ImageFont.load_default() # font asset
-
 class Text(Primative):
 
-    def __init__(self, anchor: Vector, text: str="Default Text", font: Font=std.font, size: int=11, colour: int=0, justify: str='C'): # font asset
+    def __init__(self, anchor: Vector, text: str="Default Text", font: Font=std.font, size: int=11, colour: int=0, justify: str='C'):
         super().__init__()
         self.anchor = anchor
         self.text, self.size, self.colour, self.justify, self.font = str(text), size, colour, justify, font
         self._calc_pos()
 
     def render(self, image: "PIL.ImageDraw.ImageDraw"):
-        image.text(self.pos, self.text, self.colour, _FONT) # font asset
+        image.text(self.pos, self.text, self.colour, self.font)
 
     def copy(self):
         return self.anchor, self.text, self.size, self.colour, self.justify, self.font
@@ -26,7 +24,7 @@ class Text(Primative):
         self._calc_pos()
 
     def _calc_pos(self) -> Vector:
-        fs = Vector(*_FONT.getsize(self.text)) # font asset
+        fs = Vector(*self.font.text_pixel_size(self.text))
         if self.justify == "L":
             self.pos = Vector(self.anchor[0], self.anchor[1] - fs[1] // 2)
         elif self.justify == "R":
