@@ -2,7 +2,7 @@ from core.sys.attributes import Constant
 from core.sys.attributes import Config
 from core.asset.res_pool import Pool
 from core.render.window import Window
-# from core.sys.io.
+from core.sys.program import Program
 
 __all__ = ["Application"]
 
@@ -19,6 +19,7 @@ class MetaApplication(type):
             raise TypeError
         if not isinstance(cls.window, Window):
             raise TypeError
+        dct["_program"] = Program(cls)
         return super().__init__(name, bases, dct)
 
 class Application(metaclass=MetaApplication):

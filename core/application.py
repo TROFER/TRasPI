@@ -25,7 +25,7 @@ class Application(metaclass=_Active):
     def __init__(self, app: TApplication):
         self.running = False
         self.render = Render(Pipeline(), self.home)
-        self.__home = Program(app)
+        self.__home = app._program
         self.__current_app = self.__home
         self.applications = {}
 

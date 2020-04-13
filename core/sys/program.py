@@ -1,13 +1,11 @@
 from core.render.window import Window
-from core.type.application import Application
 
 from core.interface import Interface
 
 class Program:
 
-    def __init__(self, app: Application):
+    def __init__(self, app):
         self.application = app
-        self.application._program = self
         self.window_stack = [app.window]
         self._intervals = set()
 
