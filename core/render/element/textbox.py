@@ -16,7 +16,7 @@ class TextBox(Text):  # ASK TOM
         self.rect.render(image)
 
     def copy(self):
-        return self.anchor, self.line_col, self.fill, self.width
+        return (*super().copy(), *self.rect.copy())
 
     def _calc_pos(self):
         super()._calc_pos()
