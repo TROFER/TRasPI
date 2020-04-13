@@ -4,6 +4,7 @@ from urllib import request
 import time
 import datetime
 from core.render.element import Text
+from core.render.element import Rectangle
 from core.vector import Vector
 from core.interface import Interface
 from core.sys.attributes import SysConstant
@@ -21,14 +22,15 @@ class Panel:
         self.speed = refresh
         self.elements = [Text(Vector(4, self.POSITIONS[i]), func(self), justify='L')
                          for i, func in enumerate(self.fields)]
-        self.elements.append(Text(Vector(4, 5), title, justify='L'))
+        self.elements.append(Text(Vector(10, 4), title, justify='L'))
+        self.elements.append(Rectangle(Vector(9, 3), Vector(20, 60)))
 
     def render(self):
         for element in self.elements:
             Interface.render(element)
 
     def refresh(self):
-        for i, element in enumerate(self.elements[:len(self.elements)-1]):
+        for i, element in enumerate(self.elements[:len(self.elements)-2]):
             element.text = self.fields[i]()
 
 

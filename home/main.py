@@ -30,6 +30,8 @@ class MainWindow(Window):
             TextBox(Vector(127, 42), "Power Options", justify='R')
         ]
         self.panels = panels.panels
+        App.interval(self.refresh)
+        App.interval(self.panels[self.index[1]].refresh)
 
     async def show(self):
         Backlight.fill(SysConfig.colour)
@@ -37,7 +39,7 @@ class MainWindow(Window):
     def render(self):
         for element in self.elements:
             Interface.render(element)
-        self.panels[self.index[1]].render()
+        # self.panels[self.index[1]].render()
 
     def refresh(self):
         self.elements[1].text = time.strftime("%I:%M%p")

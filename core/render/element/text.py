@@ -24,7 +24,7 @@ class Text(Primative):
         self._calc_pos()
 
     def _calc_pos(self) -> Vector:
-        fs = Vector(*self.font.text_pixel_size(self.text))
+        fs = self._font_size()
         if self.justify == "L":
             self.pos = Vector(self.anchor[0], self.anchor[1] - fs[1] // 2)
         elif self.justify == "R":
@@ -32,4 +32,7 @@ class Text(Primative):
         else:
             self.justify = "C"
             self.pos = self.anchor - fs // 2
+
+    def _font_size(self):
+        return Vector(*self.font.text_pixel_size(self.text))
 
