@@ -4,6 +4,7 @@ from urllib import request
 import time
 import datetime
 from core.render.element import Text
+from core.asset.font import Font
 from core.render.element import Rectangle
 from core.vector import Vector
 from core.interface import Interface
@@ -16,13 +17,14 @@ if SysConstant.platform == "POSIX":
 class Panel:
 
     POSITIONS = [25, 35, 45, 55, 64]
+    FONT = Font(f"bitocra7", 7)
 
     def __init__(self, title, fields, refresh=1):
         self.fields = fields
         self.speed = refresh
-        self.elements = [Text(Vector(4, self.POSITIONS[i]), func(self), justify='L')
+        self.elements = [Text(Vector(4, self.POSITIONS[i]), func(self), font=self.FONT, justify='L')
                          for i, func in enumerate(self.fields)]
-        self.elements.append(Text(Vector(3, 15), title, justify='L'))
+        self.elements.append(Text(Vector(3, 15), title, font=self.FONT, justify='L'))
         self.elements.append(Rectangle(Vector(3, 12), Vector(64, 62)))
 
     def render(self):
@@ -36,9 +38,9 @@ class Panel:
 
 class WorldClock(Panel):
 
-    LOCATIONS = ["London", "New%20York", "Tokyo", "Moscow"]
+    LOCATIONS = ["London", "New%20York", "Berlin", "Moscow"]
 
-    def __init__(self):
+    def __init__(self): 
         try:
             with open(f"{SysConstant.path}/core/panels.cache") as cache:
                 self.cache = cache.read().splitlines()
@@ -71,23 +73,19 @@ class WorldClock(Panel):
             datetime.timedelta(seconds=int(self.cache[2]))))
         return f"NYok:{time.strftime('%H:%M')}"
 
-    def tokyo(self):
-        time = datetime.datetime.now(datetime.timezone(
-            datetime.timedelta(seconds=int(self.cache[3]))))
-        return f"Toky:{time.strftime('%H:%M')}"
 
     def moscow(self):
         time = datetime.datetime.now(datetime.timezone(
-            datetime.timedelta(seconds=int(self.cache[4]))))
+            datetime.timedelta(seconds=int(self.cache[3]))))
         return f"Mosc:{time.strftime('%H:%M')}"
 
     def berlin(self):
         time = datetime.datetime.now(datetime.timezone(
-            datetime.timedelta(seconds=int(self.cache[5]))))
+            datetime.timedelta(seconds=int(self.cache[4]))))
         return f"berl:{time.strftime('%H:%M')}"
 
     FIELDS = [london, newyork,
-              tokyo, moscow, berlin]
+              moscow, berlin]
 
 
 class HWinfo(Panel):
