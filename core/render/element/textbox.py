@@ -20,7 +20,7 @@ class TextBox(Text):
     
     def volatile(self):
         self._calc_pos()
-        self._offset()
+        self.rect.pos1, self.rect.pos2 = *self._offset()
 
     def _offset(self):
         fs = self._font_size()
