@@ -47,7 +47,7 @@ class Application(metaclass=_Active):
         self.__change_program(self.__home)
 
     async def __change_program(self, program: Program):
-        self.__current_app.window_stack = self.render.change_stack(program.window_stack[:-1], program.window_stack[-1])
+        self.__current_app.window_stack = self.render.change_stack(program.window_stack[-1], program.window_stack[:-1])
         await self.__current_app.hide()
         self.__current_app = program
         await self.__current_app.show()
@@ -58,7 +58,11 @@ class Application(metaclass=_Active):
     async def run(self):
         Interface.schedule(self.render.execute())
         Interface.schedule(self.render.process())
-        Interface.schedule(self.__home.application.window.focus())
+        await self.__current_app.open()
+        self.render.change_stack(self.__current_app.window_stack[-1], self.__current_app.window_stack[:-1])
+        await self.__current_app.show()
+        Interface.schedule(self.__home.application.window.show())
+        # Interface.schedule(self.__home.application.window.focus())
 
 def main(application: Application):
     application.main()

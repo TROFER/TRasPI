@@ -46,6 +46,7 @@ class MainWindow(Window):
         self.elements[1].text = time.strftime("%I:%M%p")
         self.elements[2].anchor = Vector(self.elements[2+self.index[0]].pos[0]-2,
                                          self.elements[2+self.index[0]].pos[1]+2)
+
 class Handle(Handler):
 
     window = MainWindow
