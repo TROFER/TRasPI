@@ -29,6 +29,7 @@ class Render:
     async def execute(self):
         await self.__executing.wait()
         try:
+            print(self.__active)
             self.__active.render()
             self.__pipeline.execute()
         except Exception as e:
