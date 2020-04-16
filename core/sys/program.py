@@ -18,6 +18,7 @@ class Program:
 
     async def open(self):
         print("Prog Open App")
+        self.window_active = app.window
         await self.application.open()
     async def close(self):
         for interval in self._intervals:
