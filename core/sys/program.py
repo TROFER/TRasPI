@@ -17,7 +17,6 @@ class Program:
         pass
 
     async def open(self):
-        print("Prog Open App")
         self.window_active = self.application.window
         await self.application.open()
     async def close(self):
@@ -27,10 +26,8 @@ class Program:
         await self.application.close()
 
     async def show(self):
-        print("resume intervals")
         for interval in self._intervals:
             interval.resume()
-        print("Showing")
         await self.application.show()
     async def hide(self):
         for interval in self._intervals:

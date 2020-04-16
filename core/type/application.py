@@ -41,11 +41,11 @@ class Application(metaclass=MetaApplication):
     window = Window()
 
     async def open():
-        print("opening app from prog")
+        pass
     async def close():
         pass
 
     async def show():
-        print("showing app from prog")
+        pass
     async def hide():
         pass

@@ -41,14 +41,11 @@ class Render:
         self.__pipeline.submit(obj)
 
     def change_stack(self, stack: list, active: Window, enable=True) -> [Window,]:
-        print("Disable")
         self.disable()
         output = (self.__window_stack, self.__active)
         self.__window_stack = stack
-        print("Set active")
         self.__set_active(active)
         if enable:
-            print("Enable")
             self.enable()
         return output
 

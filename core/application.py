@@ -57,16 +57,11 @@ class Application(metaclass=_Active):
 
     async def run(self):
         try:
-            print("Run App")
             Interface.schedule(self.render.execute())
             Interface.schedule(self.render.process())
-            print("Open Prog")
             await self.__current_app.open()
-            print("Change Stack")
             self.render.change_stack(self.__current_app.window_stack, self.__current_app.window_active, enable=False)
-            print("Show Prog")
             await self.__current_app.show()
-            print("Show Win")
             Interface.schedule(self.__home.application.window.show())
             self.render.enable()
             # Interface.schedule(self.__home.application.window.focus())

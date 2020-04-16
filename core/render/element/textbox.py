@@ -22,4 +22,4 @@ class TextBox(Text):
         super()._calc_pos()
         fs = self._font_size()
         self.rect.pos1 = self.pos - Vector(2, 0)
-        self.rect.pos2 = self.pos + fs - Vector(2, 0)
+        self.rect.pos2 = self.pos + fs
