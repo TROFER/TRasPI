@@ -92,7 +92,10 @@ class Interface:
             await asyncio.sleep(self.delay)
             while not self._cancel:
                 await self._event.wait()
-                self.func()
+                try:
+                    self.func()
+                except Exception as e:
+                    print(e)
                 await asyncio.sleep(self.delay)
 
         def __hash__(self) -> int:
