@@ -22,10 +22,10 @@ class Panel:
     def __init__(self, title, fields, refresh=1):
         self.fields = fields
         self.speed = refresh
-        self.elements = [Text(Vector(4, self.POSITIONS[i]), func(self), font=self.FONT, justify='L')
+        self.elements = [Text(Vector(2, self.POSITIONS[i]), func(self), font=self.FONT, justify='L')
                          for i, func in enumerate(self.fields)]
-        self.elements.append(Text(Vector(3, 15), title, font=self.FONT, justify='L'))
-        self.elements.append(Rectangle(Vector(3, 12), Vector(64, 62)))
+        self.elements.append(Text(Vector(2, 17), title, font=self.FONT, justify='L'))
+        self.elements.append(Rectangle(Vector(0, 12), Vector(50, 62)))
 
     def render(self):
         for element in self.elements:
@@ -66,23 +66,23 @@ class WorldClock(Panel):
     def london(self):
         time = datetime.datetime.now(datetime.timezone(
             datetime.timedelta(seconds=int(self.cache[1]))))
-        return f"Lond:{time.strftime('%H:%M')}"
+        return f"Londo:{time.strftime('%H:%M')}"
 
     def newyork(self):
         time = datetime.datetime.now(datetime.timezone(
             datetime.timedelta(seconds=int(self.cache[2]))))
-        return f"NYok:{time.strftime('%H:%M')}"
+        return f"NYork:{time.strftime('%H:%M')}"
 
 
     def moscow(self):
         time = datetime.datetime.now(datetime.timezone(
             datetime.timedelta(seconds=int(self.cache[3]))))
-        return f"Mosc:{time.strftime('%H:%M')}"
+        return f"Mosco:{time.strftime('%H:%M')}"
 
     def berlin(self):
         time = datetime.datetime.now(datetime.timezone(
             datetime.timedelta(seconds=int(self.cache[4]))))
-        return f"berl:{time.strftime('%H:%M')}"
+        return f"Berli:{time.strftime('%H:%M')}"
 
     FIELDS = [london, newyork,
               moscow, berlin]
@@ -94,7 +94,7 @@ class HWinfo(Panel):
         super().__init__("HW Info", self.FIELDS, refresh=1)
 
     def cpu_temp(self):
-        return f"CPU°C: {round(gpiozero.CPUTemperature().temperature, 1)}°C"
+        return f"CPUC: {round(gpiozero.CPUTemperature().temperature, 1)}C"
 
     def cpu_usage(self):
         return f"CPU%: {psutil.cpu_percent()}%"
@@ -103,7 +103,7 @@ class HWinfo(Panel):
         return f"Mem%: {psutil.virtual_memory().percent}%"
 
     def storage_free(self):
-        return f"Strg%: {int(psutil.disk_usage('/').used) // int(psutil.disk_usage('/').total) * 100}%"
+        return f"Strg%: {psutil.disk_usage('/').percent}%"
 
     FIELDS = [cpu_temp, cpu_usage,
               memory_usage, storage_free]
@@ -124,7 +124,7 @@ class Weather(Panel):
         super().__init__("Weather", self.FIELDS, refresh=1)
 
     def temperature(self):
-        return f"Temp: {round(self.data['main']['temp'] - 273.1, 1)}°C"
+        return f"Temp: {round(self.data['main']['temp'] - 273.1, 1)}C"
 
     def pressure(self):
         return f"Pres: {self.data['main']['pressure']}Pa"
@@ -135,7 +135,7 @@ class Weather(Panel):
     def wind_speed(self):
         return f"WSpd: {self.data['wind']['speed']}Mph"
 
-    FIELDS = [temperature]
+    FIELDS = [temperature, pressure, humidity, wind_speed]
 
 
-panels = [WorldClock(), HWinfo(), Weather()]
+panels = [Weather(), HWinfo(), WorldClock()]
