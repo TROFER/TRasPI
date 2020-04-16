@@ -40,12 +40,12 @@ class Application(metaclass=MetaApplication):
 
     window = Window()
 
-    async def open(self):
+    async def open():
         print("opening app from prog")
-    async def close(self):
+    async def close():
         pass
 
-    async def show(self):
+    async def show():
         print("showing app from prog")
-    async def hide(self):
+    async def hide():
         pass
