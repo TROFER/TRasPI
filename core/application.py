@@ -63,11 +63,12 @@ class Application(metaclass=_Active):
             print("Open Prog")
             await self.__current_app.open()
             print("Change Stack")
-            self.render.change_stack(self.__current_app.window_stack[-1], self.__current_app.window_stack[:-1])
+            self.render.change_stack(self.__current_app.window_stack[-1], self.__current_app.window_stack[:-1], enable=False)
             print("Show Prog")
             await self.__current_app.show()
             print("Show Win")
             Interface.schedule(self.__home.application.window.show())
+            self.render.enable()
             # Interface.schedule(self.__home.application.window.focus())
         except Exception as e:
             print(f"{type(e).__name__}: {e}")

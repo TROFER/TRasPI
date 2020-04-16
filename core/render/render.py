@@ -40,31 +40,32 @@ class Render:
     def submit(self, obj: Primative):
         self.__pipeline.submit(obj)
 
-    def change_stack(self, active: Window, stack: list) -> [Window,]:
+    def change_stack(self, active: Window, stack: list, enable=True) -> [Window,]:
         print("Disable")
-        self.__disable()
+        self.disable()
         output = [*self.__window_stack, self.__active]
         self.__window_stack = stack
         print("Set active")
         self.__set_active(active)
-        print("Enable")
-        self.__enable()
+        if enable:
+            print("Enable")
+            self.enable()
         return output
 
     async def window_focus(self, window: "Window"):
-        self.__disable()
+        self.disable()
         self.__window_stack.append(self.__active)
         await self.__active.hide()
         self.__set_active(window)
         await self.__active.show()
-        self.__enable()
+        self.enable()
 
     async def window_pop(self):
-        self.__disable()
+        self.disable()
         await self.__active.hide()
         self.__set_active(self.__window_stack.pop())
         await self.__active.show()
-        self.__enable()
+        self.enable()
 
     def __set_active(self, window: "Window"):
         self.__active = window
@@ -75,9 +76,9 @@ class Render:
         self.__bind_handles()
         self.__pipeline.template = self.__active.template
 
-    def __disable(self):
+    def disable(self):
         self.__executing.clear()
-    def __enable(self):
+    def enable(self):
         self.__executing.set()
 
     def initialize(self):
