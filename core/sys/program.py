@@ -6,7 +6,8 @@ class Program:
 
     def __init__(self, app):
         self.application = app
-        self.window_stack = [app.window]
+        self.window_stack = []
+        self.window_active = app.window
         self._intervals = set()
 
     def create_interval_func(self, func: callable, delay: float=1, repeat: int=-1):

@@ -40,10 +40,10 @@ class Render:
     def submit(self, obj: Primative):
         self.__pipeline.submit(obj)
 
-    def change_stack(self, active: Window, stack: list, enable=True) -> [Window,]:
+    def change_stack(self, stack: list, active: Window, enable=True) -> [Window,]:
         print("Disable")
         self.disable()
-        output = [*self.__window_stack, self.__active]
+        output = (self.__window_stack, self.__active)
         self.__window_stack = stack
         print("Set active")
         self.__set_active(active)

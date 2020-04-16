@@ -47,7 +47,7 @@ class Application(metaclass=_Active):
         self.__change_program(self.__home)
 
     async def __change_program(self, program: Program):
-        self.__current_app.window_stack = self.render.change_stack(program.window_stack[-1], program.window_stack[:-1])
+        self.__current_app.window_stack, self.__current_app.window_active = self.render.change_stack(program.window_stack, program.window_active)
         await self.__current_app.hide()
         self.__current_app = program
         await self.__current_app.show()
@@ -63,7 +63,7 @@ class Application(metaclass=_Active):
             print("Open Prog")
             await self.__current_app.open()
             print("Change Stack")
-            self.render.change_stack(self.__current_app.window_stack[-1], self.__current_app.window_stack[:-1], enable=False)
+            self.render.change_stack(self.__current_app.window_stack, self.__current_app.window_active, enable=False)
             print("Show Prog")
             await self.__current_app.show()
             print("Show Win")
