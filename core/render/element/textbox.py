@@ -19,6 +19,7 @@ class TextBox(Text):
         return (*super().copy(), *self.rect.copy())
 
     def _calc_pos(self):
+        super()._calc_pos()
         fs = self._font_size()
         self.rect.pos1 = self.pos - Vector(2, 0)
         self.rect.pos2 = fs + Vector(2, 0)
