@@ -9,7 +9,7 @@ from core.render.element import Rectangle, Text, TextBox
 from core.render.window import Window
 from core.sys.attributes import SysConfig
 from core.vector import Vector
-from home import loader, panels
+from home import loader, power, panels
 
 
 class App(core.type.Application):
@@ -32,7 +32,7 @@ class MainWindow(Window):
             TextBox(Vector(127, 43), "Power Ctrl", justify='R')
         ]
         self.panels = panels.panels
-        self.map = {0: loader.main}
+        self.map = {0: loader.main, 2: power.main}
         App.interval(self.refresh)
 
     async def show(self):
