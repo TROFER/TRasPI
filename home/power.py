@@ -1,9 +1,12 @@
 from core.interface import Interface
 from core.hw.power import Power
-from core.render.element import Text
-from core.render.element import TextBox
+from core.render import element
+from core import asset
 
 class Main(Window):
+
+    POWER_HALT = asset.Image("power-halt.image")
+    POWER_RESTART = asset.Image("power-restart.image")
 
     def __init__(self):
         self.index = 0
@@ -12,6 +15,8 @@ class Main(Window):
             Power.restart,
             self.finish}
         self.elements [
-            Text(Vector(3, 5), "Power Options", justify='L'),
-            Text(Vector(127, 5), time.strftime("%I:%M%p"), justify='R'),
+            element.Text(Vector(3, 5), "Power Options", justify='L'),
+            element.Text(Vector(127, 5), time.strftime("%I:%M%p"), justify='R'),
+            element.Image()
+
         ]

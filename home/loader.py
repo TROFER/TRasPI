@@ -3,7 +3,7 @@ import itertools
 from core.input.event import Handler
 from core.interface import Interface
 from core.render import Window
-from core.render.element import Image  # POTENTIAL ISSUE
+from core.render.element import Image
 from core.render.element import Rectangle
 from core.sys.attributes import SysConstant
 from core.vector import Vector
@@ -12,7 +12,6 @@ from home import app
 
 class Loader:
 
-    @classmethod
     def index(self, path="programs/"):
         apps = []
         for program in os.scandir(SysConstant.path + path):
@@ -29,7 +28,6 @@ class Loader:
                             App(app, f"{SysConstant.path}programs/{app}", icon))
         return apps
 
-    @classmethod
     def run(self, target):
         pass
 
