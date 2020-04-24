@@ -5,7 +5,7 @@ __all__ = ["Image"]
 
 class Image(Primative):
 
-    def __init__(self, anchor: Vector, just_w: str='C', just_h: str=None):
+    def __init__(self, anchor: Vector, image, just_w: str='C', just_h: str=None):
         super().__init__()
         self.image, self.just_w, self.just_h = image, just_w, just_h
         self.anchor = anchor

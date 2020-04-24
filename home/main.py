@@ -1,18 +1,20 @@
-from core.render.window import Window
-from core.interface import Interface
-from core.input.event import Handler
-from core.render.element import Text
-from core.render.element import TextBox
-from core.render.element import Rectangle
-from core.vector import Vector
-from core.sys.attributes import SysConfig
-from core.hw.backlight import Backlight
-import core
 import time
-from home import panels
+
+import core
+from core.hw.backlight import Backlight
+from core.input.event import Handler
+from core.interface import Interface
+from core.render import Window
+from core.render.element import Rectangle, Text, TextBox
+from core.render.window import Window
+from core.sys.attributes import SysConfig
+from core.vector import Vector
+from home import loader, panels
+
 
 class App(core.type.Application):
     pass
+
 
 class MainWindow(Window):
 
@@ -30,8 +32,8 @@ class MainWindow(Window):
             TextBox(Vector(127, 43), "Power Ctrl", justify='R')
         ]
         self.panels = panels.panels
+        self.map = {0: loader.main}
         App.interval(self.refresh)
-        App.interval(self.panels[self.index[1]].refresh)
 
     async def show(self):
         Backlight.fill(SysConfig.colour)
@@ -44,37 +46,40 @@ class MainWindow(Window):
 
     def refresh(self):
         self.elements[1].text = time.strftime("%I:%M%p")
-        self.elements[2].anchor = Vector(self.elements[2+self.index[0]].pos[0]-2,
-                                         self.elements[2+self.index[0]].pos[1]+2)
+        self.elements[2].anchor = Vector(self.elements[self.index[0] + 3].pos[0] - 2,
+                                         self.elements[self.index[0] + 3].pos[1] + 4)
+        self.panels[self.index[1]].refresh()
+
 
 class Handle(Handler):
 
     window = MainWindow
 
     class press:
-        async def up(window):
+        async def down(null, window):
             if window.index[0] < 2:
                 window.index[0] += 1
                 window.refresh()
-        
-        async def down(window):
+
+        async def up(null, window):
             if window.index[0] > 0:
-                window.index[0] -=1
+                window.index[0] -= 1
                 window.refresh()
-        
-        async def centre(window):
-            print("Centre")
+
+        async def centre(null, window):
+            await(window.map[window.index[0]])
             window.refresh()
-            
-        async def left(window):
+
+        async def left(null, window):
             if window.index[1] > 0:
-                window.index[1] -=1
+                window.index[1] -= 1
                 window.refresh()
-        
-        async def right(window):
+
+        async def right(null, window):
             if window.index[1] < 2:
                 window.index[1] += 1
                 window.refresh()
+
 
 App.window = MainWindow()
 main = App

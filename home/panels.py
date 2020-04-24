@@ -1,14 +1,15 @@
-import json
-from urllib.error import HTTPError, URLError
-from urllib import request
-import time
 import datetime
-from core.render.element import Text
+import json
+import time
+from urllib import request
+from urllib.error import HTTPError, URLError
+
 from core.asset.font import Font
-from core.render.element import Rectangle
-from core.vector import Vector
 from core.interface import Interface
+from core.render.element import Rectangle, Text
 from core.sys.attributes import SysConstant
+from core.vector import Vector
+
 if SysConstant.platform == "POSIX":
     import gpiozero
     import psutil
@@ -24,7 +25,8 @@ class Panel:
         self.speed = refresh
         self.elements = [Text(Vector(2, self.POSITIONS[i]), func(self), font=self.FONT, justify='L')
                          for i, func in enumerate(self.fields)]
-        self.elements.append(Text(Vector(2, 17), title, font=self.FONT, justify='L'))
+        self.elements.append(
+            Text(Vector(2, 17), title, font=self.FONT, justify='L'))
         self.elements.append(Rectangle(Vector(0, 12), Vector(50, 62)))
 
     def render(self):
@@ -33,14 +35,14 @@ class Panel:
 
     def refresh(self):
         for i, element in enumerate(self.elements[:len(self.elements)-2]):
-            element.text = self.fields[i]()
+            element.text = self.fields[i](self)
 
 
 class WorldClock(Panel):
 
     LOCATIONS = ["London", "New%20York", "Berlin", "Moscow"]
 
-    def __init__(self): 
+    def __init__(self):
         try:
             with open(f"{SysConstant.path}/core/panels.cache") as cache:
                 self.cache = cache.read().splitlines()
@@ -72,7 +74,6 @@ class WorldClock(Panel):
         time = datetime.datetime.now(datetime.timezone(
             datetime.timedelta(seconds=int(self.cache[2]))))
         return f"NYork:{time.strftime('%H:%M')}"
-
 
     def moscow(self):
         time = datetime.datetime.now(datetime.timezone(
@@ -133,7 +134,7 @@ class Weather(Panel):
         return f"Humi: {self.data['main']['humidity']}%"
 
     def wind_speed(self):
-        return f"WSpd: {self.data['wind']['speed']}Mph"
+        return f"WSpd: {round(self.data['wind']['speed'], 1)}Mph"
 
     FIELDS = [temperature, pressure, humidity, wind_speed]
 
