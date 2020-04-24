@@ -4,6 +4,7 @@ import PIL.ImageDraw
 import PIL.Image
 from core.sys.attributes import SysConstant
 from core.driver.pipeline.display import Display
+from core.asset.image import Template
 
 class Render:
 
@@ -14,11 +15,15 @@ class Render:
         self.__update = True
 
         self.__template = PIL.Image.new("1", (SysConstant.width, SysConstant.height), 1)
-        # self.__template
         self.__image = self.__template.copy()
         self.__draw = PIL.ImageDraw.Draw(self.__image)
 
         self.__renderer = Renderer()
+
+    def template(self, template: Template):
+        if not template(isinstance(Template)):
+            raise TypeError(f"Templates must be instance of '{Template.__name__}' and not '{template.__class__.__name__}'")
+        self.__template = template.image
 
     def submit(self, wgt):
         self.__wgt_s.add(wgt.render)

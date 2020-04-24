@@ -70,7 +70,10 @@ class Render:
                 self.__event_queue.get(False)
         except queues.Empty: pass
         self.__bind_handles()
-        self.__pipeline.template = self.__active.template
+        self.template()
+
+    def template(self):
+        self.__pipeline.template(self.__active.template)
 
     def disable(self):
         self.__executing.clear()

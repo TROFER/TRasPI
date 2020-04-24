@@ -7,7 +7,7 @@ class _MetaHandler(type):
 
     def __init__(cls, name, bases, dct):
         if not issubclass(cls.window, Window):
-            raise TypeError
+            raise TypeError(f"Handler Must be Linked to a '{Window.__name__}' type. Not a '{cls.window.__name__}'")
         cls.window._event_handler_ = cls
         return super().__init__(name, bases, dct)
 
