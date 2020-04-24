@@ -13,7 +13,8 @@ class Image(Primative):
         self._calc_pos()
 
     def render(self, image: "PIL.ImageDraw.ImageDraw"):
-        image.im.paste(self.image.image, tuple([*self.pos, *(self.pos + self.image.size())]))
+        pos = [*self.pos, *self.pos+self.image.size()]
+        image.im.paste(self.image.image, tuple(pos))
 
     def copy(self):
         return self.pos, self.just_w, self.just_h
