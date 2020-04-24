@@ -17,7 +17,8 @@ class Asset(metaclass=_MetaAsset):
             if os.path.exists(filepath):
                 self.path = filepath
                 return
-        raise FileNotFoundError
+        p = "\n\t".join(paths)
+        raise FileNotFoundError(f"{path}.{self.__class__.__name__.lower()} in Directories:\n\t{p}")
 
     def __setattr__(self, name, value):
         if name not in self.__dict__:
