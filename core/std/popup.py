@@ -3,11 +3,12 @@ from core.interface import Interface
 from core.input.event import Handler
 from core.render.element import Text
 from core.vector import Vector
+from core.asset import Template
 
 
 class Info(Window):
 
-    # template = core.asset.Template("std::info", path="info.template")
+    template = Template("info.template")
 
     def __init__(self, message):
         self.message = Text((38, 27), message[:20], justify='L')
@@ -26,10 +27,8 @@ class Handle(Handler):
 
 
 class Warning(Info):
-    # template = core.asset.Template("std::warning", path="warning.template")
-    pass
+    template = Template("warning.template")
 
 
 class Error(Info):
-    # template = core.asset.Template("std::error", path="error.template")
-    pass
+    template = Template("error.template")

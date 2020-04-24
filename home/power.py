@@ -1,4 +1,5 @@
 from core.interface import Interface
+from core.asset import Template
 from core.render import Window
 from core.input import Handler
 from core.hw.power import Power
@@ -8,6 +9,7 @@ from core import Vector
 
 class Main(Window):
 
+    template = Template("window.template")
     POWER_HALT = asset.Image("power-halt.image")
     POWER_RESTART = asset.Image("power-restart.image")
 
