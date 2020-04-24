@@ -1,4 +1,5 @@
 from core.interface import Interface
+from core.render import Window
 from core.input import Handler
 from core.hw.power import Power
 from core.render import element
