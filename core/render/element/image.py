@@ -14,7 +14,7 @@ class Image(Primative):
 
     def render(self, image: "PIL.ImageDraw.ImageDraw"):
         pos = [*self.pos, *self.pos+self.image.size()]
-        image.im.paste(self.image.image, tuple(pos))
+        image.im.paste(self.image.image.im, tuple(pos))
 
     def copy(self):
         return self.pos, self.just_w, self.just_h
