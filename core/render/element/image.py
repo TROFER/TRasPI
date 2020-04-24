@@ -22,18 +22,18 @@ class Image(Primative):
         size = self.image.size()
 
         if self.just_w == 'R':
-            off_w = self.anchor[0] - img_w
+            off_w = self.anchor[0] - size[0]
         elif self.just_w == 'L':
             off_w = self.anchor[0]
         else:
-            off_w = self.anchor[0] - (img_w // 2)
+            off_w = self.anchor[0] - (size[0] // 2)
 
         if self.just_h == 'B':
-            off_h = self.anchor[1] + img_h
+            off_h = self.anchor[1] + size[1]
         elif self.just_h == 'T':
             off_h = self.anchor[1]
         else:
-            off_h = self.anchor[1] + (img_h // 2)
+            off_h = self.anchor[1] + (size[1] // 2)
 
         self.pos = Vector(off_w, off_h)
 
