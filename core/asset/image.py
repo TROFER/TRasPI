@@ -7,7 +7,7 @@ __all__ = ["Image", "Template"]
 class Image(Asset):
 
     def __init__(self, path: str):
-        super().__init__()
+        super().__init__(path)
         self.image = PIL.Image.open(self.path).convert("1")
 
     def __repr__(self) -> str:
