@@ -1,4 +1,5 @@
 from core.render.window import Window
+from core.asset import Template
 from core.interface import Interface
 from core.input.event import Handler
 from core.render.element import Text
@@ -7,7 +8,7 @@ from core.vector import Vector
 
 class Numpad(Window):
 
-    # Import Template
+    template = Template("window.template")
 
     def __init__(self, min, max, default=None, title="Numpad"):
         if default is None:

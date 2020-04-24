@@ -1,6 +1,7 @@
 import time
 
 import core
+from core.asset import Template
 from core.hw.backlight import Backlight
 from core.input.event import Handler
 from core.interface import Interface
@@ -18,7 +19,7 @@ class App(core.type.Application):
 
 class MainWindow(Window):
 
-    # template = core.asset.Template("std::window", path="window.template")
+    template = Template("window.template")
 
     def __init__(self):
         super().__init__()
