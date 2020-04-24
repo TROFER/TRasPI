@@ -1,25 +1,25 @@
 from core.vector import Vector
 from core.render.primative import Primative
+from core.asset.image import Image as AssetImage
 
 __all__ = ["Image"]
 
 class Image(Primative):
 
-    def __init__(self, anchor: Vector, image, just_w: str='C', just_h: str=None):
+    def __init__(self, anchor: Vector, image: AssetImage, just_w: str='C', just_h: str=None):
         super().__init__()
         self.image, self.just_w, self.just_h = image, just_w, just_h
         self.anchor = anchor
         self._calc_pos()
 
     def render(self, image: "PIL.ImageDraw.ImageDraw"):
-        pass
-        # ASK TOM
+        image.paste(self.image.image, self.pos)
 
     def copy(self):
         return self.pos, self.just_w, self.just_h
 
     def _calc_pos(self):
-        size = Vector(1, 1) # image asset image size
+        size = self.image.size()
 
         if self.just_w == 'R':
             off_w = self.anchor[0] - img_w

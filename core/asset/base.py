@@ -5,7 +5,7 @@ __all__ = ["Asset"]
 
 class _MetaAsset(type):
     def __new__(cls, name, bases, dct):
-        paths = (SysConstant.path+"core/resource/"+name.lower()+"/", SysConstant.path+"programs/resource/"+name.lower()+"/", SysConstant.path+"programs/", SysConstant.path, "")
+        paths = (SysConstant.path+"core/resource/"+name.lower()+"/", SysConstant.path+"programs/resource/"+name.lower()+"/", SysConstant.path+"programs/", SysConstant.path, "/")
         dct["_prefix_paths"] = paths
         return super().__new__(cls, name, bases, dct)
 
