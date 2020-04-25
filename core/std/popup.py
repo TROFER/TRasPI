@@ -8,7 +8,7 @@ from core.asset import Template
 
 class Info(Window):
 
-    template = Template("info.template")
+    template = Template("info")
 
     def __init__(self, message):
         self.message = Text((38, 27), message[:20], justify='L')
@@ -27,8 +27,8 @@ class Handle(Handler):
 
 
 class Warning(Info):
-    template = Template("warning.template")
+    template = Template("warning")
 
 
 class Error(Info):
-    template = Template("error.template")
+    template = Template("error")

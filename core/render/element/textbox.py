@@ -5,10 +5,12 @@ from core.render.element.rectangle import Rectangle
 
 __all__ = ["TextBox"]
 
+
 class TextBox(Text):
 
     def __init__(self, anchor, *args, line_col=0, fill=None, width=1, **kwargs):
-        self.rect = Rectangle(Vector(0, 0), Vector(0, 0), line_col, fill, width)
+        self.rect = Rectangle(Vector(0, 0), Vector(0, 0),
+                              line_col, fill, width)
         super().__init__(anchor, *args, **kwargs)
 
     def render(self, image: "PIL.ImageDraw.ImageDraw"):
@@ -17,6 +19,9 @@ class TextBox(Text):
 
     def copy(self):
         return (*super().copy(), *self.rect.copy())
+
+    def volatile(self):
+        self._calc_pos()
 
     def _calc_pos(self):
         super()._calc_pos()

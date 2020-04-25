@@ -8,7 +8,7 @@ from core.vector import Vector
 
 class Numpad(Window):
 
-    template = Template("window.template")
+    template = Template("window")
 
     def __init__(self, min, max, default=None, title="Numpad"):
         if default is None:

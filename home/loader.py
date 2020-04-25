@@ -3,11 +3,10 @@ import itertools
 from core.input.event import Handler
 from core.interface import Interface
 from core.render import Window
-from core.render.element import Image
-from core.render.element import Rectangle
+from core.render.element import Image, Rectangle
 from core.sys.attributes import SysConstant
 from core.vector import Vector
-from home import app
+from home import program
 
 
 class Loader:
@@ -25,7 +24,7 @@ class Loader:
                             icon = Image(
                                 f"{SysConstant.path}core/resource/image/code.icon")
                         apps.append(
-                            App(app, f"{SysConstant.path}programs/{app}", icon))
+                            program.Program(app, f"{SysConstant.path}programs/{app}", icon))
         return apps
 
     def run(self, target):

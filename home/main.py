@@ -10,16 +10,13 @@ from core.render.element import Rectangle, Text, TextBox
 from core.render.window import Window
 from core.sys.attributes import SysConfig
 from core.vector import Vector
-from home import loader, power, panels
+from home import loader, panels, power
+from home.app import App
 
 
-class App(core.type.Application):
-    pass
+class Home(Window):
 
-
-class MainWindow(Window):
-
-    template = Template("window.template")
+    template = Template("window")
 
     def __init__(self):
         super().__init__()
@@ -54,7 +51,7 @@ class MainWindow(Window):
 
 class Handle(Handler):
 
-    window = MainWindow
+    window = Home
 
     class press:
         async def down(null, window):
@@ -82,5 +79,5 @@ class Handle(Handler):
                 window.refresh()
 
 
-App.window = MainWindow()
+App.window = Home()
 main = App
