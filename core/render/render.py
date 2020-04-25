@@ -102,17 +102,18 @@ class Render:
         def wrap(key, handler):
             key = key_names[key]
             async def event(event):
-                print("Call Event", event, key, handler)
+                # print("Call Event", event, key, handler)
                 try:
                     func = getattr(getattr(handler, event), key)
                 except AttributeError: return
                 try:
                     await func(None, self.__active)
                 except Exception as e:
+                    print(f"EventError: {type(e).__name__}: {e}")
                     raise core.error.Event(e, key, event, handler, self.__active)
 
             def submit(ch, event_type):
-                print("Event Submit", ch, event_type, handler)
+                # print("Event Submit", ch, event_type, handler)
                 self.__event_queue.put((event, event_type))
             return submit
 
