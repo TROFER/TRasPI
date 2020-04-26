@@ -20,9 +20,6 @@ class TextBox(Text):
     def copy(self):
         return (*super().copy(), *self.rect.copy())
 
-    def volatile(self):
-        self._calc_pos()
-
     def _calc_pos(self):
         super()._calc_pos()
         fs = self._font_size()
