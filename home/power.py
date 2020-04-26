@@ -16,6 +16,7 @@ class Main(Window):
     POWER_RESTART = asset.Image("power-restart")
 
     def __init__(self):
+        super().__init__()
         self.index = 2 # Default to cancel
         self.map = {Power.halt, Power.restart, self.finish}
         self.elements = [

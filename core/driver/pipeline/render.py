@@ -21,7 +21,7 @@ class Render:
         self.__renderer = Renderer()
 
     def template(self, template: Template):
-        if not template(isinstance(Template)):
+        if not isinstance(template, Template):
             raise TypeError(f"Templates must be instance of '{Template.__name__}' and not '{template.__class__.__name__}'")
         self.__template = template.image
 
