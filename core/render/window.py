@@ -1,12 +1,13 @@
 import asyncio
 from core.interface import Interface
+from core.asset.std import AssetPool
 
 __all__ = ["Window"]
 
 class Window:
 
     _event_handler_ = None
-    template = None
+    template = AssetPool.template
 
     def __init__(self):
         self.__event = asyncio.Event()
