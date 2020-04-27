@@ -17,8 +17,8 @@ class Main(Window):
 
     def __init__(self):
         super().__init__()
-        self.index = 2 # Default to cancel
-        self.map = {Power.halt, Power.restart, self.finish}
+        self.index = 2  # Default to cancel
+        self.map = [Power.halt, Power.restart, self.finish]
         self.elements = [
             element.Text(Vector(3, 5), "Power Options", justify='L'),
             element.Text(Vector(127, 5), time.strftime(
@@ -27,7 +27,7 @@ class Main(Window):
             element.Image(Vector(94, 15), self.POWER_RESTART),
             element.TextBox(Vector(32, 40), "Turn Off", line_col=1),
             element.TextBox(Vector(94, 40), "Restart", line_col=1),
-            element.TextBox(Vector(100, 57), "Cancel", line_col=0)]
+            element.TextBox(Vector(100, 56), "Cancel", line_col=0)]
         App.interval(self.refresh)
 
     def render(self):
@@ -35,7 +35,6 @@ class Main(Window):
             Interface.render(element)
 
     def refresh(self):
-        print(self.index)
         self.elements[1].text = time.strftime("%I:%M%p")
 
 
@@ -45,28 +44,19 @@ class Handle(Handler):
 
     class press:
         async def left(null, window):
-            print("if")
             if window.index > 0:
-                print("left")
-                window.elements[window.index + 3].line_col = 1
+                window.elements[window.index + 4].rect.outline = 1
                 window.index -= 1
-                window.elements[window.index + 3].line_col = 0
-                print("done")
+                window.elements[window.index + 4].rect.outline = 0
 
         async def right(null, window):
-            print("if")
-            if window.pos < 2:
-                print("right")
-                window.elements[window.index + 3].line_col = 1
-                window.pos += 1
-                window.elements[window.index + 3].line_col = 0
-                print("done")
+            if window.index < 2:
+                window.elements[window.index + 4].rect.outline = 1
+                window.index += 1
+                window.elements[window.index + 4].rect.outline = 0
 
         async def centre(null, window):
-            print("starting")
-            print(window.index)
             window.map[window.index]()
-            print(window.index)
 
 
 main = Main()

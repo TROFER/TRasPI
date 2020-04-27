@@ -6,7 +6,7 @@ from core.hw.backlight import Backlight
 from core.input.event import Handler
 from core.interface import Interface
 from core.render import Window
-from core.render.element import Rectangle, Text, TextBox
+from core.render.element import Line, Rectangle, Text, TextBox
 from core.render.window import Window
 from core.sys.attributes import SysConfig
 from core.vector import Vector
@@ -16,8 +16,6 @@ from home.app import App
 
 class Home(Window):
 
-    template = Template("window")
-
     def __init__(self):
         super().__init__()
         self.index = [0, 0]
@@ -25,9 +23,10 @@ class Home(Window):
             Text(Vector(3, 5), f"{SysConfig.name}", justify='L'),
             Text(Vector(127, 5), time.strftime("%I:%M%p"), justify='R'),
             Text(Vector(0, 0), ">", justify='R'),
-            TextBox(Vector(127, 17), "Run Program", justify='R'),
-            TextBox(Vector(127, 30), "Settings", justify='R'),
-            TextBox(Vector(127, 43), "Power Ctrl", justify='R')
+            Line(Vector(0, 10), Vector(128, 10)),
+            TextBox(Vector(127, 18), "Run Program", justify='R'),
+            TextBox(Vector(127, 31), "Settings", justify='R'),
+            TextBox(Vector(127, 44), "Power Ctrl", justify='R')
         ]
         self.panels = panels.panels
         self.map = {0: loader.main, 2: power.main}
@@ -44,8 +43,8 @@ class Home(Window):
 
     def refresh(self):
         self.elements[1].text = time.strftime("%I:%M%p")
-        self.elements[2].anchor = Vector(self.elements[self.index[0] + 3].pos[0] - 2,
-                                         self.elements[self.index[0] + 3].pos[1] + 4)
+        self.elements[2].anchor = Vector(self.elements[self.index[0] + 4].pos[0] - 2,
+                                         self.elements[self.index[0] + 4].pos[1] + 4)
         self.panels[self.index[1]].refresh()
 
 

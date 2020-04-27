@@ -17,7 +17,7 @@ if SysConstant.platform == "POSIX":
 
 class Panel:
 
-    POSITIONS = [25, 35, 45, 55, 64]
+    POSITIONS = [26, 36, 46, 56, 65]
     FONT = Font(f"bitocra7", 7)
 
     def __init__(self, title, fields, refresh=1):
@@ -27,7 +27,7 @@ class Panel:
                          for i, func in enumerate(self.fields)]
         self.elements.append(
             Text(Vector(2, 17), title, font=self.FONT, justify='L'))
-        self.elements.append(Rectangle(Vector(0, 12), Vector(50, 62)))
+        self.elements.append(Rectangle(Vector(0, 13), Vector(50, 62)))
 
     def render(self):
         for element in self.elements:
