@@ -6,8 +6,9 @@ from core.asset.image import Image
 
 class Program:
 
-    def __init__(name, location, icon=None):
-        self.name, self.location, self.icon = name, location, icon
+    def __init__(self, location, icon=None):
+        self.location, self.icon = location, icon
+        print(self.icon)
 
     def remove(self):
         os.rmdir(self.location)

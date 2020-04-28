@@ -18,27 +18,33 @@ class Loader:
     FOLDER_DEFAULT = asset.Image("folder-default")
 
     def index(self, path):
-        apps = [] 
+        apps = []
         for package in os.scandir(SysConstant.path + path):
             if package.is_dir:
-                contents = [item.name for item in list(os.scandir(SysConstant + path + package))]
+                contents = [item.name for item in list(
+                    os.scandir(SysConstant.path + path + package.name))]
                 if "main.py" in contents:
                     if "app-icon.image" in contents:
-                        icon = asset.Image(SysConstant.path + path + package + "app-icon")
+                        icon = asset.Image(
+                            SysConstant.path + path + package.name + "app-icon")
                     else:
                         icon = self.APP_DEFAULT
-                    apps.append(program.Program(SysConstant.path + path + package, icon))
+                    print(icon)
+                    apps.append(program.Program(
+                        SysConstant.path + path + package.name, icon))
                 else:
                     if "folder-icon" in contents:
-                        icon = asset.Image(SysConstant.path + path + package + "folder-icon")
+                        icon = asset.Image(
+                            SysConstant.path + path + package.name + "folder-icon")
                     else:
                         icon = self.FOLDER_DEFAULT
-                    apps.append(folder.Folder(SysConstant.path + path + package, icon))
+                    print(icon)
+                    apps.append(folder.Folder(
+                        SysConstant.path + path + package.name, icon))
         return apps
 
     def run(self, target):
         Backlight.fill(SysConfig.colour)
- 
 
 
 class AppDrawer(Window, Loader):
@@ -52,8 +58,8 @@ class AppDrawer(Window, Loader):
         self.pages = self.group(6, super().index(path))
         self.icons = []
         for page in self.pages:
-            self.icons.append([Image(Vector(self.POSITIONS[i]), app.icon)
-                               for i, app in enumerate(page)])
+            for i, app in enumerate(page):
+                self.icons.append(Image(*Vector(self.POSITIONS[i]), app.icon))
         self.elements = [
             Rectangle(Vector(0, 0), Vector(128, 64))]
 
@@ -61,10 +67,10 @@ class AppDrawer(Window, Loader):
         args = [iter(iterable)] * groupsize
         pages = list(itertools.zip_longest(*args, fillvalue=fillvalue))
         for page in pages:
+            page = list(page)
             while None in page:
                 page.remove(None)
         return pages
-
 
     def render(self):
         for icon in self.icons[self.index]:
@@ -100,7 +106,7 @@ class Handle(Handler):
                 window.index += 1
 
         async def centre(null, window):
-            target = self.pages[self.index][self.pos]
+            target = self.pages[self.index][self.pos].location
             if isinstance(target, program.Program):
                 self.run(target)
             else:
