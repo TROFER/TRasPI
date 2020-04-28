@@ -8,7 +8,6 @@ class Program:
 
     def __init__(self, location, icon=None):
         self.location, self.icon = location, icon
-        print(self.icon)
 
     def remove(self):
         os.rmdir(self.location)
