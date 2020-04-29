@@ -10,7 +10,7 @@ from core.render import Window
 from core.render.element import Image, Rectangle, Line, Text
 from core.sys.attributes import SysConfig, SysConstant
 from core.vector import Vector
-from home import folder, program
+from home.loader import program
 from home.app import App
 
 
@@ -39,7 +39,7 @@ class Loader:
                             SysConstant.path + path + package.name + "folder-icon")
                     else:
                         icon = self.FOLDER_DEFAULT
-                    apps.append(folder.Folder(
+                    apps.append(program.Folder(
                         SysConstant.path + path + package.name, icon))
         return apps
 

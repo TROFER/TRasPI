@@ -29,3 +29,10 @@ class Program:
         else:
             with open(f"{SysConstant.path}programs/{self.name}/config.json", 'w') as config:
                 json.dump(new_config, config)
+
+
+class Folder:
+
+    def __init__(self, location, icon):
+        self.location = location
+        self.icon = icon

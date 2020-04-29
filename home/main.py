@@ -10,7 +10,8 @@ from core.render.element import Line, Rectangle, Text, TextBox
 from core.render.window import Window
 from core.sys.attributes import SysConfig
 from core.vector import Vector
-from home import loader, panels, power
+from home import panels, power
+from home.loader import main as loader
 from home.app import App
 
 
