@@ -13,6 +13,11 @@ class Key:
         def __init__(self):
             touch.setup()
 
+        def initialize(self):
+            pass
+        def terminate(self):
+            pass
+
         def bind(self, button, function):
             touch.on(button, function)
 
@@ -29,6 +34,11 @@ class Key:
     else: # DUMMY
 
         def __init__(self):
+            pass
+
+        def initialize(self):
+            touch.setup()
+        def terminate(self):
             pass
 
         def bind(self, button, function):

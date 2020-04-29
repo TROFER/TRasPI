@@ -19,6 +19,7 @@ class Window:
     async def focus(self):
         await Interface.application().render.window_focus(self)
         await self.__event.wait()
+        self.__event.clear()
         await Interface.application().render.window_pop()
         return self.__finish
 

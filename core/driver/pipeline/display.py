@@ -13,6 +13,11 @@ class Display:
             lcd.st7567.setup()
             self.contrast(40)
 
+        def initialize(self):
+            pass
+        def terminate(self):
+            pass
+
         def clear(self):
             lcd.clear()
             self.show()
@@ -32,6 +37,11 @@ class Display:
     else: # DUMMY
         def __init__(self):
             lcd.setup()
+
+        def initialize(self):
+            pass
+        def terminate(self):
+            pass
 
         def clear(self):
             lcd.clear()

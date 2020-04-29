@@ -1,6 +1,7 @@
 import asyncio
 import concurrent
 import threading
+import traceback
 import core.error
 
 class AsyncController:
@@ -9,7 +10,7 @@ class AsyncController:
         self._executor_cpu = concurrent.futures.ThreadPoolExecutor(thread_name_prefix="AsyncCPU")
         self._executor_io = concurrent.futures.ThreadPoolExecutor(thread_name_prefix="AsyncIO")
 
-        self.loop = asyncio.new_event_loop()
+        self.loop = asyncio.get_event_loop()
 
     def run(self, application: "Application"):
         try:
@@ -44,7 +45,7 @@ class Interface:
 
     def active(self) -> bool:
         """Is the program actively running"""
-        return self.__application.running
+        return self.__application.running.is_set()
 
     def application(self) -> "Application":
         """Returns the Application"""
@@ -95,7 +96,7 @@ class Interface:
                 try:
                     self.func()
                 except Exception as e:
-                    print(e)
+                    print(traceback.print_exception(e, e, e.__traceback__))
                 await asyncio.sleep(self.delay)
 
         def __hash__(self) -> int:

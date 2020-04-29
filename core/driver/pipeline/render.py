@@ -55,9 +55,11 @@ class Render:
         self.__renderer.buffer_frame.join()
 
     def open(self):
+        Display.initialize()
         self.__renderer.open()
     def close(self):
         self.__renderer.close()
+        Display.terminate()
 
     def pause(self):
         self.__renderer.event_pause.clear()

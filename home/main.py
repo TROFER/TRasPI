@@ -53,27 +53,27 @@ class Handle(Handler):
     window = Home
 
     class press:
-        async def down(null, window):
+        async def down(null, window: Home):
             if window.index[0] < 2:
                 window.index[0] += 1
                 window.refresh()
 
-        async def up(null, window):
+        async def up(null, window: Home):
             if window.index[0] > 0:
                 window.index[0] -= 1
                 window.refresh()
 
-        async def centre(null, window):
-            await(window.map[window.index[0]])
+        async def centre(null, window: Home):
+            await window.map[window.index[0]]
             window.refresh()
 
-        async def left(null, window):
+        async def left(null, window: Home):
             if window.index[1] > 0:
                 window.index[1] -= 1
                 window.refresh()
 
-        async def right(null, window):
-            if window.index[1] < 2:
+        async def right(null, window: Home):
+            if window.index[1] < len(window.panels) - 1:
                 window.index[1] += 1
                 window.refresh()
 

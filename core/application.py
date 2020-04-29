@@ -1,3 +1,6 @@
+import threading
+import traceback
+
 from core.driver.pipeline.render import Render as Pipeline
 from core.render.render import Render
 
@@ -23,7 +26,7 @@ class _Active(type):
 class Application(metaclass=_Active):
 
     def __init__(self, app: TApplication):
-        self.running = False
+        self.running = threading.Event()
         self.render = Render(Pipeline(), self.home)
         self.__home = app._program
         self.__current_app = self.__home
@@ -31,11 +34,11 @@ class Application(metaclass=_Active):
 
     def initialize(self):
         self.__class__.activate(self)
-        self.running = True
+        self.running.set()
         self.render.initialize()
 
     def terminate(self):
-        self.running = False
+        self.running.clear()
         self.render.terminate()
         self.__class__.activate(None)
 
@@ -66,7 +69,7 @@ class Application(metaclass=_Active):
             self.render.enable()
             # Interface.schedule(self.__home.application.window.focus())
         except Exception as e:
-            print(f"{type(e).__name__}: {e}")
+            print(traceback.print_exception(e, e, e.__traceback__))
             raise
 
 def main(application: Application):

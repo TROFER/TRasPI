@@ -81,12 +81,18 @@ class Render:
         self.__executing.set()
 
     def initialize(self):
+        Key.initialize()
         self.__pipeline.open()
     def terminate(self):
+        Key.terminate()
         self.__pipeline.close()
 
     def __home_cb(self, ch, event):
-        Interface.schedule(self.__home())
+        print("Debug Back Key")
+        print(self.__window_stack)
+        print(self.__active)
+        print("/Debug")
+        # Interface.schedule(self.__home())
 
     async def process(self):
         try:
@@ -99,24 +105,24 @@ class Render:
                 Interface.schedule(self.process())
 
     def __bind_handles(self):
-        def wrap(key, handler):
+        def wrap(key, handler, active: Window):
             key = key_names[key]
             async def event(event):
-                # print("Call Event", event, key, handler)
                 try:
                     func = getattr(getattr(handler, event), key)
                 except AttributeError: return
                 try:
-                    await func(None, self.__active)
+                    await func(None, active)
                 except Exception as e:
                     print(f"EventError: {type(e).__name__}: {e}")
-                    raise core.error.Event(e, key, event, handler, self.__active)
+                    raise core.error.Event(e, key, event, handler, active)
+
+            event.__qualname__ = f"{active.__class__.__qualname__}-{key}"
 
             def submit(ch, event_type):
-                # print("Event Submit", ch, event_type, handler)
                 self.__event_queue.put((event, event_type))
             return submit
 
         for key in (KeyEnum.UP.value, KeyEnum.DOWN.value, KeyEnum.LEFT.value, KeyEnum.CENTRE.value, KeyEnum.RIGHT.value):
-            Key.bind(key, wrap(key, self.__active._event_handler_))
+            Key.bind(key, wrap(key, self.__active._event_handler_, self.__active))
         Key.bind(KeyEnum.BACK.value, self.__home_cb)
