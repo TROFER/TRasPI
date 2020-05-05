@@ -1,5 +1,5 @@
 import msvcrt
-import keys
+from core.driver.dummy import keys
 
 def kbfunc():
     if msvcrt.kbhit():
