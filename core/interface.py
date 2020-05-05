@@ -18,9 +18,11 @@ class AsyncController:
             asyncio.run_coroutine_threadsafe(application.run(), self.loop)
             self.loop.run_forever()
         finally:
+            application.running.clear()
+            self.loop.run_until_complete(application.close_all())
+            self.loop.run_until_complete(self.loop.shutdown_asyncgens())
             self.loop.stop()
             application.terminate()
-            self.loop.run_until_complete(self.loop.shutdown_asyncgens())
             self.loop.close()
 
     async def executor_cpu(self, func):
@@ -43,6 +45,11 @@ class Interface:
         self.__application = application
         self.__async.run(application)
 
+    def stop(self):
+        if self.active():
+            self.__application.running.clear()
+            self.__async.loop.stop()
+
     def active(self) -> bool:
         """Is the program actively running"""
         return self.__application.running.is_set()
@@ -64,6 +71,10 @@ class Interface:
         if type == "IO":
             return await self.__async.executor_io(func)
         return await self.__async.executor_cpu(func)
+
+    def program(self, program: "Program"):
+        """Set the Program to have Focus"""
+        self.schedule(self.__application.program(program))
 
     class interval:
         """Call func repeatedly, determinded by repeat, with a delay in seconds"""

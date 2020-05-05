@@ -39,13 +39,10 @@ class Render:
     def submit(self, obj: Primative):
         self.__pipeline.submit(obj)
 
-    def change_stack(self, stack: list, active: Window, enable=True) -> [Window,]:
-        self.disable()
+    def change_stack(self, stack: list, active: Window) -> [Window,]:
         output = (self.__window_stack, self.__active)
         self.__window_stack = stack
         self.__set_active(active)
-        if enable:
-            self.enable()
         return output
 
     async def window_focus(self, window: "Window"):
@@ -87,12 +84,14 @@ class Render:
         Key.terminate()
         self.__pipeline.close()
 
+    def window_finish(self):
+        if not self.__window_stack:
+            self.__home_cb(-1, "press")
+            return True
+        return False
+
     def __home_cb(self, ch, event):
-        print("Debug Back Key")
-        print(self.__window_stack)
-        print(self.__active)
-        print("/Debug")
-        # Interface.schedule(self.__home())
+        Interface.schedule(self.__home(ch))
 
     async def process(self):
         try:

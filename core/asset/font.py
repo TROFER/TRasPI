@@ -5,6 +5,7 @@ from core.vector import Vector
 class Font(Asset):
 
     def __init__(self, path: str, size: int):
+        self.__path_original = path
         super().__init__(path)
         self.size = size
         self.__calculate_font()
@@ -17,9 +18,8 @@ class Font(Asset):
     def __repr__(self) -> str:
         return f"{super().__repr__()}<{self.size} {self.font} {self.path}>"
 
-    def resize(self, size: int):
-        super().__setattr__("size", size)
-        self.__calculate_font()
+    def resize(self, size: int) -> "Font":
+        return self.__class__(self.__path_original, size)
 
     def text_pixel_size(self, text: str) -> Vector:
         return Vector(*self.font.getsize(text))

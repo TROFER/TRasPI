@@ -16,17 +16,17 @@ def __poll_loop():
         key = soutput.get_key()
         if not key:
             continue
-        if key == "q":
+        if key == "w":
             __funcs[0](0, "press")
-        if key == "a":
+        if key == "s":
             __funcs[1](1, "press")
-        if key == "z":
+        if key == "q":
             __funcs[2](2, "press")
-        if key == "x":
+        if key == "a":
             __funcs[3](3, "press")
-        if key == "c":
+        if key == "e":
             __funcs[4](4, "press")
-        if key == "v":
+        if key == "d":
             __funcs[5](5, "press")
 
 def setup():

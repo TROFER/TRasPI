@@ -1,11 +1,16 @@
 import os
+from core.interface import Interface
 
 class Power:
 
     def halt(cls):
-        os.system("halt")
+        Interface.stop()
+        # Disabled so i don't accidently turn it off
+        # os.system("halt")
 
     def restart(cls):
-        os.system("reboot")
+        Interface.stop()
+        # Disabled so i don't accidently turn it off
+        # os.system("reboot")
 
 Power = Power()

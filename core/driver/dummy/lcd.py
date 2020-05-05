@@ -14,10 +14,14 @@ def clear():
         for x in range(SysConstant.width):
             y[x] = 0
 
-def show():
-    os.system(_clear_sys_)
-    for y in __image:
-        print("".join("#" if i else " " for i in y))
+if SysConstant.pipeline == "DUMMYNR": # Dummy No Render
+    def show():
+        return
+else:
+    def show():
+        os.system(_clear_sys_)
+        for y in __image:
+            print("".join("#" if i else " " for i in y))
 
 def set_pixel(x: int, y: int, value: int):
     __image[y][x] = value

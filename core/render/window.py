@@ -25,6 +25,8 @@ class Window:
 
     def finish(self, value=None):
         self.__finish = value
+        if Interface.application().render.window_finish():
+            return
         self.__event.set()
         return value
 

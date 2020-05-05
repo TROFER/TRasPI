@@ -7,8 +7,8 @@ from core.sys.program import Program
 __all__ = ["Application"]
 
 class MetaApplication(type):
-
     def __init__(cls, name, bases, dct):
+
         if not issubclass(cls.var, Config):
             raise TypeError
         # core
@@ -17,10 +17,16 @@ class MetaApplication(type):
             raise TypeError
         if not issubclass(cls.asset, Pool):
             raise TypeError
-        if not isinstance(cls.window, Window):
-            raise TypeError
-        cls._program = Program(cls)
+        try:
+            if not issubclass(cls.window, Window):
+                raise TypeError
+            cls._program = Program(cls)
+        except TypeError:
+            raise TypeError("Must be Window Type") from None
         return super().__init__(name, bases, dct)
+
+    # def __getattribute__(self):
+    #     pass
 
 class Application(metaclass=MetaApplication):
 
@@ -38,7 +44,7 @@ class Application(metaclass=MetaApplication):
     class asset(Pool):
         pass
 
-    window = Window()
+    window = Window
 
     async def open():
         pass

@@ -49,18 +49,31 @@ class _MetaConfig(type):
         try:
             return super().__getattribute__("__vars")[name][0]
         except KeyError:
+            if name.startswith("__"):
+                return super().__getattribute__(name)
             raise AttributeError
 
     def __setattr__(cls, name, value):
         try:
-            attr = super().__getattribute__("__vars")[name]
+            var = super().__getattribute__("__vars")
+            attr = var[name]
         except KeyError:
-            if name == "_set_cb_":
-                super().__getattribute__("__vars")[value[0]][1] = value[1]
+            if name == "_callback_":
+                var[value[0]][1] = value[1]
                 return
             raise AttributeError
         attr[0] = value
         attr[1](value)
+
+    def __repr__(cls) -> str:
+        return "<{} [{}]>".format(cls.__qualname__, ", ".join(f"{k}: {v[0]}" for k,v in super().__getattribute__("__vars").items()))
+
+    def __getstate__(cls) -> dict:
+        return super().__getattribute__("__vars")
+    def __setstate__(cls, state: dict):
+        var = super().__getattribute__("__vars")
+        for key, value in state.items():
+            var[key][0] = value
 
 class Config(metaclass=_MetaConfig):
     pass

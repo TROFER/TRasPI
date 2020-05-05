@@ -50,9 +50,9 @@ class Render:
             for func in self.__wgt_r:
                 func(self.__draw)
 
-        self.__renderer.buffer_frame.put(self.__image)
-        self.__renderer.event_frame.set()
-        self.__renderer.buffer_frame.join()
+            self.__renderer.buffer_frame.put(self.__image)
+            self.__renderer.event_frame.set()
+            self.__renderer.buffer_frame.join()
 
     def open(self):
         Display.initialize()
