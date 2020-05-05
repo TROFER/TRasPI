@@ -126,7 +126,11 @@ class Handle(Handler):
 
 
 class AppList(Loader):
-    pass
+
+    POSITIONS []
+
+    def __init__(self):
+        
 
 
 main = AppDrawer()
