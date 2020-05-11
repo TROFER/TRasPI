@@ -1,5 +1,13 @@
+import os
+import subprocess
 import core
 import cpu, memory, network, storage, hardware
+
+try:
+    import psutil
+    import gpiozero
+except ImportError:
+    print("Warning: Some dependancies could not be found")
 
 class Main(core.render.Window):
 
@@ -16,4 +24,27 @@ class Main(core.render.Window):
             if res is None:
                 self.finish()
             else:
-                self.index = (self.index + res) % len(self.map) 
+                self.index = (self.index + res) % len(self.map)
+
+class Hardware:
+    
+    class CPU:
+
+        def temperature():
+            return round(gpiozero.CPUTemperature().temperature, 1)
+        
+        def load():
+            return psutil.cpu_percent()
+        
+        def cur_speed():
+            os.system("cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq")
+            return int(subprocess.check_output("cat / sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq", shell=True).decode())
+        
+        def max_speed():
+            os.system("/sys/devices/.../cpuinfo_max_freq")
+    
+    class Memory:
+
+        pass
+    
+    
