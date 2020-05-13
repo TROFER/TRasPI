@@ -38,10 +38,11 @@ class Hardware:
         
         def cur_speed():
             os.system("cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq")
-            return int(subprocess.check_output("cat / sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq", shell=True).decode())
+            return int(subprocess.check_output("cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq", shell=True).decode())
         
         def max_speed():
-            os.system("/sys/devices/.../cpuinfo_max_freq")
+            os.system("cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq")
+            return int(subprocess.check_output("cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq", shell=True).decode())
     
     class Memory:
 

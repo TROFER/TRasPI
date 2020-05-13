@@ -1,9 +1,7 @@
-import os
-import subprocess
-
 import core
 from home.app import App
 from core import Vector
+from core import Interface
 from core.render.element import Line, Text
 
 def constrain(n, start1, stop1, start2, stop2):
@@ -42,11 +40,16 @@ class Main(core.render.Window, Graph):
             Text(Vector(3, 40), "CPU Speed"),
             Line(Vector(0, 46), Vector(128, 46), width=2)]
         App.interval(self.refresh)
+    
+    def render(self):
+        for element in self.elements:
+            Interface.render(element)
+            
 
     def refresh(self):
-        self.elements[1:4].text = CPU.load(), CPU.tempreture(), CPU.cur_speed()
+        self.elements[1:4].text = f"CPU Load: {CPU.load()}%", f"CPU Temp: {CPU.tempreture()}°C", f"CPU Speed: {CPU.cur_speed()}Mhz"
         self.elements[5].pos2 = Vector(constrain(CPU.load, 1, 128, 0, 100), 36)
-        self.elements[7].pos2 = Vector(constrain(CPU.Speed, 1, 128, 0, ))
+        self.elements[7].pos2 = Vector(constrain(CPU.Speed, 1, 128, 0, CPU.max_speed()), 46)
 
 class Handle(core.input.event.Handle):
 
