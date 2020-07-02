@@ -6,6 +6,7 @@ from core.sys.attributes import SysConstant
 from core.sys.program import Program
 from core.type.application import Application
 import core.asset.base
+import core.error
 
 CACHE_DIR = "resource/program/"
 
@@ -21,11 +22,14 @@ class Load:
         self.tree[path[:-1]] = scan_programs(SysConstant.path+path, len(SysConstant.path))
         return self.tree
 
-    def app(self, *path: str) -> Program:
-        tree = self.tree
-        for dir in path:
-            tree = tree[dir]
-        path = tree
+    def app(self, *path: str, full=False) -> Program:
+        if full:
+            path = path[0]
+        else:
+            tree = self.tree
+            for dir in path:
+                tree = tree[dir]
+            path = tree
         if path not in self.__programs:
             return self.load(path)
         return self.__programs[path][0]
@@ -98,9 +102,9 @@ def write_cache(name: str, data):
 
 def validate_app(module) -> tuple:
     if not hasattr(module, "main"):
-        raise AttributeError("An Application must Contain a 'main' Attribute")
+        raise core.error.load.Validate(module.__name__, module.__file__, "An Application must Contain a 'main' Attribute")
     if not issubclass(module.main, Application):
-        raise TypeError(f"Main must be of type '{Application.__name__}' not '{module.main.__name__}'")
+        raise core.error.load.Validate(module.__name__, module.__file__, f"Main must be of type '{Application.__name__}' not '{module.main.__name__}'")
     return (module.main._program, module)
 
 def load_app(path: str):
@@ -110,16 +114,22 @@ _program_count = 1
 def _load_py_file(path: str):
     global _program_count
     try:
-        spec = importlib.util.spec_from_file_location("Program<{}-{}>".format(path.split("/")[-2], _program_count), path + "main.py")
         import_path(path, True)
+        name = "Program<{}-{}>".format(path.split("/")[-2], _program_count)
+        spec = importlib.util.spec_from_file_location(name, path+"main.py", submodule_search_locations=[])
         module = importlib.util.module_from_spec(spec)
+        sys.modules[name] = module
         spec.loader.exec_module(module)
-        import_path(path, False)
 
         _program_count += 1
         return module
     except Exception as e:
-        raise e
+        raise core.error.load.ModuleFileImport(name, path) from e
+    finally:
+        import_path(path, False)
+        try:
+            del sys.modules[name]
+        except KeyError:    pass
 
 def import_path(path: str, add: bool):
     if add:
@@ -131,5 +141,6 @@ def import_path(path: str, add: bool):
             sys.path.remove(path)
             core.asset.base._active_dir.remove(path+"resource/")
         except ValueError: return
+
 
 load = Load()

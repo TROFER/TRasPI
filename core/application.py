@@ -47,9 +47,9 @@ class Application(metaclass=_Active):
         for app in tuple(self.applications):
             await self.__close_program(app)
 
-    async def home(self, value: int):
+    async def home(self, value: int=2):
         if self.__current_app is self.__home:
-            return # Do the funky
+            return self.render.enable()
 
         current = self.__current_app
         await self.__change_program(self.__home)
@@ -57,14 +57,18 @@ class Application(metaclass=_Active):
             await self.__close_program(current)
 
     async def program(self, program: Program):
-        if program not in self.applications:
-            await self.__start_program(program)
-        await self.__change_program(program)
+        try:
+            if program not in self.applications:
+                await self.__start_program(program)
+            await self.__change_program(program)
+        except Exception as e:
+            print("Program:", "".join(traceback.format_exception(e, e, e.__traceback__)))
+            await self.home()
 
     async def __start_program(self, program: Program):
         self.render.disable()
-        self.applications.add(program)
         await program.open()
+        self.applications.add(program)
 
     async def __change_program(self, program: Program):
         self.render.disable()
@@ -77,24 +81,23 @@ class Application(metaclass=_Active):
     async def __close_program(self, program: Program):
         await program.hide()
         await program.close()
-        self.applications.discard(program)
-        Load.close(program)
+        try:
+            self.applications.remove(program)
+            Load.close(program)
+        except ValueError:
+            pass
 
     async def main(self):
         await self.__current_app.main()
 
     async def run(self):
-        try:
-            Interface.schedule(self.render.execute())
-            Interface.schedule(self.render.process())
-            await self.__current_app.open()
-            self.render.change_stack(self.__current_app.window_stack, self.__current_app.window_active)
-            await self.__current_app.show()
-            Interface.schedule(self.__current_app.window_active.show())
-            self.render.enable()
-        except Exception as e:
-            print(traceback.print_exception(e, e, e.__traceback__))
-            raise
+        Interface.schedule(self.render.execute())
+        Interface.schedule(self.render.process())
+        await self.__current_app.open()
+        self.render.change_stack(self.__current_app.window_stack, self.__current_app.window_active)
+        await self.__current_app.show()
+        Interface.schedule(self.__current_app.window_active.show())
+        self.render.enable()
 
 def main(application: Application):
     application.main()

@@ -17,10 +17,16 @@ class Image(Primative):
         image.im.paste(self.image.image.im, tuple(pos))
 
     def copy(self):
-        return self.pos, self.just_w, self.just_h
+        return self.image, self.pos, self.just_w, self.just_h
 
     def _calc_pos(self):
         size = self.image.size()
+
+        try:
+            self.just_w = self.just_w.upper()
+            self.just_h = self.just_h.upper()
+        except Exception as e:
+            pass
 
         if self.just_w == 'R':
             off_w = self.anchor[0] - size[0]

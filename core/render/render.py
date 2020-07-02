@@ -32,7 +32,7 @@ class Render:
             self.__active.render()
             self.__pipeline.execute()
         except Exception as e:
-            print(traceback.print_exception(e, e, e.__traceback__))
+            print("Render:", "".join(traceback.format_exception(e, e, e.__traceback__)))
         if Interface.active():
             Interface.schedule(self.execute())
 
@@ -113,8 +113,8 @@ class Render:
                 try:
                     await func(None, active)
                 except Exception as e:
-                    print(f"EventError: {type(e).__name__}: {e}")
-                    raise core.error.Event(e, key, event, handler, active)
+                    err = core.error.Event(e, key, event, handler, active)
+                    print(f"EventError:", "".join(traceback.format_exception(err, err, e.__traceback__)))
 
             event.__qualname__ = f"{active.__class__.__qualname__}-{key}"
 

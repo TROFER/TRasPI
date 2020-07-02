@@ -1,136 +1,69 @@
-import itertools
-import os
-import time
+import core
 
-from core import asset
-from core.hw.backlight import Backlight
-from core.input.event import Handler
-from core.interface import Interface
-from core.render import Window
-from core.render.element import Image, Rectangle, Line, Text
-from core.sys.attributes import SysConfig, SysConstant
-from core.vector import Vector
-from home.loader import program
-from home.app import App
+class App(core.type.Application):
+    class asset(core.asset.Pool):
+        app = core.asset.Image("app-default")
+        folder = core.asset.Image("folder-default")
 
+class AppDraw(core.render.Window):
 
-class Loader:
+    POSITIONS = [core.Vector(x, y) for y in (13, 39) for x in (12, 39, 66, 93)]
+    CURSOR = (core.Vector(-2, -1), App.asset.app.size()+core.Vector(1, 0))
 
-    APP_DEFAULT = asset.Image("app-default")
-    FOLDER_DEFAULT = asset.Image("folder-default")
-
-    def index(self, path):
-        apps = []
-        for package in os.scandir(SysConstant.path + path):
-            if package.is_dir:
-                contents = [item.name for item in list(
-                    os.scandir(SysConstant.path + path + package.name))]
-                if "main.py" in contents:
-                    if "app-icon.image" in contents:
-                        icon = asset.Image(
-                            SysConstant.path + path + package.name + "app-icon")
-                    else:
-                        icon = self.APP_DEFAULT
-                    apps.append(program.Program(
-                        SysConstant.path + path + package.name, icon))
-                else:
-                    if "folder-icon" in contents:
-                        icon = asset.Image(
-                            SysConstant.path + path + package.name + "folder-icon")
-                    else:
-                        icon = self.FOLDER_DEFAULT
-                    apps.append(program.Folder(
-                        SysConstant.path + path + package.name, icon))
-        return apps
-
-    def run(self, target):
-        Backlight.fill(SysConfig.colour)
-
-
-class AppDrawer(Window, Loader):
-
-    POSITIONS = [(12, 13), (39, 13), (66, 13), (93, 13),
-                 (12, 39), (39, 39), (66, 39), (93, 39)]
-    ICON_SCALE = Vector(24, 24)
-
-    def __init__(self, path='programs/'):
+    def __init__(self, tree=core.sys.load.tree["programs"], name="/"):
         super().__init__()
-        self.index, self.pos = 0, 0
-        self.pages = self.group(8, super().index(path))
-        self.icons = []
-        for page in self.pages:
-            for i, app in enumerate(page):
-                self.icons.append(Image(*Vector(self.POSITIONS[i]), app.icon, just_w='L'))
-        self.elements = [
-            Text(Vector(3, 5), "App Drawer", justify='L'),
-            Text(Vector(127, 5), time.strftime("%I:%M%p"), justify='R'),
-            Line(Vector(0, 10), Vector(128, 10)),
-            Rectangle(Vector(*self.POSITIONS[0]), Vector(*self.POSITIONS[0]) + self.ICON_SCALE)]
-        App.interval(self.refresh)
+        self.apps = [self.__file(v) if isinstance(v, str) else self.__folder(tree[k], f"{name}{k}/") for k,v in tree.items()]
+        self.icon_elm = [core.element.Image(self.POSITIONS[index % len(self.POSITIONS)], App.asset.app if isinstance(value, str) else App.asset.folder, just_w="L") for index, value in enumerate(tree.values())]
+        self.index = 0
+        self._render_elm = set()
+        self.title = core.element.Text(core.Vector(1, 5), name, justify="L")
+        self.cursor = core.element.Rectangle(*self.CURSOR)
 
-    def group(self, groupsize, iterable, fillvalue=None):
-        args = [iter(iterable)] * groupsize
-        pages = list(itertools.zip_longest(*args, fillvalue=fillvalue))
-        for i in range(len(pages)):
-            page = list(pages[i])
-            while None in page:
-                page.remove(None)
-            pages[i] = page
-        return pages
+        self.update()
+
+    def __file(self, path):
+        async def _file():
+            prog = core.sys.load.app(path, full=True)
+            core.Interface.program(prog)
+        return _file
+    def __folder(self, path, name):
+        async def _folder():
+            await self.__class__(path, name)
+        return _folder
 
     def render(self):
-        for icon in self.icons[8 * self.index : 8 * self.index + 8]:
-            Interface.render(icon)
-        for element in self.elements:
-            Interface.render(element)
+        for elm in (*self._render_elm, self.cursor, self.title):
+            core.Interface.render(elm)
 
-    def refresh(self):
-        self.elements[-1].pos1 = Vector(*self.POSITIONS[self.pos]) + Vector(-1, -1)
-        self.elements[-1].pos2 = Vector(*self.POSITIONS[self.pos]) + self.ICON_SCALE
+    def update(self):
+        index = self.index // len(self.POSITIONS)
+        self._render_elm = {elm for elm in self.icon_elm[index:min(index+len(self.POSITIONS), len(self.icon_elm))]}
+        offset = self.POSITIONS[self.index % len(self.POSITIONS)]
+        self.cursor.pos1 = self.CURSOR[0] + offset
+        self.cursor.pos2 = self.CURSOR[1] + offset
 
+    async def run(self):
+        app = self.apps[self.index]
+        await app()
 
-class Handle(Handler):
+class Handle(core.input.Handler):
 
-    window = AppDrawer
+    window = AppDraw
 
     class press:
-        async def left(null, window):
-            if window.pos > 0:
-                window.pos -= 1
-                window.refresh() 
+        async def right(null, window: AppDraw):
+            window.index = (window.index + 1) % len(window.apps)
+            window.update()
+        async def left(null, window: AppDraw):
+            window.index = (window.index - 1) % len(window.apps)
+            window.update()
 
-        async def right(null, window):
-            if window.pos < len(window.pages[window.index])-1:
-                window.pos += 1
-                window.refresh()
-
-        async def up(null, window):
-            if window.index > 0:
-                window.index -= 1
-                window.refresh()
-
-        async def down(null, window):
-            if window.index < len(window.pages)-1:
-                window.index += 1
-                window.refresh()
-
-        async def centre(null, window):
-            target = window.pages[window.index][window.pos].location
-            if isinstance(target, program.Program):
-                window.run(target)
-            else:
-                await(AppDrawer(target))
-
-        async def back(null, window):
+        async def up(null, window: AppDraw):
             window.finish()
 
-
-class AppList(Loader):
-
-    POSITIONS []
-
-    def __init__(self):
-        
+        async def centre(null, window: AppDraw):
+            await window.run()
 
 
-main = AppDrawer()
+App.window = AppDraw
+main = App

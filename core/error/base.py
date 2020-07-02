@@ -1,7 +1,13 @@
+import traceback
+
 __all__ = [
 "CoreException",
-"ExecutorProcess", "ExecutorProcessCPU", "ExecutorProcessIO"
+"ExecutorProcess", "ExecutorProcessCPU", "ExecutorProcessIO",
+"Event",
 ]
+
+def _fmt_exc(error: Exception):
+    return traceback.format_exception_only(type(error), error)[0][:-1]
 
 class CoreException(Exception):
 
@@ -17,7 +23,7 @@ class ExecutorProcess(CoreException):
         self.err = err
 
     def __str__(self) -> str:
-        return f"{self.err.__class__.__name__}: {self.err}"
+        return f"{_fmt_exc(self.err)}"
 
 class ExecutorProcessCPU(ExecutorProcess):
     pass
@@ -30,4 +36,9 @@ class Event(CoreException):
         self.err, self.key, self.event, self.handler, self.window = err, key, event, handler, window
 
     def __str__(self) -> str:
-        return f"{self.event}-{self.key} {self.err.__class__.__name__}<{self.err}> {self.handler} {self.window}"
+        return f"{self.handler.__module__}.{self.handler.__qualname__}.{self.event}-{self.key} on {type(self.window).__qualname__} | {_fmt_exc(self.err)}"
+
+class Load(CoreException):
+
+    def __init__(self, msg="Load Error"):
+        super().__init__(msg)

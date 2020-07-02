@@ -6,7 +6,7 @@ class Program:
     def __init__(self, app):
         self.application = app
         self.window_stack = []
-        self.window_active = app.window
+        self.window_active = None
         self._intervals = set()
         self._file = ""
 
@@ -17,7 +17,11 @@ class Program:
         pass
 
     async def open(self):
-        self.window_active = self.application.window()
+        try:
+            self.window_active = self.application.window()
+        except Exception as e:
+            self.window_active = None
+            raise
         await self.application.open()
     async def close(self):
         for interval in self._intervals:

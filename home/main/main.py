@@ -1,8 +1,8 @@
 import core
 import time
 
-from app import App
-import panels
+from .app import App
+from . import panels
 
 class WindowHome(core.render.Window):
 
@@ -16,7 +16,7 @@ class WindowHome(core.render.Window):
         self.index = 0
         self.cursor = core.element.Text(core.Vector(0, 0), ">", justify='R')
         self.app_map = [
-            core.sys.load.app("home", "power"), # Loader - Placeholder
+            core.sys.load.app("home", "loader"),
             core.sys.load.app("home", "power"), # Settings - Placeholder
             core.sys.load.app("home", "power"),
         ]

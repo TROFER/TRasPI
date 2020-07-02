@@ -29,9 +29,13 @@ class Asset(metaclass=_MetaAsset):
         raise TypeError("Assets are Constant")
 
     def __eq__(self, other) -> bool:
-        return self.path == other.path
+        if isinstance(other, Asset):
+            return self.path == other.path
+        return False
     def __ne__(self, other) -> bool:
-        return self.path != other.path
+        if isinstance(other, Asset):
+            return self.path != other.path
+        return False
 
     def __repr__(self) -> str:
         return f"Asset[{self.__class__.__name__}]"

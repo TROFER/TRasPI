@@ -36,6 +36,9 @@ class AsyncController:
         except Exception as e:
             raise core.error.ExecutorProcessIO(e) from e
 
+    async def stop(self):
+        self.loop.stop()
+
 class Interface:
 
     def __init__(self, _async: AsyncController):
@@ -48,7 +51,7 @@ class Interface:
     def stop(self):
         if self.active():
             self.__application.running.clear()
-            self.__async.loop.stop()
+            self.schedule(self.__async.stop())
 
     def active(self) -> bool:
         """Is the program actively running"""
@@ -112,6 +115,7 @@ class Interface:
 
         def __hash__(self) -> int:
             return id(self)
+
 
 
 Interface = Interface(AsyncController())
