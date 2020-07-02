@@ -5,6 +5,11 @@ import time
 import datetime
 import json
 import urllib.request
+try:
+    import psutil
+    import gpiozero
+except ImportError:
+    pass
 
 TIME_FORMAT = "%H:%M"
 
