@@ -86,6 +86,7 @@ class Interface:
             """Call func repeatedly, determinded by repeat, with a delay in seconds"""
             self._cancel = False
             self._event = asyncio.Event()
+            self._event.set()
             self.func = func
             self.delay = delay
             self.repeat = repeat
@@ -103,9 +104,14 @@ class Interface:
         def __await__(self):
             return self.run().__await__()
 
+        def __str__(self):
+            return f"Interval{self.func}"
+
         async def run(self):
+            print("Starting Run")
             await asyncio.sleep(self.delay)
             while not self._cancel:
+                print("Waiting on Event", self)
                 await self._event.wait()
                 try:
                     print("INT", self)

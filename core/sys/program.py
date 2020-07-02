@@ -20,34 +20,30 @@ class Program:
         pass
 
     async def open(self):
-        print("Opening")
         try:
             self.window_active = self.application.window()
         except Exception as e:
             self.window_active = None
             raise
-        print("App Open")
+        # print("Open", self)
         await self.application.open()
     async def close(self):
-        print("Closing")
         for interval in self._intervals:
             interval.cancel()
         self._intervals.clear()
-        print("App Close")
+        # print("Close", self)
         await self.application.close()
 
     async def show(self):
-        print("Showing")
         for interval in self._intervals:
             interval.resume()
-        print("App Show", self)
+        # print("Show", self)
         await self.application.show()
     async def hide(self):
-        print("Hiding")
         for interval in self._intervals:
             interval.pause()
-        print("App Hide")
         try:
+            # print("Hide", self)
             await self.application.hide()
         except Exception:
             pass
