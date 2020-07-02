@@ -11,7 +11,7 @@ class Program:
         self._file = ""
 
     def __str__(self) -> str:
-        return f"{self.__class__.__name__}<{self._file} {len(self.window_stack)}>{self.window_active} {self.app}>"
+        return f"{self.__class__.__name__}<{self._file} {len(self.window_stack)}>{self.window_active} {self.application}>"
 
     def create_interval_func(self, func: callable, delay: float=1, repeat: int=-1):
         self._intervals.add(Interface.interval(func, delay, repeat))
@@ -40,11 +40,11 @@ class Program:
         print("Showing")
         for interval in self._intervals:
             interval.resume()
-        print("Ap Show")
+        print("App Show")
         await self.application.show()
     async def hide(self):
         print("Hiding")
         for interval in self._intervals:
             interval.pause()
-        print("Ap Hide")
+        print("App Hide")
         await self.application.hide()
