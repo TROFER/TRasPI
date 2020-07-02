@@ -22,7 +22,7 @@ class Main(core.render.Window, Graph):
 
     def refresh(self):
         self.elements[1:4].text = f"Mem Load: {Mem.load()}%", f"VMem: {Mem.vmem()}Mb", f"Total Mem{Mem.total()}Mb"
-        self.elements[5].pos2 = c
+        self.elements[5].pos2 = 8
 
 
 class Handle(core.input.event.Handle):

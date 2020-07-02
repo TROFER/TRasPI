@@ -8,9 +8,9 @@ class App(core.type.Application):
 class AppDraw(core.render.Window):
 
     POSITIONS = [core.Vector(x, y) for y in (13, 39) for x in (12, 39, 66, 93)]
-    CURSOR = (core.Vector(-2, -1), App.asset.app.size()+core.Vector(1, 0))
+    CURSOR = (core.Vector(-1, -1), App.asset.app.size()+core.Vector(0, 0))
 
-    def __init__(self, tree=core.sys.load.tree["programs"], name="/"):
+    def __init__(self, tree=core.sys.load.tree["programs"], name="P:/"):
         super().__init__()
         self.apps = [self.__file(v) if isinstance(v, str) else self.__folder(tree[k], f"{name}{k}/") for k,v in tree.items()]
         self.icon_elm = [core.element.Image(self.POSITIONS[index % len(self.POSITIONS)], App.asset.app if isinstance(value, str) else App.asset.folder, just_w="L") for index, value in enumerate(tree.values())]
