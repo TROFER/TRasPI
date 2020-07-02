@@ -57,6 +57,7 @@ class Application(metaclass=_Active):
             await self.__close_program(current)
 
     async def program(self, program: Program):
+        print("Program", program)
         try:
             if program not in self.applications:
                 await self.__start_program(program)

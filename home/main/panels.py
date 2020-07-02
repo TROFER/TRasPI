@@ -39,7 +39,6 @@ class Panel:
                 elm.text = func()
             except Exception as err:
                 elm.text = " ~ERR"
-                print("\n".join(traceback.format_exception(err, err, err.__traceback__)))
 
 class WorldClock(Panel):
 
