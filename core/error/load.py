@@ -1,4 +1,4 @@
-from core.error.base import Load, _fmt_exc
+from core.error.base import Load, _fmt_exc, _fmt_exc_only
 import traceback
 
 class ImportApp(Load):
@@ -12,7 +12,7 @@ class ImportApp(Load):
 class ModuleFileImport(ImportApp):
 
     def __str__(self) -> str:
-        return f"Failed to Import Application {super().__str__()} cause {_fmt_exc(self.__cause__)}"
+        return f"Failed to Import Application {super().__str__()} cause {_fmt_exc_only(self.__cause__)}>>>\n{_fmt_exc(self.err)}"
 
 class Validate(ImportApp):
 
