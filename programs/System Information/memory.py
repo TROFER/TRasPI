@@ -4,9 +4,10 @@ from core import Vector
 from core.render.element import Line, Text
 
 
-class Main(core.render.Window, Graph):
+class Main(core.render.Window):
 
     def __init__(self):
+        super().__init__()
         self.elements = [
             Text(Vector(3, 5), "Memory - System Information", justify='L'),
             Text(Vector(3, 15), ""),
@@ -22,10 +23,10 @@ class Main(core.render.Window, Graph):
 
     def refresh(self):
         self.elements[1:4].text = f"Mem Load: {Mem.load()}%", f"VMem: {Mem.vmem()}Mb", f"Total Mem{Mem.total()}Mb"
-        self.elements[5].pos2 = 8
+        self.elements[5].pos2 = Vector(constrain(Hardware.Memory.load, 1, 128, 0, 100), 36)
 
 
-class Handle(core.input.event.Handle):
+class Handle(core.input.Handler):
 
     window = Main
 

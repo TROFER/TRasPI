@@ -1,11 +1,12 @@
+from app import App
 import os
 import subprocess
 import core
 import cpu
-import memory
-import network
-import storage
-import hardware
+#import memory
+#import network
+#import storage
+#import hardware
 
 try:
     import psutil
@@ -20,8 +21,9 @@ class Main(core.render.Window):
         super().__init__()
         self._flag = True
         self.index = 0
-        self.map = [cpu.main, memory.main,
-                    network.main, storage.main, hardware.main]
+        self.map = [cpu.Main()]
+        ''' , memory.Main,
+                     network.Main, storage.Main, hardware.Main '''
 
     async def show(self):
         if self._flag:
@@ -53,8 +55,19 @@ class Hardware:
 
     class Memory:
 
-        pass
+        def load():
+            return int(psutil.virtual_memory().used // 1000000)
+
+        def vmem():
+            return int(psutil.swap_memory().used // 1000000)
+        
+        def total():
+            return int(psutil.virtual_memory().total // 1000000)
+
 
 
 def constrain(n, start1, stop1, start2, stop2):
     return int(((n - start1) / (stop1 - start1)) * (stop2 - start2) + start2)
+
+App.window = Main
+main = App
