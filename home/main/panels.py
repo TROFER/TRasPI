@@ -11,6 +11,8 @@ try:
 except ImportError:
     pass
 
+import traceback
+
 TIME_FORMAT = "%H:%M"
 
 class Panel:
@@ -35,8 +37,9 @@ class Panel:
         for func, elm in zip(self.fields_funcs, self.fields):
             try:
                 elm.text = func()
-            except Exception as e:
+            except Exception as err:
                 elm.text = " ~ERR"
+                print("\n".join(traceback.format_exception(err, err, err.__traceback__)))
 
 class WorldClock(Panel):
 
