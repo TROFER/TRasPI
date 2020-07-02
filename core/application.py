@@ -58,7 +58,7 @@ class Application(metaclass=_Active):
 
     async def program(self, program: Program):
         try:
-            print("Program", program)
+            print(program)
             if program not in self.applications:
                 await self.__start_program(program)
             await self.__change_program(program)
@@ -73,10 +73,12 @@ class Application(metaclass=_Active):
 
     async def __change_program(self, program: Program):
         self.render.disable()
-        self.__current_app.window_stack, self.__current_app.window_active = self.render.change_stack(program.window_stack, program.window_active)
+        await self.render.switch_start()
         await self.__current_app.hide()
+        self.__current_app.window_stack, self.__current_app.window_active = self.render.change_stack(program.window_stack, program.window_active)
         self.__current_app = program
         await self.__current_app.show()
+        await self.render.switch_end()
         self.render.enable()
 
     async def __close_program(self, program: Program):

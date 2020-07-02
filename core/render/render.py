@@ -45,6 +45,13 @@ class Render:
         self.__set_active(active)
         return output
 
+    async def switch_start(self):
+        if self.__active:
+            await self.__active.hide()
+    async def switch_end(self):
+        if self.__active:
+            await self.__active.show()
+
     async def window_focus(self, window: "Window"):
         self.disable()
         self.__window_stack.append(self.__active)

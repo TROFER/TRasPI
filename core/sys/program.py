@@ -40,11 +40,14 @@ class Program:
         print("Showing")
         for interval in self._intervals:
             interval.resume()
-        print("App Show")
+        print("App Show", self)
         await self.application.show()
     async def hide(self):
         print("Hiding")
         for interval in self._intervals:
             interval.pause()
         print("App Hide")
-        await self.application.hide()
+        try:
+            await self.application.hide()
+        except Exception:
+            pass
