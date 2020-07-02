@@ -127,9 +127,10 @@ class Handle(Handler):
 
 class AppList(Loader):
 
-    POSITIONS []
+    POSITIONS = []
 
     def __init__(self):
+        pass
         
 
 
