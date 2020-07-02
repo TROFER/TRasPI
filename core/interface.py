@@ -108,6 +108,7 @@ class Interface:
             while not self._cancel:
                 await self._event.wait()
                 try:
+                    print("INT", self)
                     self.func()
                 except Exception as e:
                     print(traceback.print_exception(e, e, e.__traceback__))
