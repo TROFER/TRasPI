@@ -106,6 +106,7 @@ class Weather(Panel):
     URL = "http://api.openweathermap.org/data/2.5/weather?"
 
     def __init__(self):
+        self.reload_cache()
         self.funcs = [self.temperature, self.pressure, self.humidity, self.wind_speed]
         super().__init__("Weather", *self.funcs)
 
