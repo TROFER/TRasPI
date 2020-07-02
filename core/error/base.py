@@ -10,7 +10,7 @@ def _fmt_exc_only(error: Exception):
     return traceback.format_exception_only(type(error), error)[0][:-1]
 
 def _fmt_exc(error: Exception):
-    return traceback.format_exception_only(type(error), error)[0][:-1]
+    return "".join(traceback.format_exception(error, error, error.__traceback__))
 
 class CoreException(Exception):
 
@@ -39,7 +39,7 @@ class Event(CoreException):
         self.err, self.key, self.event, self.handler, self.window = err, key, event, handler, window
 
     def __str__(self) -> str:
-        return f"{self.handler.__module__}.{self.handler.__qualname__}.{self.event}-{self.key} on {type(self.window).__qualname__} | {_fmt_exc_only(self.err)}>>>\n{_fmt_exc(self.err)}"
+        return f"{self.handler.__module__}.{self.handler.__qualname__}.{self.event}-{self.key} on {type(self.window).__qualname__} | {_fmt_exc_only(self.err)}\nFull Cause: {_fmt_exc(self.err)}"
 
 class Load(CoreException):
 
