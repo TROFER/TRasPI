@@ -10,4 +10,5 @@ TrasPi Setup Guide.txt
 eventlog.txt
 eventlog.json
 **old_**
+attributes.py
 home/main/resource/program/time_cache.vcm
