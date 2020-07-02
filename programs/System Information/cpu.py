@@ -34,9 +34,9 @@ class Main(core.render.Window, Graph):
             Text(Vector(3, 15), ""),
             Text(Vector(3, 20), ""),
             Text(Vector(3, 25), ""),
-            Text(Vector(3, 49), "CPU Load"),
-            Line(Vector(0, 53), Vector(128, 53), width=2),
-            Text(Vector(3, 55), "CPU Speed"),
+            Text(Vector(3, 45), "CPU Load"),
+            Line(Vector(0, 50), Vector(128, 50), width=2),
+            Text(Vector(3, 57), "CPU Speed"),
             Line(Vector(0, 62), Vector(128, 62), width=2)]
         App.interval(self.refresh)
 
@@ -45,6 +45,7 @@ class Main(core.render.Window, Graph):
             Interface.render(element)
 
     def refresh(self):
+        print("Test")
         self.elements[1:4].text = f"CPU Load: {Hardware.CPU.load()}%", f"CPU Temp: {Hardware.CPU.tempreture()}°C", f"CPU Speed: {Hardware.CPU.cur_speed()}Mhz"
         self.elements[5].pos2 = Vector(constrain(Hardware.CPU.load, 1, 128, 0, 100), 36)
         self.elements[7].pos2 = Vector(
