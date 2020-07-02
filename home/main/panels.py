@@ -126,6 +126,7 @@ class Weather(Panel):
         if curr - App.var.weather_cache[0] > 46400:
             App.var.weather_cache[0] = curr
             App.var.weather_cache[1] = self.request(self.LOCATION)
+        self.data = App.var.weather_cache[1]
 
     def request(self, location: str):
         try:
