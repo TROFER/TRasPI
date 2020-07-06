@@ -1,6 +1,13 @@
 import core
+<<<<<<< HEAD
 from app import App
 from core import Vector, Interface
+=======
+from home.app import App
+from util import Hardware, constrain
+from core import Vector
+from core import Interface
+>>>>>>> ccc9bd0ac93f94cef2b17833608bd30337e13bf0
 from core.render.element import Line, Text
 from hardware import Hardware, constrain
 
@@ -9,16 +16,20 @@ class Graph:
     BUFFER_SIZE = 10
 
     def __init__(self):
-        self.buffer = [0 for i in range(self.BUFFER_SIZE)]
+        self.buffer = [0]
 
     def plot(self, data):
-        self.buffer.append(data)
-        del self.buffer[-1]
+        if self.buffer[0] != 0:
+            self.buffer.append(data)
+        else:
+            self.buffer[0] = data
+        if len(self.buffer) > self.BUFFER_SIZE:
+            del self.buffer[0]
 
     def trend(self):
-        if self.buffer[0] > self.buffer[-1]:
+        if self.buffer[0] < self.buffer[-1]:
             return True
-        elif self.buffer[0] < self.buffer[-1]:
+        elif self.buffer[0] > self.buffer[-1]:
             return False
         else:
             None
@@ -29,6 +40,7 @@ class Main(core.render.Window, Graph):
     def __init__(self):
         super().__init__()
         self.elements = [
+<<<<<<< HEAD
             Text(Vector(3, 5), "CPU - System Information", justify='L'),
             Text(Vector(3, 15), "", justify="L"),
             Text(Vector(3, 22), "", justify="L"),
@@ -36,7 +48,18 @@ class Main(core.render.Window, Graph):
             Text(Vector(3, 40), "CPU Load", justify="L"),
             Line(Vector(0, 53), Vector(128, 53), width=2),
             Text(Vector(3, 55), "CPU Speed", justify="L"),
+=======
+            Text(Vector(3, 5), "CPU - Sys Information", justify='L'),
+            Line(Vector(0, 9), Vector(128, 9)),
+            Text(Vector(3, 15), "", justify='L'),
+            Text(Vector(3, 25), "", justify='L'),
+            Text(Vector(3, 35), "", justify='L'),
+            Text(Vector(3, 45), "CPU Load"),
+            Line(Vector(0, 50), Vector(128, 50), width=2),
+            Text(Vector(3, 57), "CPU Speed"),
+>>>>>>> ccc9bd0ac93f94cef2b17833608bd30337e13bf0
             Line(Vector(0, 62), Vector(128, 62), width=2)]
+        self.graph = Graph()
         App.interval(self.refresh)
 
     def render(self):
@@ -44,12 +67,24 @@ class Main(core.render.Window, Graph):
             Interface.render(element)
 
     def refresh(self):
+<<<<<<< HEAD
         for elm, text in zip(self.elements[1:4], (f"CPU Load: {Hardware.CPU.load()}%", f"CPU Temp: {Hardware.CPU.temperature()}°C", f"CPU Speed: {Hardware.CPU.cur_speed()}Mhz")):
             elm.text = text
         self.elements[5].pos2 = Vector(constrain(Hardware.CPU.load(), 1, 128, 0, 100), 36)
         self.elements[7].pos2 = Vector(
             constrain(Hardware.CPU.cur_speed(), 1, 128, 0, Hardware.CPU.max_speed()), 46)
 
+=======
+        self.elements[2].text = f"CPU Load: {Hardware.CPU.load()}%"
+        self.elements[3].text = "CPU Temp: {}°C {}".format(Hardware.CPU.temperature(), '/\\' if self.graph.trend() else '\\/')
+        self.elements[4].text = f"CPU Speed: {Hardware.CPU.cur_speed() // 1000}Mhz"
+        self.elements[6].pos2 = Vector(
+            constrain(Hardware.CPU.load(), 0, 100, 0, 128), 50)
+        self.elements[8].pos2 = Vector(
+            constrain(Hardware.CPU.cur_speed(), 1, Hardware.CPU.max_speed(), 0, 128), 62)
+        self.graph.plot(Hardware.CPU.temperature())
+        print(self.graph.buffer)
+>>>>>>> ccc9bd0ac93f94cef2b17833608bd30337e13bf0
 
 class Handle(core.input.Handler):
 
