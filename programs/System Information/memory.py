@@ -9,7 +9,8 @@ class Main(core.render.Window):
     def __init__(self):
         super().__init__()
         self.elements = [
-            Text(Vector(3, 5), "Memory - System Information", justify='L'),
+            Text(Vector(3, 5), "Mem - Sys Information", justify='L'),
+            Line(Vector(0, 9), Vector(128, 9)),
             Text(Vector(3, 15), ""),
             Text(Vector(3, 20), ""),
             Text(Vector(3, 25), ""),
