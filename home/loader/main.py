@@ -1,6 +1,7 @@
 import core
 
 class App(core.type.Application):
+    name = "Application Loader"
     class asset(core.asset.Pool):
         app = core.asset.Image("app-default")
         folder = core.asset.Image("folder-default")
@@ -22,12 +23,12 @@ class AppDraw(core.render.Window):
         self.update()
 
     def __file(self, path):
-        async def _file():
+        async def _file(): # Called in run
             prog = core.sys.load.app(path, full=True)
             core.Interface.program(prog)
         return _file
     def __folder(self, path, name):
-        async def _folder():
+        async def _folder(): # Called in run
             await self.__class__(path, name)
         return _folder
 

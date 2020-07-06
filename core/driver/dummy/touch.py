@@ -1,7 +1,7 @@
 import threading
-from core.driver.dummy import soutput
+from . import soutput
 
-from core.interface import Interface
+from ...interface import Interface
 
 def __default(ch: int, event_type: str):
     print(ch, event_type)

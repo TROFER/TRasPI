@@ -1,5 +1,6 @@
 import os.path
-from core.sys.attributes import SysConstant
+from ..error.attributes import SysConstant
+# from core.sys.attributes import SysConstant
 
 __all__ = ["Asset"]
 

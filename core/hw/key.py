@@ -1,10 +1,10 @@
-from core.sys.attributes import SysConstant
+from ..error.attributes import SysConstant
 if SysConstant.pipeline == "GFXHAT":
     _FLAG = True
-    from core.driver.gfxhat import touch
+    from ..driver.gfxhat import touch
 else:
     _FLAG = False
-    from core.driver.dummy import touch
+    from ..driver.dummy import touch
 
 class Key:
 

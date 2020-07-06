@@ -1,13 +1,12 @@
-from core.sys.attributes import SysConstant
-from core.vector import Vector
+from ..error.attributes import SysConstant, SysConfig
+from ..vector import Vector
 if SysConstant.pipeline == "GFXHAT":
     _FLAG = True
-    from core.driver.gfxhat import backlight
+    from ..driver.gfxhat import backlight
 else:
     _FLAG = False
-    from core.driver.dummy import backlight
+    from ..driver.dummy import backlight
 
-from core.sys.attributes import SysConfig
 import colorsys
 
 

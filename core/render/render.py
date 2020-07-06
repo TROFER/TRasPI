@@ -2,12 +2,13 @@ import asyncio
 import queue as queues
 
 import core.error
-from core.render.primative import Primative
-from core.hw.key import Key
-from core.input.keys import name as key_names
-from core.input.keys import Key as KeyEnum
-from core.render.window import Window
-from core.interface import Interface
+from .primative import Primative
+from ..hw.key import Key
+from ..input.keys import name as key_names
+from ..input.keys import Key as KeyEnum
+from .window import Window
+from ..interface import Interface
+from ..error import logging as log
 
 import traceback
 
@@ -32,7 +33,9 @@ class Render:
             self.__active.render()
             self.__pipeline.execute()
         except Exception as e:
-            print("Render:", "".join(traceback.format_exception(e, e, e.__traceback__)))
+            # print("Render:", "".join(traceback.format_exception(e, e, e.__traceback__)))
+            log.core.error("Active: %s - %s: %s", self.__active, type(e).__name__, e)
+            log.traceback.error("Could not Render Active Frame: %s", self.__active, exc_info=e)
         if Interface.active():
             Interface.schedule(self.execute())
 
@@ -119,9 +122,11 @@ class Render:
                 except AttributeError: return
                 try:
                     await func(None, active)
-                except Exception as e:
-                    err = core.error.Event(e, key, event, handler, active)
-                    print(f"EventError:", "".join(traceback.format_exception(err, err, e.__traceback__)))
+                except Exception as err:
+                    e = core.error.Event(err, key, event, handler, active).with_traceback(err.__traceback__)
+                    # print(f"EventError:", "".join(traceback.format_exception(e, e, e.__traceback__)))
+                    log.core.error("%s", e, exc_info=False)
+                    log.traceback.error("", exc_info=e)
 
             event.__qualname__ = f"{active.__class__.__qualname__}-{key}"
 

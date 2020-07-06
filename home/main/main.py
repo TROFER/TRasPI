@@ -4,7 +4,7 @@ import time
 from .app import App
 from . import panels
 
-class WindowHome(core.render.Window):
+class Home(core.render.Window):
 
     def __init__(self):
         super().__init__()
@@ -19,12 +19,14 @@ class WindowHome(core.render.Window):
             core.sys.load.app("home", "loader"),
             core.sys.load.app("home", "power"), # Settings - Placeholder
             core.sys.load.app("home", "power"),
+            core.sys.load.app("home", "manager"),
         ]
 
         self.buttons = [
             core.element.TextBox(core.Vector(127, 18), "Run Program", justify='R'),
             core.element.TextBox(core.Vector(127, 31), "Settings", justify='R'),
             core.element.TextBox(core.Vector(127, 44), "Power Ctrl", justify='R'),
+            core.element.TextBox(core.Vector(127, 57), "Task Mngr", justify='R'),
         ]
 
         self.elements = {
@@ -53,29 +55,29 @@ class WindowHome(core.render.Window):
 
 class Handle(core.input.Handler):
 
-    window = WindowHome
+    window = Home
 
     class press:
-        async def down(null, window: WindowHome):
+        async def down(null, window: Home):
             if window.index < len(window.app_map)-1:
                 window.index += 1
                 window.move_cursor()
 
-        async def up(null, window: WindowHome):
+        async def up(null, window: Home):
             if window.index > 0:
                 window.index -= 1
                 window.move_cursor()
 
-        async def centre(null, window: WindowHome):
+        async def centre(null, window: Home):
             core.Interface.program(window.app_map[window.index])
 
-        async def left(null, window: WindowHome):
+        async def left(null, window: Home):
             window.panel = (window.panel - 1) % len(window.panels)
             window.refresh()
 
-        async def right(null, window: WindowHome):
+        async def right(null, window: Home):
             window.panel = (window.panel + 1) % len(window.panels)
             window.refresh()
 
-App.window = WindowHome
+App.window = Home
 main = App

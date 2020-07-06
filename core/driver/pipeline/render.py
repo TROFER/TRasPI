@@ -2,9 +2,9 @@ import multiprocessing as mp
 import ctypes
 import PIL.ImageDraw
 import PIL.Image
-from core.sys.attributes import SysConstant
-from core.driver.pipeline.display import Display
-from core.asset.image import Template
+from ...error.attributes import SysConstant
+from .display import Display
+from ...asset.image import Template
 
 class Render:
 

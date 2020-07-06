@@ -1,5 +1,5 @@
-from core.vector import Vector
-from core.render.primative import Primative
+from ...vector import Vector
+from ..primative import Primative
 
 import PIL.ImageDraw
 

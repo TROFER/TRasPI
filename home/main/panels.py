@@ -27,7 +27,7 @@ class Panel:
             core.element.Rectangle(core.Vector(0, 13), core.Vector(50, 62)),
         }
 
-        self.refresh()
+        # self.refresh()
 
     def render(self):
         for element in (*self.elements, *self.fields):

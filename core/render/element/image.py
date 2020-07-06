@@ -1,6 +1,6 @@
-from core.vector import Vector
-from core.render.primative import Primative
-from core.asset.image import Image as AssetImage
+from ...vector import Vector
+from ..primative import Primative
+from ...asset.image import Image as AssetImage
 
 __all__ = ["Image"]
 

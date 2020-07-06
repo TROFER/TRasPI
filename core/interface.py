@@ -3,6 +3,7 @@ import concurrent
 import threading
 import traceback
 import core.error
+from .error import logging as log
 
 class AsyncController:
 
@@ -50,6 +51,7 @@ class Interface:
 
     def stop(self):
         if self.active():
+            log.core.critical("Exiting")
             self.__application.running.clear()
             self.schedule(self.__async.stop())
 
@@ -67,7 +69,7 @@ class Interface:
 
     def schedule(self, coroutine):
         """Schedule Coroutine to Run"""
-        asyncio.run_coroutine_threadsafe(coroutine, self.__async.loop)
+        return asyncio.wrap_future(asyncio.run_coroutine_threadsafe(coroutine, self.__async.loop), loop=self.__async.loop)
 
     async def process(self, func, type: ("CPU", "IO")):
         """Process Intense Func on another Thread"""
@@ -90,7 +92,7 @@ class Interface:
             self.func = func
             self.delay = delay
             self.repeat = repeat
-            interface.schedule(self.run())
+            self._fut = interface.schedule(self.run())
 
         def cancel(self):
             """Cancel the interval"""
@@ -102,28 +104,31 @@ class Interface:
             self._event.set()
 
         def __await__(self):
-            return self.run().__await__()
+            return self._fut.__await__()
 
         def __str__(self):
             return f"Interval{self.func}"
 
         async def run(self):
-            print("Starting Run")
+            err_count = 0
             await asyncio.sleep(self.delay)
             while not self._cancel:
-                print("Waiting on Event", self)
                 await self._event.wait()
                 try:
-                    print("INT", self)
-                    self.func()
+                    f = self.func()
+                    if asyncio.iscoroutinefunction(self.func):
+                        await f
                 except Exception as e:
-                    print(traceback.print_exception(e, e, e.__traceback__))
+                    log.core.warning("%s - %s: %s", self, type(e).__name__, e)
+                    log.traceback.error("%s", self, exc_info=e)
+                    err_count += 1
+                    if err_count >= 3:
+                        log.core.error("Interval has thrown too many errors and has been cancelled - %s", self)
+                        self.cancel()
                 await asyncio.sleep(self.delay)
 
         def __hash__(self) -> int:
             return id(self)
-
-
 
 Interface = Interface(AsyncController())
 interface = Interface

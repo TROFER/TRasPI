@@ -1,6 +1,7 @@
 import asyncio
-from core.interface import Interface
-from core.asset.std import AssetPool
+from ..interface import Interface
+from ..asset.std import AssetPool
+from ..error import logging as log
 
 __all__ = ["Window"]
 
@@ -10,13 +11,18 @@ class Window:
     template = AssetPool.template
 
     def __init__(self):
+        super().__init__()
         self.__event = asyncio.Event()
         self.__finish = None
+
+    def __repr__(self):
+        return f"Window.{self.__module__}.{self.__class__.__qualname__}"
 
     def __await__(self):
         return self.focus().__await__()
 
     async def focus(self):
+        log.debug("%s", self)
         await Interface.application().render.window_focus(self)
         await self.__event.wait()
         self.__event.clear()
@@ -24,6 +30,7 @@ class Window:
         return self.__finish
 
     def finish(self, value=None):
+        log.debug("%s", self)
         self.__finish = value
         if Interface.application().render.window_finish():
             return

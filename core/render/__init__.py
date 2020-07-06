@@ -1,3 +1,3 @@
-from core.render.primative import Primative
-from core.render.render import Render
-from core.render.window import Window
+from .primative import Primative
+from .render import Render
+from .window import Window

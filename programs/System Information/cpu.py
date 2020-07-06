@@ -1,9 +1,8 @@
 import core
-from home.app import App
-from core import Vector
-from core import Interface
+from app import App
+from core import Vector, Interface
 from core.render.element import Line, Text
-
+from hardware import Hardware, constrain
 
 class Graph:
 
@@ -31,12 +30,12 @@ class Main(core.render.Window, Graph):
         super().__init__()
         self.elements = [
             Text(Vector(3, 5), "CPU - System Information", justify='L'),
-            Text(Vector(3, 15), ""),
-            Text(Vector(3, 20), ""),
-            Text(Vector(3, 25), ""),
-            Text(Vector(3, 49), "CPU Load"),
+            Text(Vector(3, 15), "", justify="L"),
+            Text(Vector(3, 22), "", justify="L"),
+            Text(Vector(3, 29), "", justify="L"),
+            Text(Vector(3, 40), "CPU Load", justify="L"),
             Line(Vector(0, 53), Vector(128, 53), width=2),
-            Text(Vector(3, 55), "CPU Speed"),
+            Text(Vector(3, 55), "CPU Speed", justify="L"),
             Line(Vector(0, 62), Vector(128, 62), width=2)]
         App.interval(self.refresh)
 
@@ -45,10 +44,11 @@ class Main(core.render.Window, Graph):
             Interface.render(element)
 
     def refresh(self):
-        self.elements[1:4].text = f"CPU Load: {Hardware.CPU.load()}%", f"CPU Temp: {Hardware.CPU.tempreture()}°C", f"CPU Speed: {Hardware.CPU.cur_speed()}Mhz"
-        self.elements[5].pos2 = Vector(constrain(Hardware.CPU.load, 1, 128, 0, 100), 36)
+        for elm, text in zip(self.elements[1:4], (f"CPU Load: {Hardware.CPU.load()}%", f"CPU Temp: {Hardware.CPU.temperature()}°C", f"CPU Speed: {Hardware.CPU.cur_speed()}Mhz")):
+            elm.text = text
+        self.elements[5].pos2 = Vector(constrain(Hardware.CPU.load(), 1, 128, 0, 100), 36)
         self.elements[7].pos2 = Vector(
-            constrain(CPU.Speed, 1, 128, 0, CPU.max_speed()), 46)
+            constrain(Hardware.CPU.cur_speed(), 1, 128, 0, Hardware.CPU.max_speed()), 46)
 
 
 class Handle(core.input.Handler):
@@ -56,8 +56,11 @@ class Handle(core.input.Handler):
     window = Main
 
     class press:
-        async def right(null, window):
+        async def right(null, window: Main):
             window.finish(1)
 
-        async def left(null, window):
+        async def left(null, window: Main):
             window.finish(-1)
+
+        async def centre(null, window: Main):
+            window.finish()

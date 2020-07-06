@@ -22,10 +22,10 @@ class Constant(metaclass=MetaConstant):
 
 class SysConstant(Constant):
     width = 128
-    height = 62
+    height = 64
     path = os.path.dirname(os.path.abspath(sys.argv[0])).replace("\\", "/") + "/"
-    platform = "NT" if os.name == "nt" else "POSIX"
-    pipeline = "DUMMY" # "GFXHAT" or "DUMMY"
+    platform = "NT" if os.name == "nt" else "UNIX"
+    pipeline = "GFXHAT" # "GFXHAT" or "DUMMY"
 
 # __all__ = ["Config"]
 

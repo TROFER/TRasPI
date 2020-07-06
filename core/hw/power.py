@@ -1,5 +1,5 @@
 import os
-from core.interface import Interface
+from ..interface import Interface
 
 class Power:
 

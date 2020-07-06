@@ -9,5 +9,8 @@ class _MetaResourcePool(type):
                 raise TypeError("Only Assets or funcs plz")
         return super().__new__(cls, name, bases, dct)
 
+    def __len__(cls) -> int:
+        return sum(True for i in cls.__dict__ if isinstance(i, Asset))
+
 class Pool(metaclass=_MetaResourcePool):
     pass

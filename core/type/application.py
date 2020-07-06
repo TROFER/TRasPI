@@ -1,8 +1,9 @@
-from core.sys.attributes import Constant
-from core.sys.attributes import Config
-from core.asset.res_pool import Pool
-from core.render.window import Window
-from core.sys.program import Program
+from ..error.attributes import Constant, Config
+from ..asset.res_pool import Pool
+from ..asset.image import Image
+from ..render.window import Window
+from ..sys.program import Program
+from ..error import logging as log
 
 __all__ = ["Application"]
 
@@ -25,10 +26,17 @@ class MetaApplication(type):
             raise TypeError("Must be Window Type") from None
         return super().__init__(name, bases, dct)
 
+    def __repr__(self) -> str:
+        return f"{self.__module__}['{self.name}']"
+        # {len(self.asset)}
+
     # def __getattribute__(self):
     #     pass
 
 class Application(metaclass=MetaApplication):
+
+    name = "CoreApplicationTemplate"
+    window = Window
 
     @classmethod
     def interval(self, func: callable, delay: float=1, repeat: int=-1):
@@ -43,8 +51,6 @@ class Application(metaclass=MetaApplication):
 
     class asset(Pool):
         pass
-
-    window = Window
 
     async def open():
         pass

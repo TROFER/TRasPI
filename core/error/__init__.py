@@ -1,2 +1,2 @@
-from core.error.base import *
-from core.error import load
+from .base import *
+from . import load

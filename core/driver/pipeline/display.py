@@ -1,4 +1,4 @@
-from core.sys.attributes import SysConstant
+from ...error.attributes import SysConstant
 if SysConstant.pipeline == "GFXHAT":
     _FLAG = True
     from core.driver.gfxhat import lcd as lcd

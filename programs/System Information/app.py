@@ -1,6 +1,7 @@
 import core
 
 class App(core.type.Application):
+    name = "System Information"
 
     class var(core.type.Config):
         pass

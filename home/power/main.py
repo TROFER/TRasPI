@@ -1,9 +1,10 @@
 import core
 import time
-
 TIME_FORMAT = "%I:%M%p"
 
 class App(core.type.Application):
+    name = "Power Controls"
+
     class asset(core.asset.Pool):
         halt = core.asset.Image("halt")
         restart = core.asset.Image("restart")

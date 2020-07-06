@@ -1,5 +1,5 @@
 import os
-from core.sys.attributes import SysConstant
+from ...error.attributes import SysConstant
 
 _clear_sys_ = "cls" if SysConstant.platform == "NT" else "clear"
 __image = [[2 for x in range(SysConstant.width)] for y in range(SysConstant.height)]
