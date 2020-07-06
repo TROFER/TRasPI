@@ -15,7 +15,7 @@ class MainWindow(core.render.Window):
         # Set up some elements
         self.text = core.element.Text(
             core.Vector(core.sys.const.width // 2, core.sys.const.height // 2), # The position of the element
-            "This is a Text Element", # Text
+            "This is a text Element", # Text
             # Font
         )
 
@@ -24,17 +24,23 @@ class MainWindow(core.render.Window):
             self.count,
             # Font
         )
+        App.interval(self.refresh)
 
     def render(self):
         # Called every frame
         # Render the elements
         core.interface.render(self.text)
+        core.interface.render(self.counter)
 
     async def show(self):
         # Called when the window is shown and given focus
-
         self.count += 1
         self.counter.text = self.count
+
+    def refresh(self):
+        self.count += 1
+        self.counter.text = self.count
+        raise ValueError("Example Error")
 
 class HandlerMainWindow(core.input.Handler):
 

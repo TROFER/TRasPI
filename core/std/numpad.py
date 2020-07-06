@@ -1,10 +1,11 @@
-from core.render.window import Window
-from core.asset import Template
-from core.interface import Interface
-from core.input.event import Handler
-from core.render.element import Text
-from core.vector import Vector
+from ..render.window import Window
+from ..asset import Template
+from ..interface import Interface
+from ..input.event import Handler
+from ..render.element import Text
+from ..vector import Vector
 
+__all__ = ["Numpad"]
 
 class Numpad(Window):
 

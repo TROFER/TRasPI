@@ -1,10 +1,11 @@
-from core.render.window import Window
-from core.interface import Interface
-from core.input.event import Handler
-from core.render.element import Text
-from core.vector import Vector
-from core.asset import Template
+from ..render.window import Window
+from ..interface import Interface
+from ..input.event import Handler
+from ..render.element import Text
+from ..vector import Vector
+from ..asset import Template
 
+__all__ = ["Info", "Warning", "Error"]
 
 class Info(Window):
 

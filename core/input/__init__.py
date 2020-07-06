@@ -1,2 +1,2 @@
-from core.input.keys import Key
-from core.input.event import Handler, event
+from .keys import Key
+from .event import Handler, event

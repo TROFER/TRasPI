@@ -2,11 +2,12 @@ import os
 import sys
 import importlib.util
 import pickle
-from core.sys.attributes import SysConstant
-from core.sys.program import Program
-from core.type.application import Application
-import core.asset.base
 import core.error
+from ..error.attributes import SysConstant
+from .program import Program
+from ..type.application import Application
+from ..asset import base as _AssetBase
+from ..error import logging as log
 
 CACHE_DIR = "resource/program/"
 
@@ -15,11 +16,10 @@ class Load:
     def __init__(self):
         self.__programs = {}
         self.tree = {}
-        self.rescan("home/")
-        self.rescan("programs/")
 
     def rescan(self, path: str):
-        self.tree[path[:-1]] = scan_programs(SysConstant.path+path, len(SysConstant.path))
+        self.tree[path[:-1]], size = scan_programs(SysConstant.path+path, len(SysConstant.path))
+        log.core.info("Found %d Programs in '%s'", size, path)
         return self.tree
 
     def app(self, *path: str, full=False) -> Program:
@@ -35,27 +35,33 @@ class Load:
         return self.__programs[path][0]
 
     def load(self, path: str) -> Program:
-        app = load_app(SysConstant.path + path)
-        app[0]._file = path
+        program, module = load_app(SysConstant.path + path)
+        program._file = path
         if (cache := read_cache(path)):
-            app[0].application.var.__setstate__(cache)
-            x = app[0].application.var
-        self.__programs[path] = app
-        return app[0]
+            program.application.var.__setstate__(cache)
+        self.__programs[path] = (program, module)
+        return program
 
-    def reload(self, path: str) -> Program:
-        app = load_app(SysConstant.path + path)
-        app[0]._file = path
-        self.__programs[path] = app
-        return app[0]
+    def reload(self, program: Program) -> Program:
+        if program._file in self.__programs:
+            lprog = self.__programs[program._file][0]
+            if lprog is program:
+                return program
+            program._acquire(lprog)
+            return program
+        program._acquire(self.load(program._file))
+        self.__programs[program._file] = (program, *self.__programs[program._file][1:])
+        return program
 
     def close(self, program: Program):
-        app = self.__programs[program._file]
-        del self.__programs[program._file]
-        x = app[0].application.var
-        write_cache(program._file, app[0].application.var.__getstate__())
+        try:
+            del self.__programs[program._file]
+            log.core.info("Closing Program: %s", program)
+        except KeyError:    pass
+        write_cache(program._file, program.application.var.__getstate__())
 
 def scan_programs(path: str, top: int):
+    total_size = 0
     apps = {}
     with os.scandir(path) as it:
         for file in it:
@@ -66,13 +72,15 @@ def scan_programs(path: str, top: int):
                         if f.name == "main.py":
                             apps[file.name] = path[top:]+file.name+"/"
                             flag = False
+                            total_size += 1
                             break
                 if flag:
-                    apps[file.name] = scan_programs(path+file.name+"/", top)
+                    apps[file.name], size = scan_programs(path+file.name+"/", top)
+                    total_size += size
     for k,v in tuple(apps.items()):
         if not v:
             del apps[k]
-    return apps
+    return apps, total_size
 
 def read_cache(name: str) -> dict:
     path = SysConstant.path + name + CACHE_DIR
@@ -102,24 +110,35 @@ def write_cache(name: str, data):
 
 def validate_app(module) -> tuple:
     if not hasattr(module, "main"):
+        log.core.error("Application Missing 'main' Attribute: %s - %s", module.__name__, module.__file__)
         raise core.error.load.Validate(module.__name__, module.__file__, "An Application must Contain a 'main' Attribute")
     if not issubclass(module.main, Application):
-        raise core.error.load.Validate(module.__name__, module.__file__, f"Main must be of type '{Application.__name__}' not '{module.main.__name__}'")
+        log.core.error("Application 'main' Attribute not : %s - %s", module.__name__, module.__file__)
+        raise core.error.load.Validate(module.__name__, module.__file__, f"'main' Attribute must be of type '{Application.__name__}' not '{module.main.__name__}'")
     return (module.main._program, module)
 
 def load_app(path: str):
-    return validate_app(_load_py_file(path))
+    log.core.info("Loading Program: '%s'", path)
+    try:
+        return validate_app(_load_py_file(path))
+    except core.error.load.ModuleFileImport as e:
+        log.core.error("%s: %s", type(e).__name__, e)
+        log.traceback.error("Failed to Import Module: %s", path, exc_info=e)
 
 _program_count = 1
 def _load_py_file(path: str):
     global _program_count
     try:
         import_path(path, True)
-        name = "Program<{}-{}>".format(path.split("/")[-2], _program_count)
+        name = "<{}-{}>".format(path.split("/")[-2], _program_count)
         spec = importlib.util.spec_from_file_location(name, path+"main.py", submodule_search_locations=[])
         module = importlib.util.module_from_spec(spec)
+        sys_modules = set(sys.modules)
         sys.modules[name] = module
+        previous_name = log._active_program
+        log._active_program = name
         spec.loader.exec_module(module)
+        log._active_program = previous_name
 
         _program_count += 1
         return module
@@ -127,19 +146,23 @@ def _load_py_file(path: str):
         raise core.error.load.ModuleFileImport(name, path) from e
     finally:
         import_path(path, False)
-        try:
-            del sys.modules[name]
-        except KeyError:    pass
+        mpath = path[:-1]
+        for n in set(sys.modules) - sys_modules:
+            mod = sys.modules[n]
+            if hasattr(mod, "__file__") and mpath in mod.__file__:
+                try:
+                    del sys.modules[n]
+                except KeyError:    pass
 
 def import_path(path: str, add: bool):
     if add:
         if path not in sys.path:
             sys.path.append(path)
-            core.asset.base._active_dir.append(path+"resource/")
+            _AssetBase._active_dir.append(path+"resource/")
     else:
         try:
             sys.path.remove(path)
-            core.asset.base._active_dir.remove(path+"resource/")
+            _AssetBase._active_dir.remove(path+"resource/")
         except ValueError: return
 
 

@@ -1,5 +1,6 @@
-# from core.render.window import Window
-from core.interface import Interface
+from ..interface import Interface
+# from .load import load
+from ..error import logging as log
 
 class Program:
 
@@ -10,14 +11,20 @@ class Program:
         self._intervals = set()
         self._file = ""
 
-    def __str__(self) -> str:
-        return f"{self.__class__.__name__}<{self._file} {len(self.window_stack)}>{self.window_active} {self.application}>"
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}<'{self.application.name}' in '{self._file}' {len(self.window_stack)}#{self.window_active}>"
 
     def create_interval_func(self, func: callable, delay: float=1, repeat: int=-1):
         self._intervals.add(Interface.interval(func, delay, repeat))
 
-    async def main(self):
-        pass
+    def _acquire(self, other: "Program"):
+        self.application = other.application
+        self.application._program = self
+        self.window_active = other.window_stack
+        self.window_active = other.window_active
+        self._intervals = other._intervals
+        self._file = other._file
+        return self
 
     async def open(self):
         try:
@@ -25,25 +32,37 @@ class Program:
         except Exception as e:
             self.window_active = None
             raise
-        # print("Open", self)
-        await self.application.open()
+        try:
+            await self.application.open()
+        except Exception as e:
+            log.program.warning("Application threw an Error %s %s: %s", self, type(e).__name__, e, extra={"program_name": self.application.name})
+            log.traceback.warning("%s", self)
     async def close(self):
         for interval in self._intervals:
             interval.cancel()
         self._intervals.clear()
-        # print("Close", self)
-        await self.application.close()
+        try:
+            await self.application.close()
+        except Exception as e:
+            log.program.warning("Application threw an Error %s %s: %s", self, type(e).__name__, e, extra={"program_name": self.application.name})
+            log.traceback.warning("%s", self)
 
     async def show(self):
-        for interval in self._intervals:
-            interval.resume()
-        # print("Show", self)
-        await self.application.show()
+        for interval in tuple(self._intervals):
+            if interval._cancel:
+                self._intervals.remove(interval)
+            else:
+                interval.resume()
+        try:
+            await self.application.show()
+        except Exception as e:
+            log.program.warning("Application threw an Error %s %s: %s", self, type(e).__name__, e, extra={"program_name": self.application.name})
+            log.traceback.warning("%s", self)
     async def hide(self):
         for interval in self._intervals:
             interval.pause()
         try:
-            # print("Hide", self)
             await self.application.hide()
-        except Exception:
-            pass
+        except Exception as e:
+            log.program.warning("Application threw an Error %s %s: %s", self, type(e).__name__, e, extra={"program_name": self.application.name})
+            log.traceback.warning("%s", self)

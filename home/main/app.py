@@ -1,6 +1,7 @@
 import core
 
 class App(core.type.Application):
+    name = "Home"
 
     class var(core.type.Config):
         time_cache = [0, 0, 0, 0, 0]

@@ -6,13 +6,6 @@ import cpu
 #import storage
 #import hardware
 
-try:
-    import psutil
-    import gpiozero
-except ImportError:
-    print("Warning: Some dependancies could not be found")
-
-
 class Main(core.render.Window):
 
     def __init__(self):

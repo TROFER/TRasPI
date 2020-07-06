@@ -1,14 +1,18 @@
 **__pycache__
 .vscode
 .idea
-/core/log.txt
-/user/
-test**
-TrasPi Setup Guide.txt
+**test**
+**old_**
 **.cgf
 ~*
+<<<<<<< HEAD
+
+openweatherkey.*
+TrasPi Setup Guide.txt
+=======
 eventlog.txt
 eventlog.json
 **old_**
 attributes.py
 home/main/resource/program/time_cache.vcm
+>>>>>>> ccc9bd0ac93f94cef2b17833608bd30337e13bf0

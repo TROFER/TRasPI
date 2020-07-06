@@ -1,5 +1,5 @@
-from core.input.keys import name as key_names
-from core.render.window import Window
+from .keys import name as key_names
+from ..render.window import Window
 
 __all__ = ["Handler", "event"]
 

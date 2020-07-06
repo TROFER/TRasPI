@@ -1,3 +1,3 @@
-from core.hw.backlight import Backlight
-from core.hw.key import Key
-from core.hw.power import Power
+from .backlight import Backlight
+from .key import Key
+from .power import Power

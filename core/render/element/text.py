@@ -1,7 +1,7 @@
-from core.vector import Vector
-from core.render.primative import Primative
-from core.asset.font import Font
-from core.asset.std import AssetPool as std
+from ...vector import Vector
+from ..primative import Primative
+from ...asset.font import Font
+from ...asset.std import AssetPool as std
 
 __all__ = ["Text"]
 

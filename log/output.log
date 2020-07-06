@@ -1,0 +1,16 @@
+[15:41:01>DEBUG] logging.__setup -> Enabled Logging[DEBUG]: core, core.program, CoreTraceback
+[15:41:01>INFO] __init__.<module> -> System:
+	Platform: NT
+	Path: 'C:/dev/Code/Github/TRasPI/'
+	Size: 128, 64
+	Pipeline: DUMMYNC
+[15:41:01>INFO] __init__.<module> -> Configuration:
+	Name: Traspi
+	Brightness: 65
+	Colour: 12
+[15:41:01>INFO] load.rescan -> Found 4 Programs in 'home/'
+[15:41:01>INFO] load.rescan -> Found 9 Programs in 'programs/'
+[15:41:01>INFO] load.load_app -> Loading Program: 'C:/dev/Code/Github/TRasPI/home/main/'
+[15:41:02>INFO] load.load_app -> Loading Program: 'C:/dev/Code/Github/TRasPI/home/loader/'
+[15:41:03>INFO] load.load_app -> Loading Program: 'C:/dev/Code/Github/TRasPI/home/power/'
+[15:41:03>INFO] load.load_app -> Loading Program: 'C:/dev/Code/Github/TRasPI/home/manager/'

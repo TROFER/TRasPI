@@ -1,8 +1,8 @@
-from core.render.window import Window 
-from core.interface import Interface 
-from core.input.event import Handler
-from core.render.element import Text
-from core.vector import Vector
+from ..render.window import Window 
+from ..interface import Interface 
+from ..input.event import Handler
+from ..render.element import Text
+from ..vector import Vector
 
 async def null(self, window):
     pass
@@ -27,7 +27,7 @@ class MenuElement:
             self._index = index
             for i, element in enumerate(self.elements):
                 element.anchor = self._rel_pos[i] core.Vector(X_OFFSET, Y_OFFSET + offset * self._index)
-            
+
 class Menu(Window):
 
     CURSORS = {
@@ -49,7 +49,7 @@ class Menu(Window):
         self._c_index = self._index
 
         self.title = Text(Vector(3, 5), title, justify='L')
-        self.cursor = 
+        self.cursor = self.CURSORS[cursor].copy()
 
 
 

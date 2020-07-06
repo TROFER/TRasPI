@@ -1,7 +1,7 @@
 import PIL.ImageDraw
-from core.vector import Vector
-from core.render.element.text import Text
-from core.render.element.rectangle import Rectangle
+from ...vector import Vector
+from .text import Text
+from .rectangle import Rectangle
 
 __all__ = ["TextBox"]
 
