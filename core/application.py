@@ -47,7 +47,7 @@ class Application(metaclass=_Active):
         await self.home(-1)
         for app in tuple(self.applications):
             await self.__close_program(app)
-        self.__close_program(self.__home)
+        await self.__close_program(self.__home)
 
     async def kill_program(self, program: Program):
         if program is self.__current_app:
@@ -96,7 +96,7 @@ class Application(metaclass=_Active):
         await program.hide()
         await program.close()
         try:
-            self.applications.remove(program)
+            self.applications.discard(program)
             Load.close(program)
         except ValueError:
             pass

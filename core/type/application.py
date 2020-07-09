@@ -1,4 +1,5 @@
 from ..error.attributes import Constant, Config
+from ..interface import Interface
 from ..asset.res_pool import Pool
 from ..asset.image import Image
 from ..render.window import Window
@@ -39,9 +40,9 @@ class Application(metaclass=MetaApplication):
     window = Window
 
     @classmethod
-    def interval(self, func: callable, delay: float=1, repeat: int=-1):
+    def interval(self, func: callable, delay: float=1, repeat: int=-1) -> Interface.interval:
         """Calls func every 'delay' seconds 'repeat' number of times"""
-        self._program.create_interval_func(func, delay, repeat)
+        return self._program.create_interval_func(func, delay, repeat)
 
     class var(Config):
         pass

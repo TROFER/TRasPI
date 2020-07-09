@@ -14,8 +14,10 @@ class Program:
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}<'{self.application.name}' in '{self._file}' {len(self.window_stack)}#{self.window_active}>"
 
-    def create_interval_func(self, func: callable, delay: float=1, repeat: int=-1):
-        self._intervals.add(Interface.interval(func, delay, repeat))
+    def create_interval_func(self, func: callable, delay: float=1, repeat: int=-1) -> Interface.interval:
+        i = Interface.interval(func, delay, repeat)
+        self._intervals.add(i)
+        return i
 
     def _acquire(self, other: "Program"):
         self.application = other.application
