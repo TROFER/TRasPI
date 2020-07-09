@@ -1,13 +1,6 @@
 import core
-<<<<<<< HEAD
 from app import App
 from core import Vector, Interface
-=======
-from home.app import App
-from util import Hardware, constrain
-from core import Vector
-from core import Interface
->>>>>>> ccc9bd0ac93f94cef2b17833608bd30337e13bf0
 from core.render.element import Line, Text
 from hardware import Hardware, constrain
 
@@ -40,7 +33,6 @@ class Main(core.render.Window, Graph):
     def __init__(self):
         super().__init__()
         self.elements = [
-<<<<<<< HEAD
             Text(Vector(3, 5), "CPU - System Information", justify='L'),
             Text(Vector(3, 15), "", justify="L"),
             Text(Vector(3, 22), "", justify="L"),
@@ -48,16 +40,6 @@ class Main(core.render.Window, Graph):
             Text(Vector(3, 40), "CPU Load", justify="L"),
             Line(Vector(0, 53), Vector(128, 53), width=2),
             Text(Vector(3, 55), "CPU Speed", justify="L"),
-=======
-            Text(Vector(3, 5), "CPU - Sys Information", justify='L'),
-            Line(Vector(0, 9), Vector(128, 9)),
-            Text(Vector(3, 15), "", justify='L'),
-            Text(Vector(3, 25), "", justify='L'),
-            Text(Vector(3, 35), "", justify='L'),
-            Text(Vector(3, 45), "CPU Load"),
-            Line(Vector(0, 50), Vector(128, 50), width=2),
-            Text(Vector(3, 57), "CPU Speed"),
->>>>>>> ccc9bd0ac93f94cef2b17833608bd30337e13bf0
             Line(Vector(0, 62), Vector(128, 62), width=2)]
         self.graph = Graph()
         App.interval(self.refresh)
@@ -78,13 +60,16 @@ class Main(core.render.Window, Graph):
         self.elements[2].text = f"CPU Load: {Hardware.CPU.load()}%"
         self.elements[3].text = "CPU Temp: {}°C {}".format(Hardware.CPU.temperature(), '/\\' if self.graph.trend() else '\\/')
         self.elements[4].text = f"CPU Speed: {Hardware.CPU.cur_speed() // 1000}Mhz"
-        self.elements[6].pos2 = Vector(
+        self.elements[7].pos2 = Vector(
             constrain(Hardware.CPU.load(), 0, 100, 0, 128), 50)
-        self.elements[8].pos2 = Vector(
+        self.elements[9].pos2 = Vector(
             constrain(Hardware.CPU.cur_speed(), 1, Hardware.CPU.max_speed(), 0, 128), 62)
         self.graph.plot(Hardware.CPU.temperature())
+<<<<<<< HEAD
+=======
         print(self.graph.buffer)
 >>>>>>> ccc9bd0ac93f94cef2b17833608bd30337e13bf0
+>>>>>>> e4f44da093f88d6fc0c055542ff2da00c6471711
 
 class Handle(core.input.Handler):
 

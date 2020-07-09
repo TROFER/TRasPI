@@ -5,14 +5,11 @@
 **old_**
 **.cgf
 ~*
-<<<<<<< HEAD
-
-openweatherkey.*
+openweatherkey.txt
 TrasPi Setup Guide.txt
-=======
 eventlog.txt
 eventlog.json
 **old_**
 attributes.py
 home/main/resource/program/time_cache.vcm
->>>>>>> ccc9bd0ac93f94cef2b17833608bd30337e13bf0
+/user/playlists
