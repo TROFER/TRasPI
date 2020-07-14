@@ -12,6 +12,7 @@ class Key:
 
         def __init__(self):
             touch.setup()
+            touch.high_sensitivity()
 
         def initialize(self):
             pass
