@@ -1,0 +1,3 @@
+Program Icons
+Applets Panel causing indentaion error when run at first boot
+Break out applications from main git repo in order to simplify file tree?
