@@ -49,14 +49,14 @@ class Main(core.render.Window, Graph):
             Interface.render(element)
 
     def refresh(self):
-<<<<<<< HEAD
+
         for elm, text in zip(self.elements[1:4], (f"CPU Load: {Hardware.CPU.load()}%", f"CPU Temp: {Hardware.CPU.temperature()}°C", f"CPU Speed: {Hardware.CPU.cur_speed()}Mhz")):
             elm.text = text
         self.elements[5].pos2 = Vector(constrain(Hardware.CPU.load(), 1, 128, 0, 100), 36)
         self.elements[7].pos2 = Vector(
             constrain(Hardware.CPU.cur_speed(), 1, 128, 0, Hardware.CPU.max_speed()), 46)
 
-=======
+
         self.elements[2].text = f"CPU Load: {Hardware.CPU.load()}%"
         self.elements[3].text = "CPU Temp: {}°C {}".format(Hardware.CPU.temperature(), '/\\' if self.graph.trend() else '\\/')
         self.elements[4].text = f"CPU Speed: {Hardware.CPU.cur_speed() // 1000}Mhz"
@@ -65,11 +65,6 @@ class Main(core.render.Window, Graph):
         self.elements[9].pos2 = Vector(
             constrain(Hardware.CPU.cur_speed(), 1, Hardware.CPU.max_speed(), 0, 128), 62)
         self.graph.plot(Hardware.CPU.temperature())
-<<<<<<< HEAD
-=======
-        print(self.graph.buffer)
->>>>>>> ccc9bd0ac93f94cef2b17833608bd30337e13bf0
->>>>>>> e4f44da093f88d6fc0c055542ff2da00c6471711
 
 class Handle(core.input.Handler):
 

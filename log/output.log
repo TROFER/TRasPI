@@ -1,16 +1,22 @@
-[15:41:01>DEBUG] logging.__setup -> Enabled Logging[DEBUG]: core, core.program, CoreTraceback
-[15:41:01>INFO] __init__.<module> -> System:
+[15:45:07>DEBUG] logging.__setup -> Enabled Logging[DEBUG]: core, core.program, CoreTraceback
+[15:45:08>INFO] __init__.<module> -> System:
 	Platform: NT
-	Path: 'C:/dev/Code/Github/TRasPI/'
+	Path: 'd:/Documents/Programing/Python/TrasPi Operating System/'
 	Size: 128, 64
-	Pipeline: DUMMYNC
-[15:41:01>INFO] __init__.<module> -> Configuration:
+	Pipeline: DUMMY
+[15:45:08>INFO] __init__.<module> -> Configuration:
 	Name: Traspi
 	Brightness: 65
 	Colour: 12
-[15:41:01>INFO] load.rescan -> Found 4 Programs in 'home/'
-[15:41:01>INFO] load.rescan -> Found 9 Programs in 'programs/'
-[15:41:01>INFO] load.load_app -> Loading Program: 'C:/dev/Code/Github/TRasPI/home/main/'
-[15:41:02>INFO] load.load_app -> Loading Program: 'C:/dev/Code/Github/TRasPI/home/loader/'
-[15:41:03>INFO] load.load_app -> Loading Program: 'C:/dev/Code/Github/TRasPI/home/power/'
-[15:41:03>INFO] load.load_app -> Loading Program: 'C:/dev/Code/Github/TRasPI/home/manager/'
+[15:45:08>INFO] load.rescan -> Found 4 Programs in 'home/'
+[15:45:08>INFO] load.rescan -> Found 8 Programs in 'programs/'
+[15:45:08>INFO] load.load_app -> Loading Program: 'd:/Documents/Programing/Python/TrasPi Operating System/home/main/'
+[15:45:09>INFO] load.load_app -> Loading Program: 'd:/Documents/Programing/Python/TrasPi Operating System/home/loader/'
+[15:45:09>INFO] load.load_app -> Loading Program: 'd:/Documents/Programing/Python/TrasPi Operating System/home/power/'
+[15:45:09>INFO] load.load_app -> Loading Program: 'd:/Documents/Programing/Python/TrasPi Operating System/home/manager/'
+[15:45:17>INFO] application.program -> Switching Program<'Application Loader' in 'home/loader/' 0#None>
+[15:45:24>DEBUG] Application Loader@window.finish -> Window.<loader-2>.AppDraw
+[15:45:24>INFO] application.home -> Return to Home Program<'Home' in 'home/main/' 0#Window.<main-1>.Home>
+[15:45:24>INFO] load.close -> Closing Program: Program<'Application Loader' in 'home/loader/' 0#Window.<loader-2>.AppDraw>
+[15:45:29>INFO] application.program -> Switching Program<'Application Loader' in 'home/loader/' 0#Window.<loader-2>.AppDraw>
+[15:45:29>INFO] load.load_app -> Loading Program: 'd:/Documents/Programing/Python/TrasPi Operating System/home/loader/'
