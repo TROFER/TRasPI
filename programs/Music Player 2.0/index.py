@@ -5,21 +5,22 @@ from tinytag import TinyTag
 
 class Index:
 
-    #DEFAULT_PATH = f"{core.sys.const.path}user/music"
-    DEFAULT_PATH = f"D:\Music\Library III"
+    DEFAULT_PATH = f"{core.sys.const.path}user/music"
 
     @classmethod
-    def scan(self):
+    def scan(self, path=None):
+        if path is None:
+            path = self.DEFAULT_PATH
         library = []
-        for genre in os.scandir(self.DEFAULT_PATH):
+        for genre in os.scandir(path):
             if genre.is_dir():
                 albums = []
-                for album in os.scandir(f"{self.DEFAULT_PATH}/{genre.name}"):
+                for album in os.scandir(f"{path}/{genre.name}"):
                     if album.is_dir():
                         tracks = []
-                        for track in os.scandir(f"{self.DEFAULT_PATH}/{genre.name}/{album.name}"):
+                        for track in os.scandir(f"{path}/{genre.name}/{album.name}"):
                             if ".ogg" in track.name or ".mp3" in track.name:
-                                res = Track(f"{self.DEFAULT_PATH}/{genre.name}/{album.name}/{track.name}")
+                                res = Track(f"{path}/{genre.name}/{album.name}/{track.name}")
                                 if not isinstance(res, UnicodeDecodeError) and not isinstance(res, FileNotFoundError):
                                     tracks.append(res)
                         albums.append([album.name, tracks])                    
@@ -35,8 +36,9 @@ class Track:
         try:
             self.meta_tags = TinyTag.get(self.path)
             self.length = self.meta_tags.duration
-            self.desc = "{}, {}, {}".format(self.meta_tags.title, self.meta_tags.artist, )
-            print(self.desc)
+            self.desc = f"{self.meta_tags.title}, {self.meta_tags.artist}, {self.meta_tags.album}"
+            if self.meta_tags.year is not None:
+                self.desc += f", {self.meta_tags.year}"
         except UnicodeDecodeError:
             return UnicodeDecodeError
         except FileNotFoundError:
@@ -45,4 +47,3 @@ class Track:
     def play(self):
         pygame.mixer.music.load(self.path)
         pygame.mixer.music.play()
-            
