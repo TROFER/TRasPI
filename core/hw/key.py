@@ -12,7 +12,7 @@ class Key:
 
         def __init__(self):
             touch.setup()
-
+        
         def initialize(self):
             pass
         def terminate(self):

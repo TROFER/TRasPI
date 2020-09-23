@@ -1,9 +1,0 @@
-[
-    {
-        "One-time key" : "Encrypt.otk"
-    },
-    {
-        "Run lengh encode" : "Compress.rle",
-        "Pycompress" : "Compress.py"
-    }
-]
