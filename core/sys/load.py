@@ -124,6 +124,7 @@ def load_app(path: str):
     except core.error.load.ModuleFileImport as e:
         log.core.error("%s: %s", type(e).__name__, e)
         log.traceback.error("Failed to Import Module: %s", path, exc_info=e)
+        raise
 
 _program_count = 1
 def _load_py_file(path: str):
@@ -149,7 +150,7 @@ def _load_py_file(path: str):
         mpath = path[:-1]
         for n in set(sys.modules) - sys_modules:
             mod = sys.modules[n]
-            if hasattr(mod, "__file__") and mpath in mod.__file__:
+            if hasattr(mod, "__file__") and isinstance(mod.__file__, str) and mpath in mod.__file__:
                 try:
                     del sys.modules[n]
                 except KeyError:    pass

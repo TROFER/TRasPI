@@ -1,16 +1,21 @@
-[15:41:01>DEBUG] logging.__setup -> Enabled Logging[DEBUG]: core, core.program, CoreTraceback
-[15:41:01>INFO] __init__.<module> -> System:
+[23:51:48>DEBUG] logging.__setup -> Enabled Logging[DEBUG]: core, core.program, CoreTraceback
+[23:51:48>INFO] __init__.<module> -> System:
 	Platform: NT
 	Path: 'C:/dev/Code/Github/TRasPI/'
 	Size: 128, 64
-	Pipeline: DUMMYNC
-[15:41:01>INFO] __init__.<module> -> Configuration:
+	Pipeline: DUMMY
+[23:51:48>INFO] __init__.<module> -> Configuration:
 	Name: Traspi
 	Brightness: 65
 	Colour: 12
-[15:41:01>INFO] load.rescan -> Found 4 Programs in 'home/'
-[15:41:01>INFO] load.rescan -> Found 9 Programs in 'programs/'
-[15:41:01>INFO] load.load_app -> Loading Program: 'C:/dev/Code/Github/TRasPI/home/main/'
-[15:41:02>INFO] load.load_app -> Loading Program: 'C:/dev/Code/Github/TRasPI/home/loader/'
-[15:41:03>INFO] load.load_app -> Loading Program: 'C:/dev/Code/Github/TRasPI/home/power/'
-[15:41:03>INFO] load.load_app -> Loading Program: 'C:/dev/Code/Github/TRasPI/home/manager/'
+[23:51:48>INFO] load.rescan -> Found 4 Programs in 'home/'
+[23:51:48>INFO] load.rescan -> Found 9 Programs in 'programs/'
+[23:51:48>INFO] load.load_app -> Loading Program: 'C:/dev/Code/Github/TRasPI/home/main/'
+[23:51:49>INFO] load.load_app -> Loading Program: 'C:/dev/Code/Github/TRasPI/home/loader/'
+[23:51:49>INFO] load.load_app -> Loading Program: 'C:/dev/Code/Github/TRasPI/home/power/'
+[23:51:49>INFO] load.load_app -> Loading Program: 'C:/dev/Code/Github/TRasPI/home/manager/'
+[23:51:50>INFO] application.program -> Switching Program<'Application Loader' in 'home/loader/' 0#None>
+[23:51:53>INFO] load.load_app -> Loading Program: 'C:/dev/Code/Github/TRasPI/programs/System Information/'
+[23:51:53>DEBUG] <System Information-5>@hardware.<module> -> Loading Placeholder Functions due to Platform
+[23:51:54>ERROR] load.load_app -> ModuleFileImport: Failed to Import Application '<System Information-5>' from 'C:/dev/Code/Github/TRasPI/programs/System Information/' cause ModuleNotFoundError: No module named 'home.app'
+[23:51:54>ERROR] main._file -> Failed to Launch "programs/System Information/"

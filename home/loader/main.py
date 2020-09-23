@@ -22,10 +22,15 @@ class AppDraw(core.render.Window):
 
         self.update()
 
+        core.Interface.schedule(self._get_icons(*((i,p) for i,p in enumerate(tree.values()) if isinstance(p, str))))
+
     def __file(self, path):
         async def _file(): # Called in run
-            prog = core.sys.load.app(path, full=True)
-            core.Interface.program(prog)
+            try:
+                prog = core.sys.load.app(path, full=True)
+                core.Interface.program(prog)
+            except core.error.load.Load:
+                core.log.error("Failed to Launch \"%s\"", path)
         return _file
     def __folder(self, path, name):
         async def _folder(): # Called in run
@@ -42,6 +47,9 @@ class AppDraw(core.render.Window):
         offset = self.POSITIONS[self.index % len(self.POSITIONS)]
         self.cursor.pos1 = self.CURSOR[0] + offset
         self.cursor.pos2 = self.CURSOR[1] + offset
+
+    async def _get_icons(self, *paths):
+        pass
 
     async def run(self):
         app = self.apps[self.index]
