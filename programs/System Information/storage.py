@@ -9,13 +9,13 @@ class Main(core.render.Window):
     def __init__(self):
         super().__init__()
         self.elements = [
-            Text(Vector(3, 5), "Memory - System Inf..", justify='L'),
+            Text(Vector(3, 5), "Storage - System In..", justify='L'),
             Line(Vector(0,  10), Vector(128, 10)),
             Text(Vector(3, 16), "", justify="L"),
-            Text(Vector(3, 24), f"Mem Total: {Hardware.Memory.total()}Mb", justify="L"),
+            Text(Vector(3, 24), "", justify="L"),
             Text(Vector(3, 32), "", justify="L"),
             Line(Vector(0,  37), Vector(128, 37)),
-            Text(Vector(3, 43), "Memory Usage", justify="L"),
+            Text(Vector(3, 43), "Disk Usage", justify="L"),
             Line(Vector(3, 49), Vector(128, 49), width=2)]
         App.interval(self.refresh)
 
@@ -24,9 +24,10 @@ class Main(core.render.Window):
             core.Interface.render(element)
 
     def refresh(self):
-        self.elements[2].text = f"Mem load: {Hardware.Memory.load()}Mb ({Hardware.Memory.load_percent()}%)"
-        self.elements[4].text = f"Swap Size: {Hardware.Memory.vmem()}Mb"
-        self.elements[7].pos2 = Vector(constrain(Hardware.Memory.load_percent(), 1, 128, 0, 100), 49)
+        self.elements[2].text = f"Used: {Hardware.Storage.used()}GB ({Hardware.Storage.used_percent()}%)"
+        self.elements[3].text = f"Free: {Hardware.Storage.free()}GB"
+        self.elements[4].text = f"Total: {Hardware.Storage.total()}GB"
+        self.elements[7].pos2 = Vector(constrain(Hardware.Storage.used_percent(), 1, 128, 0, 100), 49)
 
 
 class Handle(core.input.Handler):
