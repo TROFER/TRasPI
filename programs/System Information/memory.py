@@ -21,7 +21,7 @@ class Main(core.render.Window):
 
     def render(self):
         for element in self.elements:
-            Interface.render(element)
+            core.Interface.render(element)
 
     def refresh(self):
         self.elements[2].text = f"Mem Load: {Hardware.Memory.load()}%"
@@ -40,3 +40,6 @@ class Handle(core.input.Handler):
 
         async def left(null, window: Main):
             window.finish(-1)
+
+        async def centre(null, window: Main):
+            window.finish()

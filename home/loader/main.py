@@ -22,7 +22,7 @@ class AppDraw(core.render.Window):
 
         self.update()
 
-        core.Interface.schedule(self._get_icons(*((i,p) for i,p in enumerate(tree.values()) if isinstance(p, str))))
+        core.Interface.schedule(self.find_icons(*((i,p) for i,p in enumerate(tree.values()) if isinstance(p, str))))
 
     def __file(self, path):
         async def _file(): # Called in run
@@ -48,8 +48,16 @@ class AppDraw(core.render.Window):
         self.cursor.pos1 = self.CURSOR[0] + offset
         self.cursor.pos2 = self.CURSOR[1] + offset
 
-    async def _get_icons(self, *paths):
-        pass
+    async def find_icons(self, *paths):
+        async def find(index: int, path: str):
+            try:
+                self.icon_elm[index].image = core.asset.Icon(f"{path}resource/app")
+                return True
+            except FileNotFoundError as e:
+                return False
+
+        res = await core.Interface.gather(*(find(i, p) for i,p in paths))
+        core.log.debug("Icons Found: %d/%d", sum(filter(None, res)), len(res))
 
     async def run(self):
         app = self.apps[self.index]
