@@ -36,13 +36,13 @@ class Main(core.render.Window, Graph):
             Text(Vector(3, 5), "CPU - System Info..", justify='L'),
             Line(Vector(0,  10), Vector(128, 10)),
             Text(Vector(3, 16), "", justify="L"),
-            Text(Vector(3, 23), "", justify="L"),
-            Text(Vector(3, 30), "", justify="L"),
-            Line(Vector(0,  35), Vector(128, 35)),
-            Text(Vector(3, 42), "CPU Load", justify="L"),
-            Line(Vector(3, 47), Vector(128, 47), width=2),
-            Text(Vector(3, 56), "CPU Speed", justify="L"),
-            Line(Vector(3, 61), Vector(128, 61), width=2)]
+            Text(Vector(3, 24), "", justify="L"),
+            Text(Vector(3, 32), "", justify="L"),
+            Line(Vector(0,  37), Vector(128, 37)),
+            Text(Vector(3, 43), "CPU Load", justify="L"),
+            Line(Vector(3, 48), Vector(128, 48), width=2),
+            Text(Vector(3, 57), "CPU Speed", justify="L"),
+            Line(Vector(3, 62), Vector(128, 61), width=2)]
         self.graph = Graph()
         App.interval(self.refresh)
 
@@ -57,9 +57,9 @@ class Main(core.render.Window, Graph):
         self.elements[3].text = "CPU Temp: {}°C {}".format(Hardware.CPU.temperature(), '/\\' if self.graph.trend() else '\\/')
         self.elements[4].text = f"CPU Speed: {Hardware.CPU.cur_speed() // 1000}Mhz"
         self.elements[7].pos2 = Vector(
-            constrain(Hardware.CPU.load(), 0, 100, 3, 125), 47)
+            constrain(Hardware.CPU.load(), 0, 100, 3, 125), 48)
         self.elements[9].pos2 = Vector(
-            constrain(Hardware.CPU.cur_speed(), 1, Hardware.CPU.max_speed(), 3, 125), 61)
+            constrain(Hardware.CPU.cur_speed(), 1, Hardware.CPU.max_speed(), 3, 125), 62)
         self.graph.plot(Hardware.CPU.temperature())
 
 class Handle(core.input.Handler):
@@ -73,7 +73,3 @@ class Handle(core.input.Handler):
         async def left(null, window: Main):
             pass
             window.finish(-1)
-
-        async def centre(null, window: Main):
-            pass
-            window.finish()
