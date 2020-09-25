@@ -9,7 +9,7 @@ class Main(core.render.Window):
     def __init__(self):
         super().__init__()
         self.elements = [
-            Text(Vector(3, 5), "Storage - System In..", justify='L'),
+            Text(Vector(3, 5), "Storage - Sys Info", justify='L'),
             Line(Vector(0,  10), Vector(128, 10)),
             Text(Vector(3, 16), "", justify="L"),
             Text(Vector(3, 24), "", justify="L"),
