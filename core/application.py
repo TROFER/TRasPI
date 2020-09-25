@@ -5,6 +5,7 @@ from .sys import log
 from .driver.pipeline.render import Render as Pipeline
 from .render.render import Render
 from .sys.load import load as Load
+from .asset import base as AssetBase
 
 from .sys.program import Program
 
@@ -85,9 +86,11 @@ class Application(metaclass=_Active):
         self.render.disable()
         await self.render.switch_start()
         await self.__current_app.hide()
+        AssetBase.search(self.__current_app._file+"resource/{name}/", False)
         self.__current_app.window_stack, self.__current_app.window_active = self.render.change_stack(program.window_stack, program.window_active)
         self.__current_app = program
         log._active_program = self.__current_app.application.name
+        AssetBase.search(self.__current_app._file+"resource/{name}/")
         await self.__current_app.show()
         await self.render.switch_end()
         self.render.enable()

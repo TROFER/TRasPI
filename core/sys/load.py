@@ -8,14 +8,21 @@ from .program import Program
 from ..type.application import Application
 from ..asset import base as _AssetBase
 from ..error import logging as log
+# from .. import std
 
 CACHE_DIR = "resource/program/"
+
+# print(std.Error("Invalid Program"))
+
+# class DefaultApp(Application):
+#     window = std.Error("Invalid Program")
 
 class Load:
 
     def __init__(self):
         self.__programs = {}
         self.tree = {}
+        # self.__default = DefaultApp
 
     def rescan(self, path: str):
         self.tree[path[:-1]], size = scan_programs(SysConstant.path+path, len(SysConstant.path))
@@ -156,14 +163,13 @@ def _load_py_file(path: str):
                 except KeyError:    pass
 
 def import_path(path: str, add: bool):
+    _AssetBase.search(path+"resource/{name}/", add)
     if add:
         if path not in sys.path:
             sys.path.append(path)
-            _AssetBase._active_dir.append(path+"resource/")
     else:
         try:
             sys.path.remove(path)
-            _AssetBase._active_dir.remove(path+"resource/")
         except ValueError: return
 
 
