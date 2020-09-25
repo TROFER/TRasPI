@@ -2,7 +2,7 @@ from core.asset.base import Asset
 import PIL.Image
 from core.vector import Vector
 
-__all__ = ["Image", "Template"]
+__all__ = ["Image", "Template", "Icon"]
 
 class Image(Asset):
 
@@ -20,4 +20,7 @@ class Image(Asset):
         return Vector(self.image.width, self.image.height)
 
 class Template(Image):
+    pass
+
+class Icon(Image):
     pass

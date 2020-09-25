@@ -21,8 +21,10 @@ class Main(core.render.Window):
                 res = await self.map[self.index]
                 if res is None:
                     self.finish()
+                    break
                 else:
                     self.index = (self.index + res) % len(self.map)
+            self._flag = True
 
 App.window = Main
 main = App

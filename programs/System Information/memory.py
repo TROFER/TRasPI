@@ -39,3 +39,6 @@ class Handle(core.input.Handler):
 
         async def left(null, window: Main):
             window.finish(-1)
+
+        async def centre(null, window: Main):
+            window.finish()

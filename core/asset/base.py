@@ -4,7 +4,7 @@ from ..error.attributes import SysConstant
 
 __all__ = ["Asset"]
 
-_search_paths = [SysConstant.path+"core/resource/", SysConstant.path, ""]
+_search_paths = [SysConstant.path+"core/resource/{name}/", SysConstant.path, ""]
 _active_dir = []
 
 class _MetaAsset(type):
@@ -17,7 +17,7 @@ class Asset(metaclass=_MetaAsset):
         search_paths = (*_search_paths, *_active_dir)
         name = self.__class__.__name__.lower()
         for prefix in search_paths:
-            filepath = f"{prefix}{name}/{path}.{name}"
+            filepath = f"{prefix.format(name=name)}{path}.{name}"
             if os.path.exists(filepath):
                 self.path = filepath
                 return

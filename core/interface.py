@@ -130,5 +130,11 @@ class Interface:
         def __hash__(self) -> int:
             return id(self)
 
+    async def next(self):
+        await asyncio.sleep(0)
+
+    def gather(self, *coro) -> asyncio.Future:
+        return asyncio.gather(*coro)
+
 Interface = Interface(AsyncController())
 interface = Interface
