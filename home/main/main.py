@@ -16,10 +16,10 @@ class Home(core.render.Window):
         self.index = 0
         self.cursor = core.element.Text(core.Vector(0, 0), ">", justify='R')
         self.app_map = [
-            core.sys.load.app("home", "loader"),
-            core.sys.load.app("home", "power"), # Settings - Placeholder
-            core.sys.load.app("home", "power"),
-            core.sys.load.app("home", "manager"),
+            core.sys.load.app("home", "loader", default=True),
+            core.sys.load.app("home", "power", default=True), # Settings - Placeholder
+            core.sys.load.app("home", "power", default=True),
+            core.sys.load.app("home", "manager", default=True),
         ]
 
         self.buttons = [

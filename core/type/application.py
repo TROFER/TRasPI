@@ -8,6 +8,15 @@ from ..error import logging as log
 
 __all__ = ["Application"]
 
+def CreateWindow(window: Window):
+    if isinstance(window, type):
+        return window
+    elif isinstance(window, Window):
+        class WindowWrapper(Window):
+            def __new__(cls):
+                return window
+        return WindowWrapper
+
 class MetaApplication(type):
     def __init__(cls, name, bases, dct):
 

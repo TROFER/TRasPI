@@ -23,7 +23,7 @@ class Handle(Handler):
     window = Info
 
     class press:
-        async def centre(window):
+        async def centre(null, window: Info):
             window.finish()
 
 

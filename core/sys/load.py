@@ -5,31 +5,30 @@ import pickle
 import core.error
 from ..error.attributes import SysConstant
 from .program import Program
-from ..type.application import Application
+from ..type.application import Application, CreateWindow as ApplicationWindowWrapper
 from ..asset import base as _AssetBase
 from ..error import logging as log
-# from .. import std
+from .. import std
 
 CACHE_DIR = "resource/program/"
-
-# print(std.Error("Invalid Program"))
-
-# class DefaultApp(Application):
-#     window = std.Error("Invalid Program")
 
 class Load:
 
     def __init__(self):
         self.__programs = {}
         self.tree = {}
-        # self.__default = DefaultApp
+        class __DefaultApp(Application):
+            name = "ApplicationDefault"
+            window = ApplicationWindowWrapper(std.Error("Invalid Program"))
+        __DefaultApp._program._file = "/default"
+        self.__default = __DefaultApp._program
 
     def rescan(self, path: str):
         self.tree[path[:-1]], size = scan_programs(SysConstant.path+path, len(SysConstant.path))
         log.core.info("Found %d Programs in '%s'", size, path)
         return self.tree
 
-    def app(self, *path: str, full=False) -> Program:
+    def app(self, *path: str, full=False, default=False) -> Program:
         if full:
             path = path[0]
         else:
@@ -37,9 +36,14 @@ class Load:
             for dir in path:
                 tree = tree[dir]
             path = tree
-        if path not in self.__programs:
-            return self.load(path)
-        return self.__programs[path][0]
+        try:
+            if path not in self.__programs:
+                return self.load(path)
+            return self.__programs[path][0]
+        except core.error.load.Load:
+            if default:
+                return self.__default
+            raise
 
     def load(self, path: str) -> Program:
         program, module = load_app(SysConstant.path + path)
@@ -55,6 +59,8 @@ class Load:
             if lprog is program:
                 return program
             program._acquire(lprog)
+            return program
+        if self.__default == program:
             return program
         program._acquire(self.load(program._file))
         self.__programs[program._file] = (program, *self.__programs[program._file][1:])

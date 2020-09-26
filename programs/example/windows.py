@@ -65,8 +65,6 @@ class HandlerMainWindow(core.input.Handler):
             # To call a new window, await on the window object
             self.count = await SecondWindow(self.count)
 
-
-
 class SecondWindow(core.render.Window):
 
     def __init__(self, count: int):
