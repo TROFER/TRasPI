@@ -4,7 +4,7 @@ import cpu
 import memory
 import network
 import storage
-#import hardware
+import battery
 
 class Main(core.render.Window):
 
@@ -12,7 +12,7 @@ class Main(core.render.Window):
         super().__init__()
         self._flag = True
         self.index = 0
-        self.map = [cpu.Main(), memory.Main(), network.Main(), storage.Main()]
+        self.map = [cpu.Main(), memory.Main(), network.Main(), storage.Main(), battery.Main()]
 
     async def show(self):
         if self._flag:

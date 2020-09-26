@@ -27,7 +27,7 @@ class Main(core.render.Window):
         self.elements[2].text = f"Used: {Hardware.Storage.used()}GB ({Hardware.Storage.used_percent()}%)"
         self.elements[3].text = f"Free: {Hardware.Storage.free()}GB"
         self.elements[4].text = f"Total: {Hardware.Storage.total()}GB"
-        self.elements[7].pos2 = Vector(constrain(Hardware.Storage.used_percent(), 1, 128, 0, 100), 49)
+        self.elements[7].pos2 = Vector(constrain(Hardware.Storage.used_percent(), 0, 100, 3, 125), 49)
 
 
 class Handle(core.input.Handler):
