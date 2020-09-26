@@ -6,7 +6,7 @@ from hardware import Hardware, constrain
 
 class Graph:
 
-    BUFFER_SIZE = 10
+    BUFFER_SIZE = 30
 
     def __init__(self):
         self.buffer = [0]

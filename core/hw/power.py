@@ -1,18 +1,24 @@
 import os
 from ..interface import Interface
+from ..error.attributes import SysConstant
 
 if SysConstant.pipeline == "GFXHAT":
     _FLAG = True
+    from ..driver import pijuice
 else:
     _FLAG = False
 
 if _FLAG:
     class Power:
 
-        def halt(cls):
-            os.system("poweroff")
+        def __init__(self):
+            self.__juice = pijuice.PiJuice(1, 0x14)
 
-        def restart(cls):
+        def halt(self):
+            self.__juice.power.SetPowerOff(30)
+            os.system("shutdown -h now")
+
+        def restart(self):
             os.system("reboot")
 else:
      class Power:

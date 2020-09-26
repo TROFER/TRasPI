@@ -32,7 +32,6 @@ class Battery:
         def amperage(self):
             """Returns battery amerage"""
             return self.__juice.status.GetIoCurrent()()["data"]
-            
 
     else: # _FLAG
 
