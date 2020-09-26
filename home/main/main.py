@@ -1,6 +1,7 @@
 import core
 import time
 
+from core.hw.battery import Battery
 from .app import App
 from . import panels
 
@@ -8,7 +9,7 @@ class Home(core.render.Window):
 
     def __init__(self):
         super().__init__()
-        self.time = core.element.Text(core.Vector(127, 5), time.strftime(App.const.time), justify='R')
+        self.status = core.element.Text(core.Vector(127, 5), f"{Battery.percentage()}% {time.strftime(App.const.time)}", justify='R')
 
         self.panel = 0
         self.panels = [panels.WorldClock(), panels.HWInfo(), panels.Weather()]
@@ -37,7 +38,7 @@ class Home(core.render.Window):
         App.interval(self.refresh)
 
     def render(self):
-        for element in (*self.elements, self.time, self.cursor, *self.buttons):
+        for element in (*self.elements, self.status, self.cursor, *self.buttons):
             core.Interface.render(element)
         self.panels[self.panel].render()
 
@@ -45,7 +46,7 @@ class Home(core.render.Window):
         self.cursor.anchor = self.buttons[self.index].pos + core.Vector(-2, 4)
 
     def refresh(self):
-        self.time.text = time.strftime(App.const.time)
+        self.status.text = f"{Battery.percentage()}% {time.strftime(App.const.time)}"
         self.panels[self.panel].refresh()
 
     async def show(self):

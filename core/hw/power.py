@@ -1,16 +1,26 @@
 import os
 from ..interface import Interface
 
-class Power:
+if SysConstant.pipeline == "GFXHAT":
+    _FLAG = True
+else:
+    _FLAG = False
 
-    def halt(cls):
-        Interface.stop()
-        # Disabled so i don't accidently turn it off
-        # os.system("halt")
+if _FLAG:
+    class Power:
 
-    def restart(cls):
-        Interface.stop()
-        # Disabled so i don't accidently turn it off
-        # os.system("reboot")
+        def halt(cls):
+            os.system("poweroff")
+
+        def restart(cls):
+            os.system("reboot")
+else:
+     class Power:
+
+        def halt(cls):
+            Interface.stop()
+
+        def restart(cls):
+            Interface.stop()
 
 Power = Power()
