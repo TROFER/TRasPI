@@ -26,7 +26,7 @@ class Main(core.render.Window):
     def refresh(self):
         self.elements[2].text = f"Mem load: {Hardware.Memory.load()}Mb ({Hardware.Memory.load_percent()}%)"
         self.elements[4].text = f"Swap Size: {Hardware.Memory.vmem()}Mb"
-        self.elements[7].pos2 = Vector(constrain(Hardware.Memory.load_percent(), 1, 128, 0, 100), 49)
+        self.elements[7].pos2 = Vector(constrain(Hardware.Memory.load_percent(), 0, 100, 3, 125), 49)
 
 
 class Handle(core.input.Handler):
