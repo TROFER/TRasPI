@@ -1,5 +1,6 @@
 import sys
 import os
+from typing import Any, Iterable, Tuple
 # from core.type.config import Config
 # from core.type.constant import Constant
 
@@ -67,6 +68,10 @@ class _MetaConfig(type):
 
     def __repr__(cls) -> str:
         return "<{} [{}]>".format(cls.__qualname__, ", ".join(f"{k}: {v[0]}" for k,v in super().__getattribute__("__vars").items()))
+
+    def __iter__(self) -> Iterable[Tuple[str, Any]]:
+        for k,v in super().__getattribute__("__vars").items():
+            yield (k, v[0])
 
     def __getstate__(cls) -> dict:
         return super().__getattribute__("__vars")
