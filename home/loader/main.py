@@ -1,5 +1,7 @@
 import core
 
+core.sys.load.rescan("programs/")
+
 class App(core.type.Application):
     name = "Application Loader"
     class asset(core.asset.Pool):
@@ -80,7 +82,6 @@ class Handle(core.input.Handler):
 
         async def centre(null, window: AppDraw):
             await window.run()
-
 
 App.window = AppDraw
 main = App

@@ -1,16 +1,14 @@
 import os
 import sys
 import importlib.util
-import pickle
 import core.error
 from ..error.attributes import SysConstant
 from .program import Program
 from ..type.application import Application, CreateWindow as ApplicationWindowWrapper
 from ..asset import base as _AssetBase
 from ..error import logging as log
+from .io import ConfigCache
 from .. import std
-
-CACHE_DIR = "resource/program/"
 
 class Load:
 
@@ -48,8 +46,7 @@ class Load:
     def load(self, path: str) -> Program:
         program, module = load_app(SysConstant.path + path)
         program._file = path
-        if (cache := read_cache(path)):
-            program.application.var.__setstate__(cache)
+        ConfigCache.read(path, program.application.var)
         self.__programs[path] = (program, module)
         return program
 
@@ -71,7 +68,7 @@ class Load:
             del self.__programs[program._file]
             log.core.info("Closing Program: %s", program)
         except KeyError:    pass
-        write_cache(program._file, program.application.var.__getstate__())
+        ConfigCache.write(program._file, program.application.var)
 
 def scan_programs(path: str, top: int):
     total_size = 0
@@ -95,31 +92,31 @@ def scan_programs(path: str, top: int):
             del apps[k]
     return apps, total_size
 
-def read_cache(name: str) -> dict:
-    path = SysConstant.path + name + CACHE_DIR
-    try:
-        with open(path+"vcm", "r") as file_manager:
-            files = file_manager.readlines()
-        data = {}
-        for key in files:
-            key = key.strip()
-            with open(path+key+".vcm", "rb") as file:
-                data[key] = pickle.load(file)
-        return data
-    except (FileNotFoundError, EOFError) as e:
-        return None
+# def read_cache(name: str) -> dict:
+#     path = SysConstant.path + name + CACHE_DIR
+#     try:
+#         with open(path+"vcm", "r") as file_manager:
+#             files = file_manager.readlines()
+#         data = {}
+#         for key in files:
+#             key = key.strip()
+#             with open(path+key+".vcm", "rb") as file:
+#                 data[key] = pickle.load(file)
+#         return data
+#     except (FileNotFoundError, EOFError) as e:
+#         return None
 
-def write_cache(name: str, data):
-    path = SysConstant.path + name + CACHE_DIR
-    try:
-        with open(path+"vcm", "w") as file_manager:
-            for key, value in data.items():
-                with open(path+key+".vcm", "wb") as file:
-                    pickle.dump(value[0], file)
-                file_manager.write(key + "\n")
-    except FileNotFoundError:
-        os.makedirs(path)
-        write_cache(name, data)
+# def write_cache(name: str, data):
+#     path = SysConstant.path + name + CACHE_DIR
+#     try:
+#         with open(path+"vcm", "w") as file_manager:
+#             for key, value in data.items():
+#                 with open(path+key+".vcm", "wb") as file:
+#                     pickle.dump(value[0], file)
+#                 file_manager.write(key + "\n")
+#     except FileNotFoundError:
+#         os.makedirs(path)
+#         write_cache(name, data)
 
 def validate_app(module) -> tuple:
     if not hasattr(module, "main"):
