@@ -1,68 +1,49 @@
 import core
 from core.vector import Vector
-import time
 from core.render.element import Text, Line
+from core.std import Query, Numpad
 from .app import App
-
-TIME_FORMAT = "%I:%M%p"
 
 class Main(core.render.Window):
 
-    self.TREE = {
-        "Accounts": {
-            "System Name": "name"
-        },
-        "Display": {
-            "Brightness": "brightness",
-            "Night Mode": "nightmode_enable"
-        },
-        "Personalisation": {
-            "System Colour": "colour",
-            "Time Format" : "timeformat"
-        }
-    }
-
     def __init__(self):
-        super().__init__()
         self.index = 0
-        self.elements = [Text(Vector(64, 3), "Settings"),
-        Line(Vector(0, 5), Vector(128, 5)),
-        Text(Vector(3, 10), ""),
-        Line(Vector(0, 10), Vector(128, 10)),
-        Text(Vector(3, 20), ""),
-        Line(Vector(0, 20), Vector(128, 20)),
-        Text(Vector(3, 30), ""),
-        Line(Vector(0, 30), Vector(128, 30)),
-        Text(Vector(3, 40), ""),
-        Line(Vector(0, 40), Vector(128, 40))]
-        
-        #setattr(core.sys.var, "name", "value") use this to edit and set attributes
+        self.cursor = Text(Vector(3, 10), "<", justify='R')
+        self.elements = [
+            Text(Vector(64, 5), "Settings",),
+            Line(Vector(0, 6), Vector(128, 6)),
+            Line(Vector(0, 20), Vector(128, 20)),
+            Line(Vector(0, 30), Vector(128, 30)),
+            Text(Vector(3, 10), "Account", justify='L'),
+            Text(Vector(3, 20), "Display", justify='L'),
+            Text(Vector(3, 30), "Personalisation", justify='L'),
+            Line(Vector(0, 35), Vector(128, 35))]
     
     def render(self):
         for element in self.elements:
-            core.Interface.render(element)
+            core.interface.render(element)
+        core.interface.render(self.cursor)
     
-    def show(self):
-        pass
-
-    def render(self):
-        pass
-
+    def refresh(self):
+        self.cursor.pos = self.elements[3+self.index].pos
 
 class Handle(core.input.Handler):
 
     window = WindowPower
 
     class press:
-        async def right(null, window: WindowPower):
-            if window.index < len()
+        async def down(null, window: WindowPower):
+            if window.index < 2:
+                window.index +=1
+                window.refresh()
 
-        async def left(null, window: WindowPower):
-            if window.index > 0:
-                window.index -= 1
+        async def up(null, window: WindowPower):
+            if window.index != 0:
+                window.index -=1
+                window.refresh()
 
         async def centre(null, window: WindowPower):
-            window.func_map[window.index]()
+            async open()
 
 
 App.window = Main
