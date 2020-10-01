@@ -6,6 +6,7 @@ class App(core.type.Application):
     class var(core.type.Config):
         time_cache = [0, 0, 0, 0, 0]
         weather_cache = [0, {}]
+        test = 7
 
     class const(core.type.Constant):
         time = "%I:%M%p"
