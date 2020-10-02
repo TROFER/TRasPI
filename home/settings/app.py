@@ -8,8 +8,8 @@ class App(core.type.Application):
         pass
 
     class const(core.type.Constant):
-        Layout = []
-
+        pass
+    
     class asset(core.type.Pool):
         pass
 
