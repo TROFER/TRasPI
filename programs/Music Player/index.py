@@ -5,8 +5,7 @@ from tinytag import TinyTag
 
 class Index:
 
-    #DEFAULT_PATH = f"{core.sys.const.path}user/music"
-    DEFAULT_PATH = "D:/Music/Library III"
+    DEFAULT_PATH = f"{core.sys.const.path}user/music"
 
     @classmethod
     def scan(self, path=None):
@@ -51,18 +50,12 @@ class Track:
 
 class Album:
 
-    def __init__(self, name, tracks):
+    def __init__(self, name, items):
         self.name = name
-        self.tracks = tracks
+        self.items = items
 
 class Genre:
 
-    def __init__(self, name, albums):
+    def __init__(self, name, items):
         self.name = name
-        self.albums = albums
-
-res = Index.scan()
-for genre in res:
-    for album in genre.albums:
-        for track in album.tracks:
-            print(track.name)
+        self.items = items

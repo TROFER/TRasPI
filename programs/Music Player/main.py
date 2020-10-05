@@ -1,5 +1,6 @@
 from app import App
-from tabs import single, playlist, radio
+from window import single, playlist, radio
+from index import Index
 import core 
 
 ###############TRASPI MUSIC PLAYER################
@@ -7,14 +8,25 @@ import core
 ## Date: 2020                                   ##
 ################################################## 
 
+rescan = True
+
 
 class Main(core.render.Window):
 
     def __init__(self):
         super().__init__()
+        self.check_rescan()
         self._flag = True
         self.index = 0
-        self.map = []
+        self.map = [single.main()]
+
+    def check_rescan(self):
+        if App.var.rescan:
+            App.var.library = Index.scan()
+            if App.var.directories:
+                for directory in App.const.directories:
+                    App.var.library = App.var.library + Index.scan(path=directory)
+            App.var.rescan = False
 
     async def show(self):
         if self._flag:
