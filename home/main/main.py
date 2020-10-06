@@ -1,7 +1,6 @@
 import core
 import time
 
-from core.hw.battery import Battery
 from .app import App
 from . import panels
 
@@ -9,7 +8,7 @@ class Home(core.render.Window):
 
     def __init__(self):
         super().__init__()
-        self.status = core.element.Text(core.Vector(127, 5), f"{Battery.percentage()}% {time.strftime(App.const.time)}", justify='R')
+        self.status = core.element.Text(core.Vector(127, 5), f"{core.hw.Battery.percentage()}% {time.strftime(App.const.time)}", justify='R')
 
         self.panel = 0
         self.panels = [panels.WorldClock(), panels.HWInfo(), panels.Weather()]
@@ -18,7 +17,7 @@ class Home(core.render.Window):
         self.cursor = core.element.Text(core.Vector(0, 0), ">", justify='R')
         self.app_map = [
             core.sys.load.app("home", "loader", default=True),
-            core.sys.load.app("home", "power", default=True), # Settings - Placeholder
+            core.sys.load.app("home", "settings", default=True), # Settings - Placeholder
             core.sys.load.app("home", "power", default=True),
             core.sys.load.app("home", "manager", default=True),
         ]
@@ -46,7 +45,7 @@ class Home(core.render.Window):
         self.cursor.anchor = self.buttons[self.index].pos + core.Vector(-2, 4)
 
     def refresh(self):
-        self.status.text = f"{Battery.percentage()}% {time.strftime(App.const.time)}"
+        self.status.text = f"{core.hw.Battery.percentage()}% {time.strftime(App.const.time)}"
         self.panels[self.panel].refresh()
 
     async def show(self):

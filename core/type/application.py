@@ -4,6 +4,7 @@ from ..asset.res_pool import Pool
 from ..asset.image import Image
 from ..render.window import Window
 from ..sys.program import Program
+from ..sys.setting import Setting
 from ..error import logging as log
 
 __all__ = ["Application"]
@@ -28,6 +29,17 @@ class MetaApplication(type):
             raise TypeError
         if not issubclass(cls.asset, Pool):
             raise TypeError
+
+        if not isinstance(cls.settings, list):
+            raise TypeError
+
+        # Parse Settings
+        def parse(settings: list):
+            for setting in enumerate(settings):
+                if isinstance(setting, list): # Sub Tree
+                    # parse
+                    pass
+
         try:
             if not issubclass(cls.window, Window):
                 raise TypeError
@@ -61,6 +73,8 @@ class Application(metaclass=MetaApplication):
 
     class asset(Pool):
         pass
+
+    settings = []
 
     async def open():
         pass

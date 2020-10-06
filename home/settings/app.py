@@ -13,8 +13,11 @@ class App(core.type.Application):
     class asset(core.type.Pool):
         pass
 
-    async open():
-        sys_config = core.sys.var
+    async def open():
+        core.sys.io.ConfigCache.read("core/", core.sys.var)
+
+    async def close():
+        core.sys.io.ConfigCache.write("core/", core.sys.var)
 
 
 main = App
