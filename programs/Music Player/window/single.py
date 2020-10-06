@@ -1,6 +1,6 @@
 import core
 from core.std import menu
-from .. import index
+from ..types import Genre, Album, Track, Playlist
 from core import Vector
 from ..app import App
 import player
@@ -11,7 +11,7 @@ class Main(menu.Menu):
         if data is None:
             data = App.var.library
         elements = []
-        if isinstance(data, list) or isinstance(data, index.genre):
+        if isinstance(data, list) or isinstance(data, Genre):
             for container in data:
                 elements.append(menu.MenuElement(
                     *[Text(Vector(0, 0), container.name[:19], justify='L'), Text(Vector(128, 0), len(container.items), justify='R')],
@@ -19,7 +19,7 @@ class Main(menu.Menu):
                     select = self.select))
             super().__init__(*elements, title=f"Music Player - {container.name}", end=False)
 
-        elif isinstance(data, index.album):
+        elif isinstance(data, Album):
             for track in data:
                 elements.append(menu.MenuElement(
                     *[Text(Vector(0, 0), track.name, justify='L')],
@@ -29,8 +29,8 @@ class Main(menu.Menu):
 
 
     def select(self, element, window):
-        if isinstance(element.data, index.track):
-            await player([element.data])
+        if isinstance(element.data, Track):
+            await player.Main(Playlist(element.name, [element]))
         else:
             await Main(element.data)
 

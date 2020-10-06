@@ -4,12 +4,10 @@ from index import Index
 import core 
 
 ###############TRASPI MUSIC PLAYER################
+## Version: 1.1                                 ##
 ## Created By: Tristan Day                      ##
 ## Date: 2020                                   ##
 ################################################## 
-
-rescan = True
-
 
 class Main(core.render.Window):
 

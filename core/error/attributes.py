@@ -87,3 +87,4 @@ class SysConfig(Config):
     name = "Traspi"
     brightness = 65
     colour = 12
+    volume = 75
