@@ -34,11 +34,25 @@ class MetaApplication(type):
             raise TypeError
 
         # Parse Settings
-        def parse(settings: list):
-            for setting in enumerate(settings):
+        def parse(settings: list) -> list:
+            for i, setting in enumerate(settings[1:], start=1):
                 if isinstance(setting, list): # Sub Tree
-                    # parse
+                    parse(setting)
+                elif isinstance(setting, str):
+                    settings[i] = Setting(setting)
+                elif isinstance(setting, dict):
+                    settings[i] = Setting(setting.pop("attr"), **setting)
+                elif isinstance(setting, Setting):
                     pass
+                else:
+                    raise TypeError("SETTING")
+
+                setting = settings[i]
+                if setting.data_type is None:
+                    setting.data_type = type(getattr(cls.var, setting.attr))
+                # Categories
+            return settings
+        cls.settings = parse([cls.name, *cls.settings])
 
         try:
             if not issubclass(cls.window, Window):
@@ -85,3 +99,5 @@ class Application(metaclass=MetaApplication):
         pass
     async def hide():
         pass
+
+Application.settings = []

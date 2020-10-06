@@ -57,8 +57,7 @@ class SettingHome(Setting):
             yield (self.config, core.sys.Setting(name, data=type(value)))
         for program in core.interface.application().applications:
             # All open programs - Add closed Programs
-            # yield (program.application.var, program.application.settings)
-            pass
+            yield (program.application.var, program.application.settings)
 
 class Settings(core.std.Menu):
 

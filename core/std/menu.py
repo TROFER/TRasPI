@@ -46,7 +46,7 @@ class Menu(Window):
 
     elm = MenuElement
 
-    def __init__(self, *items: MenuElement, visable=4, offset=11, title="Menu", end=True, cursor="default"):
+    def __init__(self, *items: MenuElement, visable=5, offset=11, title="Menu", end=True, cursor="default"):
         self._visible = visable
         self._elements = list(items)
         if end:
@@ -86,8 +86,8 @@ class Menu(Window):
         self.__c_index = (self.__c_index + direction) % len(self._elements)
         if self.__c_index < self.__index:
             self.__index = self.__c_index
-        elif self.__c_index > self.__index + self._visible:
-            self.__index = self.__c_index - self._visible
+        elif self.__c_index >= self.__index + self._visible:
+            self.__index = self.__c_index // self._visible * self._visible
         self.regenerate()
 
 class Handle(Handler):
