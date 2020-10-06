@@ -8,43 +8,32 @@ if SysConstant.pipeline == "GFXHAT":
 else:
     _FLAG = False
 
-if _FLAG:
-    class Audio:
+class Audio:
 
-        def __init__(self):
+    def __init__(self):
+        self.__update()
+
+    def current(self):
+        return SysConfig.volume
+
+    def increse(self, percent):
+        SysConfig.volume = min(SysConfig.volume + percent, 100)
+        self.__update()
+    
+    def decrese(self, percent):
+        SysConfig.volume = max(SysConfig.volume - percent, 0)
+        self.__update()
+
+    def set(self, percent):
+        SysConfig.volume = max(min(percent, 100), 0)
+        self.__update()
+
+    if _FLAG:
+        def __update(self):
             os.system(f"amixer set Headphone {SysConfig.volume}%")
-            self.volume = SysConfig.volume
 
-        def current(self):
-            return self.volume
-            
-        def increse(self, percent):
-            if self.volume + percent <= 100:
-                os.system(f"amixer set Headphone {self.volume + percent}%")
-                self.volume += percent
-        
-        def decrese(self, percent):
-            if self.volume - percent >= 0:
-                os.system(f"amixer set Headphone {self.volume - percent}%")
-                self.volume -= percent
-
-        def set(self, percent):
-            if 0 <= percent >= 100:
-                os.system(f"amixer set Headphone {percent}%")
-                self.volume = percent
-else:
-     class Audio:
-
-        def current(cls):
-             return 0
-        
-        def increse(cls, percent):
-            pass
-        
-        def decrese(cls, percent):
+    else:
+        def __update(self):
             pass
 
-        def set(cls, percent):
-            pass
-        
 Audio = Audio()
