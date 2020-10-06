@@ -20,8 +20,8 @@ class Main(core.render.Window):
         self.index = 0
         self.map = [single.main()]
 
-    def check_rescan(self):
-        if App.var.rescan:
+    def rescan(self, force=False):
+        if App.var.rescan or force:
             App.var.library = Index.scan()
             if App.var.directories:
                 for directory in App.const.directories:

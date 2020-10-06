@@ -5,11 +5,14 @@ class App(core.type.Application):
         rescan = True
         library = []
         volume = 75
-    
+
     class const(core.type.Constant):
         directories = []
         screen_timeout = 30
         colour = core.sys.var.colour
+
+    class player:
+        sleeptimer = -1
 
     class asset(core.asset.Pool):
         sleep_icon = core.asset.Image("icon-sleep")
