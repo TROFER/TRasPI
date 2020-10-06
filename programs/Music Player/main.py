@@ -1,9 +1,9 @@
 from app import App
-from window import single, playlist, radio
+from window import single
 from index import Index
 import core 
 
-###############TRASPI MUSIC PLAYER################
+############## TRASPI MUSIC PLAYER ###############
 ## Version: 1.1                                 ##
 ## Created By: Tristan Day                      ##
 ## Date: 2020                                   ##
