@@ -21,6 +21,8 @@ class Query(Window):
         if cancel:
             self.elements.append(TextBox(Vector(96, 54), "Cancel"))
 
+        self.__cancel = cancel
+
     def render(self):
         for element in self.elements:
             Interface.render(element)
@@ -35,4 +37,5 @@ class Handle(Handler):
         async def right(null, window: Query):
             window.finish(False)
         async def centre(null, window: Query):
-            window.finish(None)
+            if window.__cancel:
+                window.finish(None)

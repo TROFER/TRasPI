@@ -2,8 +2,10 @@ import core
 
 if __name__ == "__main__":
 
-    # Read SysConfig
+    # Read Config
     core.sys.io.ConfigCache.read("core/", core.sys.var)
+    # Schedule Write Config
+    core.interface.termintate.schedule(core.sys.io.ConfigCache.write, "core/", core.sys.var)
 
     # Load Home Screen Application
     core.sys.load.rescan("home/")
@@ -11,5 +13,4 @@ if __name__ == "__main__":
     app = core.application.Application(main)
 
     # Run Main Loop
-    core.Interface.run(app)
-    core.sys.io.ConfigCache.write("core/", core.sys.var)
+    core.Interface.main(app)

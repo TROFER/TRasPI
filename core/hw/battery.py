@@ -20,16 +20,16 @@ class Battery:
         def temperature(self) -> int:
             """Temperature of the Battery"""
             return self.__juice.status.GetBatteryTemperature()["data"]
-        def status(self):
+        def status(self) -> bool:
             """Returns True if charging"""
             if self.__juice.status.GetStatus()["data"]["powerInput"] == "PRESENT":
                 return True
             else:
                 return False
-        def voltage(self):
+        def voltage(self) -> int:
             """Returns battery voltage"""
             return self.__juice.status.GetBatteryVoltage()["data"]
-        def amperage(self):
+        def amperage(self) -> int:
             """Returns battery amerage"""
             return self.__juice.status.GetIoCurrent()()["data"]
 
@@ -45,15 +45,15 @@ class Battery:
             """Temperature of the Battery"""
             return 0
 
-        def status(self):
+        def status(self) -> bool:
             """Returns True if charging"""
-            return "None"
+            return None
         
-        def voltage(self):
+        def voltage(self) -> float:
             """Returns battery voltage"""
             return 0
         
-        def amerage(self):
+        def amerage(self) -> float:
             """Returns battery amerage"""
             return 0
 

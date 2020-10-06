@@ -11,7 +11,7 @@ if core.sys.const.platform != "UNIX":
         class CPU:
             temperature = load = cur_speed = max_speed = _base
         class Memory:
-            load = vmem = total = _base
+            load = vmem = total = load_percent = _base
 
 else: # == UNIX
     try:

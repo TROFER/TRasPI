@@ -2,84 +2,125 @@ import asyncio
 import concurrent
 import threading
 import traceback
+import functools
 import core.error
+import time
 from .error import logging as log
+from typing import Union, Coroutine, Callable, Any
 
-class AsyncController:
-
+class Batch:
     def __init__(self):
-        self._executor_cpu = concurrent.futures.ThreadPoolExecutor(thread_name_prefix="AsyncCPU")
-        self._executor_io = concurrent.futures.ThreadPoolExecutor(thread_name_prefix="AsyncIO")
+        self.__callbacks = set()
 
-        self.loop = asyncio.get_event_loop()
+    def schedule(self, function: Union[Coroutine, Callable, asyncio.Future], *args: Any, **kwargs: Any) -> asyncio.Future:
+        fut = Interface.loop.create_future()
+        async def execute():
+            try:
+                if not fut.cancelled():
+                    return fut.set_result(await Interface.schedule(function, *args, **kwargs))
+                if asyncio.iscoroutine(function):
+                    function.throw(asyncio.CancelledError)
+            except Exception as e:
+                fut.set_exception(e)
+        self.__callbacks.add(execute())
+        return fut
 
-    def run(self, application: "Application"):
-        try:
-            application.initialize()
-            asyncio.run_coroutine_threadsafe(application.run(), self.loop)
-            self.loop.run_forever()
-        finally:
-            application.running.clear()
-            self.loop.run_until_complete(application.close_all())
-            self.loop.run_until_complete(self.loop.shutdown_asyncgens())
-            self.loop.stop()
-            application.terminate()
-            self.loop.close()
-
-    async def executor_cpu(self, func):
-        try:
-            return await self.loop.run_in_executor(self._executor_cpu, func)
-        except Exception as e:
-            raise core.error.ExecutorProcessCPU(e) from e
-    async def executor_cpu(self, func):
-        try:
-            return await self.loop.run_in_executor(self._executor_io, func)
-        except Exception as e:
-            raise core.error.ExecutorProcessIO(e) from e
-
-    async def stop(self):
-        self.loop.stop()
+    async def finish(self):
+        while self.__callbacks:
+            callbacks = self.__callbacks.copy()
+            await Interface.wait(*callbacks)
+            self.__callbacks -= callbacks
 
 class Interface:
 
-    def __init__(self, _async: AsyncController):
-        self.__async = _async
+    def __init__(self):
+        self.__executor_io = concurrent.futures.ThreadPoolExecutor()
+        self.__executor_cpu = concurrent.futures.ProcessPoolExecutor()
+        self.__loop = asyncio.get_event_loop()
+        self.__active = asyncio.Event()
 
-    def run(self, application: "Application"):
-        self.__application = application
-        self.__async.run(application)
+        self.termintate = Batch()
+
+    def __repr__(self):
+        if self.single():
+            return f"{self.__class__.__name__}"
+        return f"{self.__class__.__name__}<{mp.current_process().name}>"
+
+    @property
+    def loop(self) -> asyncio.AbstractEventLoop:
+        return self.__loop
+
+    def active(self) -> bool:
+        return not self.__active.is_set()
 
     def stop(self):
         if self.active():
-            log.core.critical("Exiting")
-            self.__application.running.clear()
-            self.schedule(self.__async.stop())
+            self.__active.set()
+            self.__loop.call_soon_threadsafe(self.__loop.stop)
 
-    def active(self) -> bool:
-        """Is the program actively running"""
-        return self.__application.running.is_set()
+    def main(self, application: "Application"):
+        self.__application = application
+        self.__application.initialize()
+        try:
+            self.__active.clear()
+            with self.__executor_cpu, self.__executor_io:
+                self.schedule(self.__application.run())
+                self.__loop.run_forever()
+        finally:
+            self.__active.set()
+            self.__application.terminate()
+            self.__loop.run_until_complete(self.__application.close_all())
+            self.__loop.run_until_complete(self.termintate.finish())
+            self.__loop.run_until_complete(self.__loop.shutdown_asyncgens())
+            self.__loop.stop()
+            self.__loop.close()
+
+    def schedule(self, function: Union[Coroutine, Callable, asyncio.Future], *args: Any, **kwargs: Any) -> asyncio.Future:
+        if asyncio.iscoroutine(function): # Coroutine
+            return asyncio.wrap_future(asyncio.run_coroutine_threadsafe(function, self.__loop), loop=self.__loop)
+        elif asyncio.iscoroutinefunction(function): # Coroutine Function
+            return self.schedule(function(*args, **kwargs))
+        elif asyncio.isfuture(function): # Future
+            return function
+        elif callable(function): # Function
+            fut = self.__loop.create_future()
+            def execute():
+                try:
+                    if not fut.cancelled():
+                        return fut.set_result(function(*args, **kwargs))
+                except Exception as e:
+                    fut.set_exception(e)
+            self.__loop.call_soon_threadsafe(execute)
+            return fut
+        raise TypeError(f"'function' must be of type 'Coroutine', 'Callable', 'asyncio.Future' not '{function.__class__.__name__}'")
+
+    async def process(self, func, *args, execute_type: str="io", **kwargs):
+        exec_func = functools.partial(func, *args, **kwargs)
+        if execute_type.lower() == "cpu":
+            return await self.__loop.run_in_executor(self.__executor_cpu, exec_func)
+        else:
+            return await self.__loop.run_in_executor(self.__executor_io, exec_func)
+
+    def gather(self, *coro) -> asyncio.Future:
+        return asyncio.gather(*coro)
+
+    async def wait(self, *coro: Union[Coroutine, asyncio.Future]) -> list:
+        return (await asyncio.wait(coro))[0]
+
+    async def next(self):
+        asyncio.sleep(0)
 
     def application(self) -> "Application":
         """Returns the Application"""
         return self.__application
 
-    def render(self, obj: "Primative"):
-        """Render Primative"""
-        return self.__application.render.submit(obj)
-
-    def schedule(self, coroutine):
-        """Schedule Coroutine to Run"""
-        return asyncio.wrap_future(asyncio.run_coroutine_threadsafe(coroutine, self.__async.loop), loop=self.__async.loop)
-
-    async def process(self, func, type: ("CPU", "IO")):
-        """Process Intense Func on another Thread"""
-        if type == "IO":
-            return await self.__async.executor_io(func)
-        return await self.__async.executor_cpu(func)
-
     def program(self, program: "Program"):
         """Set the Program to have Focus"""
         self.schedule(self.__application.program(program))
+
+    def render(self, obj: "Primative"):
+        """Render Primative"""
+        return self.__application.render.submit(obj)
 
     class interval:
         """Call func repeatedly, determinded by repeat, with a delay in seconds"""
@@ -130,11 +171,5 @@ class Interface:
         def __hash__(self) -> int:
             return id(self)
 
-    async def next(self):
-        await asyncio.sleep(0)
-
-    def gather(self, *coro) -> asyncio.Future:
-        return asyncio.gather(*coro)
-
-Interface = Interface(AsyncController())
+Interface = Interface()
 interface = Interface

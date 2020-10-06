@@ -12,6 +12,7 @@ class Info(Window):
     template = Template("info")
 
     def __init__(self, message):
+        super().__init__()
         self.message = Text((38, 27), message[:20], justify='L')
 
     def render(self):

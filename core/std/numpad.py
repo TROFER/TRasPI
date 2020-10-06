@@ -12,6 +12,7 @@ class Numpad(Window):
     template = Template("window")
 
     def __init__(self, min, max, default=None, title="Numpad"):
+        super().__init__()
         if default is None:
             default = min
         self.min, self.max, self.number, self.step = min, max, default, 1
@@ -22,14 +23,14 @@ class Numpad(Window):
             Text(Vector(125, 48), f"+{self.step}", justify='R')  # Step Right
         ]
 
-        def render(self):
-            for element in self.elements:
-                Interface.render(element)
+    def render(self):
+        for element in self.elements:
+            Interface.render(element)
 
-        def refresh(self):
-            self.elements[1].text = self.number
-            self.elements[2].text = f"-{self.step}"
-            self.elements[3].text = f"+{self.step}"
+    def refresh(self):
+        self.elements[1].text = self.number
+        self.elements[2].text = f"-{self.step}"
+        self.elements[3].text = f"+{self.step}"
 
 
 class Handle(Handler):
@@ -37,25 +38,25 @@ class Handle(Handler):
     window = Numpad
 
     class press:
-        async def up(window):
+        async def up(null, window: Numpad):
             if not window.step * 10 > window.max:
                 window.step *= 10
                 window.refresh()
 
-        async def down(window):
+        async def down(null, window: Numpad):
             if not window.step // 10 < 1:
                 window.step //= 10
                 window.refresh()
 
-        async def left(window):
+        async def left(null, window: Numpad):
             if window.number - window.step >= window.min:
                 window.number -= window.step
                 window.refresh()
 
-        async def right(window):
+        async def right(null, window: Numpad):
             if window.number + window.step <= window.max:
                 window.number += window.step
                 window.refresh()
 
-        async def centre(window):
+        async def centre(null, window: Numpad):
             window.finish(window.number)
