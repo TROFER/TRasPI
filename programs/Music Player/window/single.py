@@ -14,10 +14,10 @@ class Main(menu.Menu):
         if isinstance(data, list) or isinstance(data, Genre):
             for container in data:
                 elements.append(menu.MenuElement(
-                    *[Text(Vector(0, 0), container.name[:19], justify='L'), Text(Vector(128, 0), len(container.items), justify='R')],
+                    *[Text(Vector(0, 0), f"{container.name[:16]}[{len(container.items)}]", justify='L')],
                     data = container.items,
                     func = self.select))
-            super().__init__(*elements, title=f"Music Player - Library", end=False)
+            super().__init__(*elements, title=f"Library - MP", end=False)
 
         elif isinstance(data, Album):
             for track in data:
@@ -25,7 +25,7 @@ class Main(menu.Menu):
                     *[Text(Vector(0, 0), track.name, justify='L')],
                     func = track,
                     select = self.select))
-            super().__init__(*elements, title=f"Music Player - {data.name}", end=False)
+            super().__init__(*elements, title=f"{data.name} - MP", end=False)
 
 
     async def select(self, element, window):
