@@ -1,3 +1,6 @@
+import core
+
+
 class App(core.type.Application):
     name = "Music Player"
 
