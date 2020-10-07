@@ -15,7 +15,7 @@ class Main(menu.Menu):
             for container in data:
                 elements.append(menu.MenuElement(
                     *[Text(Vector(0, 0), container.name[:19], justify='L'), Text(Vector(128, 0), len(container.items), justify='R')],
-                    data = container.items
+                    data = container.items,
                     select = self.select))
             super().__init__(*elements, title=f"Music Player - {container.name}", end=False)
 
@@ -23,12 +23,12 @@ class Main(menu.Menu):
             for track in data:
                 elements.append(menu.MenuElement(
                     *[Text(Vector(0, 0), track.name, justify='L')],
-                    data = track
+                    data = track,
                     select = self.select))
             super().__init__(*elements, title=f"Music Player - {data.name}", end=False)
 
 
-    def select(self, element, window):
+    async def select(self, element, window):
         if isinstance(element.data, Track):
             await player.Main(Playlist(element.name, [element]))
         else:
