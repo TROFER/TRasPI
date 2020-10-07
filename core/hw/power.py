@@ -3,12 +3,8 @@ from ..interface import Interface
 from ..error.attributes import SysConstant
 
 if SysConstant.pipeline == "GFXHAT":
-    _FLAG = True
     from ..driver import pijuice
-else:
-    _FLAG = False
 
-if _FLAG:
     class Power:
 
         def __init__(self):
