@@ -1,7 +1,7 @@
 from app import App
 from window import single
 from index import Index
-import core 
+import core
 
 ############## TRASPI MUSIC PLAYER ###############
 ## Version: 1.1                                 ##
@@ -13,18 +13,10 @@ class Main(core.render.Window):
 
     def __init__(self):
         super().__init__()
-        self.check_rescan()
+        App.rescan()
         self._flag = True
         self.index = 0
-        self.map = [single.main()]
-
-    def rescan(self, force=False):
-        if App.var.rescan or force:
-            App.var.library = Index.scan()
-            if App.var.directories:
-                for directory in App.const.directories:
-                    App.var.library = App.var.library + Index.scan(path=directory)
-            App.var.rescan = False
+        self.map = [single.Main()]
 
     async def show(self):
         if self._flag:

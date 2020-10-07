@@ -5,8 +5,8 @@ import pygame
 from core import Vector, hw
 from core.render.element import Image, Line, Rectangle, Text
 from core.std import numpad, popup, query
-import settings
-from .. import app, main, marquee
+from app import App
+from window import marquee
 
 
 class Main(core.render.Window):
@@ -16,24 +16,24 @@ class Main(core.render.Window):
         self.player = Player(playlist)
         self.elements = [
             Text(Vector(64, 3), ""),
-            Text(Vector(3, 3), "", justify='L')
+            Text(Vector(3, 3), "", justify='L'),
             Line(Vector(0, 8), Vector(128, 8)),
             Text(Vector(3, 10), "", justify='L'),
             marquee.Marquee(Vector(64, 30), "Music Player", width=20),
             Line(Vector(3, 40), Vector(125, 40), width=2),
             Text(Vector(3, 45), "0:00", justify='L'),
             Text(Vector(125, 45), "", justify='R'),
-            Image(Vector(64, 55), app.App.asset.pause_icon),
-            Image(Vector(40, 55), app.App.asset.rewind_icon),
-            Image(Vector(70, 55), app.App.asset.next_icon)]
+            Image(Vector(64, 55), App.asset.pause_icon),
+            Image(Vector(40, 55), App.asset.rewind_icon),
+            Image(Vector(70, 55), App.asset.next_icon)]
         self.elements_conditional = [
-            Image(Vector(120, 10), app.App.asset.sleep_icon),
-            Image(Vector(120, 60), app.App.repeat)]
+            Image(Vector(120, 10), App.asset.sleep_icon),
+            Image(Vector(120, 60), App.repeat)]
         self.timeout = 0
-        app.App.interval(self.refresh)
-        app.App.interval(self.active)
-        app.App.interval(self.sleeptimer)
-        app.App.interval(self.player.check)
+        App.interval(self.refresh)
+        App.interval(self.active)
+        App.interval(self.sleeptimer)
+        App.interval(self.player.check)
     
     def refresh(self):
         self.elements[0].text = time.strftime("%I:%M%p")
@@ -41,13 +41,13 @@ class Main(core.render.Window):
         self.elements[3].text = f"{hw.Audio.current}%"
         self.elements[4].text(self.player.playlist[self.player.track_number].desc)
         self.elements[4].update()
-        self.elements[5].pos2 = Vector(app.App.constrain(self.player.endpoint - time.time(), 0, self.player.playlist[self.player.track_number].length, 3, 125) 40)
+        self.elements[5].pos2 = Vector(App.constrain(self.player.endpoint - time.time(), 0, self.player.playlist[self.player.track_number].length, 3, 125), 40)
         self.elements[6].text = datetime.timedelta(seconds=self.player.endpoint - time.time()) 
         self.elements[7].text = datetime.timedelta(seconds=self.player.playlist[self.player.track_number].length) 
         if self.player.state == 1:
-            self.elements[8].image = app.App.asset.play_icon
+            self.elements[8].image = App.asset.play_icon
         else:
-            self.elements[8].image = app.App.asset.pause_icon
+            self.elements[8].image = App.asset.pause_icon
 
     def render(self):
         for element in self.elements:
@@ -91,7 +91,7 @@ class Handle(core.input.Handler):
             else:
                 window.play()
 
-        async def up(null window: Main):
+        async def up(null, window: Main):
             await settings.Main()
 
 
@@ -103,7 +103,7 @@ class Player:
         self.state = 0  # State 0 = Stopped, State 1 = Paused, State 2 = Playing
         self.pausestart = 0
 
-    def play(self):
+    async def play(self):
         if self.state == 0:
             try:
                 self.playlist[self.track_number].play()
@@ -127,7 +127,7 @@ class Player:
         self.state = 0
         self.track_number = 0
 
-    def skip(self):
+    async def skip(self):
         if self.track_number != len(self.playlist) - 1:
             self.stop()
             self.track_number += 1
@@ -137,7 +137,7 @@ class Player:
     
     def check(self):
         if time.time > self.endpoint:
-            if app.App.player.repeat:
+            if App.player.repeat:
                 self.stop()
                 self.play()
             else:

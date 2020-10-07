@@ -1,6 +1,5 @@
 import core
-from ..app import App
-from ..main import Main
+from app import App
 from core.std import Numpad, Query
 from core.render.element import Text, Rectangle, Line
 
@@ -27,15 +26,15 @@ class Handle(core.input.Handler):
     window = Settings
 
     class press:
-        async def up(null, window: Main):
+        async def up(null, window):
             if window.index == 2:
                 window.index = 0
 
-        async def down(null, window: Main):
+        async def down(null, window):
             if window.index == 0:
                 window.index = 2
 
-        async def centre(null, window: Main):
+        async def centre(null, window):
             if window.index == 0:
                 App.player.sleeptimer = await Numpad(min=, max=180, default=30, title="Set Sleep Timer")
             elif window.index == 1:
@@ -43,4 +42,4 @@ class Handle(core.input.Handler):
                 if res is not None:
                     App.player.repeat = res
             else:
-                Main.rescan()
+                App.rescan()

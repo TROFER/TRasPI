@@ -1,13 +1,13 @@
 import core
 from core.std import menu
-from ..types import Genre, Album, Track, Playlist
 from core import Vector
-from ..app import App
-import player
+from app import App
+from window import player
+from core.render.element import Text
 
 class Main(menu.Menu):
 
-    def __init__(self, data):
+    def __init__(self, data=None):
         if data is None:
             data = App.var.library
         elements = []
@@ -16,14 +16,14 @@ class Main(menu.Menu):
                 elements.append(menu.MenuElement(
                     *[Text(Vector(0, 0), container.name[:19], justify='L'), Text(Vector(128, 0), len(container.items), justify='R')],
                     data = container.items,
-                    select = self.select))
-            super().__init__(*elements, title=f"Music Player - {container.name}", end=False)
+                    func = self.select))
+            super().__init__(*elements, title=f"Music Player - Library", end=False)
 
         elif isinstance(data, Album):
             for track in data:
                 elements.append(menu.MenuElement(
                     *[Text(Vector(0, 0), track.name, justify='L')],
-                    data = track,
+                    func = track,
                     select = self.select))
             super().__init__(*elements, title=f"Music Player - {data.name}", end=False)
 

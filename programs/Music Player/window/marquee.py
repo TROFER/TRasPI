@@ -1,5 +1,4 @@
 import core
-import time
 from core import Vector
 
 class Marquee(core.element.Text):
