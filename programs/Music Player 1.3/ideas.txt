@@ -1,0 +1,7 @@
+Scrap playlist and single in place of universal system
+
+Genre > Album > Track
+
+Genre will have a "play" and "shuffle" function
+selecting an Album will open up the Album
+selecting a track will play said track
