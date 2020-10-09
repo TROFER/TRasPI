@@ -6,6 +6,8 @@
 **.cgf
 **.log
 ~*
+**.vcm
+**vcm
 openweatherkey.txt
 TrasPi Setup Guide.txt
 eventlog.txt
