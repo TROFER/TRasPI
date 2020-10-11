@@ -16,7 +16,7 @@ class Main(core.render.Window):
         self.library = Library()
         self._flag = True
         self.index = 0
-        self.map = [browser.Top(self.library.db, "genre", title="Genres - MP")]
+        self.map = [browser.Top(self.library.db, "genre", title="Genres - Music Pl...")]
     
     async def show(self):
         if self._flag:

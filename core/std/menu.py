@@ -1,7 +1,7 @@
 from ..render.window import Window 
 from ..interface import Interface 
 from ..input.event import Handler
-from ..render.element import Text
+from ..render.element import Text, Line
 from ..vector import Vector
 from ..error.attributes import SysConstant
 from typing import Callable
@@ -59,6 +59,7 @@ class Menu(Window):
         self.__c_index = self.__index
 
         self.title = Text(Vector(3, 5), title, justify='L')
+        self.title_line = Line(Vector(0, 9), Vector(128, 9))
         self.__cursor = self.CURSORS[cursor]
 
         super().__init__()
@@ -73,7 +74,7 @@ class Menu(Window):
         self.__cursor.anchor = Vector(SysConstant.width - self.elm.X_OFFSET, (self._elements[self.__c_index]._index if self._elements else 0) * self._offset + self.elm.Y_OFFSET)
 
     def render(self):
-        Interface.render(self.title)
+        Interface.render(self.title), Interface.render(self.title_line)
         Interface.render(self.__cursor)
         for elm in self.__c_elements:
             for e in elm.elements:
