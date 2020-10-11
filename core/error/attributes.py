@@ -1,5 +1,6 @@
 import sys
 import os
+import multiprocessing
 from typing import Any, Iterable, Tuple
 # from core.type.config import Config
 # from core.type.constant import Constant
@@ -26,16 +27,17 @@ class SysConstant(Constant):
     height = 64
     path = os.path.dirname(os.path.abspath(sys.argv[0])).replace("\\", "/") + "/"
     platform = "NT" if os.name == "nt" else "UNIX"
-    pipeline = "GFXHAT" # "GFXHAT" or "DUMMY"
+    pipeline = "DUMMY" # "GFXHAT" or "DUMMY"
+    process = multiprocessing.current_process().name == "MainProcess" # Running on Main Process
 
 # __all__ = ["Config"]
 
 class _MetaConfig(type):
 
     def __new__(cls, name, bases, dct):
-        if "_callback" in dct:
-            callbacks = dct["_callback"]
-            del dct["_callback"]
+        if "_callback_" in dct:
+            callbacks = dct["_callback_"]
+            del dct["_callback_"]
         else:
             callbacks = {}
         _vars = {}
@@ -52,7 +54,7 @@ class _MetaConfig(type):
         except KeyError:
             if name.startswith("__"):
                 return super().__getattribute__(name)
-            raise AttributeError
+            raise AttributeError(name)
 
     def __setattr__(cls, name, value):
         try:
@@ -62,7 +64,7 @@ class _MetaConfig(type):
             if name == "_callback_":
                 var[value[0]][1] = value[1]
                 return
-            raise AttributeError
+            raise AttributeError(name, value)
         attr[0] = value
         attr[1](value)
 
@@ -87,4 +89,4 @@ class SysConfig(Config):
     name = "Traspi"
     brightness = 65
     colour = 12
-    volume = 75
+    volume = 20

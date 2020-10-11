@@ -1,17 +1,21 @@
-import os
-import subprocess
 from ..interface import Interface
 from ..error.attributes import SysConstant, SysConfig
+from ..sys.proc import Process
 
 if SysConstant.pipeline == "GFXHAT":
     _FLAG = True
 else:
+    from ..driver.dummy import audio as DummyAudio
     _FLAG = False
 
 class Audio:
 
-    def __init__(self):
-        self.__update()
+    if _FLAG:
+        def __init__(self):
+            self.__update()
+    else:
+        def __init__(self):
+            self.__volume = DummyAudio.Volume(SysConfig.volume)
 
     def current(self):
         return SysConfig.volume
@@ -28,12 +32,16 @@ class Audio:
         SysConfig.volume = max(min(percent, 100), 0)
         self.__update()
 
+    def update(self, *args, **kwargs):
+        self.__update()
+
     if _FLAG:
         def __update(self):
-            os.system(f"amixer set Headphone {SysConfig.volume}%")
-
+            Process(f"amixer set Headphone {SysConfig.volume}%")
     else:
         def __update(self):
-            pass
+            self.__volume.set(SysConfig.volume)
 
-Audio = Audio()
+if SysConstant.process:
+    Audio = Audio()
+    SysConfig._callback_ = ("volume", Audio.update)

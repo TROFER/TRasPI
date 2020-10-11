@@ -1,17 +1,18 @@
 import logging
-import inspect as __inspect
 
 _active_program = "INVALID PROGRAM"
 def __setup():
-    import multiprocessing as __mp
-    if __mp.current_process().name != "MainProcess":
+    from .attributes import SysConstant as __SysConstant
+    if __SysConstant.process:
         level = logging.NOTSET
         handler = logging.NullHandler(level)
         handler_traceback = logging.NullHandler(level)
     else:
-        from .attributes import SysConstant as __SysConstant
+        import os
         # READ FROM CONFIG
         filename = f"{__SysConstant.path}log/output.log"
+        if not os.path.isdir(dirname := f"{__SysConstant.path}log"):
+            os.makedirs(dirname)
         level = logging.DEBUG
         handler = logging.FileHandler(filename, mode="w", encoding="utf-8") if filename else logging.StreamHandler()
         filename = f"{__SysConstant.path}log/traceback.log"

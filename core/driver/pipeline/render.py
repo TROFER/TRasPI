@@ -1,70 +1,70 @@
-import multiprocessing as mp
-import ctypes
-import PIL.ImageDraw
-import PIL.Image
 from ...error.attributes import SysConstant
+import multiprocessing as mp
 from .display import Display
-from ...asset.image import Template
+if SysConstant.process:
+    import PIL.ImageDraw
+    import PIL.Image
+    from ...asset.image import Template
 
-class Render:
+    class Render:
 
-    def __init__(self):
-        self.__wgt_r = set() # Currently Rendered Widgets
-        self.__wgt_s = set() # Submitted Widgets
-        self._scene = False
-        self.__update = True
-
-        self.__template = PIL.Image.new("1", (SysConstant.width, SysConstant.height), 1)
-        self.__image = self.__template.copy()
-        self.__draw = PIL.ImageDraw.Draw(self.__image)
-
-        self.__renderer = Renderer()
-
-    def template(self, template: Template):
-        if not isinstance(template, Template):
-            raise TypeError(f"Templates must be instance of '{Template.__name__}' and not '{template.__class__.__name__}'")
-        self.__template = template.image
-
-    def submit(self, wgt):
-        self.__wgt_s.add(wgt.render)
-
-        if not all(i==j for i,j in zip(wgt.copy(), wgt._widget)):
-            wgt._widget = wgt.copy()
-            wgt.volatile()
+        def __init__(self):
+            self.__wgt_r = set() # Currently Rendered Widgets
+            self.__wgt_s = set() # Submitted Widgets
+            self._scene = False
             self.__update = True
 
-    def scene(self, flag: bool=None):
-        self._scene = not self._scene if flag is None else flag
-
-    def execute(self):
-        if not self.__renderer.event_pause.is_set():
-            return
-        if self.__update or self.__wgt_s != self.__wgt_r:
-            self.__update = False
-            self.__wgt_r = self.__wgt_s.copy()
-            self.__wgt_s.clear()
-
+            self.__template = PIL.Image.new("1", (SysConstant.width, SysConstant.height), 1)
             self.__image = self.__template.copy()
             self.__draw = PIL.ImageDraw.Draw(self.__image)
 
-            for func in self.__wgt_r:
-                func(self.__draw)
+            self.__renderer = Renderer()
 
-            self.__renderer.buffer_frame.put(self.__image)
-            self.__renderer.event_frame.set()
-            self.__renderer.buffer_frame.join()
+        def template(self, template: Template):
+            if not isinstance(template, Template):
+                raise TypeError(f"Templates must be instance of '{Template.__name__}' and not '{template.__class__.__name__}'")
+            self.__template = template.image
 
-    def open(self):
-        Display.initialize()
-        self.__renderer.open()
-    def close(self):
-        self.__renderer.close()
-        Display.terminate()
+        def submit(self, wgt):
+            self.__wgt_s.add(wgt.render)
 
-    def pause(self):
-        self.__renderer.event_pause.clear()
-    def resume(self):
-        self.__renderer.event_pause.set()
+            if not all(i==j for i,j in zip(wgt.copy(), wgt._widget)):
+                wgt._widget = wgt.copy()
+                wgt.volatile()
+                self.__update = True
+
+        def scene(self, flag: bool=None):
+            self._scene = not self._scene if flag is None else flag
+
+        def execute(self):
+            if not self.__renderer.event_pause.is_set():
+                return
+            if self.__update or self.__wgt_s != self.__wgt_r:
+                self.__update = False
+                self.__wgt_r = self.__wgt_s.copy()
+                self.__wgt_s.clear()
+
+                self.__image = self.__template.copy()
+                self.__draw = PIL.ImageDraw.Draw(self.__image)
+
+                for func in self.__wgt_r:
+                    func(self.__draw)
+
+                self.__renderer.buffer_frame.put(self.__image)
+                self.__renderer.event_frame.set()
+                self.__renderer.buffer_frame.join()
+
+        def open(self):
+            Display.initialize()
+            self.__renderer.open()
+        def close(self):
+            self.__renderer.close()
+            Display.terminate()
+
+        def pause(self):
+            self.__renderer.event_pause.clear()
+        def resume(self):
+            self.__renderer.event_pause.set()
 
 class Renderer:
 
@@ -118,7 +118,7 @@ class Renderer:
                 Display.pixel(*pixel)
             self.buffer_pixel.task_done()
 
-    def calculate_pixel(self, frame: PIL.Image.Image):
+    def calculate_pixel(self, frame: 'PIL.Image.Image'):
             data = iter(frame.getdata())
 
             for y in range(SysConstant.height):

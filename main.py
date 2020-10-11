@@ -1,6 +1,5 @@
-import core
-
 if __name__ == "__main__":
+    import core
 
     # Read Config
     core.sys.io.ConfigCache.read("core/", core.sys.var)
