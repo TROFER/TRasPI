@@ -7,7 +7,6 @@ __all__ = [
 ]
 
 def _fmt_exc(error: Exception):
-    # print(traceback.format_exception_only(type(error), error))
     return traceback.format_exception_only(type(error), error)[-1][:-1]
 
 class CoreException(Exception):
