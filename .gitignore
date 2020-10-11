@@ -17,3 +17,5 @@ vcm
 
 # User
 user/**
+core/error/eventlog.json
+core/error/attributes.py
