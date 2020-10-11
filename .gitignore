@@ -1,18 +1,19 @@
-**__pycache__
+# Python & Editors
+__pycache__
 .vscode
 .idea
-**test**
-**old_**
-**.cgf
-**.log
 ~*
-**.vcm
-**vcm
-openweatherkey.txt
-TrasPi Setup Guide.txt
-eventlog.txt
-eventlog.json
-**old_**
+
+# PROGRAM CONSTS
 attributes.py
-home/main/resource/program/time_cache.vcm
-/user/playlists
+
+# Debug Test Files
+test*
+old_**
+*.cgf
+*.log
+*.vcm
+vcm
+
+# User
+user/**
