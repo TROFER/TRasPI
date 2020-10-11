@@ -6,7 +6,7 @@ from tinytag import TinyTag
 
 class Library:
 
-    DATBASE_PATH = f"{core.sys.const.path}user/mp_data/library.db"
+    DATBASE_PATH = f"{core.sys.const.path}programs/Music Player/resource/db/library.db"
 
     def __init__(self):
         try:
@@ -69,7 +69,6 @@ class Library:
             )
         """)       
         for _track in self._index():
-            print(_track)
             self._add_track(Track(_track)) 
         self.c.close()
         self.db.commit()
@@ -84,10 +83,12 @@ class Library:
     def _add_track(self, track):
         try:
             self.c.execute("INSERT INTO genre (name) values (?)", [track.genre])
+            track.genre = next(self.c.execute("SELECT id FROM genre WHERE name = ?", [track.genre]))[0]
         except sqlite3.IntegrityError:
             track.genre = next(self.c.execute("SELECT id FROM genre WHERE name = ?", [track.genre]))[0]
         try:
             self.c.execute("INSERT INTO album (name) values (?)", [track.album])
+            track.album = next(self.c.execute("SELECT id FROM album WHERE name = ?", [track.album]))[0]
         except sqlite3.IntegrityError:
             track.album = next(self.c.execute("SELECT id FROM album WHERE name = ?", [track.album]))[0]
         self.c.execute("""INSERT INTO tags (
@@ -106,9 +107,7 @@ class Library:
             tags_id) VALUES (?, ?, ?, ?, ?, ?)""", [track.title, track.path, track.desc, track.genre, track.album, track.tags])
                 
     def _index(self):
-        print("Called Index")
         _tracks = []
-        print(App.var.directories)
         for _dir in [f"{core.sys.const.path}user/music"]:
             _tracks += self._recr(_dir)
         return _tracks
@@ -130,7 +129,7 @@ class Track:
         self.path = path
         self.tags = TinyTag.get(path)
         self.genre, self.album = self.tags.genre, self.tags.album
-        self.desc = ""
-        for attr in [self.tags.title, self.tags.artist, self.tags.year, self.tags.filesize]:
+        self.desc = self.tags.title
+        for attr in [self.tags.artist, self.tags.year, self.tags.filesize]:
             if attr is not None:
                 self.desc += f", {attr}"
