@@ -70,7 +70,7 @@ class Menu(Window):
         self.__c_elements = self._elements[self.__index:self.__index+self._visible]
         for index, elm in enumerate(self.__c_elements):
             elm.refresh(index, self._offset)
-        self.__cursor.anchor = Vector(SysConstant.width - self.elm.X_OFFSET, self._elements[self.__c_index]._index if self._elements else 0 * self._offset + self.elm.Y_OFFSET)
+        self.__cursor.anchor = Vector(SysConstant.width - self.elm.X_OFFSET, (self._elements[self.__c_index]._index if self._elements else 0) * self._offset + self.elm.Y_OFFSET)
 
     def render(self):
         Interface.render(self.title)
