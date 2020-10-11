@@ -80,7 +80,10 @@ class _MetaConfig(type):
     def __setstate__(cls, state: dict):
         var = super().__getattribute__("__vars")
         for key, value in state.items():
-            var[key][0] = value
+            attr = var[key]
+            attr[0] = value
+            attr[1](value)
+
 
 class Config(metaclass=_MetaConfig):
     pass
