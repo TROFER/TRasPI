@@ -116,6 +116,9 @@ class Application(metaclass=_Active):
         Interface.schedule(self.__current_app.window_active.show())
         self.render.enable()
 
+    def deltatime(self) -> float:
+        return self.render.deltatime
+
 def main(application: Application):
     application.main()
 

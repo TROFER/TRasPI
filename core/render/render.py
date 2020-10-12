@@ -1,5 +1,6 @@
 import asyncio
 import queue as queues
+import time
 
 import core.error
 from .primative import Primative
@@ -25,11 +26,19 @@ class Render:
         self.__executing = asyncio.Event()
         self.__executing.set()
 
+        self.__lasttime = time.time()
+        self.deltatime = self.__lasttime - time.time()
+
         self.__set_active(self.__active)
 
     async def execute(self):
         await self.__executing.wait()
         try:
+            # Delta time
+            current_time = time.time()
+            self.deltatime = current_time - self.__lasttime
+            self.__lasttime = current_time
+
             self.__active.render()
             self.__pipeline.execute()
         except Exception as e:
