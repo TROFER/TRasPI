@@ -30,5 +30,16 @@ class Main(core.render.Window):
                     self.index = (self.index + res) % len(self.map)
             self._flag = True
 
+"""Using TabManager :)
+
+class Main(core.std.TabContainer):
+
+    def __init__(self):
+        self.library = Library()
+        super().__init__(
+            browser.Top(self.library.db, "genre", title="Genres - Music Pl..."),
+        )
+"""
+
 App.window = Main
 main = App
