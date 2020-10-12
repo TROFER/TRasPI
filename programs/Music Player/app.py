@@ -5,22 +5,15 @@ class App(core.type.Application):
 
     class var(core.type.Config):
         rescan = False
-        directories = [f"{core.sys.const.path}user/music"]
-        volume = 75
 
     class const(core.type.Constant):
-        screen_timeout = 30
-        colour = core.sys.var.colour
-
-    class player:
-        sleeptimer = -1
-        repeat = False
+        pass
 
     class asset(core.asset.Pool):
         sleep_icon = core.asset.Image("icon-sleep")
         play_icon = core.asset.Image("player-play")
         pause_icon = core.asset.Image("player-pause")
-        prev_icon = core.asset.Image("player-rewind")
+        rewind_icon = core.asset.Image("player-rewind")
         next_icon = core.asset.Image("player-next")
         repeat_icon = core.asset.Image("player-repeat")
 

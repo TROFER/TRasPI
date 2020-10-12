@@ -45,7 +45,7 @@ class Library:
                 artist text,
                 year text,
                 bitrate int,
-                size int
+                size float
             )
         """)
         self.c.execute("""
@@ -130,6 +130,6 @@ class Track:
         self.tags = TinyTag.get(path)
         self.genre, self.album = self.tags.genre, self.tags.album
         self.desc = self.tags.title
-        for attr in [self.tags.artist, self.tags.year, self.tags.filesize]:
+        for attr in [self.tags.artist, self.tags.year, round(self.tags.filesize / 1048576, 2)]:
             if attr is not None:
                 self.desc += f", {attr}"
