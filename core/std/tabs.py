@@ -1,14 +1,15 @@
 from ..render.window import Window
+from typing import Type
 
-class TabManager(Window):
+class TabContainer(Window):
 
     tabs = []
 
-    def __init__(self):
+    def __init__(self, *tabs: Window):
         super().__init__()
         self._flag = True
         self.index = 0
-        self.tabs = self.__class__.tabs.copy()
+        self.tabs = [*self.__class__.tabs, *tabs]
 
     async def show(self):
         if self._flag:
@@ -22,3 +23,7 @@ class TabManager(Window):
                     break
             self._flag = True
 
+def TabManager(*tabs: Window) -> Type[TabContainer]:
+    class TabCon(TabContainer):
+        tabs = tabs
+    return TabCon
