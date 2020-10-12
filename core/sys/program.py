@@ -33,6 +33,8 @@ class Program:
             self.window_active = self.application.window()
         except Exception as e:
             self.window_active = None
+            log.program.warning("Application threw an Error Creating Main Window %s %s: %s", self, type(e).__name__, e, extra={"program_name": self.application.name})
+            log.traceback.warning("%s", self)
             raise
         try:
             await self.application.open()
