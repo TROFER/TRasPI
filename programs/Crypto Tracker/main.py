@@ -13,7 +13,8 @@ class Main(core.render.Window):
     URL = "https://api.cryptonator.com/api/ticker/"
     CURRENCIES = [
         ["Ethereum", [248, 36, 41], 'eth-usd', App.asset.ethereum],
-        ["Bitcoin", [34, 88, 96], 'btc-usd', App.asset.bitcoin]]
+        ["Bitcoin", [34, 88, 96], 'btc-usd', App.asset.bitcoin],
+        ["Litecoin", [199, 12,100], 'ltc-usd', App.asset.bitcoin]]
 
     def __init__(self):
         self.index = 0

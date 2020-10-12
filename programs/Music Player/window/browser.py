@@ -27,13 +27,13 @@ class Top(menu.Menu):
                 func= self.select))
         super().__init__(*_elements, title=title)
     
-    def playall(self):
+    async def playall(self):
         self.c.execute("SELECT * FROM track") 
-        Player(self.fetchall())
+        await Player(self.fetchall())
     
-    def shuffle(self):
+    async def shuffle(self):
         self.c.execute("SELECT * FROM track")
-        Player(random.shuffle(self.fetchall()))
+        await Player(random.shuffle(self.fetchall()))
     
     async def select(self, filter):
         await Bottom(self.db, filter, filter[2])
@@ -59,17 +59,17 @@ class Bottom(menu.Menu):
                 func= self.select))
         super().__init__(*_elements, title=f"{self.filter[0][:-3].capitalize()} - {title}")
 
-    def playall(self):
+    async def playall(self):
         self.c.execute(f"SELECT * FROM track WHERE {self.filter[0]} = ?", [self.filter[1]])
-        Player(self.c.fetchall())
+        await Player(self.c.fetchall())
     
-    def shuffle(self):
+    async def shuffle(self):
         self.c.execute(f"SELECT * FROM track WHERE {self.filter[0]} = ?", [self.filter[1]])
-        Player(random.shuffle(self.c.fetchall()))
+        await Player(random.shuffle(self.c.fetchall()))
     
-    def select(self, data):
-        pass
+    async def select(self, data):
+        await Player(self.db, data)
     
 
-def Player(*args):
+async def Player(*args):
     pass
