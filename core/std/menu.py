@@ -6,7 +6,7 @@ from ..vector import Vector
 from ..error.attributes import SysConstant
 from typing import Callable
 
-async def null(self, window):
+async def null(window):
     pass
 
 class MenuElement:
@@ -14,12 +14,12 @@ class MenuElement:
     X_OFFSET = 3
     Y_OFFSET = 15
 
-    def __init__(self, *elements, data=None, func: Callable=null):
+    def __init__(self, *elements, data=None, func: Callable=null, **on_calls: Callable):
         self.data = data
         self._index = -1
         self.elements = elements
         self._rel_pos = [element.anchor for element in self.elements]
-        self.func = func
+        self.__calls = {"enter": func, **{k[3:]:v for k,v in on_calls.items() if k.startswith("on_")}}
 
     def render(self):
         for element in self.elements:
@@ -31,10 +31,15 @@ class MenuElement:
             for i, element in enumerate(self.elements):
                 element.anchor = self._rel_pos[i] + Vector(self.X_OFFSET, self.Y_OFFSET + offset * self._index)
 
-    async def _call(self):
-        if isinstance(self.func, Window):
-            return await self.func
-        return await Interface.schedule(self.func, self.data)
+    async def _call(self, name: str="enter", halt=True):
+        if (func := self.__calls.get(name, null)) is null:
+            return
+        if isinstance(func, Window):
+            return await func
+        fut = Interface.schedule(func, self.data)
+        if halt:
+            return await fut
+        return fut
 
 class Menu(Window):
 
@@ -82,13 +87,17 @@ class Menu(Window):
 
     async def call(self):
         await self._elements[self.__c_index]._call()
+        # await self._elements[self.__c_index]._call("return", False)
 
-    def move(self, direction: int):
+    async def move(self, direction: int):
+        x = self._elements[self.__c_index]._call("dehover", False)
+        y = await x
         self.__c_index = (self.__c_index + direction) % len(self._elements)
         if self.__c_index < self.__index:
             self.__index = self.__c_index
         elif self.__c_index >= self.__index + self._visible:
             self.__index = self.__c_index // self._visible * self._visible
+        await self._elements[self.__c_index]._call("hover", False)
         self.regenerate()
 
 class Handle(Handler):
@@ -99,6 +108,6 @@ class Handle(Handler):
         async def centre(null, window: Menu):
             await window.call()
         async def up(null, window: Menu):
-            window.move(-1)
+            await window.move(-1)
         async def down(null, window: Menu):
-            window.move(1)
+            await window.move(1)

@@ -1,24 +1,48 @@
 from ...vector import Vector
-from ..primative import Primative
 from .text import Text
+from ...interface import Interface
 
 class Marquee(Text):
 
-    def __init__(self, pos: Vector, text: str, width: int):
-        self.width = width
-        self.speed = speed
-        self.index = 0
-        self.flag = True
-        self._array = [' ' for i in range(self.width)]
-        self.text = f"{text}{' ' * self.width}"
-        super().__init__(self.pos, "".join(self._array))
+    def __init__(self, anchor: Vector, text: str="Text", width: int=None, speed: int=1, flag=True, **kwargs):
+        super().__init__(anchor, text, **kwargs)
+        self.width = abs(int(width)) if width else len(self.text)
+        self.speed = abs(speed) if speed else 1
+        self.flag = bool(flag)
+        self.__index = 0
+        self.__generate_subtext()
+        self.__time_buffer = 0
 
-    def update(self):
-        if self.flag(self):
-            self._array.pop(0)
-            self._array.append(self.text[self.index])
-            if self.index == len(self.text) - 1:
-                self.index = 0
-            else:
-                self.index += 1
-            super().text = "".join(self._array)
+    def __generate_subtext(self):
+        self.__subtext = self.text[self.__index:min(self.__index + self.width, len(self.text))]
+        self.__subtext += self.text[:min(self.__index, self.width - len(self.__subtext))]
+        self.__subtext += " " * (self.width - len(self.__subtext))
+
+    def render(self, image: "PIL.ImageDraw.ImageDraw"):
+        text = self.text
+        self.text = self.__subtext
+        super().render(image)
+        self.text = text
+
+    def copy(self):
+        if self.flag:
+            self.__time_buffer += Interface.application().deltatime()
+            while self.__time_buffer > self.speed:
+                self.__time_buffer -= self.speed
+                self.__index = (self.__index + 1) % len(self.text)
+        return (self.__index, self.width, *super().copy())
+
+    def volatile(self):
+        self.__generate_subtext()
+
+        text = self.text
+        self.text = self.__subtext
+        super().volatile()
+        self.text = text
+
+    def reset(self, *args):
+        self.__index = 0
+    def pause(self, *args):
+        self.flag = False
+    def play(self, *args):
+        self.flag = True
