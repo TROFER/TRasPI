@@ -1,4 +1,5 @@
 import core
+import player
 
 class App(core.type.Application):
     name = "Music Player"
@@ -19,3 +20,6 @@ class App(core.type.Application):
 
     def constrain(n, start1, stop1, start2, stop2):
         return ((n - start1) / (stop1 - start1)) * (stop2 - start2) + start2
+
+    async def hide():
+        player.stop()

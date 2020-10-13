@@ -1,5 +1,5 @@
 from core.std import menu
-from core.render.element import Text
+from core.render.element import Text, Marquee
 from core import Vector
 #from player import Player
 import random
@@ -54,7 +54,7 @@ class Bottom(menu.Menu):
         self.c.execute(f"SELECT * FROM track WHERE {self.filter[0]} = ?", [self.filter[1]])
         for track in self.c.fetchall():
             _elements.append(menu.MenuElement(
-                Text(Vector(0, 0), track[1][:19], justify='L'),
+                Marquee(Vector(0, 0), track[1], width=16),
                 data= track,
                 func= self.select))
         super().__init__(*_elements, title=f"{self.filter[0][:-3].capitalize()} - {title}")

@@ -18,6 +18,8 @@ DTYPE = "float32"
 
 class Player:
 
+    track = Track
+
     def __init__(self, blocksize: int=4096, buffersize: int=8):
         self.__active = None
         self.__file = None
@@ -62,6 +64,9 @@ class Player:
     def pause(self):
         self.__stream.stop()
         self.__event.set()
+    
+    def skip(self):
+        self.__get_next_track()
 
     async def __refill_buffer(self):
         core.Interface.schedule(self.__stream.start)
@@ -122,13 +127,13 @@ player = Player()
 # t2 = Track("Music/s2.wav")
 
 # async def main():
-#     player.append(t1)
-#     player.play()
-#     player.append(t2)
-#     await player
-#     s = player.append(t1, True)
-#     player.append(t2)
-#     await s
-#     print("T1:", s)
-#     await player
-#     core.Interface.stop()
+#      player.append(t1)
+#      player.play()
+#      player.append(t2)
+#      await player
+#      s = player.append(t1, True)
+#         player.append(t2)
+#         await s
+#         print("T1:", s)
+#         await player
+#         core.Interface.stop()
