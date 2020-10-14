@@ -3,7 +3,7 @@ import logging
 _active_program = "INVALID PROGRAM"
 def __setup():
     from .attributes import SysConstant as __SysConstant
-    if __SysConstant.process:
+    if not __SysConstant.process:
         level = logging.NOTSET
         handler = logging.NullHandler(level)
         handler_traceback = logging.NullHandler(level)
