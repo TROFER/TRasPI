@@ -75,6 +75,7 @@ class Renderer:
 
         self.event_pause = mp.Event()
         self.event_frame = mp.Event()
+        self.event_image = mp.Event()
         self.event_pixel = mp.Event()
 
     def open(self):
@@ -82,6 +83,7 @@ class Renderer:
             self.event_open.set()
             self.event_pause.set()
             self.event_frame.clear()
+            self.event_image.clear()
             self.event_pixel.clear()
             mp.Process(target=self.thread_frame, name="FrameThread").start()
             mp.Process(target=self.thread_pixel, name="PixelThread").start()
@@ -89,6 +91,7 @@ class Renderer:
     def close(self):
         self.event_open.clear()
         self.event_frame.set()
+        self.event_image.set()
         self.event_pixel.set()
 
     def thread_frame(self):
@@ -107,12 +110,14 @@ class Renderer:
     def thread_pixel(self):
         while self.event_open.is_set():
             self.event_pause.wait()
+            self.event_pixel.wait()
             try:
                 pixel = self.buffer_pixel.get(False)
             except mp.queues.Empty: continue
 
             if pixel is None:
-                self.event_pixel.set()
+                self.event_image.set()
+                self.event_pixel.clear()
                 Display.show()
             else:
                 Display.pixel(*pixel)
@@ -121,6 +126,7 @@ class Renderer:
     def calculate_pixel(self, frame: 'PIL.Image.Image'):
             data = iter(frame.getdata())
 
+            self.event_pixel.set()
             for y in range(SysConstant.height):
                 for x in range(SysConstant.width):
                     pixel = next(data)
@@ -129,5 +135,5 @@ class Renderer:
                         self.cache_frame[x][y] = pixel
 
             self.buffer_pixel.put(None)
-            self.event_pixel.wait()
-            self.event_pixel.clear()
+            self.event_image.wait()
+            self.event_image.clear()
