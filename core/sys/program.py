@@ -34,13 +34,13 @@ class Program:
         except Exception as e:
             self.window_active = None
             log.program.warning("Application threw an Error Creating Main Window %s %s: %s", self, type(e).__name__, e, extra={"program_name": self.application.name})
-            log.traceback.warning("%s", self)
+            log.traceback.warning("%s", self, exc_info=e)
             raise
         try:
             await self.application.open()
         except Exception as e:
             log.program.warning("Application threw an Error %s %s: %s", self, type(e).__name__, e, extra={"program_name": self.application.name})
-            log.traceback.warning("%s", self)
+            log.traceback.warning("%s", self, exc_info=e)
     async def close(self):
         for interval in self._intervals:
             interval.cancel()
@@ -49,7 +49,7 @@ class Program:
             await self.application.close()
         except Exception as e:
             log.program.warning("Application threw an Error %s %s: %s", self, type(e).__name__, e, extra={"program_name": self.application.name})
-            log.traceback.warning("%s", self)
+            log.traceback.warning("%s", self, exc_info=e)
 
     async def show(self):
         for interval in tuple(self._intervals):
@@ -61,7 +61,7 @@ class Program:
             await self.application.show()
         except Exception as e:
             log.program.warning("Application threw an Error %s %s: %s", self, type(e).__name__, e, extra={"program_name": self.application.name})
-            log.traceback.warning("%s", self)
+            log.traceback.warning("%s", self, exc_info=e)
     async def hide(self):
         for interval in self._intervals:
             interval.pause()
@@ -69,4 +69,4 @@ class Program:
             await self.application.hide()
         except Exception as e:
             log.program.warning("Application threw an Error %s %s: %s", self, type(e).__name__, e, extra={"program_name": self.application.name})
-            log.traceback.warning("%s", self)
+            log.traceback.warning("%s", self, exc_info=e)
