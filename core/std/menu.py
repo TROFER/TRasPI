@@ -89,6 +89,9 @@ class Menu(Window):
         await self._elements[self.__c_index]._call()
         # await self._elements[self.__c_index]._call("return", False)
 
+    async def hook(self, name: str, halt=False):
+        return await self._elements[self.__c_index]._call(name, halt)
+
     async def move(self, direction: int):
         x = self._elements[self.__c_index]._call("dehover", False)
         y = await x
@@ -111,3 +114,7 @@ class Handle(Handler):
             await window.move(-1)
         async def down(null, window: Menu):
             await window.move(1)
+        async def left(null, window: Menu):
+            await window.hook("left")
+        async def right(null, window: Menu):
+            await window.hook("right")
