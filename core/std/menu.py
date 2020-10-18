@@ -99,7 +99,7 @@ class Menu(Window):
         if self.__c_index < self.__index:
             self.__index = self.__c_index
         elif self.__c_index >= self.__index + self._visible:
-            self.__index = self.__c_index // self._visible * self._visible
+            self.__index = max(0, self.__c_index - (self._visible - 1))
         await self._elements[self.__c_index]._call("hover", False)
         self.regenerate()
 
