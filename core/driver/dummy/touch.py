@@ -30,4 +30,4 @@ def __poll_loop():
             __funcs[5](5, "press")
 
 def setup():
-    threading.Thread(target=__poll_loop).start()
+    threading.Thread(target=__poll_loop, name="Dummy-Touch").start()
