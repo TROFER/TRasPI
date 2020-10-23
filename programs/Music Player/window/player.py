@@ -32,13 +32,14 @@ class Main(core.render.Window):
             Line(Vector(3, 40), Vector(3, 40), width=2), # Track Position Indicator 5
             Text(Vector(3, 45), justify='L'), # Current Track Position 6
             Text(Vector(127, 45), justify='R'), # Track Length 7
-            Image(Vector(64, 55), App.asset.pause_icon, just_h='C'), # Play / Pause Icon 8
-            Image(Vector(40, 55), App.asset.rewind_icon, just_h='C'), # Rewind Track Icon 9
-            Image(Vector(80, 55), App.asset.next_icon, just_h='C'),  # Next Track Icon 10
+            Image(Vector(64, 55), App.asset.pause_icon), # Play / Pause Icon 8
+            Image(Vector(40, 55), App.asset.rewind_icon), # Rewind Track Icon 9
+            Image(Vector(80, 55), App.asset.next_icon),  # Next Track Icon 10
             Text(Vector(3, 60), justify='L'),  # Playlist Position Indicator 11
             Image(Vector(127, 15), App.asset.sleep_icon, just_w='R', just_h='C'), # Sleep Timer Icon 12
             Image(Vector(127, 60), App.asset.repeat_icon, just_w='R', just_h='C')] # Repeat Timer Icon 13
-        App.interval(self.refresh())
+        App.interval(self.refresh)
+        super().__init__()
     
     async def show(self):
         self.timeout = core.Interface.schedule(self.powersaving())
@@ -49,6 +50,8 @@ class Main(core.render.Window):
         _e[0].text = time.strftime("%I:%M%p")
         _e[1].text = f"{core.hw.Battery.percentage()}%"
         _e[3].text = f"{core.hw.Audio.current()}%"
+        print(self.playlist[self.tracknumber])
+        print(f"Tracknumber {self.tracknumber}")
         _e[4].text = self.playlist[self.tracknumber][3]
         #_e[5].pos2 = 0 # <----------- INSERT FUNCTION HERE
         _e[6].text = str(datetime.timedelta(seconds=0)) # <----------- INSERT FUNCTION HERE
@@ -103,7 +106,7 @@ class Handle(core.input.Handler):
         async def up(null, window: Main):
             window.timeout = core.Interface.schedule(powersaving())
         
-        async def down(null window: Main):
+        async def down(null, window: Main):
             window.timeout = core.Interface.schedule(powersaving())
 
 '''class Settings(menu.Menu):
