@@ -15,6 +15,7 @@ class Main(core.std.TabContainer):
         self.library = Library()
         super().__init__(
             browser.Top(self.library.db, "genre", title="Genres - Music Pl..."),
+            browser.Top(self.library.db, "album", title="Albums - Music Pl...")
         )
 
 App.window = Main

@@ -8,7 +8,7 @@ class App(core.type.Application):
         rescan = False
 
     class const(core.type.Constant):
-        pass
+        screen_timeout = 30
 
     class asset(core.asset.Pool):
         sleep_icon = core.asset.Image("icon-sleep")

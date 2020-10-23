@@ -9,6 +9,12 @@ import io
 import sounddevice as sd
 import soundfile as sf
 
+################# Music Player ###################
+## Version: 1.0                                 ##
+## Created By: Thomas Woolhouse                 ##
+## Date: 2020                                   ##
+##################################################
+
 class Status(enum.IntEnum):
     NONE = 0
     QUEUE = 1
@@ -317,3 +323,5 @@ class Player:
         if track in self.__tracks:
             self.__tracks.remove(track)
             track._fut.set_result(Status.CLEAR)
+
+main = Player()

@@ -1,7 +1,7 @@
 from core.std import menu
 from core.render.element import Text, Marquee
 from core import Vector
-#from player import Player
+from window import player
 import random
 import sqlite3
 
@@ -29,11 +29,11 @@ class Top(menu.Menu):
     
     async def playall(self):
         self.c.execute("SELECT * FROM track") 
-        await Player(self.fetchall())
+        await player.Main(self.fetchall())
     
     async def shuffle(self):
         self.c.execute("SELECT * FROM track")
-        await Player(random.shuffle(self.fetchall()))
+        await player.Main(random.shuffle(self.fetchall()))
     
     async def select(self, filter):
         await Bottom(self.db, filter, filter[2])
@@ -54,22 +54,18 @@ class Bottom(menu.Menu):
         self.c.execute(f"SELECT * FROM track WHERE {self.filter[0]} = ?", [self.filter[1]])
         for track in self.c.fetchall():
             _elements.append(menu.MenuElement(
-                Marquee(Vector(0, 0), track[1], width=16),
+                Marquee(Vector(0, 0), track[1], width=19, justify='L'),
                 data= track,
                 func= self.select))
         super().__init__(*_elements, title=f"{self.filter[0][:-3].capitalize()} - {title}")
 
     async def playall(self):
         self.c.execute(f"SELECT * FROM track WHERE {self.filter[0]} = ?", [self.filter[1]])
-        await Player(self.c.fetchall())
+        await player.Main(self.c.fetchall())
     
     async def shuffle(self):
         self.c.execute(f"SELECT * FROM track WHERE {self.filter[0]} = ?", [self.filter[1]])
-        await Player(random.shuffle(self.c.fetchall()))
+        await player.Main(random.shuffle(self.c.fetchall()))
     
     async def select(self, data):
-        await Player(self.db, data)
-    
-
-async def Player(*args):
-    pass
+        await player.Main(self.db, [data])
