@@ -2,6 +2,7 @@ from core.std import menu
 from core.render.element import Text, Marquee
 from core import Vector
 from window import player
+import core
 import random
 import sqlite3
 
@@ -38,6 +39,18 @@ class Top(menu.Menu):
     async def select(self, filter):
         await Bottom(self.db, filter, filter[2])
 
+
+class Handle(core.input.Handler):
+
+    window = Top
+
+    class press:
+        async def right(null, window):
+            window.finish(1)
+
+        async def left(null, window):
+            window.finish(-1)
+
 class Bottom(menu.Menu):
 
     def __init__(self, db, filter: str, title):
@@ -69,3 +82,18 @@ class Bottom(menu.Menu):
     
     async def select(self, data):
         await player.Main(self.db, [data])
+
+
+class Handle(core.input.Handler):
+
+    window = Bottom
+
+    class press:
+        async def right(null, window):
+            window.finish(1)
+
+        async def left(null, window):
+            window.finish(-1)
+        
+        async def up(null, window):
+            await super().Handle
