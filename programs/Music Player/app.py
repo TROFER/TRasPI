@@ -1,5 +1,5 @@
 import core
-import player
+from player import main as player
 
 class App(core.type.Application):
     name = "Music Player"
@@ -22,4 +22,4 @@ class App(core.type.Application):
         return ((n - start1) / (stop1 - start1)) * (stop2 - start2) + start2
 
     async def hide():
-        player.stop()
+        player.pause()

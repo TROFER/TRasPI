@@ -12,12 +12,9 @@ class Library:
         try:
             self.db = sqlite3.connect(self.DATBASE_PATH)
             self.c = self.db.cursor()
-            try:
-                if App.var.rescan or next(self.c.execute("SELECT count(*) FROM track"))[0] == 0:
-                    self.rescan()
-            except sqlite3.OperationalError:
-                self.rebuild()
-        except FileNotFoundError:
+            if App.var.rescan or next(self.c.execute("SELECT count(*) FROM track"))[0] == 0:
+                self.rescan()
+        except (FileNotFoundError, sqlite3.OperationalError):
             self.rebuild()
         self.c.close()
         self.db.commit()
@@ -116,7 +113,7 @@ class Library:
         _tracks = []
         for item in os.scandir(path):
             if item.is_file():
-                if ".ogg" in item.name or ".mp3" in item.name:
+                if any(suffix in item.name for suffix in (".mp3", ".ogg", ".flac")):
                     _tracks.append(f"{path}/{item.name}")
             elif item.is_dir():
                 _tracks += self._recr(f"{path}/{item.name}")
@@ -125,7 +122,7 @@ class Library:
 class Track:
 
     def __init__(self, path):
-        self.title = path.split("/")[-1][0:-4]
+        self.title = ".".join(path.split("/")[-1].split(".")[:-1])
         self.path = path
         self.tags = TinyTag.get(path)
         self.genre, self.album = self.tags.genre, self.tags.album
