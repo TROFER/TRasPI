@@ -1,6 +1,7 @@
-from ..render.window import Window 
+from ..render.window import Window
 from ..interface import Interface 
 from ..input.event import Handler
+from ..render.primative import Primative
 from ..render.element import Text, Line
 from ..vector import Vector
 from ..error.attributes import SysConstant
@@ -63,23 +64,23 @@ class Menu(Window):
         self.__index = 0
         self.__c_index = self.__index
 
-        self.title = Text(Vector(3, 5), title, justify='L')
-        self.title_line = Line(Vector(0, 9), Vector(128, 9))
+        self.title = title if isinstance(title, Primative) else Text(Vector(self.elm.X_OFFSET, self.elm.Y_OFFSET // 2), title, justify='L')
+        self.__title_line = Line(Vector(0, offset), Vector(SysConstant.width, offset))
         self.__cursor = self.CURSORS[cursor]
 
         super().__init__()
 
     async def show(self):
-        self.regenerate()
+        self._regenerate()
 
-    def regenerate(self):
+    def _regenerate(self):
         self.__c_elements = self._elements[self.__index:self.__index+self._visible]
         for index, elm in enumerate(self.__c_elements):
             elm.refresh(index, self._offset)
         self.__cursor.anchor = Vector(SysConstant.width - self.elm.X_OFFSET, (self._elements[self.__c_index]._index if self._elements else 0) * self._offset + self.elm.Y_OFFSET)
 
     def render(self):
-        Interface.render(self.title), Interface.render(self.title_line)
+        Interface.render(self.title), Interface.render(self.__title_line)
         Interface.render(self.__cursor)
         for elm in self.__c_elements:
             for e in elm.elements:
@@ -101,7 +102,7 @@ class Menu(Window):
         elif self.__c_index >= self.__index + self._visible:
             self.__index = max(0, self.__c_index - (self._visible - 1))
         await self._elements[self.__c_index]._call("hover", False)
-        self.regenerate()
+        self._regenerate()
 
 class Handle(Handler):
 
