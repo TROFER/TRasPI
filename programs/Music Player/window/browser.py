@@ -23,7 +23,7 @@ class Top(menu.Menu):
         for group in self.c.fetchall():
             self.c.execute(f"SELECT count(*) FROM track WHERE {_fieldname} = ?", [group[0]])
             _elements.append(menu.MenuElement(
-                Text(Vector(0, 0), f"{group[1][:16]} ({self.c.fetchone()[0]})", justify='L'),
+                Marquee(Vector(0, 0), f"{group[1][:16]} ({self.c.fetchone()[0]})", width=17, justify='L'),
                 data= (_fieldname, group[0], group[1]),
                 func= self.select))
         super().__init__(*_elements, title=title)
@@ -50,6 +50,15 @@ class Handle(core.input.Handler):
 
         async def left(null, window):
             window.finish(-1)
+        
+        async def centre(null, window):
+            await window.call()
+        
+        async def up(null, window):
+            await window.move(-1)
+        
+        async def down(null, window):
+            await window.move(1)
 
 class Bottom(menu.Menu):
 
@@ -67,7 +76,7 @@ class Bottom(menu.Menu):
         self.c.execute(f"SELECT * FROM track WHERE {self.filter[0]} = ?", [self.filter[1]])
         for track in self.c.fetchall():
             _elements.append(menu.MenuElement(
-                Marquee(Vector(0, 0), track[1], width=19, justify='L'),
+                Marquee(Vector(0, 0), track[1], width=18, justify='L'),
                 data= track,
                 func= self.select))
         super().__init__(*_elements, title=f"{self.filter[0][:-3].capitalize()} - {title}")
@@ -95,5 +104,13 @@ class Handle(core.input.Handler):
         async def left(null, window):
             window.finish(-1)
         
+        async def centre(null, window):
+            await window.call()
+        
         async def up(null, window):
-            await super().Handle
+            await window.move(-1)
+        
+        async def down(null, window):
+            await window.move(1)
+
+     

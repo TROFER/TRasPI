@@ -1,6 +1,5 @@
 import core
 import time
-import datetime
 import sqlite3
 import player
 import asyncio
@@ -50,13 +49,11 @@ class Main(core.render.Window):
         _e[0].text = time.strftime("%I:%M%p")
         _e[1].text = f"{core.hw.Battery.percentage()}%"
         _e[3].text = f"{core.hw.Audio.current()}%"
-        print(self.playlist[self.tracknumber])
-        print(f"Tracknumber {self.tracknumber}")
         _e[4].text = self.playlist[self.tracknumber][3]
         #_e[5].pos2 = 0 # <----------- INSERT FUNCTION HERE
-        _e[6].text = str(datetime.timedelta(seconds=0)) # <----------- INSERT FUNCTION HERE
+        _e[6].text = App.constrain_time(0) # <----------- INSERT FUNCTION HERE
         self.c.execute("SELECT duration FROM tags WHERE id = ?", [self.playlist[self.tracknumber][0]])
-        _e[7].text = str(datetime.timedelta(seconds=self.c.fetchone()[0]))
+        _e[7].text = App.constrain_time(self.c.fetchone()[0])
         _e[11].text = f"{self.tracknumber+1}/{len(self.playlist)}"
         self.elements = _e 
     

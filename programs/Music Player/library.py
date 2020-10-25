@@ -113,7 +113,7 @@ class Library:
         _tracks = []
         for item in os.scandir(path):
             if item.is_file():
-                if any(suffix in item.name for suffix in (".mp3", ".ogg", ".flac")):
+                if any(suffix in item.name for suffix in (".wav", ".flac")):
                     _tracks.append(f"{path}/{item.name}")
             elif item.is_dir():
                 _tracks += self._recr(f"{path}/{item.name}")
@@ -130,3 +130,4 @@ class Track:
         for attr in [self.tags.artist, self.tags.year, round(self.tags.filesize / 1048576, 2)]:
             if attr is not None:
                 self.desc += f", {attr}"
+        self.desc += " "
