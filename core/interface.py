@@ -71,6 +71,7 @@ class Interface:
             self.__application.terminate()
             self.__loop.run_until_complete(self.__application.close_all())
             self.__loop.run_until_complete(self.termintate.finish())
+            self.__loop.run_until_complete(self.next())
             self.__loop.run_until_complete(self.__loop.shutdown_asyncgens())
             self.__loop.stop()
             self.__loop.close()
@@ -107,8 +108,8 @@ class Interface:
     async def wait(self, *coro: Union[Coroutine, asyncio.Future]) -> list:
         return (await asyncio.wait(coro))[0]
 
-    async def next(self):
-        asyncio.sleep(0)
+    async def next(self, time: float=0):
+        asyncio.sleep(time)
 
     def application(self) -> "Application":
         """Returns the Application"""
