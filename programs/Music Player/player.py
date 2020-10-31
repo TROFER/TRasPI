@@ -298,10 +298,12 @@ class Player:
         self.__tracks.append(track)
         self.__insert(track, play)
         return track
+        
     def next(self, track: Track, play=True) -> Track:
         self.__tracks.appendleft(track)
         self.__insert(track, play)
         return track
+
     def extend(self, *tracks: Track, play=True) -> Track:
         self.__tracks.extend(track)
         self.__insert(track, play)
@@ -324,4 +326,4 @@ class Player:
             self.__tracks.remove(track)
             track._fut.set_result(Status.CLEAR)
 
-main = Player()
+main = Player(samplerate=48000)
