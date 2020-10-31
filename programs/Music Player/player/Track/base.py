@@ -1,7 +1,6 @@
 import asyncio
 from .. import util
 from ..Status import Status
-from interface import Interface
 from typing import IO, overload
 
 class TrackBase:

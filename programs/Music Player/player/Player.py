@@ -1,3 +1,4 @@
+import core
 import queue
 import asyncio
 import sounddevice as sd
@@ -5,7 +6,6 @@ from .Track import Track
 from .Status import Status
 from typing import Awaitable
 from collections import deque
-from interface import Interface
 
 class Player:
 
@@ -30,7 +30,7 @@ class Player:
         return self.__event.wait().__await__()
 
     async def __buffer_feeder(self):
-        Interface.schedule(self.__stream.start)
+        core.Interface.schedule(self.__stream.start)
         if not self.__buffer_feeder_active:
             self.__buffer_feeder_active = True
             try:
@@ -52,7 +52,7 @@ class Player:
 
     def __get_next_track(self, reason: Status=Status.DONE) -> bool:
         if self.__active is not None:
-            Interface.schedule(self.__active._close())
+            core.Interface.schedule(self.__active._close())
             self.__active._fut.set_result(reason)
 
         if not self.__tracks:
@@ -65,7 +65,7 @@ class Player:
 
         # Activating The Track
         track._duration.set(0)
-        Interface.schedule(self.__activate_track(track))
+        core.Interface.schedule(self.__activate_track(track))
         self.__preload()
 
         return True
@@ -98,14 +98,14 @@ class Player:
             outdata[:] = data
 
         self.__buffer.task_done()
-        Interface.loop.call_soon_threadsafe(self.__buffer_size.release)
+        core.Interface.loop.call_soon_threadsafe(self.__buffer_size.release)
 
     def __finished_callback(self):
         self.pause()
 
     def __preload(self):
         if self.__tracks and not self.__tracks[0]._ready.is_set():
-            Interface.schedule(self.__preload_wrap(self.__tracks[0]))
+            core.Interface.schedule(self.__preload_wrap(self.__tracks[0]))
     async def __preload_wrap(self, track: Track):
         try:
             await track._preload(self.__stream, self.__SIZE_BLOCK)
@@ -120,7 +120,7 @@ class Player:
     def __insert(self, track: Track, play: bool) -> Awaitable:
         if track._status.value is not Status.NONE:
             raise ValueError(f"Already Used Track: {track}")
-        fut = track._fut = Interface.loop.create_future()
+        fut = track._fut = core.Interface.loop.create_future()
         track._status.set(Status.QUEUE)
         track._samplerate = self.__stream.samplerate
         fut.add_done_callback(track._status.chain)
@@ -136,7 +136,7 @@ class Player:
     def play(self):
         if self.__event.is_set():
             self.__event.clear()
-            Interface.schedule(self.__buffer_feeder())
+            core.Interface.schedule(self.__buffer_feeder())
 
     def pause(self):
         self.__stream.stop()

@@ -1,5 +1,5 @@
+import core
 import asyncio
-from interface import Interface
 
 class ChangeState:
 
@@ -26,7 +26,7 @@ class ChangeState:
         return value
 
     def add(self, value) -> asyncio.Future:
-        fut = Interface.loop.create_future()
+        fut = core.Interface.loop.create_future()
         if getattr(self.val, self._func)(value):
             fut.set_result(self.val)
             return fut
