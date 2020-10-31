@@ -2,7 +2,7 @@ import core
 import os
 import sqlite3
 from app import App
-from tinytag import TinyTag
+from tinytag import TinyTag, TinyTagException
 
 class Library:
 
@@ -124,10 +124,13 @@ class Track:
     def __init__(self, path):
         self.title = ".".join(path.split("/")[-1].split(".")[:-1])
         self.path = path
-        self.tags = TinyTag.get(path)
+        try:
+            self.tags = TinyTag.get(path)
+        except TinyTagException:
+            print(path)
         self.genre, self.album = self.tags.genre, self.tags.album
         self.desc = self.tags.title
-        for attr in [self.tags.artist, self.tags.year, round(self.tags.filesize / 1048576, 2)]:
+        for attr in [self.tags.artist, self.tags.year, f"{round(self.tags.filesize / 1048576, 2)}Mb"]:
             if attr is not None:
                 self.desc += f", {attr}"
         self.desc += " "

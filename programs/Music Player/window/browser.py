@@ -22,25 +22,29 @@ class Top(menu.Menu):
         self.c.execute(f"SELECT * FROM {filter}")
         for group in self.c.fetchall():
             self.c.execute(f"SELECT count(*) FROM track WHERE {_fieldname} = ?", [group[0]])
-            _elements.append(menu.MenuElement(
-                Marquee(Vector(0, 0), f"{group[1][:16]} ({self.c.fetchone()[0]})", width=17, justify='L'),
-                data= (_fieldname, group[0], group[1]),
-                func= self.select))
+            _elements.append(self.elm(
+                mq:= Marquee(Vector(0, 0), f"{group[1]} ({self.c.fetchone()[0]}) {' '*18}", width=18, justify='L', flag=False, speed=0.5),
+                data= (_fieldname, group[0], group[1], mq),
+                func= self.select,
+                on_hover=mq.play,
+                on_dehover=lambda mq: (mq[3].pause(), mq[3].reset())))
         super().__init__(*_elements, title=title)
     
-    async def playall(self):
+    async def playall(self, data):
         self.c.execute("SELECT * FROM track") 
-        await player.Main(self.fetchall())
+        tracks = self.c.fetchall()
+        await player.Main(self.db, tracks)
     
-    async def shuffle(self):
+    async def shuffle(self, data):
         self.c.execute("SELECT * FROM track")
-        await player.Main(random.shuffle(self.fetchall()))
+        tracks = random.shuffle(self.c.fetchall())
+        await player.Main(self.db, tracks)
     
     async def select(self, filter):
         await Bottom(self.db, filter, filter[2])
 
 
-class Handle(core.input.Handler):
+class Handle(core.input.Handler, menu.Menu):
 
     window = Top
 
@@ -50,15 +54,6 @@ class Handle(core.input.Handler):
 
         async def left(null, window):
             window.finish(-1)
-        
-        async def centre(null, window):
-            await window.call()
-        
-        async def up(null, window):
-            await window.move(-1)
-        
-        async def down(null, window):
-            await window.move(1)
 
 class Bottom(menu.Menu):
 
@@ -75,25 +70,27 @@ class Bottom(menu.Menu):
                 func= self.shuffle)]
         self.c.execute(f"SELECT * FROM track WHERE {self.filter[0]} = ?", [self.filter[1]])
         for track in self.c.fetchall():
-            _elements.append(menu.MenuElement(
-                Marquee(Vector(0, 0), track[1], width=18, justify='L'),
-                data= track,
-                func= self.select))
+            _elements.append(self.elm(
+                mq := Marquee(Vector(0, 0), f"{track[1]}{' '*18}", width=18, justify='L', flag=False, speed=0.5),
+                data= (track, mq),
+                func= self.select,
+                on_hover=mq.play,
+                on_dehover=lambda mq: (mq[1].pause(), mq[1].reset())))
         super().__init__(*_elements, title=f"{self.filter[0][:-3].capitalize()} - {title}")
 
-    async def playall(self):
+    async def playall(self, data):
         self.c.execute(f"SELECT * FROM track WHERE {self.filter[0]} = ?", [self.filter[1]])
-        await player.Main(self.c.fetchall())
+        await player.Main(self.db, self.c.fetchall())
     
-    async def shuffle(self):
+    async def shuffle(self, data):
         self.c.execute(f"SELECT * FROM track WHERE {self.filter[0]} = ?", [self.filter[1]])
-        await player.Main(random.shuffle(self.c.fetchall()))
+        await player.Main(self.db, random.shuffle(self.c.fetchall()))
     
     async def select(self, data):
-        await player.Main(self.db, [data])
+        await player.Main(self.db, [data[0]])
 
 
-class Handle(core.input.Handler):
+class Handle(core.input.Handler, menu.Menu):
 
     window = Bottom
 
@@ -103,14 +100,3 @@ class Handle(core.input.Handler):
 
         async def left(null, window):
             window.finish(-1)
-        
-        async def centre(null, window):
-            await window.call()
-        
-        async def up(null, window):
-            await window.move(-1)
-        
-        async def down(null, window):
-            await window.move(1)
-
-     

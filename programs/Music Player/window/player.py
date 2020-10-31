@@ -19,7 +19,6 @@ class Main(core.render.Window):
         for track in playlist:
             track = list(track)
             track.append(player.Track(track[2]))
-            core.Interface.schedule(self.next())
             self.player.append(track[7])
         self.playlist = playlist
         self.elements = [
@@ -34,7 +33,7 @@ class Main(core.render.Window):
             Image(Vector(64, 55), App.asset.pause_icon), # Play / Pause Icon 8
             Image(Vector(40, 55), App.asset.rewind_icon), # Rewind Track Icon 9
             Image(Vector(80, 55), App.asset.next_icon),  # Next Track Icon 10
-            Text(Vector(3, 60), justify='L'),  # Playlist Position Indicator 11
+            Text(Vector(3, 55), justify='L'),  # Playlist Position Indicator 11
             Image(Vector(127, 15), App.asset.sleep_icon, just_w='R', just_h='C'), # Sleep Timer Icon 12
             Image(Vector(127, 60), App.asset.repeat_icon, just_w='R', just_h='C')] # Repeat Timer Icon 13
         App.interval(self.refresh)
@@ -67,10 +66,10 @@ class Main(core.render.Window):
 
     async def powersaving(self):
         if self.timeout.done():
-            core.hw.Backlight.fill(core.sys.const.colour)
+            core.hw.Backlight.fill(core.sys.var.colour)
             core.render.Render.enable()
         await asyncio.sleep(App.const.screen_timeout)
-        core.hw.Backlight.fill([core.sys.const.colour, 0, 30])
+        core.hw.Backlight.fill([core.sys.var.colour, 0, 30], force=True)
         core.render.Render.disable()
     
     async def sleeptimer(self, time: int):
@@ -79,6 +78,7 @@ class Main(core.render.Window):
 
     async def next(self):
         self.tracknumber += 1
+        self.elements[4].reset()
 
 class Handle(core.input.Handler):
 
@@ -86,25 +86,27 @@ class Handle(core.input.Handler):
 
     class press:
         async def right(null, window: Main):
-            window.timeout = core.Interface.schedule(powersaving())
-            window.player.next()
+            window.timeout = core.Interface.schedule(window.powersaving())
+            window.player.skip()
+            core.Interface.schedule(window.next)
 
         async def left(null, window: Main):
-            window.timeout = core.Interface.schedule(powersaving())
+            window.timeout = core.Interface.schedule(window.powersaving())
 
         async def centre(null, window: Main):
-            window.timeout = core.Interface.schedule(powersaving())
-            window.elements[8] = App.asset.play_icon if window.playerstate == 1 else App.asset.pause_icon
+            window.timeout = core.Interface.schedule(window.powersaving())
+            window.elements[8].image = App.asset.play_icon if window.playerstate else App.asset.pause_icon
             if window.playerstate:
                 window.player.pause()
             else:
                 window.player.play()
+            window.playerstate = not window.playerstate
 
         async def up(null, window: Main):
-            window.timeout = core.Interface.schedule(powersaving())
+            window.timeout = core.Interface.schedule(window.powersaving())
         
         async def down(null, window: Main):
-            window.timeout = core.Interface.schedule(powersaving())
+            window.timeout = core.Interface.schedule(window.powersaving())
 
 '''class Settings(menu.Menu):
 
