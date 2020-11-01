@@ -64,8 +64,8 @@ class Menu(Window):
         self.__index = 0
         self.__c_index = self.__index
 
-        self.title = title if isinstance(title, Primative) else Text(Vector(self.elm.X_OFFSET, self.elm.Y_OFFSET // 2), title, justify='L')
-        self.__title_line = Line(Vector(0, offset), Vector(SysConstant.width, offset))
+        self.title = title if isinstance(title, Primative) else Text(Vector(3, 5), title, justify='L')
+        self.__title_line = Line(Vector(0, 9), Vector(SysConstant.width, 9))
         self.__cursor = self.CURSORS[cursor]
 
         super().__init__()

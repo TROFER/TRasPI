@@ -42,16 +42,21 @@ class Backlight:
             pass
 
     def __colour_to_rgb(self, colour, hsv, force):
+        print("START")
+        print(colour, hsv, force)
         if not hasattr(colour, "__iter__"):
             colour = (colour,)
         if hsv:
-            _hsv = Vector(*colour, *(1 for i in range(max(3-len(colour), 0))))
-            _hsv = _hsv.map(Vector(1/360, 1, 1))
+            _hsv = Vector(*colour, *(100 for i in range(max(3-len(colour), 0))))
+            _hsv = _hsv.map(Vector(1/360, 0.01, 0.01))
         else:
             _hsv = Vector(*colorsys.rgb_to_hsv(*(Vector(*colour) / 255)))
         if not force:
-            _hsv = _hsv.map((1, 1, SysConfig.brightness / 100))
+            _hsv = Vector(*_hsv[:-1], SysConfig.brightness * 0.01)
+        print(hsv)
         rgb = colorsys.hsv_to_rgb(*_hsv)
+        print(rgb)
+        print("END")
         return (Vector(*rgb) * 255).int()
 
     def fill(self, colour, hsv=True, force=False):

@@ -37,7 +37,7 @@ class Audio:
 
     if _FLAG:
         def __update(self):
-            Process(f"amixer set Headphone {SysConfig.volume}%")
+            Process(f"amixer set Headphone {SysConfig.volume}%", shell=True)
     else:
         def __update(self):
             self.__volume.set(SysConfig.volume)

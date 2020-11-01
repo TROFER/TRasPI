@@ -4,7 +4,7 @@ from ...interface import Interface
 
 class Marquee(Text):
 
-    def __init__(self, anchor: Vector, text: str="Text", width: int=None, speed: int=1, small=True, flag=True, **kwargs):
+    def __init__(self, anchor: Vector, text: str="Text", width: int=None, speed: float=1, small=True, flag=True, **kwargs):
         super().__init__(anchor, text, **kwargs)
         self.width = abs(int(width)) if width else len(self.text)
         self.speed = abs(speed) if speed else 1
@@ -26,7 +26,7 @@ class Marquee(Text):
         self.text = text
 
     def copy(self):
-        if self.flag and not (self.small and len(self.text) <= self.width):
+        if self.flag and not (self.small and len(self.text.strip()) <= self.width):
             self.__time_buffer += Interface.application().deltatime()
             while self.__time_buffer > self.speed:
                 self.__time_buffer -= self.speed
