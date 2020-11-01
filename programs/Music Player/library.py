@@ -66,35 +66,46 @@ class Library:
             )
         """)       
         for _track in self._index():
-            self._add_track(Track(_track)) 
+            try:
+                self._add_track(Track(_track)) 
+            except ImportError:
+                continue
         self.c.close()
         self.db.commit()
 
     def rescan(self):
         self.c.execute("DELETE FROM track"), self.c.execute("DELETE FROM genre"), self.c.execute("DELETE FROM album"), self.c.execute("DELETE FROM tags")
         for _track in self._index():
-            self._add_track(Track(_track)) 
+            try:
+                self._add_track(Track(_track))
+            except ImportError:
+                continue
         self.c.close()
         self.db.commit()
 
     def _add_track(self, track):
         try:
             self.c.execute("INSERT INTO genre (name) values (?)", [track.genre])
-            track.genre = next(self.c.execute("SELECT id FROM genre WHERE name = ?", [track.genre]))[0]
+            self.c.execute("SELECT id FROM genre WHERE name = ?", [track.genre])
+            track.genre = self.c.fetchone()[0]
         except sqlite3.IntegrityError:
-            track.genre = next(self.c.execute("SELECT id FROM genre WHERE name = ?", [track.genre]))[0]
+            self.c.execute("SELECT id FROM genre WHERE name = ?", [track.genre])
+            track.genre = self.c.fetchone()[0]
         try:
             self.c.execute("INSERT INTO album (name) values (?)", [track.album])
-            track.album = next(self.c.execute("SELECT id FROM album WHERE name = ?", [track.album]))[0]
+            self.c.execute("SELECT id FROM album WHERE name = ?", [track.album])
+            track.album = self.c.fetchone()[0]
         except sqlite3.IntegrityError:
-            track.album = next(self.c.execute("SELECT id FROM album WHERE name = ?", [track.album]))[0]
+            self.c.execute("SELECT id FROM album WHERE name = ?", [track.album])
+            track.album = self.c.fetchone()[0]
         self.c.execute("""INSERT INTO tags (
             duration,
             artist,
             year,
             bitrate,
             size) VALUES (?, ?, ?, ?, ?)""", [track.tags.duration, track.tags.artist, track.tags.year, track.tags.bitrate, track.tags.filesize])
-        track.tags = next(self.c.execute("SELECT id FROM tags ORDER BY id DESC LIMIT 1"))[0]
+        self.c.execute("SELECT id FROM tags ORDER BY id DESC LIMIT 1")
+        track.tags = self.c.fetchone()[0]
         self.c.execute("""INSERT INTO track (
             title,
             path,
@@ -129,7 +140,9 @@ class Track:
         except TinyTagException:
             print(path)
         self.genre, self.album = self.tags.genre, self.tags.album
-        self.desc = self.tags.title
+        if self.genre is None or self.album is None:
+            raise ImportError
+        self.desc = self.title if self.tags.title is None else self.tags.title
         for attr in [self.tags.artist, self.tags.year, f"{round(self.tags.filesize / 1048576, 2)}Mb"]:
             if attr is not None:
                 self.desc += f", {attr}"

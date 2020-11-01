@@ -3,6 +3,7 @@ import time
 import sqlite3
 import player
 import asyncio
+import traceback #REEMMOMVE MEMEMEM
 from app import App
 from core import Vector
 from core.std import menu, numpad, query
@@ -16,9 +17,11 @@ class Main(core.render.Window):
         self.player = player.main
         self.playerstate = True
         self.tracknumber = 0
-        for track in playlist:
+        for i, track in enumerate(playlist):
             track = list(track)
             track.append(player.Track(track[2]))
+            core.Interface.schedule(self.next(track[-1]))
+            playlist[i] = track
             self.player.append(track[7])
         self.playlist = playlist
         self.elements = [
@@ -49,8 +52,9 @@ class Main(core.render.Window):
         _e[1].text = f"{core.hw.Battery.percentage()}%"
         _e[3].text = f"{core.hw.Audio.current()}%"
         _e[4].text = self.playlist[self.tracknumber][3]
-        #_e[5].pos2 = 0 # <----------- INSERT FUNCTION HERE
-        _e[6].text = App.constrain_time(0) # <----------- INSERT FUNCTION HERE
+        self.c.execute("SELECT duration FROM tags WHERE id = ?", [self.playlist[self.tracknumber][0]])
+        _e[5].pos2 = Vector(App.constrain(self.playlist[self.tracknumber][-1].duration('s'), 0, self.c.fetchone()[0], 3, 125), 40)
+        _e[6].text = App.constrain_time(self.playlist[self.tracknumber][-1].duration('s'))
         self.c.execute("SELECT duration FROM tags WHERE id = ?", [self.playlist[self.tracknumber][0]])
         _e[7].text = App.constrain_time(self.c.fetchone()[0])
         _e[11].text = f"{self.tracknumber+1}/{len(self.playlist)}"
@@ -65,18 +69,31 @@ class Main(core.render.Window):
             core.interface.render(element)
 
     async def powersaving(self):
+        print("Function Called")
         if self.timeout.done():
             core.hw.Backlight.fill(core.sys.var.colour)
-            core.render.Render.enable()
+            core.Interface.application().render.enable()
+        print("Waiting")
+        print(f"For {App.const.screen_timeout}")
         await asyncio.sleep(App.const.screen_timeout)
-        core.hw.Backlight.fill([core.sys.var.colour, 0, 30], force=True)
-        core.render.Render.disable()
+        print("Executing")
+        print([core.sys.var.colour, 0, 30])
+        try:
+            core.hw.Backlight.fill([core.sys.var.colour, 0, 30])
+            print("Next") 
+            core.hw.Backlight.fill([248, 36, 41])
+            core.Interface.application().render.disable()
+        except Exception as e:
+            print(e)
+            traceback.print_exception(e, e, e.__traceback__)
+        print("Completed")
     
     async def sleeptimer(self, time: int):
         await asyncio.sleep(time)
         core.hw.Power.halt()
 
-    async def next(self):
+    async def next(self, track):
+        await track
         self.tracknumber += 1
         self.elements[4].reset()
 
@@ -88,7 +105,6 @@ class Handle(core.input.Handler):
         async def right(null, window: Main):
             window.timeout = core.Interface.schedule(window.powersaving())
             window.player.skip()
-            core.Interface.schedule(window.next)
 
         async def left(null, window: Main):
             window.timeout = core.Interface.schedule(window.powersaving())

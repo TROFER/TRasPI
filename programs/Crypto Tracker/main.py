@@ -14,7 +14,7 @@ class Main(core.render.Window):
     CURRENCIES = [
         ["Ethereum", [248, 36, 41], 'eth-usd', App.asset.ethereum],
         ["Bitcoin", [34, 88, 96], 'btc-usd', App.asset.bitcoin],
-        ["Litecoin", [199, 12,100], 'ltc-usd', App.asset.bitcoin]]
+        ["Litecoin", [199, 12, 100], 'ltc-usd', App.asset.bitcoin]]
 
     def __init__(self):
         self.index = 0
@@ -31,7 +31,7 @@ class Main(core.render.Window):
     
     async def show(self):
         self.refresh()
-        Backlight.fill(*self.CURRENCIES[self.index][1])
+        Backlight.fill(self.CURRENCIES[self.index][1])
     
     def render(self):
         for element in self.elements:
