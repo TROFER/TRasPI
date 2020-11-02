@@ -16,6 +16,7 @@ class Library:
                 self.rescan()
         except (FileNotFoundError, sqlite3.OperationalError):
             self.rebuild()
+        App.var.rescan = False
         self.c.close()
         self.db.commit()
 
@@ -64,32 +65,21 @@ class Library:
                 id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                 tracks INT
             )
-        """)
-        self.c.execute("""
-            CREATE TABLE genre_radio(
-                id INTERGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                name text UNIQUE
-            )
-        """)
+        """)    
         self.c.execute("""
             CREATE TABLE radio(
-                id INTERGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                 name text,
                 url text,
-                genre_id,
-                FOREIGN KEY (genre_id) REFERENCES genre_radio(id)
+                genre_id int,
+                FOREIGN KEY (genre_id) REFERENCES genre(id)
             )
-        """)       
-        for _track in self._index():
-            try:
-                self._add_track(Track(_track)) 
-            except ImportError:
-                continue
-        self.c.close()
-        self.db.commit()
+        """)
+        self.rescan(clear=False)
 
-    def rescan(self):
-        self.c.execute("DELETE FROM track"), self.c.execute("DELETE FROM genre"), self.c.execute("DELETE FROM album"), self.c.execute("DELETE FROM tags")
+    def rescan(self, clear=True):
+        if clear:
+            self.c.execute("DELETE FROM track"), self.c.execute("DELETE FROM genre"), self.c.execute("DELETE FROM album"), self.c.execute("DELETE FROM tags")
         for _track in self._index([".wav", ".flac"]):
             try:
                 self._add_track(Track(_track))
@@ -110,16 +100,14 @@ class Library:
             self.c.execute("INSERT INTO genre (name) values (?)", [track.genre])
         except sqlite3.IntegrityError:
             pass
-        finally:
-            self.c.execute("SELECT id FROM genre WHERE name = ?", [track.genre])
-            track.genre = self.c.fetchone()[0]
+        self.c.execute("SELECT id FROM genre WHERE name = ?", [track.genre])
+        track.genre = self.c.fetchone()[0]
         try:
             self.c.execute("INSERT INTO album (name) values (?)", [track.album])
         except sqlite3.IntegrityError:
             pass
-        finally:
-            self.c.execute("SELECT id FROM album WHERE name = ?", [track.album])
-            track.album = self.c.fetchone()[0]
+        self.c.execute("SELECT id FROM album WHERE name = ?", [track.album])
+        track.album = self.c.fetchone()[0]
         self.c.execute("""INSERT INTO tags (
             duration,
             artist,
@@ -141,13 +129,16 @@ class Library:
         if len(_attr) != 3:
             raise ImportError
         try:
-            self.c.execute("INSERT INTO genre_radio"
+            self.c.execute("INSERT INTO genre (name) values (?)", [_station.genre])
+        except sqlite3.IntegrityError:
+            pass
+        self.c.execute("SELECT id FROM genre WHERE name = ?", [_station.genre])
+        _station.genre = self.c.fetchone()[0]
         self.c.execute("""INSERT INTO radio (
             name,
             url,
-            catgeory) VALUES (?, ?, ?)""", [_station.name, _station.url, _station.catgeory])
+            genre_id) VALUES (?, ?, ?)""", [_station.name, _station.url, _station.genre])
             
-
     def _index(self, extension: list):
         _tracks = []
         for _dir in [f"{core.sys.const.path}user/music"]:
@@ -161,7 +152,7 @@ class Library:
                 if any(suffix in item.name for suffix in extension):
                     _tracks.append(f"{path}/{item.name}")
             elif item.is_dir():
-                _tracks += self._recr(f"{path}/{item.name}")
+                _tracks += self._recr(f"{path}/{item.name}", extension)
         return _tracks
     
 class Track:

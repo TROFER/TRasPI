@@ -69,25 +69,14 @@ class Main(core.render.Window):
             core.interface.render(element)
 
     async def powersaving(self):
-        print("Function Called")
+        print("Future Status: ", self.timeout.done())
         if self.timeout.done():
             core.hw.Backlight.fill(core.sys.var.colour)
-            core.Interface.application().render.enable()
-        print("Waiting")
-        print(f"For {App.const.screen_timeout}")
+            #core.Interface.application().render.enable()
         await asyncio.sleep(App.const.screen_timeout)
-        print("Executing")
-        print([core.sys.var.colour, 0, 30])
-        try:
-            core.hw.Backlight.fill([core.sys.var.colour, 0, 30])
-            print("Next") 
-            core.hw.Backlight.fill([248, 36, 41])
-            core.Interface.application().render.disable()
-        except Exception as e:
-            print(e)
-            traceback.print_exception(e, e, e.__traceback__)
-        print("Completed")
-    
+        core.hw.Backlight.fill([core.sys.var.colour, 99, 25], force=True)
+        #core.Interface.application().render.disable()
+        
     async def sleeptimer(self, time: int):
         await asyncio.sleep(time)
         core.hw.Power.halt()
@@ -107,7 +96,8 @@ class Handle(core.input.Handler):
             window.player.skip()
 
         async def left(null, window: Main):
-            window.timeout = core.Interface.schedule(window.powersaving())
+            print(window.timeout.done())
+            #window.timeout = core.Interface.schedule(window.powersaving())
 
         async def centre(null, window: Main):
             window.timeout = core.Interface.schedule(window.powersaving())
