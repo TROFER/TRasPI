@@ -64,6 +64,21 @@ class Library:
                 id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                 tracks INT
             )
+        """)
+        self.c.execute("""
+            CREATE TABLE genre_radio(
+                id INTERGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                name text UNIQUE
+            )
+        """)
+        self.c.execute("""
+            CREATE TABLE radio(
+                id INTERGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                name text,
+                url text,
+                genre_id,
+                FOREIGN KEY (genre_id) REFERENCES genre_radio(id)
+            )
         """)       
         for _track in self._index():
             try:
@@ -75,27 +90,34 @@ class Library:
 
     def rescan(self):
         self.c.execute("DELETE FROM track"), self.c.execute("DELETE FROM genre"), self.c.execute("DELETE FROM album"), self.c.execute("DELETE FROM tags")
-        for _track in self._index():
+        for _track in self._index([".wav", ".flac"]):
             try:
                 self._add_track(Track(_track))
             except ImportError:
                 continue
+        for _stations in self._index([".station"]):
+            with open(_stations, 'r') as file:
+                for station in file.read().splitlines():
+                    try:
+                        self._add_station(station)
+                    except ImportError:
+                        continue
         self.c.close()
         self.db.commit()
 
     def _add_track(self, track):
         try:
             self.c.execute("INSERT INTO genre (name) values (?)", [track.genre])
-            self.c.execute("SELECT id FROM genre WHERE name = ?", [track.genre])
-            track.genre = self.c.fetchone()[0]
         except sqlite3.IntegrityError:
+            pass
+        finally:
             self.c.execute("SELECT id FROM genre WHERE name = ?", [track.genre])
             track.genre = self.c.fetchone()[0]
         try:
             self.c.execute("INSERT INTO album (name) values (?)", [track.album])
-            self.c.execute("SELECT id FROM album WHERE name = ?", [track.album])
-            track.album = self.c.fetchone()[0]
         except sqlite3.IntegrityError:
+            pass
+        finally:
             self.c.execute("SELECT id FROM album WHERE name = ?", [track.album])
             track.album = self.c.fetchone()[0]
         self.c.execute("""INSERT INTO tags (
@@ -113,18 +135,30 @@ class Library:
             genre_id,
             album_id,
             tags_id) VALUES (?, ?, ?, ?, ?, ?)""", [track.title, track.path, track.desc, track.genre, track.album, track.tags])
-                
-    def _index(self):
+
+    def _add_station(self, station):
+        _station = Station(*station.split("|"))
+        if len(_attr) != 3:
+            raise ImportError
+        try:
+            self.c.execute("INSERT INTO genre_radio"
+        self.c.execute("""INSERT INTO radio (
+            name,
+            url,
+            catgeory) VALUES (?, ?, ?)""", [_station.name, _station.url, _station.catgeory])
+            
+
+    def _index(self, extension: list):
         _tracks = []
         for _dir in [f"{core.sys.const.path}user/music"]:
-            _tracks += self._recr(_dir)
+            _tracks += self._recr(_dir, extension)
         return _tracks
     
-    def _recr(self, path):
+    def _recr(self, path, extension):
         _tracks = []
         for item in os.scandir(path):
             if item.is_file():
-                if any(suffix in item.name for suffix in (".wav", ".flac")):
+                if any(suffix in item.name for suffix in extension):
                     _tracks.append(f"{path}/{item.name}")
             elif item.is_dir():
                 _tracks += self._recr(f"{path}/{item.name}")
@@ -147,3 +181,8 @@ class Track:
             if attr is not None:
                 self.desc += f", {attr}"
         self.desc += " "
+
+class Station:
+
+    def __init__(self, name, url, catgeory):
+        self.name, self.url, self.genre = name, url, catgeory

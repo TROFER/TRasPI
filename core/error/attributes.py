@@ -24,10 +24,10 @@ class Constant(metaclass=MetaConstant):
 
 class SysConstant(Constant):
     width = 128
-    height = 64
+    height = 63
     path = os.path.dirname(os.path.abspath(sys.argv[0])).replace("\\", "/") + "/"
     platform = "NT" if os.name == "nt" else "UNIX"
-    pipeline = "GFXHAT" if platform == "UNIX" else "DUMMY" # "GFXHAT" or "DUMMY"
+    pipeline = "DUMMY" if platform == "UNIX" else "DUMMY" # "GFXHAT" or "DUMMY"
     process = multiprocessing.current_process().name == "MainProcess" # Running on Main Process
 
 # __all__ = ["Config"]
