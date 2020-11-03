@@ -3,7 +3,6 @@ import time
 import sqlite3
 import player
 import asyncio
-import traceback #REEMMOMVE MEMEMEM
 from app import App
 from core import Vector
 from core.std import menu, numpad, query
@@ -12,6 +11,7 @@ from core.render.element import Text, Line, Image, Marquee
 class Main(core.render.Window):
 
     def __init__(self, db, playlist):
+        self.timeout = core.Interface.loop.create_future()
         self.db = db
         self.c = self.db.cursor()
         self.player = player.main
@@ -26,7 +26,8 @@ class Main(core.render.Window):
         self.playlist = playlist
         self.elements = [
             Text(Vector(64 ,5)), # Title 0 
-            Text(Vector(127, 5), justify='R'), # Battery 1 
+            Image(Vector(1, 3), App.asset.battery_icon, just_w='L'),
+            Text(Vector(13, 5), justify='L'), # Battery 1 
             Line(Vector(0, 9), Vector(128, 9)), # 2
             Text(Vector(3, 15), justify='L'), # Volume 3
             Marquee(Vector(64, 32), width=16), # Track Description 4
@@ -43,39 +44,41 @@ class Main(core.render.Window):
         super().__init__()
     
     async def show(self):
-        self.timeout = core.Interface.schedule(self.powersaving())
+        self.powersaving()
         self.refresh()
     
     def refresh(self):
         _e = self.elements
         _e[0].text = time.strftime("%I:%M%p")
-        _e[1].text = f"{core.hw.Battery.percentage()}%"
-        _e[3].text = f"{core.hw.Audio.current()}%"
-        _e[4].text = self.playlist[self.tracknumber][3]
+        _e[2].text = f"{core.hw.Battery.percentage()}%"
+        _e[4].text = f"{core.hw.Audio.current()}%"
+        _e[5].text = self.playlist[self.tracknumber][3]
         self.c.execute("SELECT duration FROM tags WHERE id = ?", [self.playlist[self.tracknumber][0]])
-        _e[5].pos2 = Vector(App.constrain(self.playlist[self.tracknumber][-1].duration('s'), 0, self.c.fetchone()[0], 3, 125), 40)
-        _e[6].text = App.constrain_time(self.playlist[self.tracknumber][-1].duration('s'))
+        _e[6].pos2 = Vector(App.constrain(self.playlist[self.tracknumber][-1].duration('s'), 0, self.c.fetchone()[0], 3, 125), 40)
+        _e[7].text = App.constrain_time(self.playlist[self.tracknumber][-1].duration('s'))
         self.c.execute("SELECT duration FROM tags WHERE id = ?", [self.playlist[self.tracknumber][0]])
-        _e[7].text = App.constrain_time(self.c.fetchone()[0])
-        _e[11].text = f"{self.tracknumber+1}/{len(self.playlist)}"
+        _e[8].text = App.constrain_time(self.c.fetchone()[0])
+        _e[12].text = f"{self.tracknumber+1}/{len(self.playlist)}"
         self.elements = _e 
     
     def render(self):
         if True:
-            core.interface.render(self.elements[12])
-        if True:
             core.interface.render(self.elements[13])
-        for element in self.elements[:11]: # Only Non Conditional Elements
+        if True:
+            core.interface.render(self.elements[14])
+        for element in self.elements[:12]: # Only Non Conditional Elements
             core.interface.render(element)
 
-    async def powersaving(self):
-        print("Future Status: ", self.timeout.done())
-        if self.timeout.done():
+    async def _powersaving(self, future):
+        if future.done():
             core.hw.Backlight.fill(core.sys.var.colour)
             #core.Interface.application().render.enable()
         await asyncio.sleep(App.const.screen_timeout)
         core.hw.Backlight.fill([core.sys.var.colour, 99, 25], force=True)
         #core.Interface.application().render.disable()
+
+    def powersaving(self):
+        self.timeout = core.Interface.schedule(self._powersaving(self.timeout))
         
     async def sleeptimer(self, time: int):
         await asyncio.sleep(time)
@@ -92,15 +95,16 @@ class Handle(core.input.Handler):
 
     class press:
         async def right(null, window: Main):
-            window.timeout = core.Interface.schedule(window.powersaving())
+            window.powersaving()
             window.player.skip()
 
         async def left(null, window: Main):
-            print(window.timeout.done())
-            #window.timeout = core.Interface.schedule(window.powersaving())
+            window.player.next(player.Track(window.playlist[window.tracknumber][2]))
+            window.player.skip()
+            window.powersaving()
 
         async def centre(null, window: Main):
-            window.timeout = core.Interface.schedule(window.powersaving())
+            window.powersaving()
             window.elements[8].image = App.asset.play_icon if window.playerstate else App.asset.pause_icon
             if window.playerstate:
                 window.player.pause()
@@ -109,10 +113,10 @@ class Handle(core.input.Handler):
             window.playerstate = not window.playerstate
 
         async def up(null, window: Main):
-            window.timeout = core.Interface.schedule(window.powersaving())
+            window.powersaving()
         
         async def down(null, window: Main):
-            window.timeout = core.Interface.schedule(window.powersaving())
+            window.powersaving()
 
 '''class Settings(menu.Menu):
 

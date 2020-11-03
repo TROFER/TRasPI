@@ -15,10 +15,10 @@ class Top(menu.Menu):
         _elements = [
             menu.MenuElement(
                 Text(Vector(0, 0), "Play All", justify='L'),
-                func= self.playall),
+                func=self.playall),
             menu.MenuElement(
                 Text(Vector(0, 0), "Shuffle All", justify='L'),
-                func= self.shuffle)]
+                func=self.shuffle)]
         self.c.execute(f"SELECT * FROM {filter}")
         for group in self.c.fetchall():
             self.c.execute(f"SELECT count(*) FROM track WHERE {_fieldname} = ?", [group[0]])
@@ -31,14 +31,15 @@ class Top(menu.Menu):
         super().__init__(*_elements, title=title)
     
     async def playall(self, data):
-        self.c.execute("SELECT * FROM track") 
+        self.c.execute("SELECT * FROM track")
         tracks = self.c.fetchall()
         await player.Main(self.db, tracks)
-    
+        
     async def shuffle(self, data):
         self.c.execute("SELECT * FROM track")
-        tracks = random.shuffle(self.c.fetchall())
-        await player.Main(self.db, tracks)
+        _tracks = self.c.fetchall()
+        random.shuffle(_tracks)
+        await player.Main(self.db, _tracks)
     
     async def select(self, filter):
         await Bottom(self.db, filter, filter[2])
@@ -64,10 +65,10 @@ class Bottom(menu.Menu):
         _elements = [
             menu.MenuElement(
                 Text(Vector(0, 0), "Play All", justify='L'),
-                func= self.playall),
+                func=self.playall),
             menu.MenuElement(
                 Text(Vector(0, 0), "Shuffle All", justify='L'),
-                func= self.shuffle)]
+                func=self.shuffle)]
         self.c.execute(f"SELECT * FROM track WHERE {self.filter[0]} = ?", [self.filter[1]])
         for track in self.c.fetchall():
             _elements.append(self.elm(
@@ -79,12 +80,15 @@ class Bottom(menu.Menu):
         super().__init__(*_elements, title=f"{self.filter[0][:-3].capitalize()} - {title}")
 
     async def playall(self, data):
-        self.c.execute(f"SELECT * FROM track WHERE {self.filter[0]} = ?", [self.filter[1]])
+        self.c.execute(
+            f"SELECT * FROM track WHERE {self.filter[0]} = ?", [self.filter[1]])
         await player.Main(self.db, self.c.fetchall())
-    
+
     async def shuffle(self, data):
         self.c.execute(f"SELECT * FROM track WHERE {self.filter[0]} = ?", [self.filter[1]])
-        await player.Main(self.db, random.shuffle(self.c.fetchall()))
+        _tracks = self.c.fetchall()
+        random.shuffle(_tracks)
+        await player.Main(self.db, _tracks)
     
     async def select(self, data):
         await player.Main(self.db, [data[0]])

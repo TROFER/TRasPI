@@ -18,6 +18,7 @@ class App(core.type.Application):
         rewind_icon = core.asset.Image("player-rewind")
         next_icon = core.asset.Image("player-next")
         repeat_icon = core.asset.Image("player-repeat")
+        battery_icon = core.asset.Image("icon-battery")
 
     def constrain(n: int, start1: int, stop1: int, start2: int, stop2: int):
         "Returns n as a proportion of the specified range"
