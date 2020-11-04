@@ -12,16 +12,17 @@ class Main(core.render.Window):
 
     def __init__(self, db, playlist):
         self.timeout = core.Interface.loop.create_future()
+        self._sleeptimer = None
         self.db = db
         self.c = self.db.cursor()
         self.player = player.main
-        self._flag = False
+        self.repeat = 0
         self.playerstate = True
         self.tracknumber = 0
         for i, track in enumerate(playlist):
             track = list(track)
             track.append(player.Track(track[2]))
-            core.Interface.schedule(self.next(track[-1]))
+            core.Interface.schedule(self._next(track[-1]))
             playlist[i] = track
             self.player.append(track[7])
         self.playlist = playlist
@@ -63,9 +64,9 @@ class Main(core.render.Window):
         self.elements = _e 
     
     def render(self):
-        if True:
+        if self._sleeptimer is not None:
             core.interface.render(self.elements[13])
-        if True:
+        if self.repeat > 0:
             core.interface.render(self.elements[14])
         for element in self.elements[:12]: # Only Non Conditional Elements
             core.interface.render(element)
@@ -73,32 +74,26 @@ class Main(core.render.Window):
     async def _powersaving(self, future):
         if future.done():
             core.hw.Backlight.fill(core.sys.var.colour)
-            #core.Interface.application().render.enable()
         await asyncio.sleep(App.const.screen_timeout)
         core.hw.Backlight.fill([core.sys.var.colour, 99, 25], force=True)
-        #core.Interface.application().render.disable()
 
-    def powersaving(self):
-        self.timeout = core.Interface.schedule(self._powersaving(self.timeout))
+    def powersaving(self, cancel=False):
+        self.timeout.cancel()
+        if not cancel:
+            self.timeout = core.Interface.schedule(self._powersaving(self.timeout))
         
     async def sleeptimer(self, time: int):
         await asyncio.sleep(time)
         core.hw.Power.halt()
-    
-    async def repeat(infinite: bool):
-        if infinite:
-            self._flag = True
-        else:
-            self.player.next(player.Track(self.playlist[self.tracknumer][-1]))
 
-    async def next(self, track):
-        if self._flag:
+    async def _next(self, track):
+        if self.repeat != 0:
+            self.repeat -= 1
             self.player.next(player.Track(self.playlist[self.tracknumer][-1]))
-            self.player.skip()
         else:
             await track
             self.tracknumber += 1
-
+    
 class Handle(core.input.Handler):
 
     window = Main
@@ -123,13 +118,16 @@ class Handle(core.input.Handler):
             window.playerstate = not window.playerstate
 
         async def up(null, window: Main):
+            window.powersaving(cancel=True)
+            await Options(window)
             window.powersaving()
         
         async def down(null, window: Main): # Discuss with T
-            window.powersaving()
-            window.timeout.cancel()
+            window.powersaving(cancel=True)
             window.player.clear()
             window.player.cancel(window.playlist[window.tracknumber][-1])
+            if window._sleeptimer is not None:
+                window._sleeptimer.cancel()
             window.finish()
 
 class Options(menu.Menu):
@@ -137,25 +135,30 @@ class Options(menu.Menu):
     def __init__(self, player: Main):
         self.player = player
         _elements = [
-            menu.MenuElement(Text(Vector(0, 0), "Set Sleep Timer"),
-            data=(0, 180, 30),
+            menu.MenuElement(Text(Vector(0, 0), "Set Sleep Timer", justify='L'),
             func=self._sleeptimer),
-            menu.MenuElement(Text(Vector(0, 0), "Enable Repeat"),
+            menu.MenuElement(Text(Vector(0, 0), "Enable Repeat", justify='L'),
             data=("Enable Repeat?", "Repeat?", True),
             func=self._repeat),
-            menu.MenuElement(Text(Vector(0, 0), "Rescan Device"),
+            menu.MenuElement(Text(Vector(0, 0), "Rescan Device", justify='L'),
             func=self._rescan)]
-        super().__init__(_elements, title="Player Options")
+        super().__init__(*_elements, title="Player Options")
     
-    def _sleeptimer(self, data):
-        res = await numpad(*data)
-        if res != 0:
-            await self.player.sleeptimer(val)
+    async def _sleeptimer(self, data):
+        val = await numpad.Numpad(0, 180, 30, title="Sleep Timer") * 60
+        if val != 0:
+            self.player._sleeptimer = core.Interface.schedule(self.player.sleeptimer(val))
+        self.finish()
 
-    def _repeat(self, data):
-        res = await query(*data):
-        if res is not None:
-            await self.player.repeat()
+    async def _repeat(self, data):
+        res = await query.Query("Enable Repeat?", "Repeat", cancel=True)
+        if res:
+            count = await numpad.Numpad(-1, 10, 1, title="Repeat: -1 for inf")
+            self.player.repeat = count
+        self.finish()
 
-    def _rescan(self, data):
-        App.var.rescan = True
+    async def _rescan(self, data):
+        res = await query.Query("Re-scan Device?", "Rescan", cancel=True)
+        if res:
+            App.var.rescan = True
+        self.finish()
