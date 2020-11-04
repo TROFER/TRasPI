@@ -40,7 +40,7 @@ class Render:
             self.__lasttime = current_time
 
             self.__active.render()
-            self.__pipeline.execute()
+            await Interface.process(self.__pipeline.execute)
         except Exception as e:
             # print("Render:", "".join(traceback.format_exception(e, e, e.__traceback__)))
             log.core.error("Active: %s - %s: %s", self.__active, type(e).__name__, e)

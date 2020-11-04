@@ -33,4 +33,3 @@ class App(core.type.Application):
 
     async def hide():
         player.pause()
-        Main.timeout.cancel()

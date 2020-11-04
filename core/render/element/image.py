@@ -38,7 +38,7 @@ class Image(Primative):
         if self.just_h == 'B':
             off_h = self.anchor[1] + size[1]
         elif self.just_h == 'C':
-            off_h = self.anchor[1] + (size[1] // 2)
+            off_h = self.anchor[1] - (size[1] // 2)
         else:
             off_h = self.anchor[1]
 

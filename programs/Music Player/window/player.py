@@ -6,7 +6,7 @@ import asyncio
 from app import App
 from core import Vector
 from core.std import menu, numpad, query
-from core.render.element import Text, Line, Image, Marquee
+from core.render.element import Text, Line, Image, Marquee, Rectangle
 
 class Main(core.render.Window):
 
@@ -29,21 +29,21 @@ class Main(core.render.Window):
             Image(Vector(1, 3), App.asset.battery_icon, just_w='L'),
             Text(Vector(13, 5), justify='L'), # Battery 1 
             Line(Vector(0, 9), Vector(128, 9)), # 2
-            Text(Vector(3, 15), justify='L'), # Volume 3
-            Marquee(Vector(64, 32), width=16), # Track Description 4
+            Text(Vector(127, 14), justify='R'), # Volume 3
+            Marquee(Vector(64, 32), width=20), # Track Description 4
             Line(Vector(3, 40), Vector(3, 40), width=2), # Track Position Indicator 5
-            Text(Vector(3, 45), justify='L'), # Current Track Position 6
-            Text(Vector(127, 45), justify='R'), # Track Length 7
-            Image(Vector(64, 55), App.asset.pause_icon), # Play / Pause Icon 8
-            Image(Vector(40, 55), App.asset.rewind_icon), # Rewind Track Icon 9
-            Image(Vector(80, 55), App.asset.next_icon),  # Next Track Icon 10
+            Text(Vector(3, 46), justify='L'), # Current Track Position 6
+            Text(Vector(127, 46), justify='R'), # Track Length 7
+            Image(Vector(64, 53), App.asset.pause_icon, just_h='C'), # Play / Pause Icon 8
+            Image(Vector(52, 53), App.asset.rewind_icon, just_h='C', just_w='R'), # Rewind Track Icon 9
+            Image(Vector(77, 53), App.asset.next_icon, just_h='C', just_w='L'),  # Next Track Icon 10
             Text(Vector(3, 55), justify='L'),  # Playlist Position Indicator 11
-            Image(Vector(127, 15), App.asset.sleep_icon, just_w='R', just_h='C'), # Sleep Timer Icon 12
-            Image(Vector(127, 60), App.asset.repeat_icon, just_w='R', just_h='C')] # Repeat Timer Icon 13
+            Image(Vector(1, 11), App.asset.sleep_icon, just_w='L'), # Sleep Timer Icon 12
+            Image(Vector(127, 55), App.asset.repeat_icon, just_w='R')] # Repeat Timer Icon 13
         App.interval(self.refresh)
         super().__init__()
     
-    async def show(self):
+    async def show(self): 
         self.powersaving()
         self.refresh()
     
@@ -87,7 +87,7 @@ class Main(core.render.Window):
     async def next(self, track):
         await track
         self.tracknumber += 1
-        self.elements[4].reset()
+        self.elements[5].reset()
 
 class Handle(core.input.Handler):
 
@@ -105,7 +105,7 @@ class Handle(core.input.Handler):
 
         async def centre(null, window: Main):
             window.powersaving()
-            window.elements[8].image = App.asset.play_icon if window.playerstate else App.asset.pause_icon
+            window.elements[9].image = App.asset.play_icon if window.playerstate else App.asset.pause_icon
             if window.playerstate:
                 window.player.pause()
             else:
@@ -115,8 +115,11 @@ class Handle(core.input.Handler):
         async def up(null, window: Main):
             window.powersaving()
         
-        async def down(null, window: Main):
+        async def down(null, window: Main): # Discuss with T
             window.powersaving()
+            window.player.clear()
+            window.player.cancel(window.playlist[window.tracknumber][-1])
+            window.finish()
 
 '''class Settings(menu.Menu):
 
