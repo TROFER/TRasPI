@@ -127,6 +127,7 @@ class Handle(core.input.Handler):
         
         async def down(null, window: Main):
             window.powersaving()
+            window.timeout.cancel()
 
 class Options(menu.Menu):
 
@@ -138,9 +139,9 @@ class Options(menu.Menu):
             func=self._sleeptimer),
             menu.MenuElement(Text(Vector(0, 0), "Enable Repeat"),
             data=("Enable Repeat?", "Repeat?", True),
-            func=self.repeat),
+            func=self._repeat),
             menu.MenuElement(Text(Vector(0, 0), "Rescan Device"),
-            func=self.rescan)]
+            func=self._rescan)]
         super().__init__(_elements, title="Player Options")
     
     def _sleeptimer(self, data):
@@ -148,10 +149,10 @@ class Options(menu.Menu):
         if res != 0:
             await self.player.sleeptimer(val)
 
-    def repeat(self, data):
+    def _repeat(self, data):
         res = await query(*data):
         if res is not None:
             await self.player.repeat()
 
-    def rescan(self, data):
+    def _rescan(self, data):
         App.var.rescan = True
