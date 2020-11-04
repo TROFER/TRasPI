@@ -1,7 +1,7 @@
 import core
 from library import Library
 from app import App
-from window import browser, browser_radio
+from window import browser
 
 ############## TRASPI MUSIC PLAYER ###############
 ## Version: 1.1                                 ##
@@ -16,7 +16,6 @@ class Main(core.std.TabContainer):
         super().__init__(
             browser.Top(self.library.db, "genre", title="Genres - Music Pl..."),
             browser.Top(self.library.db, "album", title="Albums - Music Pl..."))
-            #browser_radio.Main(self.library.db)
 
 App.window = Main
 main = App
