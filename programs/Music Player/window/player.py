@@ -15,6 +15,7 @@ class Main(core.render.Window):
         self.db = db
         self.c = self.db.cursor()
         self.player = player.main
+        self._flag = False
         self.playerstate = True
         self.tracknumber = 0
         for i, track in enumerate(playlist):
@@ -83,11 +84,20 @@ class Main(core.render.Window):
     async def sleeptimer(self, time: int):
         await asyncio.sleep(time)
         core.hw.Power.halt()
+    
+    async def repeat(infinite: bool):
+        if infinite:
+            self._flag = True
+        else:
+            self.player.next(player.Track(self.playlist[self.tracknumer][-1]))
 
     async def next(self, track):
-        await track
-        self.tracknumber += 1
-        self.elements[4].reset()
+        if self._flag:
+            self.player.next(player.Track(self.playlist[self.tracknumer][-1]))
+            self.player.skip()
+        else:
+            await track
+            self.tracknumber += 1
 
 class Handle(core.input.Handler):
 
@@ -118,17 +128,30 @@ class Handle(core.input.Handler):
         async def down(null, window: Main):
             window.powersaving()
 
-'''class Settings(menu.Menu):
+class Options(menu.Menu):
 
-    def __init__(self):
+    def __init__(self, player: Main):
+        self.player = player
         _elements = [
             menu.MenuElement(Text(Vector(0, 0), "Set Sleep Timer"),
-            data=(numpad, ("Enable Repeat", "Repeat?")),
-            func= self.select),
+            data=(0, 180, 30),
+            func=self._sleeptimer),
             menu.MenuElement(Text(Vector(0, 0), "Enable Repeat"),
-            data= (query, (0, 90, 30, "Set Sleep Timer")),
-            func= self.)]
-        super().__init__(*_elements, title="Player Settings")
+            data=("Enable Repeat?", "Repeat?", True),
+            func=self.repeat),
+            menu.MenuElement(Text(Vector(0, 0), "Rescan Device"),
+            func=self.rescan)]
+        super().__init__(_elements, title="Player Options")
     
-    async def select(self, data):
-        await data[0](*data[1])'''
+    def _sleeptimer(self, data):
+        res = await numpad(*data)
+        if res != 0:
+            await self.player.sleeptimer(val)
+
+    def repeat(self, data):
+        res = await query(*data):
+        if res is not None:
+            await self.player.repeat()
+
+    def rescan(self, data):
+        App.var.rescan = True
