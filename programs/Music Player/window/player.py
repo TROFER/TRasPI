@@ -1,76 +1,49 @@
 import core
 import time
-import sqlite3
 import player
 import asyncio
 from app import App
 from core import Vector
 from core.std import menu, numpad, query
-from core.render.element import Text, Line, Image, Marquee, Rectangle
+from core.render.element import Text, Line, Image, Marquee
 
-class Main(core.render.Window):
+class Base(core.render.Window):
 
-    def __init__(self, db, playlist):
-        self.timeout = core.Interface.loop.create_future()
-        self._sleeptimer = None
+    PLAYER = player.main
+
+    def __init__(self, db):
         self.db = db
         self.c = self.db.cursor()
-        self.player = player.main
-        self.repeat = 0
+        self._sleeptimer = None
         self.playerstate = True
-        self.tracknumber = 0
-        for i, track in enumerate(playlist):
-            track = list(track)
-            track.append(player.Track(track[2]))
-            core.Interface.schedule(self._next(track[-1]))
-            playlist[i] = track
-            self.player.append(track[7])
-        self.playlist = playlist
-        self.elements = [
-            Text(Vector(64 ,5)), # Title 0 
-            Image(Vector(1, 3), App.asset.battery_icon, just_w='L'),
-            Text(Vector(13, 5), justify='L'), # Battery 1 
-            Line(Vector(0, 9), Vector(128, 9)), # 2
-            Text(Vector(127, 14), justify='R'), # Volume 3
-            Marquee(Vector(64, 32), width=20), # Track Description 4
-            Line(Vector(3, 40), Vector(3, 40), width=2), # Track Position Indicator 5
-            Text(Vector(3, 46), justify='L'), # Current Track Position 6
-            Text(Vector(127, 46), justify='R'), # Track Length 7
-            Image(Vector(64, 53), App.asset.pause_icon, just_h='C'), # Play / Pause Icon 8
-            Image(Vector(52, 53), App.asset.rewind_icon, just_h='C', just_w='R'), # Rewind Track Icon 9
-            Image(Vector(77, 53), App.asset.next_icon, just_h='C', just_w='L'),  # Next Track Icon 10
-            Text(Vector(3, 55), justify='L'),  # Playlist Position Indicator 11
-            Image(Vector(1, 11), App.asset.sleep_icon, just_w='L'), # Sleep Timer Icon 12
-            Image(Vector(127, 55), App.asset.repeat_icon, just_w='R')] # Repeat Timer Icon 13
+        # Elements
+        self.title = Text(Vector(64, 5))
+        self.battery_icon = Image(Vector(1, 3), App.asset.battery_icon, just_w='L')
+        self.battery_percentage = Text(Vector(13, 5), justify='L')
+        self.title_line = Line(Vector(0, 9), Vector(128, 9))
+        self.volume_percentage = Text(Vector(127, 14), justify='R')
+        self.sleep_icon = Image(Vector(1, 11), App.asset.sleep_icon, just_w='L')
+        self.marquee = Marquee(Vector(64, 32), width=20)
+        self.elements = {self.title, self.battery_icon, self.battery_percentage, self.title_line, self.volume_percentage, self.marquee}
+        # Scheduling 
+        self.timeout = core.Interface.loop.create_future()
         App.interval(self.refresh)
-        super().__init__()
     
-    async def show(self): 
+    def refresh(self):
+        self.title.text = time.strftime("%I:%M%p")
+        self.battery_percentage.text = f"{core.hw.Battery.percentage()}%"
+        self.volume_percentage.text = f"{core.hw.Audio.current()}%"
+    
+    async def show(self):
         self.powersaving()
         self.refresh()
     
-    def refresh(self):
-        _e = self.elements
-        _e[0].text = time.strftime("%I:%M%p")
-        _e[2].text = f"{core.hw.Battery.percentage()}%"
-        _e[4].text = f"{core.hw.Audio.current()}%"
-        _e[5].text = self.playlist[self.tracknumber][3]
-        self.c.execute("SELECT duration FROM tags WHERE id = ?", [self.playlist[self.tracknumber][0]])
-        _e[6].pos2 = Vector(App.constrain(self.playlist[self.tracknumber][-1].duration('s'), 0, self.c.fetchone()[0], 3, 125), 40)
-        _e[7].text = App.constrain_time(self.playlist[self.tracknumber][-1].duration('s'))
-        self.c.execute("SELECT duration FROM tags WHERE id = ?", [self.playlist[self.tracknumber][0]])
-        _e[8].text = App.constrain_time(self.c.fetchone()[0])
-        _e[12].text = f"{self.tracknumber+1}/{len(self.playlist)}"
-        self.elements = _e 
-    
     def render(self):
         if self._sleeptimer is not None:
-            core.interface.render(self.elements[13])
-        if self.repeat > 0:
-            core.interface.render(self.elements[14])
-        for element in self.elements[:12]: # Only Non Conditional Elements
-            core.interface.render(element)
-
+            core.interface.render(self.sleep_icon)
+        for element in self.elements:
+            core.Interface.render(element)
+    
     async def _powersaving(self, future):
         if future.done():
             core.hw.Backlight.fill(core.sys.var.colour)
@@ -81,15 +54,53 @@ class Main(core.render.Window):
         self.timeout.cancel()
         if not cancel:
             self.timeout = core.Interface.schedule(self._powersaving(self.timeout))
-        
-    async def sleeptimer(self, time: int):
+    
+     async def sleeptimer(self, time: int):
         await asyncio.sleep(time)
         core.hw.Power.halt()
+
+class Main(Base):
+
+    def __init__(self, db, playlist):
+        super().__init__(db)
+        self.tracknumber = 0
+        self.playlist = playlist
+        self.progress_bar = Line(Vector(3, 40), Vector(3, 40), width=2)
+        self.timestamp_current = Text(Vector(3, 46), justify='L')
+        self.timestamp_total = Text(Vector(127, 46), justify='R')
+        self.pause_icon = Image(Vector(64, 53), App.asset.pause_icon, just_h='C')
+        self.rewind_icon = Image(Vector(52, 53), App.asset.rewind_icon, just_h='C', just_w='R')
+        self.next_icon = Image(Vector(77, 53), App.asset.next_icon, just_h='C', just_w='L')
+        self.repeat_icon = Image(Vector(127, 55), App.asset.repeat_icon, just_w='R')
+        self.playlist_position = Text(Vector(3, 55), justify='L')
+        self.elements |= {self.progress_bar, self.timestamp_current, self.timestamp_total, self.pause_icon, self.rewind_icon, self.next_icon, self.playlist_position}
+    
+    def refresh(self):
+        super().refresh()
+        self.marquee.text = self.playlist[self.tracknumber][3]
+        self.c.execute("SELECT duration FROM tags WHERE id = ?", [self.playlist[self.tracknumber][0]])
+        self.progress_bar.pos2 = Vector(App.constrain(self.playlist[self.tracknumber][-1].duration('s'), 0, self.c.fetchone()[0], 3, 125), 40)
+        self.timestamp_current.text = App.constrain_time(self.playlist[self.tracknumber][-1].duration('s'))
+        self.timestamp_total.text = App.constrain_time(self.c.fetchone()[0])
+        self.playlist_position.text = f"{self.tracknumber+1}/{len(self.playlist)}"
+    
+    def render(self):
+        if self.repeat > 0:
+            core.interface.render(self.repeat_icon)
+        super().render()
+    
+    def fill(self, playlist):
+        for i, track in enumerate(playlist):
+            track = list(track)
+            track.append(player.Track(track[2]))
+            core.Interface.schedule(self._next(track[-1]))
+            playlist[i] = track
+            self.PLAYER.append(track[7])
 
     async def _next(self, track):
         if self.repeat != 0:
             self.repeat -= 1
-            self.player.next(player.Track(self.playlist[self.tracknumer][-1]))
+            self.PLAYER.next(player.Track(self.playlist[self.tracknumer][-1]))
         else:
             await track
             self.tracknumber += 1
@@ -101,20 +112,20 @@ class Handle(core.input.Handler):
     class press:
         async def right(null, window: Main):
             window.powersaving()
-            window.player.skip()
+            window.PLAYER.skip()
 
         async def left(null, window: Main):
-            window.player.next(player.Track(window.playlist[window.tracknumber][2]))
-            window.player.skip()
+            window.PLAYER.next(player.Track(window.playlist[window.tracknumber][2]))
+            window.PLAYER.skip()
             window.powersaving()
 
         async def centre(null, window: Main):
             window.powersaving()
-            window.elements[9].image = App.asset.play_icon if window.playerstate else App.asset.pause_icon
+            window.pause_icon.image = App.asset.play_icon if window.playerstate else App.asset.pause_icon
             if window.playerstate:
-                window.player.pause()
+                window.PLAYER.pause()
             else:
-                window.player.play()
+                window.PLAYER.play()
             window.playerstate = not window.playerstate
 
         async def up(null, window: Main):
@@ -124,8 +135,8 @@ class Handle(core.input.Handler):
         
         async def down(null, window: Main): # Discuss with T
             window.powersaving(cancel=True)
-            window.player.clear()
-            window.player.cancel(window.playlist[window.tracknumber][-1])
+            window.PLAYER.clear()
+            window.PLAYER.cancel(window.playlist[window.tracknumber][-1])
             if window._sleeptimer is not None:
                 window._sleeptimer.cancel()
             window.finish()
@@ -148,17 +159,14 @@ class Options(menu.Menu):
         val = await numpad.Numpad(0, 180, 30, title="Sleep Timer") * 60
         if val != 0:
             self.player._sleeptimer = core.Interface.schedule(self.player.sleeptimer(val))
-        self.finish()
 
     async def _repeat(self, data):
         res = await query.Query("Enable Repeat?", "Repeat", cancel=True)
         if res:
             count = await numpad.Numpad(-1, 10, 1, title="Repeat: -1 for inf")
             self.player.repeat = count
-        self.finish()
 
     async def _rescan(self, data):
         res = await query.Query("Re-scan Device?", "Rescan", cancel=True)
         if res:
             App.var.rescan = True
-        self.finish()
