@@ -55,7 +55,7 @@ class Base(core.render.Window):
         if not cancel:
             self.timeout = core.Interface.schedule(self._powersaving(self.timeout))
     
-     async def sleeptimer(self, time: int):
+    async def sleeptimer(self, time: int):
         await asyncio.sleep(time)
         core.hw.Power.halt()
 
@@ -63,8 +63,9 @@ class Main(Base):
 
     def __init__(self, db, playlist):
         super().__init__(db)
+        self.repeat = 0
         self.tracknumber = 0
-        self.playlist = playlist
+        self.playlist = self.fill(playlist)
         self.progress_bar = Line(Vector(3, 40), Vector(3, 40), width=2)
         self.timestamp_current = Text(Vector(3, 46), justify='L')
         self.timestamp_total = Text(Vector(127, 46), justify='R')
@@ -72,17 +73,18 @@ class Main(Base):
         self.rewind_icon = Image(Vector(52, 53), App.asset.rewind_icon, just_h='C', just_w='R')
         self.next_icon = Image(Vector(77, 53), App.asset.next_icon, just_h='C', just_w='L')
         self.repeat_icon = Image(Vector(127, 55), App.asset.repeat_icon, just_w='R')
-        self.playlist_position = Text(Vector(3, 55), justify='L')
+        self.playlist_position = Text(Vector(3, 59), justify='L')
         self.elements |= {self.progress_bar, self.timestamp_current, self.timestamp_total, self.pause_icon, self.rewind_icon, self.next_icon, self.playlist_position}
         self._fill(playlist)
     
     def refresh(self):
         super().refresh()
-        self.marquee.text = self.playlist[self.tracknumber][3]
         self.c.execute("SELECT duration FROM tags WHERE id = ?", [self.playlist[self.tracknumber][0]])
-        self.progress_bar.pos2 = Vector(App.constrain(self.playlist[self.tracknumber][-1].duration('s'), 0, self.c.fetchone()[0], 3, 125), 40)
+        _cur_duration = self.c.fetchone()[0]
+        self.marquee.text = self.playlist[self.tracknumber][3]
+        self.progress_bar.pos2 = Vector(App.constrain(self.playlist[self.tracknumber][-1].duration('s'), 0, _cur_duration, 3, 125), 40)
         self.timestamp_current.text = App.constrain_time(self.playlist[self.tracknumber][-1].duration('s'))
-        self.timestamp_total.text = App.constrain_time(self.c.fetchone()[0])
+        self.timestamp_total.text = App.constrain_time(_cur_duration)
         self.playlist_position.text = f"{self.tracknumber+1}/{len(self.playlist)}"
     
     def render(self):
@@ -97,6 +99,7 @@ class Main(Base):
             core.Interface.schedule(self._next(track[-1]))
             playlist[i] = track
             self.PLAYER.append(track[7])
+        return playlist
 
     async def _next(self, track):
         if self.repeat != 0:
