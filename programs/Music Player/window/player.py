@@ -74,6 +74,7 @@ class Main(Base):
         self.repeat_icon = Image(Vector(127, 55), App.asset.repeat_icon, just_w='R')
         self.playlist_position = Text(Vector(3, 55), justify='L')
         self.elements |= {self.progress_bar, self.timestamp_current, self.timestamp_total, self.pause_icon, self.rewind_icon, self.next_icon, self.playlist_position}
+        self._fill(playlist)
     
     def refresh(self):
         super().refresh()
@@ -89,7 +90,7 @@ class Main(Base):
             core.interface.render(self.repeat_icon)
         super().render()
     
-    def fill(self, playlist):
+    def _fill(self, playlist):
         for i, track in enumerate(playlist):
             track = list(track)
             track.append(player.Track(track[2]))
