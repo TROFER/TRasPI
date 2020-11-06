@@ -22,9 +22,10 @@ class Top(menu.Menu):
         self.c.execute(f"SELECT * FROM {filter}")
         for group in self.c.fetchall():
             self.c.execute(f"SELECT count(*) FROM track WHERE {_fieldname} = ?", [group[0]])
-            if self.c.fetchone()[0] != 0:
+            _total = self.c.fetchone()[0]
+            if _total != 0:
                 _elements.append(self.elm(
-                    mq:= Marquee(Vector(0, 0), f"{group[1]} ({self.c.fetchone()[0]}) {' '*18}", width=18, justify='L', flag=False, speed=0.5),
+                    mq:= Marquee(Vector(0, 0), f"{group[1]} ({_total}) {' '*18}", width=18, justify='L', flag=False, speed=0.5),
                     data= (_fieldname, group[0], group[1], mq),
                     func= self.select,
                     on_hover=mq.play,

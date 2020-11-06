@@ -13,6 +13,7 @@ class App(core.type.Application):
 
     class asset(core.asset.Pool):
         sleep_icon = core.asset.Image("icon-sleep")
+        stop_icon = core.asset.Image("player-stop")
         play_icon = core.asset.Image("player-play")
         pause_icon = core.asset.Image("player-pause")
         rewind_icon = core.asset.Image("player-rewind")

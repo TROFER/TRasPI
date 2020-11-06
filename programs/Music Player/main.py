@@ -1,7 +1,7 @@
 import core
 from library import Library
 from app import App
-from window import browser
+from window import browser, radio
 
 ############## TRASPI MUSIC PLAYER ###############
 ## Version: 1.1                                 ##
@@ -14,7 +14,8 @@ class Carousel(core.std.TabContainer):
     def __init__(self, library):
         super().__init__(
             browser.Top(library.db, "genre", title="Genres - Music Pl..."),
-            browser.Top(library.db, "album", title="Albums - Music Pl..."))
+            browser.Top(library.db, "album", title="Albums - Music Pl..."),
+            radio.Top(library.db))
 
 class Main(core.render.Window):
     
