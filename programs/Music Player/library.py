@@ -63,7 +63,15 @@ class Library:
         self.c.execute("""
             CREATE TABLE playlist(
                 id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                tracks INT
+                name text
+            )
+        """)    
+        self.c.execute("""
+            CREATE TABLE playlist_items(
+                playlist_id int,
+                track_id int,
+                FOREIGN KEY (playlist_id) REFERENCES playlist(id),
+                FOREIGN KEY (track_id) REFERENCES track(id)
             )
         """)    
         self.c.execute("""
@@ -87,15 +95,21 @@ class Library:
                 continue
         for _stations in self._index([".station"]):
             with open(_stations, 'r') as file:
-                for station in file.read().splitlines():
+                for _station in file.read().splitlines():
                     try:
-                        self._add_station(station)
+                        self._add_station(_station)
                     except ImportError:
                         continue
+        for _playlist in self._index([".playlist"]):
+            try:
+                self._add_playlist(_playlist)
+            except ImportError:
+                continue
         self.c.close()
         self.db.commit()
 
-    def _add_track(self, track):
+    def _add_track(
+        self, track):
         try:
             self.c.execute("INSERT INTO genre (name) values (?)", [track.genre])
         except sqlite3.IntegrityError:
@@ -124,10 +138,39 @@ class Library:
             album_id,
             tags_id) VALUES (?, ?, ?, ?, ?, ?)""", [track.title, track.path, track.desc, track.genre, track.album, track.tags])
 
-    def _add_station(self, station):
-        _station = Station(*station.split("|"))
-        if len(_attr) != 3:
+    def _add_playlist(
+        self, filepath):
+
+        shortcuts = {
+            "traspi-music" : f"{core.sys.const.path}user/music/"
+        }
+
+        with open(filepath, 'r') as file:
+            _file = file.read().splitlines()
+            if len(_file) != 0:
+                _name = filepath.split("/")[-1].split(".")[0]
+                self.c.execute("INSERT INTO playlist (name) VALUES (?)", [_name])
+                self.c.execute("SELECT id FROM playlist WHERE name = ?", [_name])
+                _playlist_id = self.c.fetchone()[0] 
+                for _track_path in _file:
+                    if "|" in _track_path:
+                        try:
+                            _split = (_track_path.split("|", 1))
+                            _track_path = shortcuts[_split[0]] + _split[1]
+                        except KeyError:
+                            pass
+                    self.c.execute("SELECT id FROM track WHERE path = ?", [_track_path])
+                    _res = self.c.fetchone()
+                    if _res is not None:
+                        _track_id = _res[0]
+                        self.c.execute("INSERT INTO playlist_items (playlist_id, track_id) VALUES (?, ?)", [_playlist_id, _track_id])
+
+    def _add_station(
+        self, station):
+        _station = station.split("|")
+        if len(_station) != 3:
             raise ImportError
+        _station = Station(*_station)
         try:
             self.c.execute("INSERT INTO genre (name) values (?)", [_station.genre])
         except sqlite3.IntegrityError:
@@ -154,7 +197,8 @@ class Library:
             elif item.is_dir():
                 _tracks += self._recr(f"{path}/{item.name}", extension)
         return _tracks
-    
+
+
 class Track:
 
     def __init__(self, path):
@@ -172,6 +216,7 @@ class Track:
             if attr is not None:
                 self.desc += f", {attr}"
         self.desc += " "
+
 
 class Station:
 
