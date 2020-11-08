@@ -1,7 +1,7 @@
 import time
 import ctypes
 import functools as __functools
-import keys
+from . import keys
 
 # Import the SendInput object
 SendInput = ctypes.windll.user32.SendInput
