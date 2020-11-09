@@ -39,14 +39,16 @@ class Render:
             self.deltatime = current_time - self.__lasttime
             self.__lasttime = current_time
 
-            self.__active.render()
-            await Interface.process(self.__pipeline.execute)
+            await Interface.process(self.__execute)
         except Exception as e:
-            # print("Render:", "".join(traceback.format_exception(e, e, e.__traceback__)))
             log.core.error("Active: %s - %s: %s", self.__active, type(e).__name__, e)
             log.traceback.error("Could not Render Active Frame: %s", self.__active, exc_info=e)
         if Interface.active():
             Interface.schedule(self.execute())
+
+    def __execute(self):
+        self.__active.render()
+        self.__pipeline.execute()
 
     def submit(self, obj: Primative):
         self.__pipeline.submit(obj)
