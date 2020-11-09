@@ -17,9 +17,9 @@ class Numpad(Window):
             default = min
         self.min, self.max, self.number, self.step = min, max, default, 1
         self.elements = [
-            Text(Vector(64, 16), title[0:18]),
+            Text(Vector(3, 5), title[0:18], justify='L'),
             Text(Vector(64, 32), self.number),  # Selected Number
-            Text(Vector(3, 48), f"-{self.step}"),  # Step Left
+            Text(Vector(3, 48), f"-{self.step}", justify='L'),  # Step Left
             Text(Vector(125, 48), f"+{self.step}", justify='R')  # Step Right
         ]
 

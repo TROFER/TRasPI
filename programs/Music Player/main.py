@@ -1,6 +1,7 @@
 import core
-from library import Library
+
 from app import App
+from library import Library
 from window import browser, playlist, radio
 
 ############## TRASPI MUSIC PLAYER ###############
@@ -8,6 +9,7 @@ from window import browser, playlist, radio
 ## Created By: Tristan Day                      ##
 ## Date: 2020                                   ##
 ##################################################
+
 
 class Carousel(core.std.TabContainer):
 
@@ -20,9 +22,10 @@ class Carousel(core.std.TabContainer):
 
 
 class Main(core.render.Window):
-    
+
     def __init__(self):
-        self.splashscreen = core.render.element.Image(core.Vector(0, 0), App.asset.splashscreen, just_w='L')
+        self.splashscreen = core.render.element.Image(
+            core.Vector(0, 0), App.asset.splashscreen, just_w='L')
         self._flag = False
         App.interval(self._await)
         super().__init__()

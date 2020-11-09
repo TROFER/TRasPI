@@ -41,6 +41,16 @@ class WindowPower(core.render.Window):
     def refresh(self):
         self.time.text = time.strftime(TIME_FORMAT)
 
+class Splashscreen(core.render.Window):
+
+    def __init__(self, eventname : str, function):
+        self.function = function
+        self.title = core.element.Text(core.Vector(64, 32), eventname)
+    
+    def render(self):
+        core.Interface.render(self.title)
+
+
 class Handle(core.input.Handler):
 
     window = WindowPower

@@ -1,8 +1,11 @@
-import core
 import os
 import sqlite3
+
+import core
+
 from app import App
 from tinytag import TinyTag, TinyTagException
+
 
 class Library:
 
@@ -65,7 +68,7 @@ class Library:
                 id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                 name text
             )
-        """)    
+        """)
         self.c.execute("""
             CREATE TABLE playlist_items(
                 playlist_id int,
@@ -73,7 +76,7 @@ class Library:
                 FOREIGN KEY (playlist_id) REFERENCES playlist(id),
                 FOREIGN KEY (track_id) REFERENCES track(id)
             )
-        """)    
+        """)
         self.c.execute("""
             CREATE TABLE radio(
                 id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -87,7 +90,8 @@ class Library:
 
     def rescan(self, clear=True):
         if clear:
-            self.c.execute("DELETE FROM track"), self.c.execute("DELETE FROM genre"), self.c.execute("DELETE FROM album"), self.c.execute("DELETE FROM tags")
+            self.c.execute("DELETE FROM track"), self.c.execute("DELETE FROM genre"), self.c.execute(
+                "DELETE FROM album"), self.c.execute("DELETE FROM tags")
         for _track in self._index([".wav", ".flac"]):
             try:
                 self._add_track(Track(_track))
@@ -109,15 +113,17 @@ class Library:
         self.db.commit()
 
     def _add_track(
-        self, track):
+            self, track):
         try:
-            self.c.execute("INSERT INTO genre (name) values (?)", [track.genre])
+            self.c.execute(
+                "INSERT INTO genre (name) values (?)", [track.genre])
         except sqlite3.IntegrityError:
             pass
         self.c.execute("SELECT id FROM genre WHERE name = ?", [track.genre])
         track.genre = self.c.fetchone()[0]
         try:
-            self.c.execute("INSERT INTO album (name) values (?)", [track.album])
+            self.c.execute(
+                "INSERT INTO album (name) values (?)", [track.album])
         except sqlite3.IntegrityError:
             pass
         self.c.execute("SELECT id FROM album WHERE name = ?", [track.album])
@@ -139,19 +145,21 @@ class Library:
             tags_id) VALUES (?, ?, ?, ?, ?, ?)""", [track.title, track.path, track.desc, track.genre, track.album, track.tags])
 
     def _add_playlist(
-        self, filepath):
+            self, filepath):
 
         shortcuts = {
-            "traspi-music" : f"{core.sys.const.path}user/music/"
+            "traspi-music": f"{core.sys.const.path}user/music/"
         }
 
         with open(filepath, 'r') as file:
             _file = file.read().splitlines()
             if len(_file) != 0:
                 _name = filepath.split("/")[-1].split(".")[0]
-                self.c.execute("INSERT INTO playlist (name) VALUES (?)", [_name])
-                self.c.execute("SELECT id FROM playlist WHERE name = ?", [_name])
-                _playlist_id = self.c.fetchone()[0] 
+                self.c.execute(
+                    "INSERT INTO playlist (name) VALUES (?)", [_name])
+                self.c.execute(
+                    "SELECT id FROM playlist WHERE name = ?", [_name])
+                _playlist_id = self.c.fetchone()[0]
                 for _track_path in _file:
                     if "|" in _track_path:
                         try:
@@ -159,20 +167,23 @@ class Library:
                             _track_path = shortcuts[_split[0]] + _split[1]
                         except KeyError:
                             pass
-                    self.c.execute("SELECT id FROM track WHERE path = ?", [_track_path])
+                    self.c.execute(
+                        "SELECT id FROM track WHERE path = ?", [_track_path])
                     _res = self.c.fetchone()
                     if _res is not None:
                         _track_id = _res[0]
-                        self.c.execute("INSERT INTO playlist_items (playlist_id, track_id) VALUES (?, ?)", [_playlist_id, _track_id])
+                        self.c.execute("INSERT INTO playlist_items (playlist_id, track_id) VALUES (?, ?)", [
+                                       _playlist_id, _track_id])
 
     def _add_station(
-        self, station):
+            self, station):
         _station = station.split("|")
         if len(_station) != 3:
             raise ImportError
         _station = Station(*_station)
         try:
-            self.c.execute("INSERT INTO genre (name) values (?)", [_station.genre])
+            self.c.execute("INSERT INTO genre (name) values (?)", [
+                           _station.genre])
         except sqlite3.IntegrityError:
             pass
         self.c.execute("SELECT id FROM genre WHERE name = ?", [_station.genre])
@@ -181,13 +192,13 @@ class Library:
             name,
             url,
             genre_id) VALUES (?, ?, ?)""", [_station.name, _station.url, _station.genre])
-            
+
     def _index(self, extension: list):
         _tracks = []
         for _dir in [f"{core.sys.const.path}user/music"]:
             _tracks += self._recr(_dir, extension)
         return _tracks
-    
+
     def _recr(self, path, extension):
         _tracks = []
         for item in os.scandir(path):
