@@ -109,7 +109,7 @@ class Interface:
         return (await asyncio.wait(coro))[0]
 
     async def next(self, time: float=0):
-        asyncio.sleep(time)
+        await asyncio.sleep(time)
 
     def application(self) -> "Application":
         """Returns the Application"""
@@ -160,12 +160,13 @@ class Interface:
                     f = self.func()
                     if asyncio.iscoroutinefunction(self.func):
                         await f
+                    err_count = max(err_count - 1, 0)
                 except Exception as e:
                     log.core.warning("%s - %s: %s", self, type(e).__name__, e)
                     log.traceback.error("%s", self, exc_info=e)
                     err_count += 1
                     if err_count >= 3:
-                        log.core.error("Interval has thrown too many errors and has been cancelled - %s", self)
+                        log.core.error("%s - has thrown too many errors and has been cancelled", self)
                         self.cancel()
                 await asyncio.sleep(self.delay)
 
