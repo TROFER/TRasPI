@@ -10,7 +10,7 @@ class Process:
     STDOUT = subprocess.STDOUT
     DEVNULL = subprocess.DEVNULL
 
-    def __init__(self, args, stdout=PIPE, stderr=PIPE, stdin=None, shell=False, decode=True, **kwargs):
+    def __init__(self, args, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=False, decode=True, **kwargs):
         self.args = args
         self.__started = asyncio.Event()
         # self.__proc
@@ -42,16 +42,16 @@ class Process:
             raise ValueError("Process has not started")
         return self.__proc
 
-    async def communicate(self, input=None) -> subprocess.CompletedProcess:
+    async def communicate(self, input=None) -> (bytes, bytes):
         await self.__started.wait()
-        completed = subprocess.CompletedProcess(self.args, self.__proc.returncode, *await self.__proc.communicate(input))
+        return await self.__proc.communicate(input)
+
+    async def read(self) -> subprocess.CompletedProcess:
+        completed = subprocess.CompletedProcess(self.args, self.__proc.returncode, *await self.communicate())
         if self.__decode:
             completed.stdout = completed.stdout.decode()
             completed.stderr = completed.stderr.decode()
         return completed
-
-    async def read(self) -> subprocess.CompletedProcess:
-        return await self.communicate()
 
 class ProcessFast:
 
@@ -83,4 +83,3 @@ class ProcessFast:
             completed.stdout = completed.stdout.decode()
             completed.stderr = completed.stderr.decode()
         return completed
-
