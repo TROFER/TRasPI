@@ -4,7 +4,7 @@ from core.render.element import Marquee, Image, Text
 from core import Vector
 from window import player
 
-class Top(menu.Menu):
+class Browser(menu.Menu):
 
     def __init__(self, db):
         self.db = db
@@ -18,26 +18,63 @@ class Top(menu.Menu):
                     _elements.append(self.elm(
                         mq:= Marquee(Vector(0, 0), f"{_genre[1]} ({_items}) {' '*18}", width=18, justify='L', flag=False, speed=0.5),
                         data= (self.db, _genre),
-                        func= Bottom,
+                        func=self.__select,
                         on_hover= mq.play,
                         on_dehover= lambda  mq: (mq[3].pause(), mq[3].reset())))
         super().__init__(*_elements, title="Radio - Music Pl...")
+    
 
-class Bottom(menu.Menu):
+    async def __select(self, data):
+        await Sub(data)
 
-    def __init__(self, db, genre):
-        self.db = db
+
+class Handle(core.input.Handler, menu.Menu):
+
+    window = Browser
+
+    class press:
+        async def right(null, window):
+            window.finish(1)
+
+
+        async def left(null, window):
+            window.finish(-1)
+
+
+class Sub(menu.Menu):
+
+    def __init__(self, data):
+        self.db = data[0]
         self.c = self.db.cursor()
         _elements = []
-        self.c.execute("SELECT * FROM radio WHERE genre_id = ?", [genre[0]])
+        self.c.execute("SELECT * FROM radio WHERE genre_id = ?", [data[1][0]])
         stations = self.c.fetchall()
         for _station in stations:
             _elements.append(self.elm(
-                mq:= Marquee(Vector(0, 0), f"{_station[2]} {' '*18}", width=18, justify='L', flag=False, speed=0.5),
+                mq:= Marquee(Vector(0, 0), f"{_station[1]} {' '*18}", width=18, justify='L', flag=False, speed=0.5),
                 data= (self.db, _station),
+                func= self.__select,
                 on_hover= mq.play,
                 on_dehover= lambda mq: (mq[3].pause(), mq[3].reset())))
-        super().__init__(*_elements, title=f"Radio - {genre[0]} - Mu...")
+        super().__init__(*_elements, title=f"Radio - {data[1][1]} - Mu...")
+
+    async def __select(self, data):
+        print(*data)
+        # await Player(*data)
+
+
+class Handle(core.input.Handler, menu.Menu):
+
+    window = Sub
+
+    class press:
+        async def right(null, window):
+            window.finish(1)
+
+
+        async def left(null, window):
+            window.finish(-1)
+
 
 class Player(player.Base):
 
@@ -46,14 +83,17 @@ class Player(player.Base):
         self.station = station
         self.stop_icon = Image(Vector(64, 53), App.asset.stop_icon, just_h='C')
         self.elements |= {self.stop_icon}
-    
+
+
     def render(self):
         for element in self.elements:
             core.Interface.render(element)
     
+
     def refresh(self):
         super().refresh()
         self.marquee.text = "TEST TEST TEST TEST" # NEED COMMAND
+
 
 class Handle(core.input.Handler):
 
@@ -63,8 +103,10 @@ class Handle(core.input.Handler):
         async def right(null, window: Player):
             window.powersaving()
 
+
         async def left(null, window: Player):
             window.powersaving()
+
 
         async def centre(null, window: Player):
             window.powersaving()
@@ -75,9 +117,11 @@ class Handle(core.input.Handler):
                 pass # Play
             window.playerstate = not window.playerstate
 
+
         async def up(null, window: Player):
             await Options(window)
             window.powersaving()
+
 
         async def down(null, window: Player):  # Discuss with T
             window.powersaving(cancel=True)
@@ -85,6 +129,7 @@ class Handle(core.input.Handler):
             if window._sleeptimer is not None:
                 window._sleeptimer.cancel()
             window.finish()
+
 
 class Options(menu.Menu):
 
@@ -101,6 +146,7 @@ class Options(menu.Menu):
         val = await numpad.Numpad(0, 180, 30, title="Sleep Timer") * 60
         if val != 0:
             self.player._sleeptimer = core.Interface.schedule(self.player.sleeptimer(val))
+
 
     async def _rescan(self, data):
         res = await query.Query("Re-scan Device?", "Rescan", cancel=True)
