@@ -1,3 +1,3 @@
-import core.driver.player
+from core.driver.player import *
 
-main = core.driver.player.Player(samplerate=48000, blocksize=8192, buffersize=16)
+main = Player(samplerate=48000, blocksize=8192, buffersize=16)
