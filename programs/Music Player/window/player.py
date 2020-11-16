@@ -54,8 +54,10 @@ class Base(core.render.Window):
     async def _powersaving(self, future):
         if future.done():
             core.hw.Backlight.fill(core.sys.var.colour)
+            self.marquee.play()
         await asyncio.sleep(App.const.screen_timeout)
         core.hw.Backlight.fill([core.sys.var.colour, 99, 25], force=True)
+        self.marquee.pause()
 
     def powersaving(self, cancel=False):
         self.timeout = core.Interface.schedule(self._powersaving(self.timeout))

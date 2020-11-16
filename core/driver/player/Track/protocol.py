@@ -10,7 +10,7 @@ from .... import sys
 class TrackStream(TrackRawFile, asyncio.Protocol):
 
     FFMPEG = "ffmpeg"
-    BUFFERSIZE = 8192
+    BUFFERSIZE = 4096
 
     def __init__(self, response: Union[http.client.HTTPResponse, sys.Request, socket.socket]):
         self.stream = Stream()
