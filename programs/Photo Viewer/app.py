@@ -7,7 +7,7 @@ class App(core.type.Application):
         pass
 
     class const(core.type.Constant):
-        pass
+        path = f"{core.sys.const.path}user/photos"
 
     class asset(core.type.Pool):
         pass
