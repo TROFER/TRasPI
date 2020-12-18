@@ -5,15 +5,15 @@ import sys
 
 CD = os.path.dirname(os.path.abspath(sys.argv[0])).replace("\\", "/") + "/"
 
+
 class Library:
 
     DB_PATH = f"{CD}/gamedata/assets.db"
     IMPORT_PATH = f"{CD}/import/"
-    ASSET_TYPES = ["forground", "background", "base", "furniture"]
+    ASSET_TYPES = ["foreground", "background", "base", "furniture"]
 
     def __init__(self):
         self.load(self.DB_PATH)
-
 
     def load(self, path):
         try:
@@ -22,7 +22,6 @@ class Library:
         except sqlite3.OperationalError:
             self.build()
         return self.db, self.c
-
 
     def build(self):
         open(self.DB_PATH, 'wb')
@@ -51,12 +50,13 @@ class Library:
             FOREIGN KEY (image_id) REFERENCES image(id)
             )""")
         for _type in self.ASSET_TYPES:
-            self.c.execute("INSERT INTO type (name, end) VALUES (?, ?)", [_type, False])
+            self.c.execute(
+                "INSERT INTO type (name, end) VALUES (?, ?)", [_type, False])
         for _type in self.ASSET_TYPES:
-            self.c.execute("INSERT INTO type (name, end) VALUES (?, ?)", [_type, True])
+            self.c.execute(
+                "INSERT INTO type (name, end) VALUES (?, ?)", [_type, True])
         assets = self.index(self.IMPORT_PATH)
         self.db.commit()
-
 
     def import_asset(self, path, _type, _theme, end=None):
         self.c.execute("SELECT id FROM type WHERE name = ? AND end = ?", [_type, end])
@@ -65,10 +65,11 @@ class Library:
         theme_id = self.c.fetchone()[0]
         image = PIL.open(path).convert("RGBA")
         width, height = image.width, image.height
-        self.c.execute("INSERT INTO image (data, width, height) VALUES (?, ?, ?)", [image.tobytes(), width, height])
+        self.c.execute("INSERT INTO image (data, width, height) VALUES (?, ?, ?)", [
+                       image.tobytes(), width, height])
         image_id = self.c.lastrowid()
-        self.c.execute("INSERT INTO asset (type_id, theme_id, image_id) VALUES (?, ?, ?)", [type_id, theme_id, image_id])
-        
+        self.c.execute("INSERT INTO asset (type_id, theme_id, image_id) VALUES (?, ?, ?)", [
+                       type_id, theme_id, image_id])
 
     def index(self, path):
         for _theme in os.scandir(path):
@@ -77,7 +78,8 @@ class Library:
                     if _type.is_dir() and _type.name.lower() in self.ASSET_TYPES:
                         for _asset in os.scandir(f"{self.IMPORT_PATH}/{_theme.name}"):
                             self.import_asset(
-                                _asset.path, _type, _theme, end=True if "end" in _asset.name else False)
+                                _asset.path, _type.name, _theme.name, end=True if "end" in _asset.name else False)
+
 
 library = Library()
 library.build()
