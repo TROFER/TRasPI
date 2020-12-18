@@ -8,9 +8,9 @@ CD = os.path.dirname(os.path.abspath(sys.argv[0])).replace("\\", "/") + "/"
 
 class Library:
 
-    DB_PATH = f"{CD}/gamedata/assets.db"
-    IMPORT_PATH = f"{CD}/import/"
-    ASSET_TYPES = ["foreground", "background", "base", "furniture"]
+    DB_PATH = f"{CD}gamedata/assets.db"
+    IMPORT_PATH = f"{CD}import/"
+    ASSET_TYPES = ["foreground", "background", "base", "furniture", "palette"]
 
     def __init__(self):
         self.load(self.DB_PATH)
@@ -52,33 +52,40 @@ class Library:
         for _type in self.ASSET_TYPES:
             self.c.execute(
                 "INSERT INTO type (name, end) VALUES (?, ?)", [_type, False])
-        for _type in self.ASSET_TYPES:
+        for _type in self.ASSET_TYPES[:-1]:
             self.c.execute(
                 "INSERT INTO type (name, end) VALUES (?, ?)", [_type, True])
         assets = self.index(self.IMPORT_PATH)
         self.db.commit()
 
-    def import_asset(self, path, _type, _theme, end=None):
-        self.c.execute("SELECT id FROM type WHERE name = ? AND end = ?", [_type, end])
+    def import_asset(self, path, _type, _theme, end=False):
+        self.c.execute("SELECT id FROM type WHERE name = ? AND end = ?", [
+                       _type, int(end)])
         type_id = self.c.fetchone()[0]
         self.c.execute("SELECT id FROM theme WHERE name = ?", [_theme])
-        theme_id = self.c.fetchone()[0]
+        try:
+            theme_id = self.c.fetchone()[0]
+        except TypeError:
+            self.c.execute("INSERT INTO theme (name) VALUES (?)", [_theme])
+            theme_id = self.c.lastrowid
         image = PIL.open(path).convert("RGBA")
         width, height = image.width, image.height
         self.c.execute("INSERT INTO image (data, width, height) VALUES (?, ?, ?)", [
-                       image.tobytes(), width, height])
-        image_id = self.c.lastrowid()
+            image.tobytes(), width, height])
+        image_id = self.c.lastrowid
         self.c.execute("INSERT INTO asset (type_id, theme_id, image_id) VALUES (?, ?, ?)", [
-                       type_id, theme_id, image_id])
+            type_id, theme_id, image_id])
 
     def index(self, path):
         for _theme in os.scandir(path):
             if _theme.is_dir():
-                for _type in os.scandir(f"{self.IMPORT_PATH}/{_theme.name}"):
+                for _type in os.scandir(f"{self.IMPORT_PATH}{_theme.name}"):
                     if _type.is_dir() and _type.name.lower() in self.ASSET_TYPES:
-                        for _asset in os.scandir(f"{self.IMPORT_PATH}/{_theme.name}"):
+                        for _asset in os.scandir(f"{self.IMPORT_PATH}{_theme.name}/{_type.name}"):
                             self.import_asset(
                                 _asset.path, _type.name, _theme.name, end=True if "end" in _asset.name else False)
+                    if "palette" in _type.name.lower():
+                        self.import_asset(_type.path, "palette", _theme.name)
 
 
 library = Library()
