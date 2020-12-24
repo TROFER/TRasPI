@@ -10,7 +10,7 @@ class Library:
 
     DB_PATH = f"{CD}gamedata/assets.db"
     IMPORT_PATH = f"{CD}import/"
-    ASSET_TYPES = ["foreground", "background", "base", "furniture", "palette"]
+    ASSET_TYPES = ["foreground", "background", "base", "furniture", "fixing", "palette"]
 
     def __init__(self):
         self.load(self.DB_PATH)
@@ -52,7 +52,7 @@ class Library:
         for _type in self.ASSET_TYPES:
             self.c.execute(
                 "INSERT INTO type (name, end) VALUES (?, ?)", [_type, False])
-        for _type in self.ASSET_TYPES[:-1]:
+        for _type in self.ASSET_TYPES[:-3]:
             self.c.execute(
                 "INSERT INTO type (name, end) VALUES (?, ?)", [_type, True])
         assets = self.index(self.IMPORT_PATH)
