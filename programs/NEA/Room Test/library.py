@@ -8,8 +8,8 @@ from misc import CD
 
 class Library:
 
-    DB_PATH = f"{CD}resource/assets.db"
-    IMPORT_PATH = f"{CD}import/"
+    DB_PATH = f"{CD}programs/NEA/Room Test/resource/assets.db"
+    IMPORT_PATH = f"{CD}programs/NEA/Room Test/import/"
     ASSET_TYPES = ["foreground", "base", "background",
                    "furniture", "fixing", "palette"]
 
@@ -99,9 +99,9 @@ class Library:
         except TypeError:
             return None
 
-    def count(self, type_id, theme_id):
+    def count_records(self, table):
         self.c.execute(
-            "SELECT count(*) FROM asset WHERE type_id = ? AND theme_id = ?", [type_id, theme_id])
+            "SELECT count(*) FROM {}".format(table))
         return self.c.fetchone()[0]
 
 
