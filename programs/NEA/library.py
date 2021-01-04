@@ -1,16 +1,17 @@
 import sqlite3
-from PIL import Image as PIL
 import os
-import sys
 
-CD = os.path.dirname(os.path.abspath(sys.argv[0])).replace("\\", "/") + "/"
+from PIL import Image as PIL
+
+from misc import CD
 
 
 class Library:
 
-    DB_PATH = f"{CD}gamedata/assets.db"
+    DB_PATH = f"{CD}resource/assets.db"
     IMPORT_PATH = f"{CD}import/"
-    ASSET_TYPES = ["foreground", "background", "base", "furniture", "fixing", "palette"]
+    ASSET_TYPES = ["foreground", "base", "background",
+                   "furniture", "fixing", "palette"]
 
     def __init__(self):
         self.load(self.DB_PATH)
@@ -52,7 +53,7 @@ class Library:
         for _type in self.ASSET_TYPES:
             self.c.execute(
                 "INSERT INTO type (name, end) VALUES (?, ?)", [_type, False])
-        for _type in self.ASSET_TYPES[:-3]:
+        for _type in self.ASSET_TYPES[:-4]:
             self.c.execute(
                 "INSERT INTO type (name, end) VALUES (?, ?)", [_type, True])
         assets = self.index(self.IMPORT_PATH)
@@ -82,10 +83,26 @@ class Library:
                 for _type in os.scandir(f"{self.IMPORT_PATH}{_theme.name}"):
                     if _type.is_dir() and _type.name.lower() in self.ASSET_TYPES:
                         for _asset in os.scandir(f"{self.IMPORT_PATH}{_theme.name}/{_type.name}"):
+                            print(
+                                f"{_type.name.capitalize()} asset found! for theme '{_theme.name}' name '{_asset.name}' end = {True if 'end' in _asset.name else False}")
                             self.import_asset(
                                 _asset.path, _type.name, _theme.name, end=True if "end" in _asset.name else False)
                     if "palette" in _type.name.lower():
+                        print(f"Pallete Found! for theme '{_theme.name}'")
                         self.import_asset(_type.path, "palette", _theme.name)
+
+    def get_typeid(self, name: str, end: int = 0):
+        self.c.execute(
+            "SELECT id from type WHERE name = ? AND end = ?", [name, end])
+        try:
+            return self.c.fetchone()[0]
+        except TypeError:
+            return None
+
+    def count(self, type_id, theme_id):
+        self.c.execute(
+            "SELECT count(*) FROM asset WHERE type_id = ? AND theme_id = ?", [type_id, theme_id])
+        return self.c.fetchone()[0]
 
 
 library = Library()
