@@ -1,23 +1,30 @@
 import os
 from ..interface import Interface
 from ..error.attributes import SysConstant
+class Power:
 
-if SysConstant.pipeline == "GFXHAT":
-    from ..driver import pijuice
+    TIMER = 5
 
-    class Power:
+    if SysConstant.pipeline == "GFXHAT":
 
         def __init__(self):
-            self.__juice = pijuice.PiJuice(1, 0x14)
+            from ..driver import pijuice
+            if pijuice.available():
+                self.__juice = pijuice.PiJuice(1, 0x14)
+            else:
+                self.__juice = None
 
         def halt(self):
-            self.__juice.power.SetPowerOff(30)
-            os.system("shutdown -h now")
+            Interface.stop()
+            if self.__juice is not None:
+                self.__juice.power.SetPowerOff(30)
+            os.system(f"""nohup bash -c "sleep {self.TIMER}; shutdown -h now" > /dev/null 2>&1 &""")
 
         def restart(self):
-            os.system("reboot")
-else:
-     class Power:
+            Interface.stop()
+            os.system(f"""nohup bash -c "sleep {self.TIMER}; shutdown -r now" > /dev/null 2>&1 &""")
+
+    else:
 
         def halt(cls):
             Interface.stop()
