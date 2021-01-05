@@ -16,7 +16,10 @@ class Display:
         def initialize(self):
             pass
         def terminate(self):
-            pass
+            for x in range(SysConstant.width):
+                for y in range(SysConstant.height):
+                    lcd.set_pixel(x, y, 0)
+            lcd.show()
 
         def clear(self):
             lcd.clear()
