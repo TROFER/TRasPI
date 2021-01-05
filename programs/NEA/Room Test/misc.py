@@ -1,7 +1,3 @@
-import core
-import os
-import sys
-
 def align(image, axis: str, alignment: str):
     alignments = {
         "x": {
@@ -13,6 +9,3 @@ def align(image, axis: str, alignment: str):
             'T': image.height,
             'B': 0 - image.height}}
     return int(alignments[axis][alignment])
-
-#CD = os.path.dirname(os.path.abspath(sys.argv[0])).replace("\\", "/") + "/"
-CD = core.sys.const.path

@@ -1,1 +1,1 @@
-from .rawimage import RawImage
+from .paralax import Paralax, ParalaxLayer

@@ -1,15 +1,14 @@
-import sqlite3
 import os
+import sqlite3
 
+import core
 from PIL import Image as PIL
-
-from misc import CD
 
 
 class Library:
 
-    DB_PATH = f"{CD}programs/NEA/Room Test/resource/assets.db"
-    IMPORT_PATH = f"{CD}programs/NEA/Room Test/import/"
+    DB_PATH = f"{core.sys.const.path}programs/NEA/Room Test/resource/assets.db"
+    IMPORT_PATH = f"{core.sys.const.path}programs/NEA/Room Test/import/"
     ASSET_TYPES = ["foreground", "base", "background",
                    "furniture", "fixing", "palette"]
 

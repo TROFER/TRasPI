@@ -1,7 +1,7 @@
 import core
 from construct import Room
 from core.hw.key import Key
-from element import RawImage
+from element import Paralax, ParalaxLayer
 from core import Vector
 from app import App
 from PIL import Image
@@ -9,33 +9,23 @@ from PIL import Image
 
 class Viewer(core.render.Window):
 
-    Sensitivity = 150
+    Repeat_rate = 75
 
     def __init__(self):
-        Key.repeat(self.Sensitivity)
+        Key.repeat(self.Repeat_rate)
         self.generate()
-        self.layers = {
-            "base": 0,
-            "background": 0,
-            "foreground": 0}
-        self.velocities = {
-            "base": 1,
-            "background": 2,
-            "foreground": 3}
         super().__init__()
 
     def render(self):
-        template = Image.new("RGBA", (128, 64), color=0)
-        template.alpha_composite(self.background, (self.layers["base"], 0))
-        template.alpha_composite(self.background, (self.layers["background"], 0))
-        template.alpha_composite(self.foreground, (self.layers["foreground"], 0))
-        core.Interface.render(RawImage(Vector(self.layers["base"], 0), template))
+        core.Interface.render(self.paralax)
 
     def generate(self):
         self.room = Room()
-        self.base = self.room.base
-        self.background = self.room.background
-        self.foreground = self.room.foreground
+        layers = [
+            ParalaxLayer(self.room.base, 3),
+            ParalaxLayer(self.room.background, 5),
+            ParalaxLayer(self.room.foreground, 7)]
+        self.paralax = Paralax(layers)
 
 
 class Handle(core.input.Handler):
@@ -48,14 +38,10 @@ class Handle(core.input.Handler):
 
     class held:
         async def left(null, window):
-            for layer in window.layers:
-                #if window.layers[layer] != window.room.x:
-                window.layers[layer] += window.velocities[layer]
+            window.paralax.decrement(core.application.app().deltatime())
 
         async def right(null, window):
-            for layer in window.layers:
-                #if window.layers[layer] != 0:
-                window.layers[layer] -= window.velocities[layer]
+            window.paralax.increment(core.application.app().deltatime())
 
 
 App.window = Viewer
