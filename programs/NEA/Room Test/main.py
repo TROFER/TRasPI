@@ -1,7 +1,7 @@
 import core
 from construct import Room
 from core.hw.key import Key
-from element import Paralax, ParalaxLayer
+from element import Backlight, Paralax, ParalaxLayer
 from core import Vector
 from app import App
 from PIL import Image
@@ -18,6 +18,7 @@ class Viewer(core.render.Window):
 
     def render(self):
         core.Interface.render(self.paralax)
+        core.Interface.render(self.backlight)
 
     def generate(self):
         self.room = Room()
@@ -26,6 +27,9 @@ class Viewer(core.render.Window):
             ParalaxLayer(self.room.background, 5),
             ParalaxLayer(self.room.foreground, 7)]
         self.paralax = Paralax(layers)
+        colours = [self.room.base.copy().convert("RGB").getpixel((x, 64))
+                   for x in range(0, self.room.base.width - 1)]
+        self.backlight = Backlight(colours)
 
 
 class Handle(core.input.Handler):
@@ -39,9 +43,11 @@ class Handle(core.input.Handler):
     class held:
         async def left(null, window):
             window.paralax.decrement(core.application.app().deltatime())
+            window.backlight.x = window.paralax.x
 
         async def right(null, window):
             window.paralax.increment(core.application.app().deltatime())
+            window.backlight.x = window.paralax.x
 
 
 App.window = Viewer

@@ -65,6 +65,7 @@ class Backlight:
                 colour.insert(1, diff * i + colour[0])
         for i, led in enumerate(colours):
             self.zone(i, *led)
+        self.show()
 
 
 Backlight = Backlight()
