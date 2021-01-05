@@ -39,15 +39,28 @@ class Handle(core.input.Handler):
     class press:
         async def down(null, window):
             window.finish()
+        
+        async def right(null, window):
+            Key.led(5, 1)
+        
+        async def left(null, window):
+            Key.led(3, 1)
 
     class held:
         async def left(null, window):
             window.paralax.decrement(core.application.app().deltatime())
-            window.backlight.x = window.paralax.x
+            window.backlight.x = int(window.paralax.layers[0].x)
 
         async def right(null, window):
             window.paralax.increment(core.application.app().deltatime())
-            window.backlight.x = window.paralax.x
+            window.backlight.x = int(window.paralax.layers[0].x)
+    
+    class release:
+        async def right(null, window):
+            Key.led(5, 0)
+        
+        async def left(null, window):
+            Key.led(3, 0)
 
 
 App.window = Viewer
