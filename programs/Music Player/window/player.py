@@ -69,9 +69,9 @@ class Base(core.render.Window):
         core.hw.Power.halt()
 
     def _finish(self):
-        window.powersaving(cancel=True)
-        if window._sleeptimer is not None:
-            window._sleeptimer.cancel()
+        self.powersaving(cancel=True)
+        if self._sleeptimer is not None:
+            self._sleeptimer.cancel()
         self.finish()
 
 
