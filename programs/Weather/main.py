@@ -60,7 +60,10 @@ class Main(core.render.Window):
         e["status"].text = self.current.description()
         e["temp"].text = self.current.temperature()
         for i in range(0, 3):
-            e[f"data{i}"].text = self.tabs[self.INDEX][i]()
+            try:
+                e[f"data{i}"].text = self.tabs[self.INDEX][i]()
+            except KeyError:
+                e[f"data{i}"].text = "Unavailable"
         self.elements = e
 
     def cycle(self):
