@@ -21,14 +21,16 @@ class Paralax(core.render.Primative):
                 image, dest=(0 if flag else int(layer.x), 0))
         draw.im.paste(frame.convert("1").im, (0, 0, *frame.size))
 
-    def increment(self, deltatime: float):
-        for layer in self.layers:
-            layer.x -= layer.velocity * deltatime
+    def increment(self):
+        if self.layers[0].x - 0 < self.layers[0].image.width:
+            for layer in self.layers:
+                layer.x -= layer.velocity
 
 
-    def decrement(self, deltatime: float):
-        for layer in self.layers:
-            layer.x += layer.velocity * deltatime
+    def decrement(self):
+        if self.layers[0].x < self.layers[0].image.width:
+            for layer in self.layers:
+                layer.x += layer.velocity
 
     def copy(self):
         return [l.x for l in self.layers]

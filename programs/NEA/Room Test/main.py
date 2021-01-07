@@ -9,7 +9,7 @@ from PIL import Image
 
 class Viewer(core.render.Window):
 
-    Repeat_rate = 75
+    Repeat_rate = 50
 
     def __init__(self):
         Key.repeat(self.Repeat_rate)
@@ -23,9 +23,9 @@ class Viewer(core.render.Window):
     def generate(self):
         self.room = Room()
         layers = [
-            ParalaxLayer(self.room.base, 3),
-            ParalaxLayer(self.room.background, 5),
-            ParalaxLayer(self.room.foreground, 7)]
+            ParalaxLayer(self.room.base, 0.25),
+            ParalaxLayer(self.room.background, 0.5),
+            ParalaxLayer(self.room.foreground, 1)]
         self.paralax = Paralax(layers)
         colours = [self.room.base.copy().convert("RGB").getpixel((x, 64))
                    for x in range(0, self.room.base.width - 1)]
@@ -48,11 +48,11 @@ class Handle(core.input.Handler):
 
     class held:
         async def left(null, window):
-            window.paralax.decrement(core.application.app().deltatime())
+            window.paralax.decrement()
             window.backlight.x = int(window.paralax.layers[0].x)
 
         async def right(null, window):
-            window.paralax.increment(core.application.app().deltatime())
+            window.paralax.increment()
             window.backlight.x = int(window.paralax.layers[0].x)
     
     class release:
