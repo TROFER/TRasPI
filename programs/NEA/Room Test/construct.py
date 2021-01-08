@@ -8,7 +8,7 @@ from misc import align
 
 class Room:
 
-    Constraints = {"min": 2, "max": 10}
+    Constraints = {"min": 2, "max": 5}
 
     def __init__(self):
         lib.c.execute("SELECT id FROM theme")

@@ -8,6 +8,8 @@ class Paralax(core.render.Primative):
     def __init__(self, layers: list):
         super().__init__()
         self.layers = layers
+        for layer in self.layers:
+             print(layer.image.width)
 
     def render(self, draw):
         frame = Image.new("RGBA", (128, 64), color=(255, 255, 255))
@@ -22,13 +24,12 @@ class Paralax(core.render.Primative):
         draw.im.paste(frame.convert("1").im, (0, 0, *frame.size))
 
     def increment(self):
-        if self.layers[0].x - 0 < self.layers[0].image.width:
+        if self.layers[-1].x != 128 - self.layers[-1].image.width:
             for layer in self.layers:
                 layer.x -= layer.velocity
 
-
     def decrement(self):
-        if self.layers[0].x < self.layers[0].image.width:
+        if self.layers[-1].x != 0:
             for layer in self.layers:
                 layer.x += layer.velocity
 

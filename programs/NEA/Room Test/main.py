@@ -1,6 +1,6 @@
 import core
 from construct import Room
-from core.hw.key import Key
+import keyboard
 from element import Backlight, Paralax, ParalaxLayer
 from core import Vector
 from app import App
@@ -9,11 +9,9 @@ from PIL import Image
 
 class Viewer(core.render.Window):
 
-    Repeat_rate = 50
-
     def __init__(self):
-        Key.repeat(self.Repeat_rate)
         self.generate()
+        self.input = Keyboard(self)
         super().__init__()
 
     def render(self):
@@ -23,13 +21,29 @@ class Viewer(core.render.Window):
     def generate(self):
         self.room = Room()
         layers = [
-            ParalaxLayer(self.room.base, 0.25),
-            ParalaxLayer(self.room.background, 0.5),
+            ParalaxLayer(self.room.base, 0.1),
+            ParalaxLayer(self.room.background, 0.25),
             ParalaxLayer(self.room.foreground, 1)]
         self.paralax = Paralax(layers)
         colours = [self.room.base.copy().convert("RGB").getpixel((x, 64))
                    for x in range(0, self.room.base.width - 1)]
         self.backlight = Backlight(colours)
+
+
+class Keyboard:
+
+    def __init__(self, parent):
+        self.parent = parent
+        keyboard.add_hotkey("a", self.a)
+        keyboard.add_hotkey("d", self.d)
+
+    def a(self):
+        self.parent.paralax.decrement()
+        self.parent.backlight.x = int(self.parent.paralax.layers[0].x)
+
+    def d(self):
+        self.parent.paralax.increment()
+        self.parent.backlight.x = int(self.parent.paralax.layers[0].x)
 
 
 class Handle(core.input.Handler):
@@ -39,28 +53,6 @@ class Handle(core.input.Handler):
     class press:
         async def down(null, window):
             window.finish()
-        
-        async def right(null, window):
-            Key.led(5, 1)
-        
-        async def left(null, window):
-            Key.led(3, 1)
-
-    class held:
-        async def left(null, window):
-            window.paralax.decrement()
-            window.backlight.x = int(window.paralax.layers[0].x)
-
-        async def right(null, window):
-            window.paralax.increment()
-            window.backlight.x = int(window.paralax.layers[0].x)
-    
-    class release:
-        async def right(null, window):
-            Key.led(5, 0)
-        
-        async def left(null, window):
-            Key.led(3, 0)
 
 
 App.window = Viewer
