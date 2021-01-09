@@ -8,8 +8,6 @@ class Paralax(core.render.Primative):
     def __init__(self, layers: list):
         super().__init__()
         self.layers = layers
-        for layer in self.layers:
-             print(layer.image.width)
 
     def render(self, draw):
         frame = Image.new("RGBA", (128, 64), color=(255, 255, 255))

@@ -21,10 +21,7 @@ class Room:
         self.generate_base(), self.generate_background(), self.generate_foreground()
 
     def generate_base(self):
-        self.base.alpha_composite(Base(self.theme_id, end=True).image, (0, 0))
-        self.base.alpha_composite(Base(self.theme_id, end=True).image.transpose(
-            Image.FLIP_LEFT_RIGHT), (self.x - 128, 0))
-        for x in range(128, self.x - 128, 128):
+        for x in range(0, self.x, 128):
             self.base.alpha_composite(Base(self.theme_id).image, (x, 0))
     
     def generate_background(self):
@@ -41,10 +38,10 @@ class Room:
 
 class Base:
 
-    def __init__(self, theme_id, end=False):
+    def __init__(self, theme_id):
         self.theme_id = theme_id
         self.image = Image.new("RGBA", (128, 65), color=(255, 255, 255))
-        self.type_id = lib.get_typeid("base", end=int(end))
+        self.type_id = lib.get_typeid("base")
         self.image.alpha_composite(self.get_asset(self.type_id, theme_id))
         self.draw_palette()
 
