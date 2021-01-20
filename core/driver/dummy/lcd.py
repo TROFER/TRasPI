@@ -19,11 +19,11 @@ if SysConstant.pipeline == "DUMMYNR": # Dummy No Render
         return
 if SysConstant.pipeline == "DUMMYNC": # Dummy No Clear
     def show():
-        print(*("".join("#" if i else " " for i in y) for y in __image), sep="\n")
+        print(*("".join("■" if i else " " for i in y) for y in __image), sep="\n")
 else:
     def show():
         os.system(_clear_sys_)
-        print(*("".join("#" if i else " " for i in y) for y in __image), sep="\n")
+        print(*("".join("■" if i else " " for i in y) for y in __image), sep="\n")
 
 def set_pixel(x: int, y: int, value: int):
     __image[y][x] = value

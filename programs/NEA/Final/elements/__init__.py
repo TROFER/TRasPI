@@ -1,1 +1,1 @@
-from .imageloop import ImageLoop
+from .imagemotion import ImageMotion

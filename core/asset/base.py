@@ -34,10 +34,10 @@ class Asset(metaclass=_MetaAsset):
         p = "\n\t".join(_search_paths)
         raise FileNotFoundError(f"{path}.{name} in Directories:\n\t{p}")
 
-    def __setattr__(self, name, value):
+    '''def __setattr__(self, name, value):
         if name not in self.__dict__:
             return super().__setattr__(name, value)
-        raise TypeError("Assets are Constant")
+        raise TypeError("Assets are Constant")'''
 
     def __eq__(self, other) -> bool:
         if isinstance(other, Asset):
