@@ -1,8 +1,11 @@
 import core
 from app import App
 from core import Vector
+from core.hw import Backlight
 from core.render.element import Line, Text
 from hardware import Hardware, constrain
+from remote import main as Remote
+
 
 class Main(core.render.Window):
 
@@ -18,6 +21,9 @@ class Main(core.render.Window):
             Text(Vector(3, 43), "Disk Usage", justify="L"),
             Line(Vector(3, 49), Vector(128, 49), width=2)]
         App.interval(self.refresh)
+    
+    async def show(self):
+        Backlight.fill((App.const.colour), hsv=False)
 
     def render(self):
         for element in self.elements:
@@ -27,7 +33,8 @@ class Main(core.render.Window):
         self.elements[2].text = f"Used: {Hardware.Storage.used()}GB ({Hardware.Storage.used_percent()}%)"
         self.elements[3].text = f"Free: {Hardware.Storage.free()}GB"
         self.elements[4].text = f"Total: {Hardware.Storage.total()}GB"
-        self.elements[7].pos2 = Vector(constrain(Hardware.Storage.used_percent(), 0, 100, 3, 125), 49)
+        self.elements[7].pos2 = Vector(
+            constrain(Hardware.Storage.used_percent(), 0, 100, 3, 125), 49)
 
 
 class Handle(core.input.Handler):
@@ -40,3 +47,6 @@ class Handle(core.input.Handler):
 
         async def left(null, window: Main):
             window.finish(-1)
+
+        async def down(null, window: Main):
+            window.finish()

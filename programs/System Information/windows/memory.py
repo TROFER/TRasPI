@@ -1,8 +1,11 @@
 import core
 from app import App
 from core import Vector
+from core.hw import Backlight
 from core.render.element import Line, Text
 from hardware import Hardware, constrain
+from remote import main as Remote
+
 
 class Main(core.render.Window):
 
@@ -12,12 +15,16 @@ class Main(core.render.Window):
             Text(Vector(3, 5), "Memory - Sys Info", justify='L'),
             Line(Vector(0,  10), Vector(128, 10)),
             Text(Vector(3, 16), "", justify="L"),
-            Text(Vector(3, 24), f"Mem Total: {Hardware.Memory.total()}Mb", justify="L"),
+            Text(Vector(3, 24),
+                 f"Mem Total: {Hardware.Memory.total()}Mb", justify="L"),
             Text(Vector(3, 32), "", justify="L"),
             Line(Vector(0,  37), Vector(128, 37)),
             Text(Vector(3, 43), "Memory Usage", justify="L"),
             Line(Vector(3, 49), Vector(128, 49), width=2)]
         App.interval(self.refresh)
+    
+    async def show(self):
+        Backlight.fill((App.const.colour), hsv=False)
 
     def render(self):
         for element in self.elements:
@@ -26,7 +33,8 @@ class Main(core.render.Window):
     def refresh(self):
         self.elements[2].text = f"Mem load: {Hardware.Memory.load()}Mb ({Hardware.Memory.load_percent()}%)"
         self.elements[4].text = f"Swap Size: {Hardware.Memory.vmem()}Mb"
-        self.elements[7].pos2 = Vector(constrain(Hardware.Memory.load_percent(), 0, 100, 3, 125), 49)
+        self.elements[7].pos2 = Vector(
+            constrain(Hardware.Memory.load_percent(), 0, 100, 3, 125), 49)
 
 
 class Handle(core.input.Handler):
@@ -40,5 +48,5 @@ class Handle(core.input.Handler):
         async def left(null, window: Main):
             window.finish(-1)
 
-        async def centre(null, window: Main):
+        async def down(null, window: Main):
             window.finish()

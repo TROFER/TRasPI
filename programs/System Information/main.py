@@ -1,10 +1,7 @@
-from app import App
 import core
-import cpu
-import memory
-import network
-import storage
-import battery
+from app import App
+from windows import cpu, memory, network, storage, battery
+from remote import main as remote
 
 class Main(core.render.Window):
 
@@ -12,7 +9,7 @@ class Main(core.render.Window):
         super().__init__()
         self._flag = True
         self.index = 0
-        self.map = [cpu.Main(), memory.Main(), network.Main(), storage.Main(), battery.Main()]
+        self.map = [cpu.Main(), memory.Main(), network.Main(), storage.Main(), battery.Main(), remote.Main()]
 
     async def show(self):
         if self._flag:
