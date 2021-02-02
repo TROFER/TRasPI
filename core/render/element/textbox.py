@@ -14,8 +14,8 @@ class TextBox(Text):
         super().__init__(anchor, *args, **kwargs)
 
     def render(self, image: "PIL.ImageDraw.ImageDraw"):
-        super().render(image)
         self.rect.render(image)
+        super().render(image)
 
     def copy(self):
         return (*super().copy(), *self.rect.copy())
