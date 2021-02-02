@@ -14,7 +14,7 @@ if SysConstant.process:
             self._scene = False
             self.__update = True
 
-            self.__template = PIL.Image.new("1", (SysConstant.width, SysConstant.height), 1)
+            self.__template = PIL.Image.new("LA", (SysConstant.width, SysConstant.height), 1)
             self.__image = self.__template.copy()
             self.__draw = PIL.ImageDraw.Draw(self.__image)
 

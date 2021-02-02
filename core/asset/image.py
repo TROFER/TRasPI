@@ -12,7 +12,7 @@ class Image(Asset):
             self.image = path
         else:
             super().__init__(path)
-            self.image = PIL.Image.open(self.path).convert("1")
+            self.image = PIL.Image.open(self.path).convert("LA")
 
     def __repr__(self) -> str:
         return f"{super().__repr__()}<{self.image} {self.path}>"
