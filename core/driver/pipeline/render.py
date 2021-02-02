@@ -24,6 +24,7 @@ if SysConstant.process:
             if not isinstance(template, Template):
                 raise TypeError(f"Templates must be instance of '{Template.__name__}' and not '{template.__class__.__name__}'")
             self.__template = template.image
+            self.__update = True
 
         def submit(self, wgt):
             self.__wgt_s.add(wgt.render)

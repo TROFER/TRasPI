@@ -20,3 +20,4 @@ user/**
 core/error/eventlog.json
 core/error/attributes.py
 programs/Music Player/resource/db/library.db
+core/error/attributes.py

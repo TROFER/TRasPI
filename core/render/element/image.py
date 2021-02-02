@@ -43,4 +43,3 @@ class Image(Primative):
             off_h = self.anchor[1]
 
         self.pos = Vector(off_w, off_h)
-
