@@ -1,6 +1,8 @@
 from ...vector import Vector
 from ..primative import Primative
 from ...asset.image import Image as AssetImage
+import PIL.Image
+import PIL.ImageDraw
 
 __all__ = ["Image"]
 
@@ -14,7 +16,9 @@ class Image(Primative):
 
     def render(self, image: "PIL.ImageDraw.ImageDraw"):
         pos = [*self.pos, *self.pos+self.image.size()]
-        image.im.paste(self.image.image.im, tuple(pos))
+        img: PIL.Image.Image = PIL.Image.Image()._new(image.im)
+        img.paste(self.image.image, tuple(pos))
+        # image.im.paste(self.image.image.im, tuple(pos))
 
     def copy(self):
         return self.image, self.pos, self.just_w, self.just_h
