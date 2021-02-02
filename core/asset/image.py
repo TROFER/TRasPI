@@ -6,12 +6,13 @@ __all__ = ["Image", "Template", "Icon"]
 
 class Image(Asset):
 
-    def __init__(self, path: str, absolute: bool=False):
-        if not absolute:
-            super().__init__(path)
+    def __init__(self, path: str):
+        if isinstance(path, PIL.Image.Image):
+            self.path = ""
+            self.image = path
         else:
             self.path = path
-        self.image = PIL.Image.open(self.path).convert("1")
+            self.image = PIL.Image.open(self.path).convert("1")
 
     def __repr__(self) -> str:
         return f"{super().__repr__()}<{self.image} {self.path}>"
