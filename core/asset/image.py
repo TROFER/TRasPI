@@ -11,7 +11,7 @@ class Image(Asset):
             self.path = ""
             self.image = path
         else:
-            self.path = path
+            super().__init__(path)
             self.image = PIL.Image.open(self.path).convert("1")
 
     def __repr__(self) -> str:
