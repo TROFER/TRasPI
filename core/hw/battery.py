@@ -9,7 +9,7 @@ __all__ = ["Battery"]
 
 class Battery:
 
-    if _FLAG:
+    if _FLAG and pijuice.available():
 
         def __init__(self):
             self.__juice = pijuice.PiJuice(1, 0x14)
@@ -48,11 +48,11 @@ class Battery:
         def status(self) -> bool:
             """Returns True if charging"""
             return None
-        
+
         def voltage(self) -> float:
             """Returns battery voltage"""
             return 0
-        
+
         def amerage(self) -> float:
             """Returns battery amerage"""
             return 0

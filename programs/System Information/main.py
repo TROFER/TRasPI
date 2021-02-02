@@ -1,10 +1,10 @@
-from app import App
 import core
-import cpu
-import memory
-import network
-import storage
-import battery
+from core.hw import Backlight
+
+from app import App
+from remote import main as remote
+from windows import battery, cpu, memory, network, storage
+
 
 class Main(core.render.Window):
 
@@ -12,9 +12,10 @@ class Main(core.render.Window):
         super().__init__()
         self._flag = True
         self.index = 0
-        self.map = [cpu.Main(), memory.Main(), network.Main(), storage.Main(), battery.Main()]
+        self.map = [cpu.Main(), memory.Main(), network.Main(), storage.Main(), battery.Main(), remote.Main()]
 
     async def show(self):
+        Backlight.gradient(App.const.colour, hsv=False)
         if self._flag:
             self._flag = False
             while True:

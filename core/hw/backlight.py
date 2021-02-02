@@ -7,6 +7,7 @@ else:
     _FLAG = False
     from ..driver.dummy import backlight
 
+from ..interface import Interface
 import colorsys
 
 
@@ -67,5 +68,9 @@ class Backlight:
             self.zone(i, *led)
         self.show()
 
+    def termintate(self):
+        self.fill((0, 0, 0), force=True)
+        self.show()
 
 Backlight = Backlight()
+Interface.termintate.schedule(Backlight.termintate)

@@ -1,8 +1,11 @@
 import core
 from app import App
-from core import Vector, Interface
+from core import Interface, Vector
+from core.hw import Backlight
 from core.render.element import Line, Text
 from hardware import Hardware, constrain
+from remote import main as Remote
+
 
 class Graph:
 
@@ -45,6 +48,9 @@ class Main(core.render.Window, Graph):
             Line(Vector(3, 62), Vector(128, 61), width=2)]
         self.graph = Graph()
         App.interval(self.refresh)
+    
+    async def show(self):
+        Backlight.gradient(App.const.colour, hsv=False)
 
     def render(self):
         for element in self.elements:
@@ -54,13 +60,15 @@ class Main(core.render.Window, Graph):
         for elm, text in zip(self.elements[1:4], (f"CPU Load: {Hardware.CPU.load()}%", f"CPU Temp: {Hardware.CPU.temperature()}°C", f"CPU Speed: {Hardware.CPU.cur_speed()}Mhz")):
             elm.text = text
         self.elements[2].text = f"CPU Load: {Hardware.CPU.load()}%"
-        self.elements[3].text = "CPU Temp: {}°C {}".format(Hardware.CPU.temperature(), '/\\' if self.graph.trend() else '\\/')
+        self.elements[3].text = "CPU Temp: {}°C {}".format(
+            Hardware.CPU.temperature(), '/\\' if self.graph.trend() else '\\/')
         self.elements[4].text = f"CPU Speed: {Hardware.CPU.cur_speed() // 1000}Mhz"
         self.elements[7].pos2 = Vector(
             constrain(Hardware.CPU.load(), 0, 100, 3, 125), 48)
         self.elements[9].pos2 = Vector(
             constrain(Hardware.CPU.cur_speed(), 1, Hardware.CPU.max_speed(), 3, 125), 62)
         self.graph.plot(Hardware.CPU.temperature())
+
 
 class Handle(core.input.Handler):
 
@@ -71,5 +79,7 @@ class Handle(core.input.Handler):
             window.finish(1)
 
         async def left(null, window: Main):
-            pass
             window.finish(-1)
+
+        async def down(null, window: Main):
+            window.finish()

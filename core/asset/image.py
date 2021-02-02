@@ -6,8 +6,11 @@ __all__ = ["Image", "Template", "Icon"]
 
 class Image(Asset):
 
-    def __init__(self, path: str):
-        super().__init__(path)
+    def __init__(self, path: str, absolute: bool=False):
+        if not absolute:
+            super().__init__(path)
+        else:
+            self.path = path
         self.image = PIL.Image.open(self.path).convert("1")
 
     def __repr__(self) -> str:
