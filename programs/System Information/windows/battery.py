@@ -23,7 +23,6 @@ class Main(core.render.Window):
         App.interval(self.refresh)
     
     async def show(self):
-        super().show()
         hw.Backlight.gradient(App.const.colour, hsv=False)
 
     def render(self):

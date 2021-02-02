@@ -15,25 +15,35 @@ class Room:
         self.theme_id = random.choice(lib.c.fetchall())[0]
         self.x, self.y = random.randint(
             self.Constraints["min"], self.Constraints["max"]) * 128, 64
-        self.base = Image.new("RGBA", (self.x, 65), color=0)
-        self.background = Image.new("RGBA", (self.x, self.y), color=0)
-        self.foreground = Image.new("RGBA", (self.x, self.y), color=0)
         self.generate_base(), self.generate_background(), self.generate_foreground()
+        self.generate_fixings()
 
     def generate_base(self):
+        self.base = Image.new("RGBA", (self.x, 65), color=0)
         for x in range(0, self.x, 128):
             self.base.alpha_composite(Base(self.theme_id).image, (x, 0))
     
     def generate_background(self):
+        self.background = Image.new("RGBA", (self.x, self.y), color=0)
         for x in range(0, self.x, 128):
             self.background.alpha_composite(Background(self.theme_id).image, (x, 0))
     
     def generate_foreground(self):
+        self.foreground = Image.new("RGBA", (self.x, self.y), color=0)
         self.foreground.alpha_composite(Foreground(self.theme_id, end=True).image, (0, 0))
         self.foreground.alpha_composite(Foreground(self.theme_id, end=True).image.transpose(
             Image.FLIP_LEFT_RIGHT), (self.x - 128, 0))
         for x in range(128, self.x - 128, 128):
             self.foreground.alpha_composite(Foreground(self.theme_id).image, (x, 0))
+    
+    def generate_fixings(self):
+        self.lighting = Image.new("RGBA", (self.x, self.y), color=0)
+        multiplier = 32
+        type_id = lib.get_typeid("fixing")
+        for x in range(multiplier, self.x, multiplier):
+            image = self.get_asset(type_id, self.theme_id)
+            x, y = x + align(image, "x", "C"), self.Fixing["y"]
+            self.lighting.alpha_composite(image, (x, y))
 
 
 class Base:
@@ -77,7 +87,6 @@ class Base:
 class Background(Base):
 
     Furniture = {"x": [42, 84], "y": 42}
-    Fixing = {"x": [32, 64, 96], "y": 0}
     Contraints = [25, 25]
 
     def __init__(self, theme_id):
@@ -85,7 +94,6 @@ class Background(Base):
         self.type_id = lib.get_typeid("background")
         self.image = self.get_asset(self.type_id, self.theme_id)
         self.place_furniture()
-        self.place_fixings()
 
     def place_furniture(self):
         type_id = lib.get_typeid("furniture")
@@ -103,13 +111,6 @@ class Background(Base):
             image = random.choice(pool)
             x, y = x + align(image, "x",
                              'C'), self.Furniture["y"] + align(image, "y", "B")
-            self.image.alpha_composite(image, (x, y))
-
-    def place_fixings(self):
-        type_id = lib.get_typeid("fixing")
-        for x in self.Fixing["x"]:
-            image = self.get_asset(type_id, self.theme_id)
-            x, y = x + align(image, "x", "C"), self.Fixing["y"]
             self.image.alpha_composite(image, (x, y))
 
     def check_size(self, x1, y1, x2, y2):

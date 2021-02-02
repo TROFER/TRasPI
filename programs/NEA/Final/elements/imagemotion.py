@@ -1,4 +1,3 @@
-from core.asset.image import Image as AssetImage
 from PIL import Image
 
 

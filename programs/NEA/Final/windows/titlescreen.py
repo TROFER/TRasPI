@@ -8,6 +8,8 @@ from elements import ImageMotion
 
 class Main(core.render.Window):
 
+    template = core.asset.Template(core.render.Window.template.copy())
+
     def __init__(self):
         self.elements = [
             TextBox(Vector(64, 25), "Play Game", colour=0, line_col=1, fill=0),
@@ -24,20 +26,21 @@ class Main(core.render.Window):
 
     def render(self):
         self.template.image = self.imagemotion.copy()
+        core.interface.application().render.template()
         for element in self.elements:
             core.interface.render(element)
 
     def up(self):
         if self.index != 0:
             self.index -= 1
-            self.cursor.pos = Vector(
+            self.elements[3].pos = Vector(
                 self.elements[self.index].pos[0] - 7,
                 self.elements[self.index].pos[0] - 2)
 
     def down(self):
         if self.index != 2:
             self.index += 1
-            self.cursor.pos = Vector(
+            self.elements[3].pos = Vector(
                 self.elements[self.index].pos[0] - 7,
                 self.elements[self.index].pos[0] - 2)
 
