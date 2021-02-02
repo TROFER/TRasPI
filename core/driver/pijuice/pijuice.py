@@ -70,7 +70,7 @@ class PiJuiceInterface(object):
             self.errTime = time.time()
 
     def _DoTransfer(self, oper):
-        if (self.t != None and self.t.isAlive()) or (self.comError and (time.time()-self.errTime) < 4):
+        if (self.t != None and self.t.is_alive()) or (self.comError and (time.time()-self.errTime) < 4):
             return False
 
         self.t = threading.Thread(target=oper, args=())
@@ -78,10 +78,10 @@ class PiJuiceInterface(object):
 
         # wait for transfer to finish or timeout
         n = 0
-        while self.t.isAlive() and n < 2:
+        while self.t.is_alive() and n < 2:
             time.sleep(0.05)
             n = n + 1
-        if self.comError or self.t.isAlive():
+        if self.comError or self.t.is_alive():
             return False
 
         return True
@@ -102,8 +102,8 @@ class PiJuiceInterface(object):
             d[0] |= 0x80
             if self._GetChecksum(d[0:-1]) == d[-1]:
                 del d[-1]
-                return {'data': d, 'error': 'NO_ERROR'} 
-            return {'error': 'DATA_CORRUPTED'} 
+                return {'data': d, 'error': 'NO_ERROR'}
+            return {'error': 'DATA_CORRUPTED'}
         del d[-1]
         return {'data': d, 'error': 'NO_ERROR'}
 
@@ -355,7 +355,7 @@ class PiJuiceStatus(object):
                     },
                 'error': 'NO_ERROR'
             }
-    
+
     def GetIoDigitalInput(self, pin):
         if not (pin == 1 or pin == 2):
             return {'error': 'BAD_ARGUMENT'}
@@ -1034,8 +1034,8 @@ class PiJuiceConfig(object):
             #  and non_volatile argument is False
             ret['error'] = 'NO_ERROR'
         return ret
- 
-    def GetChargingConfig(self):  
+
+    def GetChargingConfig(self):
         ret = self.interface.ReadData(self.CHARGING_CONFIG_CMD, 1)
         if ret['error'] != 'NO_ERROR':
             return ret
@@ -1214,7 +1214,7 @@ class PiJuiceConfig(object):
         else:
             d = result['data']
             if ((d[0]&0x30)>>4) < len(self.rsocEstimationOptions):
-                return {'data':self.rsocEstimationOptions[(d[0]&0x30)>>4], 'error':'NO_ERROR'} 
+                return {'data':self.rsocEstimationOptions[(d[0]&0x30)>>4], 'error':'NO_ERROR'}
             else:
                 return {'error':'UNKNOWN_DATA'}
 
