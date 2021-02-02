@@ -28,7 +28,7 @@ class Main(Menu):
     
     async def show(self):
         await super().show()
-        Backlight.fill((App.const.colour), hsv=False)
+        Backlight.gradient(App.const.colour, hsv=False)
 
 
 class Handle(core.input.Handler, Menu):
@@ -59,6 +59,7 @@ class Carousel(core.render.Window):
         App.interval(self.client.request, App.const.refresh_period)
 
     async def show(self):
+        Backlight.gradient(App.const.colour, hsv=False)
         if self._flag:
             self._flag = False
             while True:

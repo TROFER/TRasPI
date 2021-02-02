@@ -24,7 +24,7 @@ class Main(core.render.Window):
         App.interval(self.refresh)
     
     async def show(self):
-        Backlight.fill((App.const.colour), hsv=False)
+        Backlight.gradient(App.const.colour, hsv=False)
 
     def render(self):
         for element in self.elements:

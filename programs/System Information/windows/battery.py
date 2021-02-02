@@ -24,7 +24,7 @@ class Main(core.render.Window):
     
     async def show(self):
         super().show()
-        hw.Backlight.fill((App.const.colour), hsv=False)
+        hw.Backlight.gradient(App.const.colour, hsv=False)
 
     def render(self):
         for element in self.elements:

@@ -56,7 +56,7 @@ class Base(core.render.Window):
             core.hw.Backlight.fill(core.sys.var.colour)
             self.marquee.play()
         await asyncio.sleep(App.const.screen_timeout)
-        core.hw.Backlight.fill([core.sys.var.colour, 99, 25], force=True)
+        core.hw.Backlight.fill([core.sys.var.colour[0], 99, 25], force=True)
         self.marquee.pause()
 
     def powersaving(self, cancel=False):

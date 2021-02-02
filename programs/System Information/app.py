@@ -8,7 +8,7 @@ class App(core.type.Application):
 
     class const(core.type.Constant):
         # Global
-        colour = (255, 153, 102)
+        colour = ((19,148,221), (19,148,221), (19,148,221), (255,96,82), (255,96,82), (255,96,82))
         # Remote Config Only
         server_address = "192.168.1.216"
         refresh_period = 1.5

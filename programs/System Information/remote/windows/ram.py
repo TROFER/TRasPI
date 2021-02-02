@@ -26,7 +26,7 @@ class Main(core.render.Window):
         App.interval(self.refresh, 1.5)
     
     async def show(self):
-        Backlight.fill((App.const.colour), hsv=False)
+        Backlight.gradient(App.const.colour, hsv=False)
 
     def refresh(self):
         self.current = json.loads(self.client.buffer)
