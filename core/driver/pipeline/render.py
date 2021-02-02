@@ -131,7 +131,7 @@ class Renderer:
                 for x in range(SysConstant.width):
                     pixel = next(data)
                     if pixel != self.cache_frame[x][y]:
-                        self.buffer_pixel.put((x, y, 1 if pixel == 0 else 0))
+                        self.buffer_pixel.put((x, y, 1 if pixel[0] == 0 else 0))
                         self.cache_frame[x][y] = pixel
 
             self.buffer_pixel.put(None)
