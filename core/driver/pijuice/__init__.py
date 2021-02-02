@@ -1,4 +1,4 @@
 from . import pijuice
 PiJuice = pijuice.PiJuice
 def available() -> bool:
-    return pijuice.get_versions()[1] is not None
+    return pijuice.PiJuice().status.GetChargeLevel()["error"] == "NO_ERROR"
