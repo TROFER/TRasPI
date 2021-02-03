@@ -6,7 +6,7 @@ class Primative:
 
     zindex = 0
 
-    def __init__(self, zindex: int):
+    def __init__(self, zindex: int=None):
         if zindex is not None:
             self.zindex = zindex
         self._widget = (self,)
