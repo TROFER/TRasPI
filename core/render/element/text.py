@@ -7,8 +7,8 @@ __all__ = ["Text"]
 
 class Text(Primative):
 
-    def __init__(self, anchor: Vector, text: str="Default Text", font: Font=std.font, colour: int=0, justify: str='C'):
-        super().__init__()
+    def __init__(self, anchor: Vector, text: str="Default Text", font: Font=std.font, colour: int=0, justify: str='C', zindex: int=None):
+        super().__init__(zindex)
         self.anchor = anchor
         self.text, self.colour, self.justify, self.font = str(text), colour, justify, font
         self._calc_pos()
@@ -36,4 +36,3 @@ class Text(Primative):
 
     def _font_size(self):
         return Vector(*self.font.text_pixel_size(self.text))
-
