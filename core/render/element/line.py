@@ -5,8 +5,8 @@ __all__ = ["Line"]
 
 class Line(Primative):
 
-    def __init__(self, pos1: Vector, pos2: Vector, colour: int=0, width: int=1, joint=None):
-        super().__init__()
+    def __init__(self, pos1: Vector, pos2: Vector, colour: int=0, width: int=1, joint=None, zindex: int=None):
+        super().__init__(zindex)
         self.colour, self.width, self.joint = colour, width, joint
         self.pos1, self.pos2 = pos1, pos2
 

@@ -4,7 +4,11 @@ __all__ = ["Primative"]
 
 class Primative:
 
-    def __init__(self):
+    zindex = 0
+
+    def __init__(self, zindex: int):
+        if zindex is not None:
+            self.zindex = zindex
         self._widget = (self,)
     def __repr__(self) -> str:
         return f"Primative[{self.__class__.__name__}]"

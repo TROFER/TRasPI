@@ -4,8 +4,8 @@ from ...interface import Interface
 
 class Marquee(Text):
 
-    def __init__(self, anchor: Vector, text: str="Text", width: int=None, speed: float=1, small=True, flag=True, **kwargs):
-        super().__init__(anchor, text, **kwargs)
+    def __init__(self, anchor: Vector, text: str="Text", width: int=None, speed: float=1, small=True, flag=True, zindex: int=None, **kwargs):
+        super().__init__(anchor, text, zindex, **kwargs)
         self.width = abs(int(width)) if width else len(self.text)
         self.speed = abs(speed) if speed else 1
         self.flag = bool(flag)

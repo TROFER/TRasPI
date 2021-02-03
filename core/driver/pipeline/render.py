@@ -1,6 +1,7 @@
 from ...error.attributes import SysConstant
 import multiprocessing as mp
 from .display import Display
+from collections import defaultdict
 if SysConstant.process:
     import PIL.ImageDraw
     import PIL.Image
@@ -11,10 +12,11 @@ if SysConstant.process:
         def __init__(self):
             self.__wgt_r = set() # Currently Rendered Widgets
             self.__wgt_s = set() # Submitted Widgets
+            self.__wgt_z = defaultdict(set) # Rendering Order
             self._scene = False
             self.__update = True
 
-            self.__template = PIL.Image.new("LA", (SysConstant.width, SysConstant.height), 1)
+            self.__template = PIL.Image.new("1", (SysConstant.width, SysConstant.height), 1)
             self.__image = self.__template.copy()
             self.__draw = PIL.ImageDraw.Draw(self.__image)
 
@@ -26,7 +28,7 @@ if SysConstant.process:
             self.__template = template.image
 
         def submit(self, wgt):
-            self.__wgt_s.add(wgt.render)
+            self.__wgt_s.add(wgt)
 
             if not all(i==j for i,j in zip(wgt.copy(), wgt._widget)):
                 wgt._widget = wgt.copy()
@@ -47,8 +49,13 @@ if SysConstant.process:
                 self.__image = self.__template.copy()
                 self.__draw = PIL.ImageDraw.Draw(self.__image)
 
-                for func in self.__wgt_r:
-                    func(self.__draw)
+                self.__wgt_z.clear()
+                for wgt in self.__wgt_r:
+                    self.__wgt_z[wgt.zindex].add(wgt)
+
+                for key in sorted(self.__wgt_z.keys()):
+                    for wgt in self.__wgt_z[key]:
+                        wgt.render(self.__draw)
 
                 self.__renderer.buffer_frame.put(self.__image)
                 self.__renderer.event_frame.set()
@@ -131,7 +138,7 @@ class Renderer:
                 for x in range(SysConstant.width):
                     pixel = next(data)
                     if pixel != self.cache_frame[x][y]:
-                        self.buffer_pixel.put((x, y, 1 if pixel[0] == 0 else 0))
+                        self.buffer_pixel.put((x, y, 1 if pixel == 0 else 0))
                         self.cache_frame[x][y] = pixel
 
             self.buffer_pixel.put(None)

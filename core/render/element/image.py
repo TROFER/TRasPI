@@ -6,8 +6,8 @@ __all__ = ["Image"]
 
 class Image(Primative):
 
-    def __init__(self, anchor: Vector, image: AssetImage, just_w: str='C', just_h: str=None):
-        super().__init__()
+    def __init__(self, anchor: Vector, image: AssetImage, just_w: str='C', just_h: str=None, zindex: int=None):
+        super().__init__(zindex)
         self.image, self.just_w, self.just_h = image, just_w, just_h
         self.anchor = anchor
         self._calc_pos()
@@ -43,4 +43,3 @@ class Image(Primative):
             off_h = self.anchor[1]
 
         self.pos = Vector(off_w, off_h)
-

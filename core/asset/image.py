@@ -6,13 +6,15 @@ __all__ = ["Image", "Template", "Icon"]
 
 class Image(Asset):
 
-    def __init__(self, path: str):
+    def __init__(self, path: str, alpha=False):
         if isinstance(path, PIL.Image.Image):
             self.path = ""
-            self.image = path
+            img: PIL.Image.Image = path.convert("LA")
         else:
             super().__init__(path)
-            self.image = PIL.Image.open(self.path).convert("LA")
+            img: PIL.Image.Image = PIL.Image.open(self.path).convert("LA")
+        self.image: PIL.Image.Image = img.getchannel(0)
+        self.alpha: PIL.Image.Image = img.getchannel(1) if alpha else None
 
     def __repr__(self) -> str:
         return f"{super().__repr__()}<{self.image} {self.path}>"
