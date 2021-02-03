@@ -11,7 +11,7 @@ class TextBox(Text):
     def __init__(self, anchor, *args, line_col=0, fill=None, width=1, zindex: int=None, **kwargs):
         self.rect = Rectangle(Vector(0, 0), Vector(0, 0),
                               line_col, fill, width, zindex)
-        super().__init__(anchor, *args, zindex=None if zindex is None else zindex+1, **kwargs)
+        super().__init__(anchor, *args, zindex=self.rect.zindex+1, **kwargs)
 
     def render(self, image: "PIL.ImageDraw.ImageDraw"):
         self.rect.render(image)
