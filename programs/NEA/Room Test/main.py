@@ -37,6 +37,7 @@ class Viewer(core.render.Window):
         layers = [
             ParalaxLayer(self.room.base, 0.75),
             ParalaxLayer(self.room.background, 2),
+            ParalaxLayer(self.room.fixings, 3),
             ParalaxLayer(self.room.foreground, 5)]
         self.paralax = Paralax(layers)
         colours = [self.room.base.copy().convert("RGB").getpixel((x, 64))

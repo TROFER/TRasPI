@@ -37,13 +37,7 @@ class Room:
             self.foreground.alpha_composite(Foreground(self.theme_id).image, (x, 0))
     
     def generate_fixings(self):
-        self.lighting = Image.new("RGBA", (self.x, self.y), color=0)
-        multiplier = 32
-        type_id = lib.get_typeid("fixing")
-        for x in range(multiplier, self.x, multiplier):
-            image = self.get_asset(type_id, self.theme_id)
-            x, y = x + align(image, "x", "C"), self.Fixing["y"]
-            self.lighting.alpha_composite(image, (x, y))
+        self.fixings = Fixings((self.x, self.y), self.theme_id).image
 
 
 class Base:
@@ -129,3 +123,16 @@ class Foreground(Background, Base):
 
     def check_size(self, x1, y1, x2, y2):
         return True if x1 <= x2 and y1 <= y2 else False
+
+
+class Fixings(Base):
+
+    Spacing = 32
+
+    def __init__(self, size: tuple, theme_id):
+        self.image = Image.new("RGBA", size, color=0)
+        type_id = lib.get_typeid("fixing")
+        for x in range(self.Spacing, size[0] - self.Spacing, self.Spacing):
+            image = self.get_asset(type_id, theme_id)
+            x, y = x + align(image, "x", "C"), 0
+            self.image.alpha_composite(image, (x, y))

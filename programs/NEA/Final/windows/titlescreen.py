@@ -2,9 +2,11 @@ import core
 from app import App
 from control import Keyboard
 from core import Vector
-from core.render.element import Image, TextBox
+from core.render.element import Image, TextBox, Rectangle
 from elements import ImageMotion
 
+# White = 1
+# Black = 0
 
 class Main(core.render.Window):
 
@@ -12,9 +14,9 @@ class Main(core.render.Window):
 
     def __init__(self):
         self.elements = [
-            TextBox(Vector(64, 25), "Play Game", colour=0, line_col=1, fill=0),
-            TextBox(Vector(64, 40), "Scoreboard", colour=0, line_col=1, fill=0),
-            TextBox(Vector(64, 55), "Extra", colour=0, line_col=1, fill=0),
+            TextBox(Vector(64, 25), "Play Game", colour=1, fill=0, line_col=1),
+            TextBox(Vector(64, 40), "Scoreboard", colour=1, fill=0, line_col=1),
+            TextBox(Vector(64, 55), "Extra", colour=1, fill=0, line_col=1),
             Image(Vector(64, 10), App.asset.ts_cursor),
             Image(Vector(64, 5), App.asset.ts_title)]
         self.imagemotion = ImageMotion(App.asset.ts_template)
