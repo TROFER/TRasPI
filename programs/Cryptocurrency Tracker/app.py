@@ -1,5 +1,6 @@
 import core
 
+
 class App(core.type.Application):
     name = "Crypto Tracker"
 
@@ -13,5 +14,4 @@ class App(core.type.Application):
         title_font = core.asset.Font("bitocra-13-full", 13)
         ethereum = core.asset.Image("eth-logo")
         bitcoin = core.asset.Image("btc-logo")
-
-        
+        litecoin = core.asset.Image("ltc-logo")
