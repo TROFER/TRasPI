@@ -39,7 +39,7 @@ class Viewer(core.render.Window):
 
     def __init__(self, path):
         shutil.copy(path, f"{core.sys.const.path}programs/Photo Viewer/resource/temp/current.image")
-        self.image = Image(Vector(0, 0), ImageAsset(f"{core.sys.const.path}programs/Photo Viewer/resource/temp/current.image", absolute=True), just_w='L')
+        self.image = Image(Vector(0, 0), ImageAsset(f"programs/Photo Viewer/resource/temp/current"), just_w='L')
         super().__init__()
 
     def render(self):
