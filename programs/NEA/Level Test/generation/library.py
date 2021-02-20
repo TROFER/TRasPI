@@ -1,14 +1,13 @@
 import os
 import sqlite3
 
-import core
 from PIL import Image as PIL
 
 
 class Library:
 
-    DB_PATH = f"{core.sys.const.path}programs/NEA/Room Test/resource/assets.db"
-    IMPORT_PATH = f"{core.sys.const.path}programs/NEA/Room Test/import/"
+    IMPORT_PATH = f"D:/Documents/Programing/Python/TrasPi Operating System/programs/NEA/Level Test/import/"
+    DB_PATH = f"D:/Documents/Programing/Python/TrasPi Operating System/programs/NEA/Level Test/resource/assets.db"
     ASSET_TYPES = ["foreground", "base", "background",
                    "furniture", "fixing", "palette", "transition"]
 
