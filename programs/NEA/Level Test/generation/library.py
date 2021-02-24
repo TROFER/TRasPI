@@ -48,6 +48,23 @@ class Library:
             FOREIGN KEY (theme_id) REFERENCES theme(id),
             FOREIGN KEY (image_id) REFERENCES image(id)
             )""")
+        self.c.execute("""CREATE TABLE transition(
+            id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+            north_exit INTEGER,
+            south_exit INTEGER,
+            left_exit INTEGER,
+            right_exit INTEGER,
+            FOREIGN KEY (north_exit) REFERENCES asset(id),
+            FOREIGN KEY (south_exit) REFERENCES asset(id),
+            FOREIGN KEY (left_exit) REFERENCES asset(id),
+            FOREIGN KEY (right_exit) REFERENCES asset(id)
+            )""")
+        self.c.execute("""CREATE TABLE frame(
+            transition_id INTEGER,
+            asset_id INTEGER,
+            FOREIGN KEY (transition_id) REFERENCES transition(id),
+            FOREIGN KEY (asset_id) REFERENCES asset(id)
+            )""")
         for _type in self.ASSET_TYPES:
             self.c.execute(
                 "INSERT INTO type (name, end) VALUES (?, ?)", [_type, False])
@@ -74,10 +91,31 @@ class Library:
         image_id = self.c.lastrowid
         self.c.execute("INSERT INTO asset (type_id, theme_id, image_id) VALUES (?, ?, ?)", [
             type_id, theme_id, image_id])
+        return self.c.lastrowid
 
     def load_assets(self, path):
         for _item in os.scandir(path):
-            if _item.is_dir():
+            if "transitions" in _item.name and _item.is_dir():
+                for transition in os.scandir(_item.path):
+                    for _file in os.scandir(transition.path):
+                        if "top" in _file.name:
+                            ne_assetID = self.import_asset(_file.path)
+                        elif "down" in _file.name:
+                            se_assetID = self.import_asset(_file.path)
+                        elif "left" in _file.name:
+                            le_assetID = self.import_asset(_file.path)
+                        elif "right" in _file.name:
+                            re_assetID = self.import_asset(_file.path)
+                    self.c.execute("INSERT INTO transition (north_exit, south_exit, left_exit, right_exit) VALUES(?, ?, ?, ?)",
+                                   [ne_assetID, se_assetID, le_assetID, re_assetID])
+                    transition_id = self.c.lastrowid
+                    for frame in os.scandir(transition.path + "/frames"):
+                        print(f"Found frame for {transition.name}")
+                        asset_id = self.import_asset(
+                            frame.path, "transition", transition.name)
+                        self.c.execute("INSERT INTO frame (transition_id, asset_id) VALUES (?, ?)", [
+                                       transition_id, asset_id])
+            elif _item.is_dir():
                 for _type in os.scandir(f"{self.IMPORT_PATH}{_item.name}"):
                     if _type.is_dir() and _type.name.lower() in self.ASSET_TYPES:
                         for _asset in os.scandir(f"{self.IMPORT_PATH}{_item.name}/{_type.name}"):
@@ -88,9 +126,6 @@ class Library:
                     if "palette" in _type.name.lower():
                         print(f"Pallete Found! for theme '{_item.name}'")
                         self.import_asset(_type.path, "palette", _item.name)
-            elif _item.is_file():
-                if "transition" in _item.name:
-                    self.import_asset(_item.path, "transition", _item.name)
 
     def get_typeid(self, name: str, end: int = 0):
         self.c.execute(
