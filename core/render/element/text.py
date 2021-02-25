@@ -2,6 +2,7 @@ from ...vector import Vector
 from ..primative import Primative
 from ...asset.font import Font
 from ...asset.std import AssetPool as std
+from PIL import Image
 
 __all__ = ["Text"]
 
@@ -13,8 +14,10 @@ class Text(Primative):
         self.text, self.colour, self.justify, self.font = str(text), colour, justify, font
         self._calc_pos()
 
-    def render(self, image: "PIL.ImageDraw.ImageDraw"):
-        image.text(self.pos, self.text, self.colour, self.font.font)
+    def render(self, draw: "PIL.ImageDraw.ImageDraw"):
+        draw.text(self.pos, self.text, self.colour, self.font.font)
+        image = Image.Image()._new(draw.im)
+        image.paste(Image.eval(image, lambda a: 0 if a <=128 else 255), (0, 0))
 
     def copy(self):
         return self.anchor, self.text, self.colour, self.justify, self.font
