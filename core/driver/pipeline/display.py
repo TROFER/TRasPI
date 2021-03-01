@@ -11,7 +11,7 @@ class Display:
     if _FLAG: # GFXHAT
         def __init__(self):
             lcd.st7567.setup()
-            self.contrast(40)
+            self.contrast(35)
 
         def initialize(self):
             pass

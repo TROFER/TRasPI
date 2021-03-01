@@ -1,24 +1,8 @@
-import random
+from scene import Room, Transition
 
+class Main: #### CREATE ROOM & Transition Windows that generate Sub map within their __init__
 
-class Level:
-
-    Constraints = {"min" : 3, "max" : 6}
+    LEVEL_DEPTH = 50
 
     def __init__(self):
-        self.depth = random.randint(self.Constraints["min"], self.Constraints["max"])
-        self.generate()
-
-    def generate(self):
-        self.level = 
-        for layer_number in range(self.depth):
-
-
-
-level = [
-    [[], [], [], [], [], [], [], [], [], [], [], [], []],
-    [[], [], [], [], [], [], [], [], [], [], [], [], []],
-    [[], [], [], [], [], [], [], [], [], [], [], [], []],
-    [[], [], [], [], [], [], [], [], [], [], [], [], []],
-    [[], [], [], [], [], [], [], [], [], [], [], [], []]
-]
+        pass
