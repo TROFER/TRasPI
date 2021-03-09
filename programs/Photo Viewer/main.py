@@ -1,12 +1,14 @@
-import core
 import os
-from core.render.element import Text, Image
-from core.asset.image import Image as ImageAsset
-from core import Vector
-from core.std import menu
-from app import App
 import shutil
-import os
+
+import core
+from core import Vector
+from core.asset.image import Image as ImageAsset
+from core.hw import Backlight
+from core.render.element import Image, Text
+from core.std import menu
+
+from app import App
 
 
 class Open(menu.Menu):
@@ -44,6 +46,9 @@ class Viewer(core.render.Window):
 
     def render(self):
         core.interface.render(self.image)
+    
+    async def show(self):
+        Backlight.fill((255, 255, 255), hsv=False, force=True)
 
 
 class Handle(core.input.Handler):
