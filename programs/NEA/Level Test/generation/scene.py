@@ -42,35 +42,37 @@ class Room:
 
 class Transition:
 
-    Anchors = [(64, 55), (64, 62), (15, 55), (113, 55)]
+    ExitGeometryX = [32, 64, 95]
+    ExitGeometryY = 50
 
     def __init__(self, _type: tuple):
         self.type = _type
         lib.c.execute("SELECT id FROM transition")
         self.transition_id = random.choice(lib.c.fetchall())[0]
-        self.load_frames(), self.generate_background
+        self.background, self.foreground = self.load_frames()
+        self.generate_exits()
 
     def load_frames(self):
-        lib.c.execute("SELECT image_id FROM frame WHERE transition_id = ?", [
-                      self.transition_id])
-        self.frames = []
-        for image_id in lib.c.fetchall():
-            lib.c.execute(
-                "SELECT data, width, height FROM image WHERE id = ?", [image_id[0]])
-            _image = lib.c.fetchone()
-            self.frames.append(PIL.frombytes(
-                "RGBA", (_image[1], _image[2]), _image[0]))
-        self.background = self.frames[0]
+        self.bg_frames, self.fg_frames = [], []
+        # Load Background Frames
+        lib.c.execute("SELECT image_id FROM frame WHERE transition_id = ? AND type = ?", [self.transition_id, "bg"])
+        self.bg_frames += [lib.fetch_image(_id[0]) for _id in lib.c.fetchall()]
+        # Load Foreground Frames
+        lib.c.execute("SELECT image_id FROM frame WHERE transition_id = ? AND type = ?", [self.transition_id, "fg"])
+        self.fg_frames += [lib.fetch_image(_id[0]) for _id in lib.c.fetchall()]
+        return self.bg_frames[0], self.fg_frames[0]
 
-    def generate_background(self):
-        self.foreground = PIL.new("RGBA", (128, 64))
-        lib.c.execute("SELECT north_exit, south_exit, left_exit, right_exit FROM transition WHERE id = ?", [
-                      self.transition_id])
-        for i, image_id in enumerate(lib.c.fetchone()):
-            if self.type[i]:
-                _image = lib.fetch_image(image_id)
-                _anchor = (self.Anchors[i][0] + align(_image, "x", "C"), 
-                            self.Anchors[i][1] + align(_image, "y", "B") if i != 0 else 0)
-                self.foreground.paste(_image, (_anchor))
+    def generate_exits(self):
+        self.stage = PIL.new("RGBA", (128, 64))
+        lib.c.execute("SELECT center_exit, left_exit, right_exit FROM transition WHERE id = ?", [self.transition_id])
+        for _generate, x, image_id in zip(self.type, self.ExitGeometryX, lib.c.fetchone()):
+            if _generate:
+                image = lib.fetch_image(image_id)
+                x += align(image, "x", "C")
+                y = self.ExitGeometryY + align(image, "y", "B")
+                self.stage.alpha_composite(image, dest=(x, y))
 
-trs = Transition([True, True, True, True])
+trs = Transition([True, True, True])
+trs.background.alpha_composite(trs.stage)
+trs.background.alpha_composite(trs.foreground)
+trs.background.save("debug.png")

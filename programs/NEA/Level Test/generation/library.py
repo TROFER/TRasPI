@@ -6,8 +6,8 @@ from PIL import Image as PIL
 
 class Library:
 
-    IMPORT_PATH = f"D:/Documents/Programing/Python/TrasPi Operating System/programs/NEA/Level Test/import/"
-    DB_PATH = f"D:/Documents/Programing/Python/TrasPi Operating System/programs/NEA/Level Test/resource/assets.db"
+    IMPORT_PATH = f"D:/Documents/Programming/Python/TRasPI Operating System/programs/NEA/Level Test/import/"
+    DB_PATH = f"D:/Documents/Programming/Python/TRasPI Operating System/programs/NEA/Level Test/resource/assets.db"
     ASSET_TYPES = ["foreground", "base", "background",
                    "furniture", "fixing", "palette", "transition"]
 
@@ -50,18 +50,17 @@ class Library:
             )""")
         self.c.execute("""CREATE TABLE transition(
             id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-            north_exit INTEGER,
-            south_exit INTEGER,
+            center_exit INTEGER,
             left_exit INTEGER,
             right_exit INTEGER,
-            FOREIGN KEY (north_exit) REFERENCES image(id),
-            FOREIGN KEY (south_exit) REFERENCES image(id),
+            FOREIGN KEY (center_exit) REFERENCES image(id),
             FOREIGN KEY (left_exit) REFERENCES image(id),
             FOREIGN KEY (right_exit) REFERENCES image(id)
             )""")
         self.c.execute("""CREATE TABLE frame(
             transition_id INTEGER,
             image_id INTEGER,
+            type TEXT,
             FOREIGN KEY (transition_id) REFERENCES transition(id),
             FOREIGN KEY (image_id) REFERENCES image(id)
             )""")
@@ -96,37 +95,38 @@ class Library:
         return self.c.lastrowid
 
     def load_assets(self, path):
+        _count = 0
         for _item in os.scandir(path):
-            if "transitions" in _item.name and _item.is_dir():
+            if "transition" in _item.name and _item.is_dir():
                 for transition in os.scandir(_item.path):
                     for _file in os.scandir(transition.path):
-                        if "top" in _file.name:
-                            north_exit = self.import_image(_file.path)
-                        elif "down" in _file.name:
-                            south_exit = self.import_image(_file.path)
+                        if "center" in _file.name:
+                            center_exit = self.import_image(_file.path)
                         elif "left" in _file.name:
                             left_exit = self.import_image(_file.path)
                         elif "right" in _file.name:
                             right_exit = self.import_image(_file.path)
-                    self.c.execute("INSERT INTO transition (north_exit, south_exit, left_exit, right_exit) VALUES(?, ?, ?, ?)",
-                                    [north_exit, south_exit, left_exit, right_exit])
+                    self.c.execute("INSERT INTO transition (center_exit, left_exit, right_exit) VALUES(?, ?, ?)",
+                                    [center_exit, left_exit, right_exit])
                     transition_id = self.c.lastrowid
-                    for frame in os.scandir(transition.path + "/frames"):
-                        print(f"Found frame for {transition.name}")
+                    for frame in os.scandir(transition.path + "/frames/background"):
                         image_id = self.import_image(frame.path)
-                        self.c.execute("INSERT INTO frame (transition_id, image_id) VALUES (?, ?)", [
-                                        transition_id, image_id])
+                        self.c.execute("INSERT INTO frame (transition_id, image_id, type) VALUES (?, ?, ?)", [
+                                        transition_id, image_id, "bg"])
+                    for frame in os.scandir(transition.path + "/frames/foreground"):
+                        image_id = self.import_image(frame.path)
+                        self.c.execute("INSERT INTO frame (transition_id, image_id, type) VALUES (?, ?, ?)", [
+                            transition_id, image_id, "fg"])
             elif _item.is_dir():
                 for _type in os.scandir(f"{self.IMPORT_PATH}{_item.name}"):
                     if _type.is_dir() and _type.name.lower() in self.ASSET_TYPES:
                         for _asset in os.scandir(f"{self.IMPORT_PATH}{_item.name}/{_type.name}"):
-                            print(
-                                f"{_type.name.capitalize()} asset found! for theme '{_item.name}' name '{_asset.name}' end = {True if 'end' in _asset.name else False}")
                             self.import_asset(
                                 _asset.path, _type.name, _item.name, end=True if "end" in _asset.name else False)
+                            _count += 1
                     if "palette" in _type.name.lower():
-                        print(f"Pallete Found! for theme '{_item.name}'")
                         self.import_asset(_type.path, "palette", _item.name)
+        print(f"Assets DB rebuilt. Imported {_count} assets")
 
     def get_typeid(self, name: str, end: int = 0):
         self.c.execute(
@@ -142,9 +142,9 @@ class Library:
         return self.c.fetchone()[0]
     
     def fetch_image(self, image_id):
-        lib.c.execute(
+        self.c.execute(
             "SELECT data, width, height FROM image WHERE id = ?", [image_id])
-        _image = lib.c.fetchone()
+        _image = self.c.fetchone()
         return PIL.frombytes("RGBA", (_image[1], _image[2]), _image[0])
 
 
