@@ -2,7 +2,7 @@ import random
 
 from PIL import Image as PIL
 from layers import Base, Background, Foreground, Fixings
-from library import library as lib
+from library import library as lib 
 from misc import align
 
 
@@ -72,7 +72,8 @@ class Transition:
                 y = self.ExitGeometryY + align(image, "y", "B")
                 self.stage.alpha_composite(image, dest=(x, y))
 
-trs = Transition([True, True, True])
+'''trs = Transition([True, False, True])
 trs.background.alpha_composite(trs.stage)
 trs.background.alpha_composite(trs.foreground)
 trs.background.save("debug.png")
+'''

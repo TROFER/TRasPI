@@ -14,9 +14,9 @@ class Main(core.render.Window):
 
     def __init__(self):
         self.elements = [
-            TextBox(Vector(64, 25), "Play Game", colour=1, fill=0, line_col=1),
-            TextBox(Vector(64, 40), "Scoreboard", colour=1, fill=0, line_col=1),
-            TextBox(Vector(64, 55), "Extra", colour=1, fill=0, line_col=1),
+            TextBox(Vector(64, 25), "Play Game", colour=255, fill=0, line_col=1),
+            TextBox(Vector(64, 40), "Scoreboard", colour=255, fill=0, line_col=1),
+            TextBox(Vector(64, 55), "Extra", colour=255, fill=0, line_col=1),
             Image(Vector(64, 10), App.asset.ts_cursor),
             Image(Vector(64, 5), App.asset.ts_title)]
         self.imagemotion = ImageMotion(App.asset.ts_template)
