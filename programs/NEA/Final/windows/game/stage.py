@@ -2,7 +2,7 @@ import asyncio
 import random
 
 import core
-import util
+import common
 from elements import backlight, paralax
 from generation import scene
 
@@ -35,7 +35,7 @@ class Room(core.render.Window):
             paralax.ParalaxLayer(self.scene.fixings, speed=3),
             paralax.ParalaxLayer(self.scene.foreground, speed=5)
         ])
-        self.backlight = backlight.Backlight(util.colour_strip(self.scene.base), y=64)
+        self.backlight = backlight.Backlight(common.colour_strip(self.scene.base), y=64)
         self.elements = [self.paralax]
 
 

@@ -9,3 +9,6 @@ def align(image, axis: str, alignment: str):
             'T': image.height,
             'B': 0 - image.height}}
     return int(alignments[axis][alignment])
+
+def colour_strip(image, y):
+    return [image.getpixel((x, y)) for x in range(0, image.width - 1)]

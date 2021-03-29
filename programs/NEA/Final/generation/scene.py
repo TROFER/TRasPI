@@ -1,9 +1,10 @@
 import random
 
 from PIL import Image as PIL
-from layers import Base, Background, Foreground, Fixings
-from library import library as lib 
-from util import align
+
+from generation.common import align
+from generation.layers import Background, Base, Fixings, Foreground
+from game.library import library as lib
 
 
 class Room:
