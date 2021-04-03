@@ -2,7 +2,7 @@
 
 library.py | Removed assets.db build commands
 library.py | Removed type validation checks
-library.py | Removed unused count_records and get_typeid functions
+library.py | Removed unused count_records function
 
 [CHANGES]
 

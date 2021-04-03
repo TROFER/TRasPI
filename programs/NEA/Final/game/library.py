@@ -101,6 +101,17 @@ class Library:
         SELECT data, with, height FROM image WHERE id = ?""", [image_id])
         image = self.databases["assets"].c.fetchone()
         return PIL.frombytes("RGBA", (image[1], image[2]), image[0])
+    
+    def fetch_typeid(self, table: str, name: str):
+        if "asset" in table:
+            self.databases["assets"].c.execute("SELECT id FROM asset-types WHERE name = ?",
+            [name]) 
+        elif "pack" in table:
+            self.databases["assets"].c.execute("SELECT id FROM pack-type WHERE name = ?",
+            [name])
+        else:
+            return None
+        return self.databases.c.fetchone()[0]
 
 
 class Database:

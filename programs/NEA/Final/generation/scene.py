@@ -4,14 +4,17 @@ from PIL import Image as PIL
 
 from generation.common import align
 from generation.layers import Background, Base, Fixings, Foreground
-from game.library import library as lib
+from game.library import lib
 
 
 class Room:
 
     def __init__(self, width):
-        lib.c.execute("SELECT id FROM theme")
-        self.theme_id = random.choice(lib.c.fetchall())[0]
+        # Set ids
+        type_id = lib.fetch_typeid("pack", "room")
+        lib.c.execute("SELECT id FROM pack WHERE type = ? ", [type_id])
+        self.pack_id = random.choice(lib.c.fetchall())[0]
+        # Generate
         self.x, self.y = width * 128, 64
         self.generate_base(), self.generate_background(), self.generate_foreground()
         self.generate_fixings()
@@ -19,62 +22,69 @@ class Room:
     def generate_base(self):
         self.base = PIL.new("RGBA", (self.x, 65), color=0)
         for x in range(0, self.x, 128):
-            self.base.alpha_composite(Base(self.theme_id).image, (x, 0))
+            self.base.alpha_composite(Base(self.pack_id).image, (x, 0))
 
     def generate_background(self):
         self.background = PIL.new("RGBA", (self.x, self.y), color=0)
         for x in range(0, self.x, 128):
             self.background.alpha_composite(
-                Background(self.theme_id).image, (x, 0))
+                Background(self.pack_id).image, (x, 0))
 
     def generate_foreground(self):
         self.foreground = PIL.new("RGBA", (self.x, self.y), color=0)
         self.foreground.alpha_composite(Foreground(
-            self.theme_id, end=True).image, (0, 0))
-        self.foreground.alpha_composite(Foreground(self.theme_id, end=True).image.transpose(
+            self.pack_id, end=True).image, (0, 0))
+        self.foreground.alpha_composite(Foreground(self.pack_id, end=True).image.transpose(
             PIL.FLIP_LEFT_RIGHT), (self.x - 128, 0))
         for x in range(128, self.x - 128, 128):
             self.foreground.alpha_composite(
-                Foreground(self.theme_id).image, (x, 0))
+                Foreground(self.pack_id).image, (x, 0))
 
     def generate_fixings(self):
-        self.fixings = Fixings((self.x, self.y), self.theme_id).image
+        self.fixings = Fixings((self.x, self.y), self.pack_id).image
 
 
 class Transition:
 
-    ExitGeometryX = [32, 64, 95]
-    ExitGeometryY = 50
+    Anchor = {
+        "left" : (32, 50),
+        "center" : (64, 50),
+        "right" : (95, 50)
+    }
 
-    def __init__(self, _type: tuple):
-        self.type = _type
-        lib.c.execute("SELECT id FROM transition")
-        self.transition_id = random.choice(lib.c.fetchall())[0]
-        self.background, self.foreground = self.load_frames()
+    def __init__(self, exits: tuple):
+        self.exits = exits
+        # Set ids
+        lib.databases["assets"].c.execute("SELECT id FROM pack WHERE type_id = ?",
+        [lib.fetch_typeid("pack", "transition")])
+        self.pack_id = random.choice(lib.databases.c.fetchall())[0]
+        # Construct
+        self.load_frames()
+        self.background = self.background_frames[0]
+        self.foreground = self.foreground_frames[0]
         self.generate_exits()
 
     def load_frames(self):
-        self.bg_frames, self.fg_frames = [], []
-        # Load Background Frames
-        lib.c.execute("SELECT image_id FROM frame WHERE transition_id = ? AND type = ?", [self.transition_id, "bg"])
-        self.bg_frames += [lib.fetch_image(_id[0]) for _id in lib.c.fetchall()]
-        # Load Foreground Frames
-        lib.c.execute("SELECT image_id FROM frame WHERE transition_id = ? AND type = ?", [self.transition_id, "fg"])
-        self.fg_frames += [lib.fetch_image(_id[0]) for _id in lib.c.fetchall()]
-        return self.bg_frames[0], self.fg_frames[0]
-
+        # Background Frames
+        type_id = lib.fetch_typeid("asset", "background")
+        lib.databases["assets"].c.execute("SELECT image_id FROM asset WHERE pack_id = ? AND type_id = ?",
+        [self.pack_id, type_id])
+        self.background_frames = []
+        for image_id in lib.databases["assets"].c.fetchall():
+            self.background_frames += lib.fetch_image(image_id[0])
+        # Foregroud Frames
+        type_id = lib.fetch_typeid("asset", "foreground")
+        lib.databases["assets"].c.execute("SELECT image_id FROM asset WHERE pack_id = ? AND type_id = ?"
+        [self.pack_id, type_id])
+        self.foreground_frames = []
+        for image_id in lib.databases["assets"].c.fetchall():
+            self.foreground_frames += lib.fetch_image(image_id[0])
+        
     def generate_exits(self):
-        self.stage = PIL.new("RGBA", (128, 64))
-        lib.c.execute("SELECT center_exit, left_exit, right_exit FROM transition WHERE id = ?", [self.transition_id])
-        for _generate, x, image_id in zip(self.type, self.ExitGeometryX, lib.c.fetchone()):
-            if _generate:
-                image = lib.fetch_image(image_id)
-                x += align(image, "x", "C")
-                y = self.ExitGeometryY + align(image, "y", "B")
-                self.stage.alpha_composite(image, dest=(x, y))
-
-'''trs = Transition([True, False, True])
-trs.background.alpha_composite(trs.stage)
-trs.background.alpha_composite(trs.foreground)
-trs.background.save("debug.png")
-'''
+        for build, name, anchor in zip(self.exits, ["left-exit", "center-exit", "right_exit"], self.Anchor.items()):
+            if build:
+                type_id = lib.fetch_typeid("asset", name)
+                lib.databases["assets"].c.execute("SELECT image_id FROM asset WHERE pack_id = ? AND type_id = ?",
+                [self.pack_id, type_id])
+                image = lib.fetch_image(random.choice(lib.databases["assets"].c.fetchall())[0])
+                self.background.alpha_composite(image, anchor)
