@@ -42,31 +42,32 @@ class Library:
         except FileNotFoundError:
             print("[ERROR] Unable to locate build file")
 
-    def import_asset(self, db, pack_id, asset):
-        image = PIL.open(asset.path).convert("RGBA")
+    def import_texture(self, db, pack_id, texture):
+        image = PIL.open(texture.path).convert("RGBA")
         db.c.execute("INSERT INTO image (data, width, height) VALUES (?, ?, ?)", [
             image.tobytes(), image.width, image.height
         ])
         image_id = db.c.lastrowid
-        asset_type = asset.name.split(".")[-1].lower()
-        db.c.execute("SELECT id FROM asset-type WHERE name = ?", [asset_type])
+        texture_type = texture.name.split(".")[-1].lower()
+        db.c.execute("SELECT id FROM texture-type WHERE name = ?",
+                     [texture_type])
         try:
             type_id = db.c.fetchone()[0]
         except TypeError:
             db.c.execute(
-                "INSERT INTO asset-type (name) VALUES (?)", [asset_type])
+                "INSERT INTO texture-type (name) VALUES (?)", [texture_type])
             type_id = db.c.lastrowid
-        db.c.execute("INSERT INTO asset(pack_id, image_id, type_id) VALUES (?, ?, ?)", [
+        db.c.execute("INSERT INTO texture(pack_id, image_id, type_id) VALUES (?, ?, ?)", [
             pack_id,
             image_id,
             type_id
         ])
 
-    def load_assets(self, db):
+    def load_textures(self, db):
         count, start = 0, time.time()
-        for package in os.scandir(f"{core.sys.const.path}programs/NEA/assets/"):
+        for package in os.scandir(self.Path["packages"]):
             try:
-                with open(package.path + "/package.meta") as file:
+                with open(package.path + "/pack.meta") as file:
                     meta = json.load(file)
                 db.c.execute(
                     "SELECT id FROM pack-type WHERE name = ?", [meta["type"]])
@@ -85,30 +86,32 @@ class Library:
                 pack_id = db.c.lastrowid
             except json.JSONDecodeError:
                 print(
-                    f"[ERROR] Failed reading package {package.name} metadata")
+                    f"[ERROR] Failed reading package '{package.name}' metadata")
                 continue
             except FileNotFoundError:
                 continue
             for item in os.scandir(package.path):
                 if item.is_file:
-                    self.import_asset(db, pack_id, item)
+                    self.import_texture(db, pack_id, item)
                     count += 1
-            print(f"[INFO] Imported {count} assets in {time.time() - start}s")
+            print(
+                f"[INFO] Imported {count} textures in {time.time() - start}s")
+            db.commit()
 
     def fetch_image(self, image_id: int):
         """Returns a PIL image object"""
-        self.databases["assets"].c.execute("""
+        self.databases["textures"].c.execute("""
         SELECT data, with, height FROM image WHERE id = ?""", [image_id])
-        image = self.databases["assets"].c.fetchone()
+        image = self.databases["textures"].c.fetchone()
         return PIL.frombytes("RGBA", (image[1], image[2]), image[0])
-    
+
     def fetch_typeid(self, table: str, name: str):
-        if "asset" in table:
-            self.databases["assets"].c.execute("SELECT id FROM asset-types WHERE name = ?",
-            [name]) 
+        if "texture" in table:
+            self.databases["textures"].c.execute("SELECT id FROM texture-types WHERE name = ?",
+                                                 [name])
         elif "pack" in table:
-            self.databases["assets"].c.execute("SELECT id FROM pack-type WHERE name = ?",
-            [name])
+            self.databases["textures"].c.execute("SELECT id FROM pack-type WHERE name = ?",
+                                                 [name])
         else:
             return None
         return self.databases.c.fetchone()[0]
@@ -126,8 +129,8 @@ class Database:
 lib = Library()
 
 databases = {
-    "assets": Database(
-        f"{core.sys.const.path}programs/NEA/resouce/db/assets.db", lib.load_assets)
+    "textures": Database(
+        f"{core.sys.const.path}programs/NEA/resouce/db/textures.db", lib.load_textures)
 }
 
 lib.init(databases)

@@ -1,10 +1,10 @@
 import random
 
+from game.library import lib
 from PIL import Image as PIL
 
 from generation.common import align
 from generation.layers import Background, Base, Fixings, Foreground
-from game.library import lib
 
 
 class Room:
@@ -47,16 +47,16 @@ class Room:
 class Transition:
 
     Anchor = {
-        "left" : (32, 50),
-        "center" : (64, 50),
-        "right" : (95, 50)
+        "left": (32, 50),
+        "center": (64, 50),
+        "right": (95, 50)
     }
 
     def __init__(self, exits: tuple):
         self.exits = exits
         # Set ids
-        lib.databases["assets"].c.execute("SELECT id FROM pack WHERE type_id = ?",
-        [lib.fetch_typeid("pack", "transition")])
+        lib.databases["textures"].c.execute("SELECT id FROM pack WHERE type_id = ?",
+                                          [lib.fetch_typeid("pack", "transition")])
         self.pack_id = random.choice(lib.databases.c.fetchall())[0]
         # Construct
         self.load_frames()
@@ -66,25 +66,26 @@ class Transition:
 
     def load_frames(self):
         # Background Frames
-        type_id = lib.fetch_typeid("asset", "background")
-        lib.databases["assets"].c.execute("SELECT image_id FROM asset WHERE pack_id = ? AND type_id = ?",
-        [self.pack_id, type_id])
+        type_id = lib.fetch_typeid("texture", "background")
+        lib.databases["textures"].c.execute("SELECT image_id FROM texture WHERE pack_id = ? AND type_id = ?",
+                                          [self.pack_id, type_id])
         self.background_frames = []
-        for image_id in lib.databases["assets"].c.fetchall():
+        for image_id in lib.databases["textures"].c.fetchall():
             self.background_frames += lib.fetch_image(image_id[0])
         # Foregroud Frames
-        type_id = lib.fetch_typeid("asset", "foreground")
-        lib.databases["assets"].c.execute("SELECT image_id FROM asset WHERE pack_id = ? AND type_id = ?"
-        [self.pack_id, type_id])
+        type_id = lib.fetch_typeid("texture", "foreground")
+        lib.databases["textures"].c.execute("SELECT image_id FROM texture WHERE pack_id = ? AND type_id = ?"
+                                          [self.pack_id, type_id])
         self.foreground_frames = []
-        for image_id in lib.databases["assets"].c.fetchall():
+        for image_id in lib.databases["textures"].c.fetchall():
             self.foreground_frames += lib.fetch_image(image_id[0])
-        
+
     def generate_exits(self):
         for build, name, anchor in zip(self.exits, ["left-exit", "center-exit", "right_exit"], self.Anchor.items()):
             if build:
-                type_id = lib.fetch_typeid("asset", name)
-                lib.databases["assets"].c.execute("SELECT image_id FROM asset WHERE pack_id = ? AND type_id = ?",
-                [self.pack_id, type_id])
-                image = lib.fetch_image(random.choice(lib.databases["assets"].c.fetchall())[0])
+                type_id = lib.fetch_typeid("texture", name)
+                lib.databases["textures"].c.execute("SELECT image_id FROM texture WHERE pack_id = ? AND type_id = ?",
+                                                  [self.pack_id, type_id])
+                image = lib.fetch_image(random.choice(
+                    lib.databases["textures"].c.fetchall())[0])
                 self.background.alpha_composite(image, anchor)

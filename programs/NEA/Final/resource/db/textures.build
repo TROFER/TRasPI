@@ -3,7 +3,7 @@ CREATE TABLE pack-type(
     name TEXT
 )
 %
-CREATE TABLE asset-type(
+CREATE TABLE texture-type(
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     name TEXT
 )
@@ -24,12 +24,12 @@ CREATE TABLE pack(
     FOREIGN KEY (type_id) REFERENCES pack-type(id)
 )
 %
-CREATE TABLE asset(
+CREATE TABLE texture(
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     pack_id INTEGER NOT NULL,
     image_id INTEGER NOT NULL,
     type_id INTEGER NOT NULL,
     FOREIGN KEY (pack_id) REFERENCES pack(id),
     FOREIGN KEY (image_id) REFERENCES image(id),
-    FOREIGN KEY (type_id) REFERENCES asset-type(id)
+    FOREIGN KEY (type_id) REFERENCES texture-type(id)
 )
