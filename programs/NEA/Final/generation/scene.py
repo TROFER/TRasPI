@@ -88,4 +88,6 @@ class Transition:
                                                   [self.pack_id, type_id])
                 image = lib.fetch_image(random.choice(
                     lib.databases["textures"].c.fetchall())[0])
-                self.background.alpha_composite(image, anchor)
+                x += align(image, "X", "C")
+                y = anchor[1] + align(image, "Y", "B")
+                self.background.alpha_composite(image, dest=(x, y))

@@ -57,46 +57,54 @@ class Library:
             db.c.execute(
                 "INSERT INTO texture-type (name) VALUES (?)", [texture_type])
             type_id = db.c.lastrowid
+        if pack_id is not None
         db.c.execute("INSERT INTO texture(pack_id, image_id, type_id) VALUES (?, ?, ?)", [
             pack_id,
             image_id,
             type_id
         ])
+        else:
+            db.c.execute("INSERT INTO texture(image_id, type_id) VALUES (?, ?)", [
+                image_id,
+                type_id
+            ])
 
     def load_textures(self, db):
         count, start = 0, time.time()
-        for package in os.scandir(self.Path["packages"]):
-            try:
-                with open(package.path + "/pack.meta") as file:
-                    meta = json.load(file)
-                db.c.execute(
-                    "SELECT id FROM pack-type WHERE name = ?", [meta["type"]])
+        for item in os.scandir(self.Path["packages"]):
+            if item.is_dir():
                 try:
-                    type_id = db.c.fetchone()[0]
-                except TypeError:
+                    with open(item.path + "/pack.meta") as file:
+                        meta = json.load(file)
                     db.c.execute(
-                        "INSERT INTO pack-type (name) VALUES (?)", [meta["type"]])
-                    type_id = db.c.lastrowid
-                db.c.execute("INSERT INTO pack (name, type_id, author, size) VALUES (?, ?, ?, ?)", [
-                    package.name,
-                    type_id,
-                    meta["author"],
-                    os.path.getsize(package.path)
-                ])
-                pack_id = db.c.lastrowid
-            except json.JSONDecodeError:
-                print(
-                    f"[ERROR] Failed reading package '{package.name}' metadata")
-                continue
-            except FileNotFoundError:
-                continue
-            for item in os.scandir(package.path):
-                if item.is_file:
-                    self.import_texture(db, pack_id, item)
-                    count += 1
-            print(
-                f"[INFO] Imported {count} textures in {time.time() - start}s")
-            db.commit()
+                        "SELECT id FROM pack-type WHERE name = ?", [meta["type"]])
+                    try:
+                        type_id = db.c.fetchone()[0]
+                    except TypeError:
+                        db.c.execute("INSERT INTO pack-type (name) VALUES (?)",
+                                     [meta["type"]])
+                        type_id = db.c.lastrowid
+                    db.c.execute("INSERT INTO pack (name, type_id, author, size) VALUES (?, ?, ?, ?)", [
+                        item.name,
+                        type_id,
+                        meta["author"],
+                        os.path.getsize(item.path)
+                    ])
+                    pack_id = db.c.lastrowid
+                except json.JSONDecodeError:
+                    print(
+                        f"[ERROR] Failed reading package '{item.name}' metadata")
+                    continue
+                except FileNotFoundError:
+                    continue
+                for item in os.scandir(item.path):
+                    if item.is_file:
+                        self.import_texture(db, pack_id, item)
+                        count += 1
+            if item.is_file():
+                self.import_texture(db, None, item)
+        print(f"[INFO] Imported {count} textures in {time.time() - start}s")
+        db.commit()
 
     def fetch_image(self, image_id: int):
         """Returns a PIL image object"""

@@ -4,7 +4,7 @@ class App(core.type.Application):
     name = "Dungeon Runner"
 
     class var(core.type.Config):
-        pass
+        playerskin = None
 
     class const(core.type.Constant):
         pass
