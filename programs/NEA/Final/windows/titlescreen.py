@@ -1,12 +1,10 @@
 import core
 from app import App
-from control import Keyboard
+import keyboard
 from core import Vector
-from core.render.element import Image, TextBox, Rectangle
+from core.render.element import Image, Rectangle, TextBox
 from elements import ImageMotion
 
-# White = 1
-# Black = 0
 
 class Main(core.render.Window):
 
@@ -14,18 +12,19 @@ class Main(core.render.Window):
 
     def __init__(self):
         self.elements = [
-            TextBox(Vector(64, 25), "Play Game", colour=255, fill=0, line_col=1),
-            TextBox(Vector(64, 40), "Scoreboard", colour=255, fill=0, line_col=1),
-            TextBox(Vector(64, 55), "Extra", colour=255, fill=0, line_col=1),
+            TextBox(Vector(64, 25), "Play Game", colour=255, fill=0, line_col=255),
+            TextBox(Vector(64, 40), "Scoreboard", colour=255, fill=0, line_col=255),
+            TextBox(Vector(64, 55), "Extra", colour=255, fill=0, line_col=255),
             Image(Vector(64, 10), App.asset.ts_cursor),
             Image(Vector(64, 5), App.asset.ts_title)]
+        keyboard.add_hotkey("E", self.select)
+        keyboard.add_hotkey("W", self.up)
+        keyboard.add_hotkey("S", self.down)
         self.imagemotion = ImageMotion(App.asset.ts_template)
-        self.keyboard = Keyboard(self, ["w", "s", "enter"],
-                                [self.up, self.down, self.select])
         self.index = 0
         App.interval(self.imagemotion.move)
         super().__init__()
-
+        
     def render(self):
         self.template.image = self.imagemotion.copy()
         core.interface.application().render.template()
@@ -48,18 +47,3 @@ class Main(core.render.Window):
 
     async def select(self):
         pass
-
-
-class Handle(core.input.Handler):
-
-    window = Main
-
-    class press:
-        async def up(null, window):
-            window.up()
-
-        async def down(null, window):
-            window.down()
-
-        async def centre(null, window):
-            window.select()

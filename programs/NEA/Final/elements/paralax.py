@@ -22,18 +22,23 @@ class Paralax(core.render.Primative):
         draw.im.paste(frame.convert("1").im, (0, 0, *frame.size))
 
     def increment(self):
-        if self.layers[-1].x != 128 - self.layers[-1].image.width:
+        """Shifts scene right"""
+        if self.layers[-1].x + self.layers[-1].speed > 128 - self.layers[-1].image.width:
             for layer in self.layers:
                 layer.x -= layer.speed
 
     def decrement(self):
-        if self.layers[-1].x != 0:
+        """Shifts scene left"""
+        if self.layers[-1].x - self.layers[-1].speed < 0:
             for layer in self.layers:
                 layer.x += layer.speed
 
     def copy(self):
         return [l.x for l in self.layers]
-
+    
+    def position(self):
+        """Returns top layer offset"""
+        return self.layers[-1].x
 
 class ParalaxLayer:
 

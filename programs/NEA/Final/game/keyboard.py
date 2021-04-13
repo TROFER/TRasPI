@@ -17,7 +17,7 @@ class Hotkey:
             self.lastpress = time.time()
 
 
-def unbind_all():
+def Unbind():
     keyboard.unbind_all()
 
 
