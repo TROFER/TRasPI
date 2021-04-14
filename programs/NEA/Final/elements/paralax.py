@@ -5,9 +5,10 @@ from PIL import Image
 
 class Paralax(core.render.Primative):
 
-    def __init__(self, layers: list):
+    def __init__(self, layers: list, speed: float):
         super().__init__()
         self.layers = layers
+        self.speed = speed
 
     def render(self, draw):
         frame = Image.new("RGBA", (128, 64), color=(255, 255, 255))
@@ -25,24 +26,25 @@ class Paralax(core.render.Primative):
         """Shifts scene right"""
         if self.layers[-1].x + self.layers[-1].speed > 128 - self.layers[-1].image.width:
             for layer in self.layers:
-                layer.x -= layer.speed
+                layer.x -= (self.speed * layer.offset)
 
     def decrement(self):
         """Shifts scene left"""
         if self.layers[-1].x - self.layers[-1].speed < 0:
             for layer in self.layers:
-                layer.x += layer.speed
+                layer.x += (self.speed * layer.offset)
 
     def copy(self):
         return [l.x for l in self.layers]
-    
+
     def position(self):
         """Returns top layer offset"""
         return self.layers[-1].x
 
+
 class ParalaxLayer:
 
-    def __init__(self, image: Image, speed: int = 1):
+    def __init__(self, image: Image, offset: int = 1):
         self.image = image
-        self.speed = speed
+        self.offset = offset
         self.x = 0

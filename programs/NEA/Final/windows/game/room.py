@@ -23,6 +23,7 @@ class Room(core.render.Window):
         "left-exit": None,
         "right-exit": None
     }
+    ScoreValue = 1
 
     def __init__(self, game):
         super().__init__()
@@ -38,17 +39,20 @@ class Room(core.render.Window):
         keyboard.Hotkey("W", self.handles.interact)
         keyboard.Hotkey("A", self.handles.decrement)
         keyboard.Hotkey("D", self.handles.increment)
-        # Start Hints
+        # Check for hints
         self.hint()
         await asyncio.sleep(3)
         if self.discovered:
             self.elements_conditional["banner"].text = self.discovered
         else:
-            self.transition = Transition()
+            # Generate Transition
+            self.transition = Transition(self.game)
             self.transition.generate()
+            # Set Banner Text
             self.elements_conditional["banner"].text = "New Room Discovered"
             self.discovered = time.strftime("%H:%M")
-            self.game.score += 1
+            # Increment Game Score
+            self.game.score += self.ScoreValue
         # Show a banner. New room or already visited.
 
     def render(self):
@@ -63,15 +67,17 @@ class Room(core.render.Window):
         self.Hitbox["left-exit"] = (0, 10)
         self.Hitbox["right-exit"] = (self.width - 10, self.width)
         # Graphical Elements
+        # Paralax
         self.paralax = Paralax([
-            ParalaxLayer(self.scene.base, speed=0.75),
-            ParalaxLayer(self.scene.background, speed=2),
-            ParalaxLayer(self.scene.fixings, speed=3),
-            # Front Layers always global speed
-            ParalaxLayer(self.scene.foreground, speed=self.GlobalSpeed)
-        ])
+            ParalaxLayer(self.scene.base, offset=0.3),
+            ParalaxLayer(self.scene.background, offset=0.6),
+            ParalaxLayer(self.scene.fixings, offset=0.7),
+            ParalaxLayer(self.scene.foreground, offset=1)
+        ], self.GlobalSpeed)
+        # Backlight
         self.backlight = Backlight(
             common.colour_strip(self.scene.base, y=64), self.GlobalSpeed)
+        # Player 
         self.player = Player(self.FloorHeight, self.GlobalSpeed)
         self.elements = [self.paralax, self.backlight, self.player]
         self.elements_conditional = {

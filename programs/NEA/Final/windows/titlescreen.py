@@ -4,6 +4,7 @@ import keyboard
 from core import Vector
 from core.render.element import Image, Rectangle, TextBox
 from elements import ImageMotion
+from windows import Game
 
 
 class Main(core.render.Window):

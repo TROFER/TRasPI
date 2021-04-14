@@ -1,7 +1,7 @@
 import core
 from windows.game import Room
 
-class Main:
+class Game(core.render.Window):
 
     def __init__(self):
         super().__init__()
@@ -12,6 +12,12 @@ class Main:
         await Room(self)
         self.finish()
         #Results screen? 
+
+class PauseMenu(core.render.Window):
+
+    def __init__(self):
+        self.index = 0
+        
         
 
         
