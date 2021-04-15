@@ -1,12 +1,22 @@
 from ..error.attributes import SysConstant
 from time import sleep
+
+if SysConstant.pipeline == "GFXHAT":
+    _FLAG = True
+    from ..driver.gfxhat import touch
+    from ..driver.keyboard import keyboard
+else:
+    _FLAG = False
+    from ..driver.dummy import touch
+
+'''
 if SysConstant.pipeline == "GFXHAT":
     _FLAG = True
     from ..driver.gfxhat import touch
 else:
     _FLAG = False
     from ..driver.dummy import touch
-
+'''
 
 class Key:
 
@@ -23,6 +33,7 @@ class Key:
 
         def bind(self, button, function):
             touch.on(button, function)
+            keyboard.bind(button, function)
 
         def repeat(self, rate=None):
             if rate is None:
