@@ -27,7 +27,7 @@ class SysConstant(Constant):
     height = 64
     path = os.path.dirname(os.path.abspath(sys.argv[0])).replace("\\", "/") + "/"
     platform = "NT" if os.name == "nt" else "UNIX"
-    pipeline = "GXHAT" if platform == "UNIX" else "DUMMY" # "GFXHAT" or "DUMMY"
+    pipeline = "GFXHAT" if platform == "UNIX" else "DUMMY" # "GFXHAT" or "DUMMY"
     process = multiprocessing.current_process().name == "MainProcess" # Running on Main Process
 
 # __all__ = ["Config"]
@@ -93,3 +93,4 @@ class SysConfig(Config):
     brightness = 65
     colour = 200
     volume = 15
+    home_colour = (1, 55, 100)

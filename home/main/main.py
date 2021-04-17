@@ -49,7 +49,7 @@ class Home(core.render.Window):
         self.panels[self.panel].refresh()
 
     async def show(self):
-        core.hw.Backlight.fill(core.sys.var.colour)
+        core.hw.Backlight.fill(core.sys.var.home_colour)
         self.move_cursor()
         self.refresh()
 
