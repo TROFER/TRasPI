@@ -7,7 +7,7 @@ class App(core.type.Application):
         playerskin = None
 
     class const(core.type.Constant):
-        pass
+        debug = True
 
     class asset(core.type.Pool):
         ts_template = core.asset.Template("ts_template")

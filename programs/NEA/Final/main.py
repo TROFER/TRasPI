@@ -10,8 +10,8 @@ class Main(core.render.Window):
 
     def __init__(self):
         super().__init__()
-        Backlight.fill((0, 128, 153), hsv=False, force=True)
-        App.interval(self.check_render, 2)
+        Backlight.fill((230, 29, 100), force=True)
+        App.interval(self.check_render, 1)
         self.flag = False
         self.titles = [
             Image(core.Vector(0, 0), App.asset.ts_keyboard, just_w="L")]

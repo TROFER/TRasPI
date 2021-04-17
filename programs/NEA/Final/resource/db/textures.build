@@ -1,9 +1,9 @@
-CREATE TABLE pack-type(
+CREATE TABLE packtype(
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     name TEXT
 )
 %
-CREATE TABLE texture-type(
+CREATE TABLE texturetype(
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     name TEXT
 )
@@ -21,7 +21,7 @@ CREATE TABLE pack(
     type_id INTEGER NOT NULL,
     author TEXT,
     size INTEGER,
-    FOREIGN KEY (type_id) REFERENCES pack-type(id)
+    FOREIGN KEY (type_id) REFERENCES packtype(id)
 )
 %
 CREATE TABLE texture(
@@ -31,5 +31,5 @@ CREATE TABLE texture(
     type_id INTEGER NOT NULL,
     FOREIGN KEY (pack_id) REFERENCES pack(id),
     FOREIGN KEY (image_id) REFERENCES image(id),
-    FOREIGN KEY (type_id) REFERENCES texture-type(id)
+    FOREIGN KEY (type_id) REFERENCES texturetype(id)
 )

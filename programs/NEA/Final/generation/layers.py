@@ -87,7 +87,7 @@ class Foreground(Background, Base):
         if end:
             self.type_id = lib.fetch_typeid("texture", "foreground-end")
         else:
-            self.type_id = lib.fetch_typeid("foreground", "foreground")
+            self.type_id = lib.fetch_typeid("texture", "foreground")
         # Construct
         self.image = self.get_texture(self.pack_id, self.type_id)
         super().place_furniture()

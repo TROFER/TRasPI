@@ -50,6 +50,7 @@ class Home(core.render.Window):
 
     async def show(self):
         core.hw.Backlight.fill(core.sys.var.colour)
+        core.hw.Key.all()
         self.move_cursor()
         self.refresh()
 

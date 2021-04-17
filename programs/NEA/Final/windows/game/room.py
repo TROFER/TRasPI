@@ -2,27 +2,24 @@ import asyncio
 import random
 import time
 
-import common
 import core
-from core.hw import Key
-from core.render.element import Image
-from elements import Backlight, Paralax, ParalaxLayer, Player
+from app import App
+from core.hw import Key as KeyBacklight
+from elements.game import Backlight, Paralax, ParalaxLayer, Player, MainLoop
 from generation import scene
-from windows.game import Transition
+from windows.game.transiton import Transition
 
-from game import keyboard
+from game import common, keyboard
 
 
 class Room(core.render.Window):
 
-    MinWidth = 2
-    MaxWidth = 5
-    GlobalSpeed = 5
-    FloorHeight = 50
-    Hitbox = {
-        "left-exit": None,
-        "right-exit": None
-    }
+    MinSegments = 3
+    MaxSegments = 5
+    GlobalSpeed = 8
+    InputRateLimit = 0.5
+    FloorHeight = 55
+    HitBoxSize = 16
     ScoreValue = 1
 
     def __init__(self, game):
@@ -31,42 +28,57 @@ class Room(core.render.Window):
         self.game = game
         self.handles = Handles(self)
         self.position = 0
+        self.hitbox = {
+            "left-exit": None,
+            "right-exit": None
+        }
+        if App.const.debug:
+            App.interval(self.debug)
 
     async def show(self):
         # Set Keybindings
-        keyboard.Unbind()
-        keyboard.Hotkey("esc", self.game.pause_menu)
-        keyboard.Hotkey("W", self.handles.interact)
-        keyboard.Hotkey("A", self.handles.decrement)
-        keyboard.Hotkey("D", self.handles.increment)
+        keyboard.Hotkey("esc", self.finish)
+        keyboard.Hotkey("w", self.handles.interact,
+                        rate_limit=self.InputRateLimit)
+        keyboard.Hotkey("a", self.handles.left, rate_limit=self.InputRateLimit)
+        keyboard.Hotkey("d", self.handles.right,
+                        rate_limit=self.InputRateLimit)
+
+        #await asyncio.sleep(6)
+
         # Check for hints
         self.hint()
-        await asyncio.sleep(3)
+
+        # Set Banner and Score
         if self.discovered:
-            self.elements_conditional["banner"].text = self.discovered
+            pass
+            #self.elements_conditional["banner"].text = self.discovered
         else:
             # Generate Transition
-            self.transition = Transition(self.game)
-            self.transition.generate()
+            #self.transition = Transition(self.game)
+            # self.transition.generate()
             # Set Banner Text
-            self.elements_conditional["banner"].text = "New Room Discovered"
+            #self.elements_conditional["banner"].text = "New Room Discovered"
             self.discovered = time.strftime("%H:%M")
             # Increment Game Score
             self.game.score += self.ScoreValue
-        # Show a banner. New room or already visited.
+            # Show a banner. New room or already visited.
 
     def render(self):
-        for element in self.elements:
-            core.Interface.render(element)
+        core.Interface.render(self.mainloop)
 
     def generate(self):
         # Generate Room
-        self.width = random.randint(self.MinWidth, self.MaxWidth)
-        self.scene = scene.Room(self.width)
-        # Create Hitboxes
-        self.Hitbox["left-exit"] = (0, 10)
-        self.Hitbox["right-exit"] = (self.width - 10, self.width)
+        segments = random.randint(self.MinSegments, self.MaxSegments)
+        self.scene = scene.Room(segments)
+        self.width = 128 * segments
+
+        # Create Exit Hitboxes
+        self.hitbox["left-exit"] = (0, self.HitBoxSize)
+        self.hitbox["right-exit"] = ((self.width) -
+                                     self.HitBoxSize, (self.width))
         # Graphical Elements
+
         # Paralax
         self.paralax = Paralax([
             ParalaxLayer(self.scene.base, offset=0.3),
@@ -74,65 +86,88 @@ class Room(core.render.Window):
             ParalaxLayer(self.scene.fixings, offset=0.7),
             ParalaxLayer(self.scene.foreground, offset=1)
         ], self.GlobalSpeed)
+
         # Backlight
         self.backlight = Backlight(
             common.colour_strip(self.scene.base, y=64), self.GlobalSpeed)
-        # Player 
+
+        # Player
         self.player = Player(self.FloorHeight, self.GlobalSpeed)
+
+        # Render
         self.elements = [self.paralax, self.backlight, self.player]
-        self.elements_conditional = {
-            "banner": Banner(core.Vector(64, 20))
-        }
+        self.mainloop = MainLoop(self.elements)
 
     def hint(self):
-        if self.Hitbox["left-exit"][0] < self.position > self.Hitbox["left-exit"][1]:
-            Key.all(True)
-        elif self.Hitbox["right-exit"][0] < self.position > self.Hitbox["right-exit"][1]:
-            Key.all(True)
+        if self.hitbox["left-exit"][0] <= self.position <= self.hitbox["left-exit"][1]:
+            KeyBacklight.all(True)
+
+        elif self.hitbox["right-exit"][0] <= self.position <= self.hitbox["right-exit"][1]:
+            KeyBacklight.all(True)
+
         else:
-            key.all(False)
-        
+            KeyBacklight.all(False)
+
+    def debug(self):
+        common.restart_line()
+        self.game.print_debug()
+        print(
+            f"[room] Pos: {self.position}, Width: {self.width}, Discovered: {self.discovered}")
 
 
 class Handles:
 
     def __init__(self, room):
-        self.r = room
+        self.room = room
 
     async def interact(self):
-        if self.r.Hitbox["left-exit"][0] < self.r.position > self.r.Hitbox["left-exit"][1]:
-            self.r.finish()
-        elif self.r.Hitbox["right-exit"][0] < self.r.position > self.r.Hitbox["right-exit"][0]:
-            await self.room.transition
+        room = self.room
+
+        if room.Hitbox["left-exit"][0] < room.position > room.Hitbox["left-exit"][1]:
+            room.finish()
+            
+        elif room.Hitbox["right-exit"][0] < room.position > room.Hitbox["right-exit"][0]:
+            await room.transition
 
     def right(self):
+        room = self.room
+
+        # Room
+        if room.position + room.GlobalSpeed < room.width:
+            room.position += room.GlobalSpeed
+
         # Player Sprite
-        if self.r.position < 32 - self.r.GlobalSpeed:
-            self.r.player.increment()
-        elif self.r.width - self.r.position < 32:
-            self.r.player.increment()
-        else:
-            self.r.player.set_position(32)
+        if room.position < 64 or room.width - room.position < 64:
+            room.player.increment()
+
         # Paralax
-        self.r.paralax.increment()
+        if room.position > 64:
+            room.paralax.increment()
+
         # Backlight
-        self.r.backlight.increment()
+        room.backlight.increment()
         self._any()
 
     def left(self):
+        room = self.room
+        
+        # Room
+        if room.position - room.GlobalSpeed > 0:
+            room.position -= room.GlobalSpeed
+
         # Player Sprite
-        if self.r.position < 32:
-            self.r.player.decrement()
-        elif self.r.width - self.r.position < 32:
-            self.r.player.decrement()
-        else:
-            self.r.player.set_position(32)
+        if room.position < 64 or room.width - room.position < 64:
+            room.player.decrement()
+
         # Paralax
-        self.r.paralax.decrement()
+        if (room.width) - room.position > 64:
+            room.paralax.decrement()
+
         # Backlight
-        self.r.backlight.decrement()
+        room.backlight.decrement()
         self._any()
-    
+
     def _any(self):
-        # Check for hints 
-        self.r.hint()
+        room = self.room
+        # Check for hints
+        room.hint()
