@@ -1,5 +1,6 @@
 import core
-from windows.game.room import Room
+from windows.game.stage import Room
+from app import App
 
 
 class Game(core.render.Window):
@@ -7,17 +8,24 @@ class Game(core.render.Window):
     def __init__(self):
         super().__init__()
         self.score = 0
-        self.debug_cache = ""
+        self._flag = True
+        App.interval(self.check_flag)
 
     def render(self):
         pass
 
     async def show(self):
-        start = Room(self)
-        start.generate()
-        await start
-        self.finish()
-        # Results screen?
+        if self._flag:
+            start = Room(self)
+            start.generate()
+            self._flag = False
+            await start
+        else:
+            self.finish()
     
+    def check_flag(self):
+        if self._flag:
+            self.finish()
+
     def print_debug(self):
         print(f"[G]: Score: {self.score}")

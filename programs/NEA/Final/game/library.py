@@ -123,6 +123,8 @@ class Library:
         return PIL.frombytes("RGBA", (image[1], image[2]), image[0])
 
     def fetch_typeid(self, table: str, name: str):
+        if App.const.debug:
+                print(f"[DEBUG] - Fetching type_id for table '{table}' with name '{name}'")
         if "texture" in table:
             self.databases["textures"].c.execute("SELECT id FROM texturetype WHERE name = ?",
                                                  [name])
@@ -131,8 +133,7 @@ class Library:
                                                  [name])
         else:
             if App.const.debug:
-                print(f"[DEBUG] - [Error] Unable to find type_id for table '{table}' wtih name '{name}'")
-            return None
+                print(f"[DEBUG] - [Error] '{table}' Invalid table name")
         return self.databases["textures"].c.fetchone()[0]
 
 

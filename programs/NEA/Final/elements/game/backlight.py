@@ -3,7 +3,7 @@ import core
 
 class Backlight:
 
-    def __init__(self, colours: list, speed: float = 5):
+    def __init__(self, colours: list, speed: float):
         super().__init__()
         self.active_colours = []
         self.colours = colours
@@ -17,7 +17,7 @@ class Backlight:
         return frame
 
     def increment(self):
-        if self.x + self.speed >= len(self.colours) - 1:
+        if self.x + self.speed < len(self.colours) - 1:
             self.x += self.speed
 
     def decrement(self):

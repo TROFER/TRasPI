@@ -60,8 +60,6 @@ class Transition:
         self.pack_id = random.choice(lib.databases["textures"].c.fetchall())[0]
         # Construct
         self.load_frames()
-        self.background = self.background_frames[0]
-        self.foreground = self.foreground_frames[0]
         self.generate_exits()
 
     def load_frames(self):
@@ -71,23 +69,24 @@ class Transition:
                                           [self.pack_id, type_id])
         self.background_frames = []
         for image_id in lib.databases["textures"].c.fetchall():
-            self.background_frames += lib.fetch_image(image_id[0])
+            self.background_frames.append(lib.fetch_image(image_id[0]))
         # Foregroud Frames
         type_id = lib.fetch_typeid("texture", "foreground")
         lib.databases["textures"].c.execute("SELECT image_id FROM texture WHERE pack_id = ? AND type_id = ?",
                                           [self.pack_id, type_id])
         self.foreground_frames = []
         for image_id in lib.databases["textures"].c.fetchall():
-            self.foreground_frames += lib.fetch_image(image_id[0])
+            self.foreground_frames.append(lib.fetch_image(image_id[0]))
 
     def generate_exits(self):
-        for build, name, anchor in zip(self.exits, ["left-exit", "center-exit", "right_exit"], self.Anchor.items()):
-            if build:
-                type_id = lib.fetch_typeid("texture", name)
-                lib.databases["textures"].c.execute("SELECT image_id FROM texture WHERE pack_id = ? AND type_id = ?",
-                                                  [self.pack_id, type_id])
-                image = lib.fetch_image(random.choice(
-                    lib.databases["textures"].c.fetchall())[0])
-                x += align(image, "X", "C")
-                y = anchor[1] + align(image, "Y", "B")
-                self.background.alpha_composite(image, dest=(x, y))
+        for frame in self.background_frames:
+            for build, name, anchor in zip(self.exits, ["left-exit", "center-exit", "right-exit"], self.Anchor.values()):
+                if build:
+                    type_id = lib.fetch_typeid("texture", name)
+                    lib.databases["textures"].c.execute("SELECT image_id FROM texture WHERE pack_id = ? AND type_id = ?",
+                                                    [self.pack_id, type_id])
+                    image = lib.fetch_image(random.choice(
+                        lib.databases["textures"].c.fetchall())[0])
+                    x = anchor[0] + align(image, "X", "C")
+                    y = anchor[1] + align(image, "Y", "B")
+                    frame.alpha_composite(image, dest=(x, y))

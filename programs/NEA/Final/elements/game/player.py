@@ -10,7 +10,7 @@ from PIL import Image as PIL
 
 class Player:
 
-    def __init__(self, height, speed: float = 5):
+    def __init__(self, height, speed: float):
         self.y = height
         self.speed = speed
 
@@ -24,7 +24,7 @@ class Player:
 
         self.x_offset = align(self.sprite, "X", "C")
         self.y_offset = align(self.sprite, "Y", "B")
-        self.x = abs(self.x_offset)
+        self.x = (self.sprite.width // 2)
 
     def render(self, frame):
         frame.alpha_composite(self.sprite, dest=(
@@ -33,11 +33,12 @@ class Player:
         return frame
 
     def increment(self):
-        if self.x + self.speed < 128 - self.sprite.width: # Keep Sprite Onscreen
+        if self.x != 128 - (self.sprite.width // 2): # Keep Sprite Onscreen
             self.x += self.speed
+            print(self.x)
 
     def decrement(self):
-        if self.x - self.speed > abs(self.x_offset):
+        if self.x != 0 + (self.sprite.width // 2):
             self.x -= self.speed
 
     def set_position(self, position):

@@ -16,10 +16,10 @@ class Main(core.render.Window):
         super().__init__()
         self.elements = [
             TextBox(Vector(64, 25), "Play Game",
-                    colour=255, fill=0, line_col=255),
-            TextBox(Vector(64, 40), "Scoreboard",
                     colour=0, fill=255, line_col=0),
-            TextBox(Vector(64, 55), "Extra", colour=0, fill=255, line_col=0),
+            TextBox(Vector(64, 40), "Scoreboard",
+                    colour=255, fill=0, line_col=255),
+            TextBox(Vector(64, 55), "Extra", colour=255, fill=0, line_col=255),
             Image(Vector(64, 5), App.asset.ts_title)]
         self.imagemotion = ImageMotion(App.asset.ts_template)
         self.index = 0
@@ -33,6 +33,8 @@ class Main(core.render.Window):
         keyboard.Hotkey("w", self.up)
         keyboard.Hotkey("s", self.down)
         keyboard.Hotkey("e", self.select)
+        # Set Backlight
+        core.hw.Backlight.fill((230, 29, 100), force=True) 
 
     def render(self):
         self.template.image = self.imagemotion.copy()
@@ -53,14 +55,14 @@ class Main(core.render.Window):
             self.hover()
 
     def hover(self):
-        self.elements[self.index].colour = 255
-        self.elements[self.index].rect.fill = 0
-        self.elements[self.index].rect.outline = 255
-
-    def dehover(self):
         self.elements[self.index].colour = 0
         self.elements[self.index].rect.fill = 255
         self.elements[self.index].rect.outline = 0
+
+    def dehover(self):
+        self.elements[self.index].colour = 255
+        self.elements[self.index].rect.fill = 0
+        self.elements[self.index].rect.outline = 255
 
     async def check_flag(self):
         if self._flag:
