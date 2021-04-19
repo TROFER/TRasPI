@@ -37,7 +37,7 @@ class Room(core.render.Window):
         App.interval(self.check_flag, 0.1)
 
     async def show(self):
-        # Reset 
+        # Reset
         self.flag = None
 
         # Set Keybindings
@@ -143,46 +143,44 @@ class RoomHandle:
         room = self.room
 
         # Room
-        if room.position + room.GlobalSpeed < room.width:
+        if room.position != room.width - room.player.sprite.width:
             room.position += room.GlobalSpeed
 
-        # Player Sprite
-        if room.position + room.GlobalSpeed <= 64 or room.width - room.position <= 64:
-            room.player.increment()
-
-        # Paralax
-        if room.position + room.GlobalSpeed > 64:
+        # Paralax & Backlight
+        if 64 <= room.position <= room.width - 64:
+            room.backlight.increment()
             room.paralax.increment()
 
-        # Backlight
-        if room.position + room.GlobalSpeed <= 64 and room.width - room.position <= 64:
-            room.backlight.increment()
         self._any()
 
     def left(self):
         room = self.room
 
         # Room
-        if room.position - room.GlobalSpeed <= 0:
+        if room.position != 0:
             room.position -= room.GlobalSpeed
 
-        # Player Sprite
-        if room.position <= 64 or room.width - room.position <= 64:
-            room.player.decrement()
-
-        # Paralax
-        if (room.width - room.position) + room.GlobalSpeed >= 64:
+        # Paralax & Backlight
+        if 64 <= room.position <= room.width - 64:
+            room.backlight.decrement()
             room.paralax.decrement()
 
-        # Backlight
-        if room.position >= 64:
-            room.backlight.decrement()
         self._any()
 
     def _any(self):
         room = self.room
+
+        # Player Sprite
+        if room.position <= 64:
+            room.player.set_position(
+                clamp(0, room.position, 64 + (room.player.sprite.width // 2)))
+        elif room.width - room.position <= 64:
+            room.player.set_position(
+                clamp(0, 128 - (room.width - room.position), 128 - room.player.sprite.width))
+
         # Check for hints
         room.hint()
+
         # Print Debug
         if App.const.debug:
             room.debug()
@@ -190,7 +188,7 @@ class RoomHandle:
 
 class Transition(core.render.Window):
 
-    InputRateLimit = 1
+    InputRateLimit = 0.2
     AnimationSpeed = 0.7
     FloorHeight = 55
     PlayerSpeed = 8
@@ -203,14 +201,17 @@ class Transition(core.render.Window):
         self.flag = None
         self.position = 0
         self.mapping = {
-            "left-exit": [(21, 42), None],
-            "center-exit": [(42, 84), None],
-            "right-exit": [(84, 107), None]
+            "left-exit": [(21, 42), None, 32],
+            "center-exit": [(42, 84), None, 64],
+            "right-exit": [(84, 107), None, 96]
         }
 
     async def show(self):
-        # Reset 
+        # Reset
         self.flag = None
+
+        # Set Backlight
+        core.hw.Backlight.fill((51, 95, 100), force=True)
 
         # Set Keybindings
         keyboard.Hotkey("esc", lambda: None)
@@ -222,11 +223,13 @@ class Transition(core.render.Window):
         # Generate Subrooms
 
         if not self.discovered:
-            for value in self.mapping.values():
-                if value[1] == self.finish:
-                    self.player.set_position((value[0][1] - value[0][0]) // 2) # Approximate Door Position
-                elif value[1] is not None:
-                    value[1].generate()
+            for data in self.mapping.values():
+                if data[1] == self.finish:
+                    # Approximate Door Position
+                    self.position = data[2]
+                    self.player.set_position(data[2])
+                elif data[1] is not None:
+                    data[1].generate()
 
             self.discovered = True
 
@@ -239,14 +242,15 @@ class Transition(core.render.Window):
     def generate(self):
         # Generate Mapping
         self.mapping[random.choice(list(self.mapping.keys()))][1] = self.finish
-        for key, value in zip(self.mapping.keys(), self.mapping.values()):
-            if value[1] is None:
-                if random.choice([True, False]):
+        for key, data in zip(self.mapping.keys(), self.mapping.values()):
+            if data[1] is None:
+                # 3/5 Chance to get an addional door
+                if random.choice([True, True, True, True, False]):
                     self.mapping[key][1] = Room(self.game)
 
         # Generate Transition
         self.scene = scene.Transition(
-            [False if value[1] is None else True for value in self.mapping.values()])
+            [False if data[1] is None else True for data in self.mapping.values()])
 
         # Graphical Elements
 
@@ -278,20 +282,25 @@ class TransitionHandle:
 
     def interact(self):
         transition = self.transition
-        transition.flag = Flag(transition.finish)
+
+        for data in transition.mapping.values():
+            if data[0][0] <= transition.position <= data[0][1]:
+                if data[1] == transition.finish:
+                    transition.flag = Flag(transition.finish)
+                else:
+                    transition.flag = Flag(data[1], True)
 
     def right(self):
         transition = self.transition
-        transition.player.increment()
-        self._any()
+        if transition.position != 128:
+            transition.position += transition.PlayerSpeed
+            transition.player.increment()
 
     def left(self):
         transition = self.transition
-        transition.player.decrement()
-        self._any()
-
-    def _any(self):
-        transition = self.transition
+        if transition.position != 0:
+            transition.position -= transition.PlayerSpeed
+            transition.player.decrement()
 
 
 class Flag:
@@ -299,3 +308,7 @@ class Flag:
     def __init__(self, function: callable, asynchronous: bool = False):
         self.function = function
         self.asynchronous = asynchronous
+
+
+def clamp(_min, data, _max):
+    return max(_min, min(data, _max))

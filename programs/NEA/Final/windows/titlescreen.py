@@ -20,7 +20,7 @@ class Main(core.render.Window):
             TextBox(Vector(64, 40), "Scoreboard",
                     colour=255, fill=0, line_col=255),
             TextBox(Vector(64, 55), "Extra", colour=255, fill=0, line_col=255),
-            Image(Vector(64, 5), App.asset.ts_title)]
+            Image(Vector(64, 3), App.asset.ts_title)]
         self.imagemotion = ImageMotion(App.asset.ts_template)
         self.index = 0
         self.map = [Game]
@@ -34,7 +34,7 @@ class Main(core.render.Window):
         keyboard.Hotkey("s", self.down)
         keyboard.Hotkey("e", self.select)
         # Set Backlight
-        core.hw.Backlight.fill((230, 29, 100), force=True) 
+        core.hw.Backlight.fill((33, 94, 100), force=True) 
 
     def render(self):
         self.template.image = self.imagemotion.copy()

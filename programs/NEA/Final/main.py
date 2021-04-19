@@ -10,7 +10,7 @@ class Main(core.render.Window):
 
     def __init__(self):
         super().__init__()
-        App.interval(self.check_render, 1)
+        App.interval(self.check_render, 2)
         self.flag = False
         self.titles = [
             Image(core.Vector(0, 0), App.asset.ts_keyboard, just_w="L")]
@@ -22,7 +22,7 @@ class Main(core.render.Window):
             self.flag = True
     
     async def show(self):
-        Backlight.fill((230, 29, 100), force=True)
+        Backlight.fill((33, 94, 100), force=True)
 
     async def check_render(self):
         if self.flag:

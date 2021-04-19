@@ -4,7 +4,6 @@ import core
 class Backlight:
 
     def __init__(self, colours: list, speed: float):
-        super().__init__()
         self.active_colours = []
         self.colours = colours
         self.speed = speed
@@ -23,3 +22,14 @@ class Backlight:
     def decrement(self):
         if self.x - self.speed > 0:
             self.x -= self.speed
+
+class AnimatedBacklight:
+
+    def __init__(self, colours: list, speed: float):
+        self.colours = colours
+        self.index = 0
+        self.active_colour = self.colours[self.index]
+    
+    def render(self, frame):
+        core.hw.Backlight.fill(self.colours[self.index], hsv=False, force=True)
+

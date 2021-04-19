@@ -11,7 +11,7 @@ from PIL import Image as PIL
 class Player:
 
     def __init__(self, height, speed: float):
-        self.y = height
+        self.x, self.y = 0, height
         self.speed = speed
 
         if App.var.playerskin is None:
@@ -21,25 +21,21 @@ class Player:
             image_id = random.choice(lib.databases["textures"].c.fetchall())[0]
             App.var.playerskin = image_id
         self.sprite = lib.fetch_image(App.var.playerskin)
-
+        self.y += align(self.sprite, "Y", "B")
         self.x_offset = align(self.sprite, "X", "C")
-        self.y_offset = align(self.sprite, "Y", "B")
-        self.x = (self.sprite.width // 2)
 
     def render(self, frame):
-        frame.alpha_composite(self.sprite, dest=(
-            self.x + self.x_offset,
-            self.y + self.y_offset))
+        construct = PIL.new("RGBA", (256, 64))
+        construct.alpha_composite(self.sprite, dest=(self.x + 128 + self.x_offset, self.y))
+        construct = construct.crop((128, 0, 256, 64))
+        frame.alpha_composite(construct)
         return frame
 
-    def increment(self):
-        if self.x != 128 - (self.sprite.width // 2): # Keep Sprite Onscreen
-            self.x += self.speed
-            print(self.x)
-
-    def decrement(self):
-        if self.x != 0 + (self.sprite.width // 2):
-            self.x -= self.speed
-
     def set_position(self, position):
-        self.x = position + self.x_offset
+        self.x = position
+    
+    def increment(self):
+        self.x += self.speed
+    
+    def decrement(self):
+        self.x -= self.speed
