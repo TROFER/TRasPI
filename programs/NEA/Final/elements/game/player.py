@@ -13,6 +13,7 @@ class Player:
     def __init__(self, height, speed: float):
         self.x, self.y = 0, height
         self.speed = speed
+        self.rotation = "Forward"
 
         if App.var.playerskin is None:
             type_id = lib.fetch_typeid("texture", "player-skin")
@@ -39,3 +40,13 @@ class Player:
     
     def decrement(self):
         self.x -= self.speed
+    
+    def flip_backward(self):
+        if self.rotation != "Backward":
+            self.sprite = self.sprite.transpose(PIL.FLIP_LEFT_RIGHT)
+            self.rotation = "Backward"
+    
+    def flip_forward(self):
+        if self.rotation != "Forward":
+            self.sprite = self.sprite.transpose(PIL.FLIP_LEFT_RIGHT)
+            self.rotation = "Forward"
