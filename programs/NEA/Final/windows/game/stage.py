@@ -4,10 +4,9 @@ import time
 
 import core
 from app import App
-from core.hw import Key as KeyBacklight
-from elements.game import (Animation, Backlight, MainLoop, Paralax,
-                           ParalaxLayer, Player)
+from elements.game import Animation, MainLoop, Paralax, ParalaxLayer, Player
 from generation import scene
+from PIL import Image as PIL
 
 from game import common, keyboard
 
@@ -87,36 +86,34 @@ class Room(core.render.Window):
             ParalaxLayer(self.scene.background, offset=0.6),
             ParalaxLayer(self.scene.fixings, offset=0.7),
             ParalaxLayer(self.scene.foreground, offset=1)
-        ], self.GlobalSpeed)
-
-        # Backlight
-        self.backlight = Backlight(
-            common.colour_strip(self.scene.base, y=64), self.GlobalSpeed)
+        ], common.colour_strip(self.scene.base, y=64), self.GlobalSpeed)
 
         # Player
         self.player = Player(self.FloorHeight, self.GlobalSpeed)
 
         # Render
-        self.elements = [self.paralax, self.backlight, self.player]
+        self.elements = [self.paralax, self.player]
         self.mainloop = MainLoop(self.elements)
 
     async def check_flag(self):
         if self.flag is not None:
-            KeyBacklight.all(False)
+            core.hw.Key.all(False)
             if self.flag.asynchronous:
-                await self.flag.function
+                res = await self.flag.function
+                if res == "quit":
+                    self.finish("quit")
             else:
                 self.flag.function()
 
     def hint(self):
         if self.hitbox["left-exit"][0] <= self.position <= self.hitbox["left-exit"][1]:
-            KeyBacklight.all(True)
+            core.hw.Key.all(True)
 
         elif self.hitbox["right-exit"][0] <= self.position <= self.hitbox["right-exit"][1]:
-            KeyBacklight.all(True)
+            core.hw.Key.all(True)
 
         else:
-            KeyBacklight.all(False)
+            core.hw.Key.all(False)
 
     def debug(self):
         common.restart_line()
@@ -143,13 +140,15 @@ class RoomHandle:
         room = self.room
 
         # Room
-        if room.position != room.width - room.player.sprite.width:
+        if room.position + room.GlobalSpeed < room.width - room.player.sprite.width:
             room.position += room.GlobalSpeed
 
-        # Paralax & Backlight
+        # Paralax
         if 64 <= room.position <= room.width - 64:
-            room.backlight.increment()
             room.paralax.increment()
+        
+        # Player
+        room.player.flip_forward()
 
         self._any()
 
@@ -160,10 +159,12 @@ class RoomHandle:
         if room.position != 0:
             room.position -= room.GlobalSpeed
 
-        # Paralax & Backlight
+        # Paralax
         if 64 <= room.position <= room.width - 64:
-            room.backlight.decrement()
             room.paralax.decrement()
+
+        # Player
+        room.player.flip_backward()
 
         self._any()
 
@@ -210,9 +211,6 @@ class Transition(core.render.Window):
         # Reset
         self.flag = None
 
-        # Set Backlight
-        core.hw.Backlight.fill((51, 95, 100), force=True)
-
         # Set Keybindings
         keyboard.Hotkey("esc", lambda: None)
         keyboard.Hotkey("e", self.handle.interact,
@@ -254,23 +252,27 @@ class Transition(core.render.Window):
 
         # Graphical Elements
 
-        # Background & Foreground Animation
-        self.background = Animation(
+        # Background, Foreground & Backlight Animation
+        self.background = Animation("image",
             self.scene.background_frames, speed=self.AnimationSpeed)
-        self.foreground = Animation(
+        self.foreground = Animation("image",
             self.scene.foreground_frames, speed=self.AnimationSpeed)
+        self.backlight = Animation("backlight",
+            self.scene.backlight_colours, speed=0.5)
 
         # Player
         self.player = Player(self.FloorHeight, self.PlayerSpeed)
 
         # Render
-        self.elements = [self.background, self.player, self.foreground]
+        self.elements = [self.backlight, self.background, self.player, self.foreground]
         self.mainloop = MainLoop(self.elements)
 
     async def check_flag(self):
         if self.flag is not None:
             if self.flag.asynchronous:
-                await self.flag.function
+                res = await self.flag.function
+                if res == "quit":
+                    self.finish("quit")
             else:
                 self.flag.function()
 
@@ -291,16 +293,26 @@ class TransitionHandle:
                     transition.flag = Flag(data[1], True)
 
     def right(self):
+        # Player
+
         transition = self.transition
         if transition.position != 128:
             transition.position += transition.PlayerSpeed
             transition.player.increment()
+        
+        transition.player.flip_forward()
+        
 
     def left(self):
+        # Player
+
         transition = self.transition
         if transition.position != 0:
             transition.position -= transition.PlayerSpeed
             transition.player.decrement()
+        
+        transition.player.flip_backward()
+        
 
 
 class Flag:
