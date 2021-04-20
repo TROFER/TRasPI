@@ -31,3 +31,9 @@ class Hotkey:
                 self.lastpress = time.time()
         else:
             self.callback()
+    
+def clear_all():
+    global _hotkeys
+    for hotkey in _hotkeys.values():
+        keyboard.remove_hotkey(hotkey)
+    _hotkeys = {}

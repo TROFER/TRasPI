@@ -5,7 +5,8 @@ from core.render.element import Image, TextBox
 from elements import ImageMotion
 
 from game import keyboard
-from windows.game.main import Game
+from windows.game import game
+from windows import character
 
 
 class Main(core.render.Window):
@@ -17,22 +18,27 @@ class Main(core.render.Window):
         self.elements = [
             TextBox(Vector(64, 25), "Play Game",
                     colour=0, fill=255, line_col=0),
-            TextBox(Vector(64, 40), "Scoreboard",
+            TextBox(Vector(64, 40), "Change Skin",
                     colour=255, fill=0, line_col=255),
             TextBox(Vector(64, 55), "Extra", colour=255, fill=0, line_col=255),
             Image(Vector(64, 3), App.asset.ts_title)]
         self.imagemotion = ImageMotion(App.asset.ts_template)
         self.index = 0
-        self.map = [Game]
+        self.map = [game.Game, character.Main]
         self._flag = False
         App.interval(self.imagemotion.move)
         App.interval(self.check_flag, 0.1)
 
     async def show(self):
+        # Reset
+        self._flag = None
+        keyboard.clear_all()
+
         # Bind Hotkeys
         keyboard.Hotkey("w", self.up)
         keyboard.Hotkey("s", self.down)
         keyboard.Hotkey("e", self.select)
+
         # Set Backlight
         core.hw.Backlight.fill((33, 94, 100), force=True) 
 

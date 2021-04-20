@@ -140,13 +140,13 @@ class RoomHandle:
         room = self.room
 
         # Room
-        if room.position + room.GlobalSpeed < room.width - room.player.sprite.width:
+        if room.position < room.width - room.player.sprite.width:
             room.position += room.GlobalSpeed
 
         # Paralax
         if 64 <= room.position <= room.width - 64:
             room.paralax.increment()
-        
+
         # Player
         room.player.flip_forward()
 
@@ -254,17 +254,18 @@ class Transition(core.render.Window):
 
         # Background, Foreground & Backlight Animation
         self.background = Animation("image",
-            self.scene.background_frames, speed=self.AnimationSpeed)
+                                    self.scene.background_frames, speed=self.AnimationSpeed)
         self.foreground = Animation("image",
-            self.scene.foreground_frames, speed=self.AnimationSpeed)
+                                    self.scene.foreground_frames, speed=self.AnimationSpeed)
         self.backlight = Animation("backlight",
-            self.scene.backlight_colours, speed=0.5)
+                                   self.scene.backlight_colours, speed=0.5)
 
         # Player
         self.player = Player(self.FloorHeight, self.PlayerSpeed)
 
         # Render
-        self.elements = [self.backlight, self.background, self.player, self.foreground]
+        self.elements = [self.backlight, self.background,
+                         self.player, self.foreground]
         self.mainloop = MainLoop(self.elements)
 
     async def check_flag(self):
@@ -299,9 +300,8 @@ class TransitionHandle:
         if transition.position != 128:
             transition.position += transition.PlayerSpeed
             transition.player.increment()
-        
+
         transition.player.flip_forward()
-        
 
     def left(self):
         # Player
@@ -310,9 +310,8 @@ class TransitionHandle:
         if transition.position != 0:
             transition.position -= transition.PlayerSpeed
             transition.player.decrement()
-        
+
         transition.player.flip_backward()
-        
 
 
 class Flag:
