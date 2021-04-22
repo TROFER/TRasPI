@@ -3,6 +3,7 @@ from app import App
 from core import Vector
 from core.asset.image import Image as AssetImage
 from core.render.element import Image, Line, Text
+from PIL import Image as PIL
 
 from game import keyboard, library
 
@@ -17,9 +18,9 @@ class Main(core.render.Window):
 
         # Elements 
 
-        self.title = Text(Vector(64, 5), "Select player skin")
+        self.title = Text(Vector(64, 5), "Select Player Skin")
         self.sprite = Image(Vector(64, 32), self.sprites[self.index]["image"], just_h="C")
-        self.index_label = Text(Vector(64, 57), self.index)
+        self.index_label = Text(Vector(64, 57), f"{self.index + 1} / {len(self.sprites)}")
     
         self.elements = [self.title, self.sprite, self.index_label, 
             Line(Vector(0, 10), Vector(128, 10)),
@@ -44,8 +45,9 @@ class Main(core.render.Window):
         image_ids = [_id[0] for _id in library.lib.databases["textures"].c.fetchall()]
         sprites = []
         for image_id in image_ids:
+            image = AssetImage(remove_alpha(library.lib.fetch_image(image_id)))
             sprites.append(
-                {"image" : AssetImage(library.lib.fetch_image(image_id), alpha=True),
+                {"image" : image,
                  "id" : image_id})
         return sprites
 
@@ -71,4 +73,16 @@ class Main(core.render.Window):
 
     def _any(self):
         self.elements[1] = Image(Vector(64, 32), self.sprites[self.index]["image"], just_h="C")
-        self.elements[2].text = self.index
+        self.elements[2].text = f"{self.index + 1} / {len(self.sprites)}"
+
+def remove_alpha(image):
+    """Replaces image alpha with white pixels"""
+    new = []
+    for pixel in image.getdata():
+        if pixel[3] == 0:
+            new.append((255, 255, 255))
+        else:
+            new.append(pixel)
+    image.putdata(new)
+    return image
+
