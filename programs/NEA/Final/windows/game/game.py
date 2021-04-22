@@ -7,7 +7,11 @@ class Game(core.render.Window):
 
     def __init__(self):
         super().__init__()
-        self.score = 0
+        self.scoring = {
+            "score" : 0,
+            "depth_multiplier" : 1,
+            "surface_exit" : True
+        }
         self._flag = True
         App.interval(self.check_flag)
 
@@ -28,4 +32,4 @@ class Game(core.render.Window):
             self.finish()
 
     def print_debug(self):
-        print(f"[G]: Score: {self.score}")
+        print(f"[G]: Score: {self.scoring['score']} Multiplier: {self.scoring['depth_multiplier']}")

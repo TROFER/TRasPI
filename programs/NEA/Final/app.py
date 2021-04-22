@@ -14,5 +14,7 @@ class App(core.type.Application):
         ts_keyboard = core.asset.Image("fs_keyboard")
         ts_title = core.asset.Image("ts_title")
         ts_cursor = core.asset.Image("ts_cursor")
+        rs_gameover = core.asset.Image("rs_gameover")
+        pm_paused = core.asset.Image("pm_paused")
 
 main = App

@@ -5,6 +5,7 @@ import time
 import core
 from app import App
 from elements.game import Animation, MainLoop, Paralax, ParalaxLayer, Player
+from windows.game import pausemenu
 from generation import scene
 from PIL import Image as PIL
 
@@ -32,6 +33,7 @@ class Room(core.render.Window):
             "left-exit": None,
             "right-exit": None
         }
+
         # Initiate Flag Checking
         App.interval(self.check_flag, 0.1)
 
@@ -40,29 +42,25 @@ class Room(core.render.Window):
         self.flag = None
 
         # Set Keybindings
-        keyboard.Hotkey("esc", lambda: None)
+        keyboard.Hotkey("esc", self.handle.esc)
         keyboard.Hotkey("e", self.handle.interact,
                         rate_limit=self.InputRateLimit)
         keyboard.Hotkey("a", self.handle.left, rate_limit=self.InputRateLimit)
         keyboard.Hotkey("d", self.handle.right,
                         rate_limit=self.InputRateLimit)
+
         # Check for hints
         self.hint()
 
         # Set Banner and Score
-        if self.discovered:
-            pass
-            #self.elements_conditional["banner"].text = self.discovered
-        else:
+        if not self.discovered:
             # Generate Transition
             self.transition = Transition(self.game)
             self.transition.generate()
-            # Set Banner Text
-            #self.elements_conditional["banner"].text = "New Room Discovered"
             self.discovered = time.strftime("%H:%M")
+
             # Increment Game Score
-            self.game.score += self.ScoreValue
-            # Show a banner. New room or already visited.
+            self.game.scoring["score"] += self.ScoreValue
 
     def render(self):
         core.Interface.render(self.mainloop)
@@ -97,9 +95,12 @@ class Room(core.render.Window):
 
     async def check_flag(self):
         if self.flag is not None:
-            core.hw.Key.all(False)
             if self.flag.asynchronous:
-                res = await self.flag.function
+                if not isinstance(self.flag.function, core.render.Window):
+                    awaitable = self.flag.function(*self.flag.arguments)
+                else:
+                    awaitable = self.flag.function
+                res = await awaitable
                 if res == "quit":
                     self.finish("quit")
             else:
@@ -127,6 +128,10 @@ class RoomHandle:
     def __init__(self, room):
         self.room = room
 
+    def esc(self):
+        self.room.flag = Flag(pausemenu.Main, arguments=[
+                              self.room.game], asynchronous=True)
+
     def interact(self):
         room = self.room
 
@@ -134,7 +139,7 @@ class RoomHandle:
             room.flag = Flag(room.finish)
 
         elif room.hitbox["right-exit"][0] <= room.position <= room.hitbox["right-exit"][1]:
-            room.flag = Flag(room.transition, True)
+            room.flag = Flag(room.transition, asynchronous=True)
 
     def right(self):
         room = self.room
@@ -189,10 +194,12 @@ class RoomHandle:
 
 class Transition(core.render.Window):
 
-    InputRateLimit = 0.2
+    InputRateLimit = 1
     AnimationSpeed = 0.7
     FloorHeight = 55
     PlayerSpeed = 8
+    # 3/5 Chance to get an addional door
+    DoorGenerateSeed = [True, True, True, True, False]
 
     def __init__(self, game):
         super().__init__()
@@ -212,14 +219,13 @@ class Transition(core.render.Window):
         self.flag = None
 
         # Set Keybindings
-        keyboard.Hotkey("esc", lambda: None)
+        keyboard.Hotkey("esc", self.handle.esc)
         keyboard.Hotkey("e", self.handle.interact,
                         rate_limit=self.InputRateLimit)
         keyboard.Hotkey("a", self.handle.left, rate_limit=self.InputRateLimit)
         keyboard.Hotkey("d", self.handle.right, rate_limit=self.InputRateLimit)
 
         # Generate Subrooms
-
         if not self.discovered:
             for data in self.mapping.values():
                 if data[1] == self.finish:
@@ -230,6 +236,7 @@ class Transition(core.render.Window):
                     data[1].generate()
 
             self.discovered = True
+            self.game.scoring["depth_multiplier"] += 0.25
 
         # Initiate Flag Checking
         App.interval(self.check_flag, 0.1)
@@ -242,8 +249,7 @@ class Transition(core.render.Window):
         self.mapping[random.choice(list(self.mapping.keys()))][1] = self.finish
         for key, data in zip(self.mapping.keys(), self.mapping.values()):
             if data[1] is None:
-                # 3/5 Chance to get an addional door
-                if random.choice([True, True, True, True, False]):
+                if random.choice(self.DoorGenerateSeed):
                     self.mapping[key][1] = Room(self.game)
 
         # Generate Transition
@@ -271,7 +277,11 @@ class Transition(core.render.Window):
     async def check_flag(self):
         if self.flag is not None:
             if self.flag.asynchronous:
-                res = await self.flag.function
+                if not isinstance(self.flag.function, core.render.Window):
+                    awaitable = self.flag.function(*self.flag.arguments)
+                else:
+                    awaitable = self.flag.function
+                res = await awaitable
                 if res == "quit":
                     self.finish("quit")
             else:
@@ -283,6 +293,10 @@ class TransitionHandle:
     def __init__(self, transition):
         self.transition = transition
 
+    def esc(self):
+        self.transition.flag = Flag(pausemenu.Main, arguments=[
+                                    self.transition.game], asynchronous=True)
+
     def interact(self):
         transition = self.transition
 
@@ -291,7 +305,7 @@ class TransitionHandle:
                 if data[1] == transition.finish:
                     transition.flag = Flag(transition.finish)
                 else:
-                    transition.flag = Flag(data[1], True)
+                    transition.flag = Flag(data[1], asynchronous=True)
 
     def right(self):
         # Player
@@ -316,8 +330,9 @@ class TransitionHandle:
 
 class Flag:
 
-    def __init__(self, function: callable, asynchronous: bool = False):
+    def __init__(self, function: callable, arguments: list = [], asynchronous: bool = False):
         self.function = function
+        self.arguments = arguments
         self.asynchronous = asynchronous
 
 
