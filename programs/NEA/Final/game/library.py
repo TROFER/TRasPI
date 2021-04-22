@@ -15,7 +15,7 @@ class Library:
         "databases": f"{core.sys.const.path}programs/NEA/Final/resource/db/"
     }
 
-    def init(self, databases):
+    def init(self, databases: list):
         self.databases = databases
         for db in self.databases.values():
             db.db, db.c, rebuild = self.load(db.path)
@@ -123,6 +123,7 @@ class Library:
         return PIL.frombytes("RGBA", (image[1], image[2]), image[0])
 
     def fetch_typeid(self, table: str, name: str):
+        table = table.lower()
         if App.const.debug:
                 print(f"[DEBUG] - Fetching type_id for table '{table}' with name '{name}'")
         if "texture" in table:
@@ -139,7 +140,7 @@ class Library:
 
 class Database:
 
-    def __init__(self, path, loader=None):
+    def __init__(self, path: str, loader: callable = None):
         self.path = path
         self.loader = loader
         self.db = None
@@ -150,13 +151,9 @@ lib = Library()
 
 databases = {
     "textures": Database(
-        f"{core.sys.const.path}programs/NEA/Final/resource/db/textures.db", lib.load_textures)
+        f"{core.sys.const.path}programs/NEA/Final/resource/db/textures.db", lib.load_textures),
+    "scores" : Database(
+        f"{core.sys.const.path}programs/NEA/Final/resource/db/scores.db", None)
 }
 
-##### REMOVE #####
-
-try:
-    os.remove(f"{core.sys.const.path}programs/NEA/Final/resource/db/textures.db")
-except:
-    pass
 lib.init(databases)

@@ -20,7 +20,6 @@ class Room(core.render.Window):
     InputRateLimit = 1
     FloorHeight = 55
     HitBoxSize = 16
-    ScoreValue = 1
 
     def __init__(self, game):
         super().__init__()
@@ -60,7 +59,7 @@ class Room(core.render.Window):
             self.discovered = time.strftime("%H:%M")
 
             # Increment Game Score
-            self.game.scoring["score"] += self.ScoreValue
+            self.game.scoring["score"] += int(1 * ((self.width / 128)) / 2)
 
     def render(self):
         core.Interface.render(self.mainloop)

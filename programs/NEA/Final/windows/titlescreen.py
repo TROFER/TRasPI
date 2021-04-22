@@ -6,7 +6,7 @@ from elements import ImageMotion
 
 from game import keyboard
 from windows.game import game
-from windows import character
+from windows import character, scoreboard
 
 
 class Main(core.render.Window):
@@ -15,23 +15,27 @@ class Main(core.render.Window):
 
     def __init__(self):
         super().__init__()
+
+        # Elements 
+        self.imagemotion = ImageMotion(App.asset.ts_template)
         self.elements = [
             TextBox(Vector(64, 25), "Play Game",
                     colour=0, fill=255, line_col=0),
             TextBox(Vector(64, 40), "Change Skin",
                     colour=255, fill=0, line_col=255),
-            TextBox(Vector(64, 55), "Extra", colour=255, fill=0, line_col=255),
+            TextBox(Vector(64, 55), "Scoreboard", colour=255, fill=0, line_col=255),
             Image(Vector(64, 3), App.asset.ts_title)]
-        self.imagemotion = ImageMotion(App.asset.ts_template)
+
         self.index = 0
-        self.map = [game.Game, character.Main]
+        self.map = [game.Game, character.Main, scoreboard.Main]
         self._flag = False
+
         App.interval(self.imagemotion.move)
         App.interval(self.check_flag, 0.1)
 
     async def show(self):
         # Reset
-        self._flag = None
+        self._flag = False
         keyboard.clear_all()
 
         # Bind Hotkeys
@@ -40,13 +44,17 @@ class Main(core.render.Window):
         keyboard.Hotkey("e", self.select)
 
         # Set Backlight
-        core.hw.Backlight.fill((33, 94, 100), force=True) 
+        core.hw.Backlight.fill((33, 94, 100), force=True)
+        core.hw.Key.all(False)
 
     def render(self):
         self.template.image = self.imagemotion.copy()
         core.interface.application().render.template()
         for element in self.elements:
             core.interface.render(element)
+
+    def select(self):
+        self._flag = True
 
     def up(self):
         if self.index != 0:
@@ -74,8 +82,5 @@ class Main(core.render.Window):
         if self._flag:
             await self.map[self.index]()
             self._flag = False
-
-    def select(self):
-        self._flag = True
     
     

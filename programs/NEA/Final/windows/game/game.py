@@ -1,6 +1,8 @@
 import core
 from windows.game.stage import Room
+from windows.game.results import Results
 from app import App
+
 
 
 class Game(core.render.Window):
@@ -12,18 +14,27 @@ class Game(core.render.Window):
             "depth_multiplier" : 1,
             "surface_exit" : True
         }
-        self._flag = True
+        self._flag = 1
         App.interval(self.check_flag)
 
     def render(self):
         pass
 
     async def show(self):
-        if self._flag:
+        # Set Backlight
+        core.hw.Backlight.fill((33, 94, 100), force=True)
+        core.hw.Key.all(False)
+
+        # Window Logic
+        if self._flag == 1:
+            self._flag = 2
             start = Room(self)
             start.generate()
-            self._flag = False
             await start
+        elif self._flag == 2:
+            self._flag = 3
+            results = Results(self)
+            await results
         else:
             self.finish()
     
