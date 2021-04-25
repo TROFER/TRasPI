@@ -20,6 +20,7 @@ class Room(core.render.Window):
     InputRateLimit = 1
     FloorHeight = 55
     HitBoxSize = 16
+    TransitionGenerateChance = [True, False, False]
 
     def __init__(self, game):
         super().__init__()
@@ -53,9 +54,12 @@ class Room(core.render.Window):
 
         # Set Banner and Score
         if not self.discovered:
-            # Generate Transition
-            self.transition = Transition(self.game)
-            self.transition.generate()
+            # Generate Subwindow
+            if random.choice(self.TransitionGenerateChance):
+                self.subwindow = Transition(self.game)
+            else:
+                self.subwindow = Room(self.game)
+            self.subwindow.generate()
             self.discovered = time.strftime("%H:%M")
 
             # Increment Game Score
@@ -138,7 +142,7 @@ class RoomHandle:
             room.flag = Flag(room.finish)
 
         elif room.hitbox["right-exit"][0] <= room.position <= room.hitbox["right-exit"][1]:
-            room.flag = Flag(room.transition, asynchronous=True)
+            room.flag = Flag(room.subwindow, asynchronous=True)
 
     def right(self):
         room = self.room
