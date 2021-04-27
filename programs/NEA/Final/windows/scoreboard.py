@@ -39,7 +39,7 @@ class Main(core.render.Window):
         keyboard.Hotkey("s", self.down)
 
         # Set Backlight
-        core.hw.Backlight.fill((33, 94, 100), force=True)
+        core.hw.Backlight.fill((57, 99, 100), force=True)
     
     def render(self):
         for element in self.elements:

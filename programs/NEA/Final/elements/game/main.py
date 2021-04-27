@@ -17,8 +17,7 @@ class MainLoop(core.render.Primative):
             for layer in self.elements:
                 self.frame = layer.render(self.frame)
         except BaseException as e:
-            print("RENDER ERR")
-            print(e)
+            print(f"Render Error in: {layer} Reason: {e}")
         draw.im.paste(self.frame.convert("1").im, (0, 0, *self.frame.size))
 
     def copy(self):

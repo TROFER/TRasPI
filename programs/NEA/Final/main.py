@@ -22,7 +22,7 @@ class Main(core.render.Window):
             self.flag = True
     
     async def show(self):
-        Backlight.fill((33, 94, 100), force=True)
+        Backlight.fill((57, 99, 100), force=True)
 
     async def check_render(self):
         if self.flag:

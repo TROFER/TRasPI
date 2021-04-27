@@ -1,6 +1,0 @@
-Add Door Interactivity
-Add Room Banners
-Finish Transition Windows
-Add skin selection
-Add leaderboards
-Add more themes

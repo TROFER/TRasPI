@@ -50,7 +50,7 @@ class Results(core.render.Window):
         keyboard.Hotkey("enter", self.enter)
 
         # Set Backlight
-        core.hw.Backlight.fill((33, 94, 100), force=True)
+        core.hw.Backlight.fill((57, 99, 100), force=True)
         core.hw.Key.all(False)
 
     def render(self):

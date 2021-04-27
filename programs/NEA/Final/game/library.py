@@ -125,7 +125,8 @@ class Library:
     def fetch_typeid(self, table: str, name: str):
         table = table.lower()
         if App.const.debug:
-                print(f"[DEBUG] - Fetching type_id for table '{table}' with name '{name}'")
+            print(
+                f"[DEBUG] - Fetching type_id for table '{table}' with name '{name}'")
         if "texture" in table:
             self.databases["textures"].c.execute("SELECT id FROM texturetype WHERE name = ?",
                                                  [name])
@@ -136,6 +137,13 @@ class Library:
             if App.const.debug:
                 print(f"[DEBUG] - [Error] '{table}' Invalid table name")
         return self.databases["textures"].c.fetchone()[0]
+
+    def fetch_texture(self, type_id):
+        """Fetches a texture without a pack_id"""
+        self.databases["textures"].c.execute(
+            "SELECT image_id FROM texture WHERE type_id = ?", [type_id])
+        image_id = self.databases["textures"].c.fetchone()[0]
+        return self.fetch_image(image_id)
 
 
 class Database:
@@ -152,8 +160,11 @@ lib = Library()
 databases = {
     "textures": Database(
         f"{core.sys.const.path}programs/NEA/Final/resource/db/textures.db", lib.load_textures),
-    "scores" : Database(
+    "scores": Database(
         f"{core.sys.const.path}programs/NEA/Final/resource/db/scores.db", None)
 }
+
+if App.const.rebuild_library:
+    os.remove(f"{core.sys.const.path}programs/NEA/Final/resource/db/textures.db")
 
 lib.init(databases)

@@ -7,7 +7,8 @@ class App(core.type.Application):
         playerskin = None
 
     class const(core.type.Constant):
-        debug = False
+        debug = True
+        rebuild_library = True
 
     class asset(core.type.Pool):
         ts_template = core.asset.Template("ts_template")

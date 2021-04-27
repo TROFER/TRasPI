@@ -44,7 +44,7 @@ class Main(core.render.Window):
         keyboard.Hotkey("e", self.select)
 
         # Set Backlight
-        core.hw.Backlight.fill((33, 94, 100), force=True)
+        core.hw.Backlight.fill((57, 99, 100), force=True)
         core.hw.Key.all(False)
 
     def render(self):
