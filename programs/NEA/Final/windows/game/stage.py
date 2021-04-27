@@ -4,7 +4,7 @@ import time
 
 import core
 from app import App
-from elements.game import Animation, MainLoop, Paralax, ParalaxLayer, Player
+from elements.game import Animation, MainLoop, Parallax, ParallaxLayer, Player
 from windows.game import pausemenu
 from generation import scene
 from PIL import Image as PIL
@@ -81,19 +81,19 @@ class Room(core.render.Window):
 
         # Graphical Elements
 
-        # Paralax
-        self.paralax = Paralax([
-            ParalaxLayer(self.scene.base, offset=0.3),
-            ParalaxLayer(self.scene.background, offset=0.6),
-            ParalaxLayer(self.scene.fixings, offset=0.7),
-            ParalaxLayer(self.scene.foreground, offset=1)
+        # Parallax
+        self.parallax = Parallax([
+            ParallaxLayer(self.scene.base, offset=0.3),
+            ParallaxLayer(self.scene.background, offset=0.6),
+            ParallaxLayer(self.scene.fixings, offset=0.7),
+            ParallaxLayer(self.scene.foreground, offset=1)
         ], common.colour_strip(self.scene.base, y=64), self.GlobalSpeed)
 
         # Player
         self.player = Player(self.FloorHeight, self.GlobalSpeed)
 
         # Render
-        self.elements = [self.paralax, self.player]
+        self.elements = [self.parallax, self.player]
         self.mainloop = MainLoop(self.elements)
 
     async def check_flag(self):
@@ -151,9 +151,9 @@ class RoomHandle:
         if room.position < room.width - room.player.sprite.width:
             room.position += room.GlobalSpeed
 
-        # Paralax
+        # Parallax
         if 64 <= room.position <= room.width - 64:
-            room.paralax.increment()
+            room.parallax.increment()
 
         # Player
         room.player.flip_forward()
@@ -167,9 +167,9 @@ class RoomHandle:
         if room.position != 0:
             room.position -= room.GlobalSpeed
 
-        # Paralax
+        # Parallax
         if 64 <= room.position <= room.width - 64:
-            room.paralax.decrement()
+            room.parallax.decrement()
 
         # Player
         room.player.flip_backward()

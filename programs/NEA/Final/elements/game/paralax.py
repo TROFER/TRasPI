@@ -2,7 +2,7 @@ import core
 from core import Vector
 
 
-class Paralax:
+class Parallax:
 
     def __init__(self, layers: list, backlight_colours: list, speed: float):
         self.layers = layers
@@ -44,7 +44,7 @@ class Paralax:
         return self.layers[-1].x
 
 
-class ParalaxLayer:
+class ParallaxLayer:
 
     def __init__(self, image, offset: int = 1):
         self.image = image
