@@ -40,31 +40,31 @@ class Room:
         self.fixings = Fixings((self.x, self.y), self.theme_id).image
 
 
-class Transition:
+class Branch:
 
     ExitGeometryX = [32, 64, 95]
     ExitGeometryY = 50
 
     def __init__(self, _type: tuple):
         self.type = _type
-        lib.c.execute("SELECT id FROM transition")
-        self.transition_id = random.choice(lib.c.fetchall())[0]
+        lib.c.execute("SELECT id FROM branch")
+        self.branch_id = random.choice(lib.c.fetchall())[0]
         self.background, self.foreground = self.load_frames()
         self.generate_exits()
 
     def load_frames(self):
         self.bg_frames, self.fg_frames = [], []
         # Load Background Frames
-        lib.c.execute("SELECT image_id FROM frame WHERE transition_id = ? AND type = ?", [self.transition_id, "bg"])
+        lib.c.execute("SELECT image_id FROM frame WHERE branch_id = ? AND type = ?", [self.branch_id, "bg"])
         self.bg_frames += [lib.fetch_image(_id[0]) for _id in lib.c.fetchall()]
         # Load Foreground Frames
-        lib.c.execute("SELECT image_id FROM frame WHERE transition_id = ? AND type = ?", [self.transition_id, "fg"])
+        lib.c.execute("SELECT image_id FROM frame WHERE branch_id = ? AND type = ?", [self.branch_id, "fg"])
         self.fg_frames += [lib.fetch_image(_id[0]) for _id in lib.c.fetchall()]
         return self.bg_frames[0], self.fg_frames[0]
 
     def generate_exits(self):
         self.stage = PIL.new("RGBA", (128, 64))
-        lib.c.execute("SELECT center_exit, left_exit, right_exit FROM transition WHERE id = ?", [self.transition_id])
+        lib.c.execute("SELECT center_exit, left_exit, right_exit FROM branch WHERE id = ?", [self.branch_id])
         for _generate, x, image_id in zip(self.type, self.ExitGeometryX, lib.c.fetchone()):
             if _generate:
                 image = lib.fetch_image(image_id)
@@ -72,7 +72,7 @@ class Transition:
                 y = self.ExitGeometryY + align(image, "y", "B")
                 self.stage.alpha_composite(image, dest=(x, y))
 
-'''trs = Transition([True, False, True])
+'''trs = Branch([True, False, True])
 trs.background.alpha_composite(trs.stage)
 trs.background.alpha_composite(trs.foreground)
 trs.background.save("debug.png")

@@ -7,14 +7,44 @@ from generation.common import align
 from generation.layers import Background, Base, Fixings, Foreground
 
 
-class Room:
+class Scene:
 
-    def __init__(self, width):
-        # Set ids
-        type_id = lib.fetch_typeid("pack", "room")
+    def __init__(self, packtype: str):
+        type_id = lib.fetch_typeid("pack", packtype)
         lib.databases["textures"].c.execute(
             "SELECT id FROM pack WHERE type_id = ? ", [type_id])
         self.pack_id = random.choice(lib.databases["textures"].c.fetchall())[0]
+
+class Animated(Scene):
+
+    def load_frames(self):
+        # Background Frames
+        type_id = lib.fetch_typeid("texture", "background")
+        lib.databases["textures"].c.execute("SELECT image_id FROM texture WHERE pack_id = ? AND type_id = ?",
+                                            [self.pack_id, type_id])
+        self.background_frames = []
+        for image_id in lib.databases["textures"].c.fetchall():
+            self.background_frames.append(lib.fetch_image(image_id[0]))
+
+        # Foregroud Frames
+        type_id = lib.fetch_typeid("texture", "foreground")
+        lib.databases["textures"].c.execute("SELECT image_id FROM texture WHERE pack_id = ? AND type_id = ?",
+                                            [self.pack_id, type_id])
+        self.foreground_frames = []
+        for image_id in lib.databases["textures"].c.fetchall():
+            self.foreground_frames.append(lib.fetch_image(image_id[0]))
+
+        # Backlight Colours
+        type_id = lib.fetch_typeid("texture", "palette")
+        lib.databases["textures"].c.execute("SELECT image_id FROM texture WHERE pack_id = ? AND type_id = ?",
+                                            [self.pack_id, type_id])
+        image = lib.fetch_image(lib.databases["textures"].c.fetchone()[0]).convert("RGB")
+        self.backlight_colours = [colour for colour in image.getdata()]
+
+class Room(Scene):
+
+    def __init__(self, width):
+        super().__init__("room")
 
         # Generate
         self.x, self.y = width * 128, 64
@@ -46,7 +76,7 @@ class Room:
         self.fixings = Fixings((self.x, self.y), self.pack_id).image
 
 
-class Transition:
+class Branch(Animated, Scene):
 
     Anchor = {
         "left": (32, 50),
@@ -56,38 +86,11 @@ class Transition:
 
     def __init__(self, exits: tuple):
         self.exits = exits
-        # Set ids
-        lib.databases["textures"].c.execute("SELECT id FROM pack WHERE type_id = ?",
-                                            [lib.fetch_typeid("pack", "transition")])
-        self.pack_id = random.choice(lib.databases["textures"].c.fetchall())[0]
+        super().__init__("branch")
 
         # Construct
-        self.load_frames()
+        super().load_frames()
         self.generate_exits()
-
-    def load_frames(self):
-        # Background Frames
-        type_id = lib.fetch_typeid("texture", "background")
-        lib.databases["textures"].c.execute("SELECT image_id FROM texture WHERE pack_id = ? AND type_id = ?",
-                                            [self.pack_id, type_id])
-        self.background_frames = []
-        for image_id in lib.databases["textures"].c.fetchall():
-            self.background_frames.append(lib.fetch_image(image_id[0]))
-
-        # Foregroud Frames
-        type_id = lib.fetch_typeid("texture", "foreground")
-        lib.databases["textures"].c.execute("SELECT image_id FROM texture WHERE pack_id = ? AND type_id = ?",
-                                            [self.pack_id, type_id])
-        self.foreground_frames = []
-        for image_id in lib.databases["textures"].c.fetchall():
-            self.foreground_frames.append(lib.fetch_image(image_id[0]))
-
-        # Backlight Colours
-        type_id = lib.fetch_typeid("texture", "palette")
-        lib.databases["textures"].c.execute("SELECT image_id FROM texture WHERE pack_id = ? AND type_id = ?",
-                                            [self.pack_id, type_id])
-        image = lib.fetch_image(lib.databases["textures"].c.fetchone()[0]).convert("RGB")
-        self.backlight_colours = [colour for colour in image.getdata()]
 
     def generate_exits(self):
         for frame in self.background_frames:
@@ -101,3 +104,12 @@ class Transition:
                     x = anchor[0] + align(image, "X", "C")
                     y = anchor[1] + align(image, "Y", "B")
                     frame.alpha_composite(image, dest=(x, y))
+
+class Treasure(Animated, Scene):
+
+    def __init__(self):
+        super().__init__("room-treasure")
+
+        # Construct
+        super().load_frames()
+

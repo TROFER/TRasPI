@@ -8,70 +8,101 @@ from elements.game import Animation, MainLoop, Parallax, ParallaxLayer, Sprite
 from generation import scene
 from PIL import Image as PIL
 
-from game import common, keyboard, handle
+from game import common, keyboard, handles
 
 
-class Room(core.render.Window):
+class Stage:
+
+    InputRateLimit = 1
+
+    def __init__(self, game, handle):
+        self.discovered = False
+        self.game = game
+        self.handle = handle(self)
+        self.flag = None
+        self.position = 0
+    
+    def _show(self):
+        # Reset
+        self.flag = None
+
+        # Set Keybindings
+        keyboard.Hotkey("esc", self.handle.esc)
+        keyboard.Hotkey("e", self.handle.interact, 
+                rate_limit=self.InputRateLimit)
+        keyboard.Hotkey("e", self.handle.interact,
+                rate_limit=self.InputRateLimit)
+        keyboard.Hotkey("a", self.handle.left,
+                rate_limit=self.InputRateLimit)
+        keyboard.Hotkey("d", self.handle.right,
+                rate_limit=self.InputRateLimit)
+
+        # Update Game Active Window
+        self.game.active_window = self
+
+        # Start Flag Checking
+        App.interval(self.check_flag, 0.1)
+
+    async def check_flag(self):
+        if self.flag is not None:
+            if self.flag.asynchronous:
+                if not isinstance(self.flag.function, core.render.Window):
+                    awaitable = self.flag.function(*self.flag.arguments)
+                else:
+                    awaitable = self.flag.function
+                res = await awaitable
+                if res == "quit":
+                    self.finish("quit")
+            else:
+                self.flag.function()
+    
+    def render(self):
+        core.Interface.render(self.mainloop)
+    
+    def _debug():
+        return {
+            "discovered" : self.discovered,
+            "position" : self.position}
+
+
+class Room(Stage, core.render.Window):
 
     MinSegments = 2
     MaxSegments = 4
     GlobalStep = 16
-    InputRateLimit = 1
     FloorHeight = 55
     HitBoxSize = 16
-    TransitionGenerateChance = [True, False]
+    BranchGenerateChance = [True, False]
     GoldenKeyChance = [True]  # CHANGE ME
 
     def __init__(self, game):
-        super().__init__()
-        self.discovered = False  # Once discovered set to time
-        self.game = game
-        self.handle = handle.RoomHandle(self)
-        self.flag = None
-        self.position = 0
+        # Initalise
+        super(core.render.Window).__init__()
+        super(Stage).__init__(game, handles.Room)
+
         self.hitboxes = {
             "left-exit": None,
             "right-exit": None,
             "golden-key": None
         }
 
-        # Initiate Flag Checking
-        App.interval(self.check_flag, 0.1)
-
     async def show(self):
-        # Reset
-        self.flag = None
-
-        # Set Keybindings
-        keyboard.Hotkey("esc", self.handle.esc)
-        keyboard.Hotkey("e", self.handle.interact,
-                        rate_limit=self.InputRateLimit)
-        keyboard.Hotkey("a", self.handle.left, rate_limit=self.InputRateLimit)
-        keyboard.Hotkey("d", self.handle.right,
-                        rate_limit=self.InputRateLimit)
+        super(Stage)._show()
 
         # Check for hints
         self.hint()
 
-        # Update Game Active Window
-        self.game.active_window = self
-
-        # Set Score
         if not self.discovered:
             # Generate Subwindow
-            if random.choice(self.TransitionGenerateChance):
-                self.subwindow = Transition(self.game)
+            if random.choice(self.BranchGenerateChance):
+                self.subwindow = Branch(self.game)
             else:
                 self.subwindow = Room(self.game)
             self.subwindow.generate()
             self.discovered = time.strftime("%H:%M")
-            self.banner.peak(5)
 
             # Increment Game Score
             self.game.scoring["score"] += int(1 * ((self.width / 128)) / 2)
-
-    def render(self):
-        core.Interface.render(self.mainloop)
 
     def generate(self):
         # Generate Room
@@ -99,7 +130,8 @@ class Room(core.render.Window):
             self.game.sprites["player"], (0, self.FloorHeight), self.GlobalStep)
 
         # Banner
-        self.banner = Sprite(self.game.sprites["newroom-notify"], (64, 20), show=False)
+        self.banner = Sprite(
+            self.game.sprites["goldenkey-notify"], (64, 20), show=False)
 
         # Render
         self.elements = [self.parallax, self.player, self.banner]
@@ -112,22 +144,10 @@ class Room(core.render.Window):
             self.elements.insert(1, self.goldenkey)
             self.hitboxes["golden-key"] = ((self.width / 2) - (self.HitBoxSize / 2),
                                            (self.width / 2) + (self.HitBoxSize / 2))
+            self.game.golden_keys.put(self.game.generate_keyvalue(5))
 
         # Render
         self.mainloop = MainLoop(self.elements)
-
-    async def check_flag(self):
-        if self.flag is not None:
-            if self.flag.asynchronous:
-                if not isinstance(self.flag.function, core.render.Window):
-                    awaitable = self.flag.function(*self.flag.arguments)
-                else:
-                    awaitable = self.flag.function
-                res = await awaitable
-                if res == "quit":
-                    self.finish("quit")
-            else:
-                self.flag.function()
 
     def hint(self):
         _hit = False
@@ -143,30 +163,26 @@ class Room(core.render.Window):
             core.hw.Key.all(False)
 
     def debug(self):
-        return {
-            "pos": self.position,
+        stats = {
             "width": self.width,
-            "discovered": self.discovered,
             "hitboxes": self.hitboxes,
             "DistanceFromMid": (self.width / 2) - self.position}
+        return super(Stage)._debug().update(stats)
+        
 
 
-class Transition(core.render.Window):
+class Branch(Stage, core.render.Window):
 
-    InputRateLimit = 1
     AnimationSpeed = 0.7
     FloorHeight = 55
     PlayerSpeed = 8
-    # 3/5 Chance to get an addional door
-    DoorGenerateSeed = [True, True, True, True, False]
+    DoorGenerateSeed = [True, True, True, True, False] # 3/5 Chance to get an addional door
 
     def __init__(self, game):
-        super().__init__()
-        self.discovered = False
-        self.game = game
-        self.handle = handle.TransitionHandle(self)
-        self.flag = None
-        self.position = 0
+        # Initalise
+        super(core.render.Window).__init__()
+        super(Stage).__init__(game, handles.Branch)
+        
         self.mapping = {
             "left-exit": [(21, 42), None, 32],
             "center-exit": [(42, 84), None, 64],
@@ -174,18 +190,7 @@ class Transition(core.render.Window):
         }
 
     async def show(self):
-        # Reset
-        self.flag = None
-
-        # Set Keybindings
-        keyboard.Hotkey("esc", self.handle.esc)
-        keyboard.Hotkey("e", self.handle.interact,
-                        rate_limit=self.InputRateLimit)
-        keyboard.Hotkey("a", self.handle.left, rate_limit=self.InputRateLimit)
-        keyboard.Hotkey("d", self.handle.right, rate_limit=self.InputRateLimit)
-
-        # Update Game Active Window
-        self.game.active_window = self
+        super(Stage)._show()
 
         # Generate Subrooms
         if not self.discovered:
@@ -200,12 +205,6 @@ class Transition(core.render.Window):
             self.discovered = True
             self.game.scoring["depth_multiplier"] += 0.25
 
-        # Initiate Flag Checking
-        App.interval(self.check_flag, 0.1)
-
-    def render(self):
-        core.Interface.render(self.mainloop)
-
     def generate(self):
         # Generate Mapping
         self.mapping[random.choice(list(self.mapping.keys()))][1] = self.finish
@@ -214,8 +213,8 @@ class Transition(core.render.Window):
                 if random.choice(self.DoorGenerateSeed):
                     self.mapping[key][1] = Room(self.game)
 
-        # Generate Transition
-        self.scene = scene.Transition(
+        # Generate Branch
+        self.scene = scene.Branch(
             [False if data[1] is None else True for data in self.mapping.values()])
 
         # Graphical Elements
@@ -237,20 +236,46 @@ class Transition(core.render.Window):
                          self.player, self.foreground]
         self.mainloop = MainLoop(self.elements)
 
-    async def check_flag(self):
-        if self.flag is not None:
-            if self.flag.asynchronous:
-                if not isinstance(self.flag.function, core.render.Window):
-                    awaitable = self.flag.function(*self.flag.arguments)
-                else:
-                    awaitable = self.flag.function
-                res = await awaitable
-                if res == "quit":
-                    self.finish("quit")
-            else:
-                self.flag.function()
-
     def debug(self):
-        return {
-            "pos": self.position,
-            "discovered": self.discovered}
+        super(Stage)._debug()
+
+
+class TreasureRoom(core.render.Window):
+
+    HitBoxSize = 10
+
+    def __init__(self, game):
+        super().__init__()
+        self.game = game
+        self.handle = handle.TreasureRoomHandle(self)
+        self.flag = None
+        self.position = 0
+        self.mapping = {
+            "exit": [(0, 0 + self.HitBoxSize)]
+        }
+
+    async def show(self):
+        # Reset
+        self.flag = None
+
+        # Set Keybindings
+        keyboard.Hotkey("esc", self.handle.esc)
+        keyboard.Hotkey("e", self.handle.interact,
+                        rate_limit=self.InputRateLimit)
+        keyboard.Hotkey("a", self.handle.left, rate_limit=self.InputRateLimit)
+        keyboard.Hotkey("d", self.handle.right, rate_limit=self.InputRateLimit)
+
+        # Update Game Active Window
+        self.game.active_window = self
+
+    def generate(self):
+        # Generate Treasure
+        self.scene = scene.TreasureRoom()
+
+        # Background Foreground & Backlight Animations
+        self.background = Animation("image",
+                                    self.scene.background_frames, speed=self.AnimationSpeed)
+        self.foreground = Animation("image",
+                                    self.scene.foreground_frames, speed=self.AnimationSpeed)
+        self.backlight = Animation("backlight",
+                                   self.scene.backlight_colours, speed=0.5)

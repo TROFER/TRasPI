@@ -1,5 +1,7 @@
 import random
+import string
 import threading
+from queue import Queue
 
 import core
 from app import App
@@ -20,6 +22,7 @@ class Game(core.render.Window):
             "surface_exit": True,
             "golden_keys" : 0
         }
+        self.golden_keys = Queue(maxsize=0)
         self.active_window = None
         self._flag = 1
 
@@ -42,9 +45,6 @@ class Game(core.render.Window):
 
         type_id = lib.fetch_typeid("texture", "goldenkey-notify")
         self.sprites["goldenkey-notify"] = lib.fetch_texture(type_id)
-
-        type_id = lib.fetch_typeid("texture", "newroom-notify")
-        self.sprites["newroom-notify"] = lib.fetch_texture(type_id)
 
         # Flag Checking
         App.interval(self.check_flag)
@@ -86,11 +86,16 @@ class Game(core.render.Window):
             pass
 
     def generate_debug(self):
-        stats = {"score": self.scoring['score'],
-                 "multiplier": self.scoring['depth_multiplier'],
-                 "golden_keys" : self.scoring['golden_keys']}
+        stats = {"golden_keys" : self.golden_keys.qsize(),
+                 "score" : self.scoring['score'],
+                 "multiplier" : self.scoring['depth_multiplier'],
+                 "player_golden_keys" : self.scoring['golden_keys']}
         try:
             stats.update(self.active_window.debug())
         except AttributeError:
             pass
         return stats
+    
+    def generate_keyvalue(self, len):
+        source = string.ascii_lowercase + string.ascii_uppercase
+        return "".join([random.choice(source) for i in range(len)])

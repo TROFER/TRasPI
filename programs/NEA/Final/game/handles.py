@@ -1,7 +1,7 @@
 
 from windows.game import pausemenu
 
-class RoomHandle:
+class Room:
 
     def __init__(self, room):
         self.room = room
@@ -26,7 +26,6 @@ class RoomHandle:
                 room.game.scoring["golden_keys"] += 1
                 room.hitboxes["golden-key"] = None
                 room.hint()
-                room.banner.sprite = room.game.sprites["goldenkey-notify"]
                 room.banner.peak(5)
 
     def right(self):
@@ -83,44 +82,44 @@ class RoomHandle:
         room.hint()
 
 
-class TransitionHandle:
+class Branch:
 
-    def __init__(self, transition):
-        self.transition = transition
+    def __init__(self, branch):
+        self.branch = branch
 
     def esc(self):
-        self.transition.flag = Flag(pausemenu.Main, arguments=[
-                                    self.transition.game], asynchronous=True)
+        self.branch.flag = Flag(pausemenu.Main, arguments=[
+                                    self.branch.game], asynchronous=True)
 
     def interact(self):
-        transition = self.transition
+        branch = self.branch
 
-        for data in transition.mapping.values():
-            if data[0][0] <= transition.position <= data[0][1]:
-                if data[1] == transition.finish:
-                    transition.flag = Flag(transition.finish)
+        for data in branch.mapping.values():
+            if data[0][0] <= branch.position <= data[0][1]:
+                if data[1] == branch.finish:
+                    branch.flag = Flag(branch.finish)
                 else:
-                    transition.flag = Flag(data[1], asynchronous=True)
+                    branch.flag = Flag(data[1], asynchronous=True)
 
     def right(self):
         # Player
 
-        transition = self.transition
-        if transition.position != 128:
-            transition.position += transition.PlayerSpeed
-            transition.player.increment()
+        branch = self.branch
+        if branch.position != 128:
+            branch.position += branch.PlayerSpeed
+            branch.player.increment()
 
-        transition.player.flip_forward()
+        branch.player.flip_forward()
 
     def left(self):
         # Player
 
-        transition = self.transition
-        if transition.position != 0:
-            transition.position -= transition.PlayerSpeed
-            transition.player.decrement()
+        branch = self.branch
+        if branch.position != 0:
+            branch.position -= branch.PlayerSpeed
+            branch.player.decrement()
 
-        transition.player.flip_backward()
+        branch.player.flip_backward()
 
 
 def clamp(_min, data, _max):

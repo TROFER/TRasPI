@@ -9,7 +9,7 @@ class Library:
     IMPORT_PATH = f"D:/Documents/Programming/Python/TRasPI Operating System/programs/NEA/Level Test/import/"
     DB_PATH = f"D:/Documents/Programming/Python/TRasPI Operating System/programs/NEA/Level Test/resource/assets.db"
     ASSET_TYPES = ["foreground", "base", "background",
-                   "furniture", "fixing", "palette", "transition"]
+                   "furniture", "fixing", "palette", "branch"]
 
     def __init__(self):
         self.load(self.DB_PATH)
@@ -48,7 +48,7 @@ class Library:
             FOREIGN KEY (theme_id) REFERENCES theme(id),
             FOREIGN KEY (image_id) REFERENCES image(id)
             )""")
-        self.c.execute("""CREATE TABLE transition(
+        self.c.execute("""CREATE TABLE branch(
             id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
             center_exit INTEGER,
             left_exit INTEGER,
@@ -58,10 +58,10 @@ class Library:
             FOREIGN KEY (right_exit) REFERENCES image(id)
             )""")
         self.c.execute("""CREATE TABLE frame(
-            transition_id INTEGER,
+            branch_id INTEGER,
             image_id INTEGER,
             type TEXT,
-            FOREIGN KEY (transition_id) REFERENCES transition(id),
+            FOREIGN KEY (branch_id) REFERENCES branch(id),
             FOREIGN KEY (image_id) REFERENCES image(id)
             )""")
         for _type in self.ASSET_TYPES:
@@ -97,26 +97,26 @@ class Library:
     def load_assets(self, path):
         _count = 0
         for _item in os.scandir(path):
-            if "transition" in _item.name and _item.is_dir():
-                for transition in os.scandir(_item.path):
-                    for _file in os.scandir(transition.path):
+            if "branch" in _item.name and _item.is_dir():
+                for branch in os.scandir(_item.path):
+                    for _file in os.scandir(branch.path):
                         if "center" in _file.name:
                             center_exit = self.import_image(_file.path)
                         elif "left" in _file.name:
                             left_exit = self.import_image(_file.path)
                         elif "right" in _file.name:
                             right_exit = self.import_image(_file.path)
-                    self.c.execute("INSERT INTO transition (center_exit, left_exit, right_exit) VALUES(?, ?, ?)",
+                    self.c.execute("INSERT INTO branch (center_exit, left_exit, right_exit) VALUES(?, ?, ?)",
                                     [center_exit, left_exit, right_exit])
-                    transition_id = self.c.lastrowid
-                    for frame in os.scandir(transition.path + "/frames/background"):
+                    branch_id = self.c.lastrowid
+                    for frame in os.scandir(branch.path + "/frames/background"):
                         image_id = self.import_image(frame.path)
-                        self.c.execute("INSERT INTO frame (transition_id, image_id, type) VALUES (?, ?, ?)", [
-                                        transition_id, image_id, "bg"])
-                    for frame in os.scandir(transition.path + "/frames/foreground"):
+                        self.c.execute("INSERT INTO frame (branch_id, image_id, type) VALUES (?, ?, ?)", [
+                                        branch_id, image_id, "bg"])
+                    for frame in os.scandir(branch.path + "/frames/foreground"):
                         image_id = self.import_image(frame.path)
-                        self.c.execute("INSERT INTO frame (transition_id, image_id, type) VALUES (?, ?, ?)", [
-                            transition_id, image_id, "fg"])
+                        self.c.execute("INSERT INTO frame (branch_id, image_id, type) VALUES (?, ?, ?)", [
+                            branch_id, image_id, "fg"])
             elif _item.is_dir():
                 for _type in os.scandir(f"{self.IMPORT_PATH}{_item.name}"):
                     if _type.is_dir() and _type.name.lower() in self.ASSET_TYPES:

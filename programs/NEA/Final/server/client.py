@@ -10,20 +10,18 @@ class Client:
     BufferSize = 1024
 
     def __init__(self):
-        '''self.ServerAddr = input("Enter Server Address: ")'''
-        '''self.OutGoingPort = int(input("Enter Server Incoming Port: "))
-        self.IncomingPort = int(input("Enter Server Outgoing Port: "))'''
         self.ServerAddr = "192.168.1.251"
         self.outgoing, self.incoming = socket(
             AF_INET, SOCK_DGRAM), socket(AF_INET, SOCK_DGRAM)
         self.incoming.bind(("", self.IncomingPort))
         self.buffer = ""
 
-    def request(self, data=""):
-        self.outgoing.sendto(self.encode(data), (self.ServerAddr, self.OutgoingPort))
+    def request(self, data="*"):
+        self.outgoing.sendto(self.encode(
+            data), (self.ServerAddr, self.OutgoingPort))
         (data, addr) = self.incoming.recvfrom(self.BufferSize, )
         print(self.decode(data))
-    
+
     def close(self):
         self.outgoing.close()
         self.incoming.close()
@@ -34,9 +32,9 @@ class Client:
     def decode(self, string):
         return json.loads(string.decode("utf-8"))
 
+
 client = Client()
+print("Client Initalised")
 while True:
-    client.request()
+    client.request("*")
     time.sleep(1)
-    
-    

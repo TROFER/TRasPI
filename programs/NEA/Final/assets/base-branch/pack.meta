@@ -1,4 +1,4 @@
 {
-    "type" : "transition",
+    "type" : "branch",
     "author" : "Tristan"
 }

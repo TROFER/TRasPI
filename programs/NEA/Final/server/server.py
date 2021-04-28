@@ -4,6 +4,7 @@ import json
 
 _inuse = False
 
+
 class Server:
 
     IncomingPort = 43334
@@ -25,29 +26,49 @@ class Server:
             if App.const.debug:
                 print(f"[DEBUG] - Server Already Active")
             raise OSError
-    
+
     def await_requests(self):
         if App.const.debug:
-            print(f"[DEBUG] - [Telemetry Server] Incoming: {self.IncomingPort} Outgoing: {self.OutgoingPort}")
+            print(
+                f"[DEBUG] - [Telemetry Server] Incoming: {self.IncomingPort} Outgoing: {self.OutgoingPort}")
         while not self._stop:
             try:
                 (data, addr) = self.incoming.recvfrom(self.BufferSize)
-                self.outgoing.sendto(self.encode(self.callback()), (addr[0], self.OutgoingPort))
+                result = self.parameterize(self.decode(data))
+                self.outgoing.sendto(self.encode(
+                    result), (addr[0], self.OutgoingPort))
             except BaseException as e:
                 if App.const.debug:
                     print(f"[DEBUG] - Error Serving Request: {e}")
-        
+
     def stop(self):
         global _inuse
         if App.const.debug:
             print(f"[DEBUG] - Stopping Server")
         self._stop = True
-        self.outgoing.sendto(self.encode(""), ("localhost", self.IncomingPort)) # Forfils Hanging Condition
+        # Forfils Hanging Condition
+        self.outgoing.sendto(self.encode(""), ("localhost", self.IncomingPort))
         self.incoming.close()
         _inuse = False
-        
 
-    def encode(self, string):
-        string = json.dumps(string)
+    def parameterize(self, request):
+        if request == "*":
+            return self.callback()
+        else:
+            source = self.callback()
+            result = {"errors": []}
+            for field in request.replace(" ", "").split(","):
+                try:
+                    result[field] = source[field]
+                except KeyError:
+                    result["errors"].append(f"KeyError: {field}")
+            if not result["errors"]:
+                result.pop("errors")
+            return result
+
+    def encode(self, _dict):
+        string = json.dumps(_dict)
         return bytes(string, 'utf-8')
 
+    def decode(self, string):
+        return string.decode("utf-8")
