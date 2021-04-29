@@ -20,7 +20,7 @@ class Game(core.render.Window):
             "score": 0,
             "depth_multiplier": 1,
             "surface_exit": True,
-            "golden_keys" : 0
+            "golden_keys": []
         }
         self.golden_keys = Queue(maxsize=0)
         self.active_window = None
@@ -45,6 +45,15 @@ class Game(core.render.Window):
 
         type_id = lib.fetch_typeid("texture", "goldenkey-notify")
         self.sprites["goldenkey-notify"] = lib.fetch_texture(type_id)
+
+        type_id = lib.fetch_typeid("texture", "locked-notify")
+        self.sprites["locked-notify"] = lib.fetch_texture(type_id)
+
+        type_id = lib.fetch_typeid("texture", "treasure")
+        lib.databases["textures"].c.execute(
+            "SELECT image_id FROM texture WHERE type_id = ?", [type_id])
+        image_ids = lib.databases["textures"].c.fetchall()
+        self.sprites["treasures"] = [lib.fetch_image(image_id[0]) for image_id in image_ids]
 
         # Flag Checking
         App.interval(self.check_flag)
@@ -86,16 +95,16 @@ class Game(core.render.Window):
             pass
 
     def generate_debug(self):
-        stats = {"golden_keys" : self.golden_keys.qsize(),
-                 "score" : self.scoring['score'],
-                 "multiplier" : self.scoring['depth_multiplier'],
-                 "player_golden_keys" : self.scoring['golden_keys']}
+        stats = {"golden_keys": self.golden_keys.qsize(),
+                 "score": self.scoring['score'],
+                 "multiplier": self.scoring['depth_multiplier'],
+                 "player_golden_keys": self.scoring['golden_keys']}
         try:
             stats.update(self.active_window.debug())
-        except AttributeError:
-            pass
+        except BaseException as e:
+            print(e)
         return stats
-    
+
     def generate_keyvalue(self, len):
         source = string.ascii_lowercase + string.ascii_uppercase
         return "".join([random.choice(source) for i in range(len)])

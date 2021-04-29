@@ -6,17 +6,18 @@ from PIL import Image as PIL
 
 class Sprite:
 
-    def __init__(self, sprite, pos: tuple, step: float = 0, show: bool = True):
+    def __init__(self, sprite, pos: tuple, step: float = 0, show: bool = True, x_align="C", y_align="B"):
         self.sprite = sprite
         self.x, self.y = pos
         self.step = step
         self.show = show
+        self.align = (x_align, y_align)
         self.rotation = "Forward"
         self._timer = None
 
         # Alignment
-        self.y_offset = align(self.sprite, "Y", "B")
-        self.x_offset = align(self.sprite, "X", "C")
+        self.x_offset = align(self.sprite, "X", self.align[0])
+        self.y_offset = align(self.sprite, "Y", self.align[1])
 
     def render(self, frame):
         if self._timer is not None:
@@ -31,8 +32,11 @@ class Sprite:
             frame.alpha_composite(construct)
         return frame
 
-    def set_position(self, position):
+    def set_x(self, position):
         self.x = position
+    
+    def set_y(self, position):
+        self.y = position
 
     def increment(self):
         self.x += self.step

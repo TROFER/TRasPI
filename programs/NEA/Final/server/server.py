@@ -35,8 +35,12 @@ class Server:
             try:
                 (data, addr) = self.incoming.recvfrom(self.BufferSize)
                 result = self.parameterize(self.decode(data))
-                self.outgoing.sendto(self.encode(
-                    result), (addr[0], self.OutgoingPort))
+                try:
+                    self.outgoing.sendto(self.encode(
+                        result), (addr[0], self.OutgoingPort))
+                except BaseException as e:
+                    if App.const.debug:
+                        print(f"[DEBUG] - Error While Obtaining: {e}")
             except BaseException as e:
                 if App.const.debug:
                     print(f"[DEBUG] - Error Serving Request: {e}")
@@ -52,12 +56,13 @@ class Server:
         _inuse = False
 
     def parameterize(self, request):
-        if request == "*":
+        if "*" in request:
             return self.callback()
         else:
             source = self.callback()
             result = {"errors": []}
             for field in request.replace(" ", "").split(","):
+                print(field)
                 try:
                     result[field] = source[field]
                 except KeyError:

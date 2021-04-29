@@ -80,7 +80,7 @@ class Main(core.render.Window):
 
     async def check_flag(self):
         if self._flag:
-            await self.map[self.index]()
             self._flag = False
+            await self.map[self.index]()
     
     

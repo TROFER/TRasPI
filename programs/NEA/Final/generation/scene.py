@@ -15,6 +15,7 @@ class Scene:
             "SELECT id FROM pack WHERE type_id = ? ", [type_id])
         self.pack_id = random.choice(lib.databases["textures"].c.fetchall())[0]
 
+
 class Animated(Scene):
 
     def load_frames(self):
@@ -38,8 +39,10 @@ class Animated(Scene):
         type_id = lib.fetch_typeid("texture", "palette")
         lib.databases["textures"].c.execute("SELECT image_id FROM texture WHERE pack_id = ? AND type_id = ?",
                                             [self.pack_id, type_id])
-        image = lib.fetch_image(lib.databases["textures"].c.fetchone()[0]).convert("RGB")
+        image = lib.fetch_image(
+            lib.databases["textures"].c.fetchone()[0]).convert("RGB")
         self.backlight_colours = [colour for colour in image.getdata()]
+
 
 class Room(Scene):
 
@@ -105,6 +108,7 @@ class Branch(Animated, Scene):
                     y = anchor[1] + align(image, "Y", "B")
                     frame.alpha_composite(image, dest=(x, y))
 
+
 class Treasure(Animated, Scene):
 
     def __init__(self):
@@ -112,4 +116,3 @@ class Treasure(Animated, Scene):
 
         # Construct
         super().load_frames()
-

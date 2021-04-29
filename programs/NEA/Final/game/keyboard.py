@@ -24,7 +24,7 @@ class Hotkey:
         self.lastpress = time.time()
         if App.const.debug:
             print(
-                f"[DEBUG] Binding Set key: '{hotkey}' to '{callback.__name__}'")
+                f"[DEBUG] - Binding Set key: '{hotkey}' to '{callback.__name__}'")
 
     def call(self, arguments=None, *args):
         if self.rate_limit:
