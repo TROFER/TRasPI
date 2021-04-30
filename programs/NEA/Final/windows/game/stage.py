@@ -75,10 +75,8 @@ class Room(Stage):
     GlobalStep = 16
     FloorHeight = 55
     HitBoxSize = 16
-    #BranchGenerateChance = [True, False]
-    BranchGenerateChance = [True]
-    # GoldenKeyChance = [True, False, False, False, False]
-    GoldenKeyChance = [True]
+    BranchGenerateChance = [True, False]
+    GoldenKeyChance = [True, False, False, False, False]
 
     def __init__(self, game):
         # Initalise
