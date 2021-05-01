@@ -1,3 +1,5 @@
+# /elements/imagemotion.py
+
 from PIL import Image
 
 

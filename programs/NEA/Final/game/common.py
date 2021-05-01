@@ -1,3 +1,5 @@
+# /game/common.py
+
 import sys
 
 def colour_strip(image, y):

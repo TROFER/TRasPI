@@ -1,3 +1,5 @@
+# /elements/game/parallax.py
+
 import core
 from core import Vector
 

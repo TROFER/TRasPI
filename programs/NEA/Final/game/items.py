@@ -1,3 +1,5 @@
+# /game/items.py
+
 from elements.game import sprite
 
 class GoldenKey(sprite.Sprite):

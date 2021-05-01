@@ -1,3 +1,5 @@
+# /windows/scoreboard.py
+
 import datetime
 
 import core

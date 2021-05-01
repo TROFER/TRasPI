@@ -1,3 +1,5 @@
+# /main.py
+
 import core
 from core.hw import Backlight
 from core.render.element import Image

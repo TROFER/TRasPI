@@ -1,3 +1,5 @@
+# /elements/game/sprite.py
+
 import core
 from generation.common import align
 import time

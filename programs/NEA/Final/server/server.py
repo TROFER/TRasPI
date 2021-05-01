@@ -1,3 +1,5 @@
+# /server/server.py
+
 from socket import *
 from app import App
 import json

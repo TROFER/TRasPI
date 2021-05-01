@@ -1,3 +1,5 @@
+# /elements/game/main.py
+
 import core
 from PIL import Image as PIL
 

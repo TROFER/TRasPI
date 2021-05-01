@@ -1,3 +1,5 @@
+# /windows/game/stage.py
+
 import asyncio
 import random
 import time

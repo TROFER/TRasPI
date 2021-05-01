@@ -1,3 +1,5 @@
+# /windows/character.py
+
 import core
 from app import App
 from core import Vector
@@ -85,4 +87,3 @@ def remove_alpha(image):
             new.append(pixel)
     image.putdata(new)
     return image
-

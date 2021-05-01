@@ -1,3 +1,5 @@
+# /generation/common.py
+
 def align(image, axis: str, alignment: str):
     alignments = {
         "x": {

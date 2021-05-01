@@ -1,3 +1,5 @@
+# /elements/game/animate.py
+
 import time
 
 import core
