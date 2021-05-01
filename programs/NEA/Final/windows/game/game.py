@@ -86,6 +86,7 @@ class Game(core.render.Window):
             self.finish()
 
     def start_server(self):
+        # Create Server Thread
         try:
             self.server = server.Server(self.generate_debug)
             self.serverthread = threading.Thread(
@@ -95,6 +96,7 @@ class Game(core.render.Window):
             pass
 
     def generate_debug(self):
+        # Geneate Debug Dict
         stats = {"golden_keys": self.golden_keys.qsize(),
                  "score": self.scoring['score'],
                  "multiplier": self.scoring['depth_multiplier'],
@@ -106,5 +108,6 @@ class Game(core.render.Window):
         return stats
 
     def generate_keyvalue(self, len):
+        # Generate Hashes for GoldenKeys
         source = string.ascii_lowercase + string.ascii_uppercase
         return "".join([random.choice(source) for i in range(len)])

@@ -55,22 +55,32 @@ class Room(Scene):
         self.generate_fixings()
 
     def generate_base(self):
+        # Create a blank image
         self.base = PIL.new("RGBA", (self.x, 65), color=0)
+        # Fill in
         for x in range(0, self.x, 128):
             self.base.alpha_composite(Base(self.pack_id).image, (x, 0))
 
     def generate_background(self):
+        # Create a blank image
         self.background = PIL.new("RGBA", (self.x, self.y), color=0)
+
+        # Fill in
         for x in range(0, self.x, 128):
             self.background.alpha_composite(
                 Background(self.pack_id).image, (x, 0))
 
     def generate_foreground(self):
+        # Create a blank image
         self.foreground = PIL.new("RGBA", (self.x, self.y), color=0)
+
+        # Paste Room Ends
         self.foreground.alpha_composite(Foreground(
             self.pack_id, end=True).image, (0, 0))
         self.foreground.alpha_composite(Foreground(self.pack_id, end=True).image.transpose(
             PIL.FLIP_LEFT_RIGHT), (self.x - 128, 0))
+        
+        # Fill in 
         for x in range(128, self.x - 128, 128):
             self.foreground.alpha_composite(
                 Foreground(self.pack_id).image, (x, 0))

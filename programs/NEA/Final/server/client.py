@@ -36,5 +36,5 @@ class Client:
 client = Client()
 print("Client Initalised")
 while True:
-    client.request("*")
+    client.request("gg")
     time.sleep(1)
