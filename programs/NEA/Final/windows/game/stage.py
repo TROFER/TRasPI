@@ -141,7 +141,7 @@ class Room(Stage):
         self.goldenkey = None
         if random.choice(self.GoldenKeyChance):
             self.goldenkey = items.GoldenKey(self.game.generate_keyvalue(5), self.game.sprites["goldenkey"],
-                                    (128 + self.game.sprites["goldenkey"].width, self.FloorHeight), self.GlobalStep)
+                                             (128 + self.game.sprites["goldenkey"].width, self.FloorHeight), self.GlobalStep)
             self.elements.insert(1, self.goldenkey)
             self.hitboxes["golden-key"] = ((self.width / 2) - (
                 self.HitBoxSize / 2), (self.width / 2) + (self.HitBoxSize / 2))
@@ -168,7 +168,7 @@ class Room(Stage):
             "width": self.width,
             "hitboxes": self.hitboxes,
             "DistanceFromMid": (self.width / 2) - self.position}'''
-        #return stats.update(self._debug())
+        # return stats.update(self._debug())
         return self._debug()
 
 
@@ -178,8 +178,7 @@ class Branch(Stage):
     FloorHeight = 55
     PlayerSpeed = 8
     DoorGenerateChance = [True, True, True, True, False]
-    TreasureRoomChance = [True]
-    # TreasureRoomChance = [True, True, False, False, False]
+    TreasureRoomChance = [True, True, False, False, False]
 
     def __init__(self, game):
         # Initalise
@@ -224,11 +223,11 @@ class Branch(Stage):
         # Graphical Elements
 
         # Background, Foreground & Backlight Animation
-        self.background=Animation("image",
-                                    self.scene.background_frames, speed = self.AnimationSpeed)
-        self.foreground=Animation("image",
-                                    self.scene.foreground_frames, speed = self.AnimationSpeed)
-        self.backlight=Animation("backlight",
+        self.background = Animation("image",
+                                    self.scene.background_frames, speed=self.AnimationSpeed)
+        self.foreground = Animation("image",
+                                    self.scene.foreground_frames, speed=self.AnimationSpeed)
+        self.backlight = Animation("backlight",
                                    self.scene.backlight_colours, speed=0.5)
 
         # Player
@@ -293,7 +292,8 @@ class TreasureRoom(Stage):
         self.mainloop = MainLoop(self.elements)
 
     def _generate_heightmap(self):
-        image = self.scene.background_frames[0].copy().convert("RGB").transpose(PIL.FLIP_TOP_BOTTOM)
+        image = self.scene.background_frames[0].copy().convert(
+            "RGB").transpose(PIL.FLIP_TOP_BOTTOM)
         source = list(image.getdata())
         source = [source[x:x + 128] for x in range(0, len(source), 128)]
         self.heightmap = []
@@ -305,6 +305,7 @@ class TreasureRoom(Stage):
 
     def debug(self):
         return self._debug()
+
 
 class Door:
 
